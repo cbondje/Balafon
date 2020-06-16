@@ -1,0 +1,17 @@
+<?php
+// config server info 
+$this->setSelectedConfigCtrl(null);
+$box = igk_html_ctrl_view_config($this, $cnf_n, "title.frameworkInfo", null);
+
+$cnf=$this->getConfigNode()->clearChilds();
+$cnf=$this->getConfigNode()->clearChilds();
+
+$dv=$cnf->addDiv()->addPanelBox();
+$dv->addSectionTitle()->Content="\$_SERVER";
+$tb=$dv->addTable();
+foreach($_SERVER as $k=>$v){
+	$r=$tb->addTr();
+	$r->addTd()->Content=$k;
+	$r->addTd()->Content=$v;
+}
+$dv=$cnf->addDiv();

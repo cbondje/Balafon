@@ -1,0 +1,45 @@
+<?php
+
+// igk_wln(__FILE__.":".__LINE__, igk_env_count(__FILE__));
+
+//
+//default configuration page view
+//
+$gdoc = igk_app()->Doc;
+igk_google_addfont($doc, "Roboto");
+
+//bind style
+$f = $this->getStylesDir()."/config.pcss";
+$gdoc->Theme->addTempFile($f);
+$confframe = $this->getConfigFrame();
+
+igk_html_rm($confframe); //this->getConfigFrame());
+$t->ClearChilds();
+($cl = $t["class"]) && $cl->clear();
+$t["class"]="igk-cnf-page";
+
+$h = $t->addDiv()->setClass("header");
+
+//toggle button only visible for small device
+$navbtn = $h->addToggleButton();
+$navbtn->Target = "#android-menu";
+$navbtn->setClass("igk-sm-only igk-xsm-only floatr");
+$navbtn->ClassProperty = "posab igk-col-sm-3-2";
+$navbtn->addBar(3);
+
+
+
+$android_menu = $h->addDiv();//("ul");
+$android_menu->setId("android-menu");
+$android_menu["class"] = "igk-mob-opts igk-sm-only";
+$android_menu["igk-data-menu"] = 1;
+$android_menu["igk-data-menu-binding"] = "#igk-cnf-menu";
+
+
+$h->addDiv()->setClass("floatr alignb")->Content = R::gets("Welcome, Admin");
+$h->addClearBoth();
+
+
+$t->addDiv()->add($confframe);
+$t->addDiv()->setClass("igk-cnf-footer")->addContainer()
+->addRow()->addCol("igk-col-3-3")->addDiv()->Content = IGK_COPYRIGHT;

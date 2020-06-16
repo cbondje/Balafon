@@ -1,0 +1,20 @@
+<?php
+// @file: sql3lite.config.phtml
+// @author: C.A.D. BONDJE DOUE
+// @description: 
+// @copyright: igkdev © 2020
+// @license: Microsoft MIT License. For more information read license.txt
+// @company: IGKDEV
+// @mail: bondje.doue@igkdev.com
+// @url: https://www.igkdev.com
+
+use function igk_resources_gets as __;
+$t->clearChilds();
+$t->addDiv()->setStyle("padding-bottom: 2em")->addSectionTitle(4)->Content=__("SQL3Lite Management");
+$t->addHR()->setStyle("padding-bottom: 2em; border:none; border-top:1px solid #eee;");
+$frm=$t->addDiv()->addForm();
+$frm->addNotifyHost();
+igk_html_form_initfield($frm);
+igk_html_form_buildformfield($frm, ["base_datafilename"=>["value"=>igk_sys_getconfig("sqlite3.database")]]);
+$bar=$frm->addActionBar();
+$bar->addButton("btn.confirm", "submit")->Content=__("Update");

@@ -1,0 +1,38 @@
+10:39:49: - [error] - Exception: <div>message : <i>error igk_db_escape_string - ResId : - for :tbigk_subdomain func is MySQLi mysqli_real_escape_string</i></div> in D:\wamp\www\igkdev\Lib\igk\igk_framework.php:15873
+Stack trace:
+#0 D:\wamp\www\igkdev\Lib\igk\igk_mysql_db.phtml(806): igk_die('error igk_db_es...')
+#1 D:\wamp\www\igkdev\Lib\igk\igk_mysql_db.phtml(748): igk_db_escape_string('tbigk_subdomain')
+#2 D:\wamp\www\igkdev\Lib\igk\igk_mysql_db.phtml(287): igk_mysql_db_tbname('tbigk_subdomain')
+#3 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(14642): IGKMySQLDataAdapterBase->countAndWhere('tbigk_subdomain', NULL)
+#4 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(14616): igk_db_table_count_where('tbigk_subdomain', NULL, Object(IGKSubDomainCtrl))
+#5 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(50333): igk_db_table_exists(Object(IGKSubDomainCtrl))
+#6 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(50302): IGKSubDomainCtrl->__init_domain()
+#7 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(36198): IGKSubDomainCtrl->InitComplete()
+#8 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(38427): IGKControllerBase::InvokeRegisterComplete()
+#9 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(38693): IGKControllerManagerObject->_onInitComplete()
+#10 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(38551): IGKControllerManagerObject->InitControllers(Object(IGKApp))
+#11 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(22145): IGKControllerManagerObject::getInstance(1)
+#12 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(21762): IGKApp->_initControllers()
+#13 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(5853): IGKApp::Init('D:\\wamp\\www\\igk...')
+#14 D:\wamp\www\igkdev\index.php(37): igk_sys_render_index('D:\\wamp\\www\\igk...')
+#15 D:\wamp\www\igkdev\Lib\igk\igk_redirection.php(40): include_once('D:\\wamp\\www\\igk...')
+#16 {main}
+12:01:10: - [error] - Exception: <div>message : <i>error igk_db_escape_string - ResId : - for :tbigk_subdomain func is MySQLi mysqli_real_escape_string</i></div> in D:\wamp\www\igkdev\Lib\igk\igk_framework.php:15896
+Stack trace:
+#0 D:\wamp\www\igkdev\Lib\igk\igk_mysql_db.phtml(806): igk_die('error igk_db_es...')
+#1 D:\wamp\www\igkdev\Lib\igk\igk_mysql_db.phtml(748): igk_db_escape_string('tbigk_subdomain')
+#2 D:\wamp\www\igkdev\Lib\igk\igk_mysql_db.phtml(287): igk_mysql_db_tbname('tbigk_subdomain')
+#3 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(14665): IGKMySQLDataAdapterBase->countAndWhere('tbigk_subdomain', NULL)
+#4 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(14639): igk_db_table_count_where('tbigk_subdomain', NULL, Object(IGKSubDomainCtrl))
+#5 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(50357): igk_db_table_exists(Object(IGKSubDomainCtrl))
+#6 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(50326): IGKSubDomainCtrl->__init_domain()
+#7 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(36221): IGKSubDomainCtrl->InitComplete()
+#8 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(38451): IGKControllerBase::InvokeRegisterComplete()
+#9 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(38717): IGKControllerManagerObject->_onInitComplete()
+#10 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(38575): IGKControllerManagerObject->InitControllers(Object(IGKApp))
+#11 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(22167): IGKControllerManagerObject::getInstance(1)
+#12 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(21784): IGKApp->_initControllers()
+#13 D:\wamp\www\igkdev\Lib\igk\igk_framework.php(5855): IGKApp::Init('D:\\wamp\\www\\igk...')
+#14 D:\wamp\www\igkdev\index.php(37): igk_sys_render_index('D:\\wamp\\www\\igk...')
+#15 D:\wamp\www\igkdev\Lib\igk\igk_redirection.php(40): include_once('D:\\wamp\\www\\igk...')
+#16 {main}

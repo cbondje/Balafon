@@ -1,0 +1,185 @@
+<data-schemas>
+	<Entries>
+		<Rows For="tbigk_user_info_types">
+			<Row clName="PhoneNumber" clDataType="tel" clRegex="[^0][0-9]+" clCardinality="0" clType="1" />
+			<Row clName="GSMNumber" clDataType="tel" clRegex="[^0][0-9]+" clCardinality="0" clType="1" />
+			<Row clName="Email" clDataType="email" clRegex="" clCardinality="0" clType="1" />
+		</Rows>
+		<Rows For="tbigk_community">
+			<Row clName="facebook" clValueType="uri" />
+			<Row clName="twitter" clValueType="uri" />
+			<Row clName="googleplus" clValueType="uri" />
+		</Rows>
+		<Rows For="tbigk_partners">
+			<Row clName="igkdev"  clCategory="framework" clWebSite="//igkdev.com" clDescription="web site creator" />  
+		</Rows>
+	</Entries>
+
+	<DataDefinition TableName="tbigk_apps" >
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="50" clNotNull="True" clIsUnique="True" />
+        <Column clName="clDownloadTime" clType="VARCHAR" clTypeLength="10" />
+        <Column clName="clLast" clType="DateTime" clDescription="Last download time" clInsertFunction="NOW()" clUpdateFunction="NOW()" />
+   
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_authorizations" >
+        <Column clName="clId" clType="Int" clTypeLength="10" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="255" clNotNull="True" clIsUnique="True" />
+    </DataDefinition>
+	 <DataDefinition TableName="tbigk_colors">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="50" clNotNull="True" clIsUnique="True" />
+        <Column clName="clValue" clType="VARCHAR" clTypeLength="9" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_community" >
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="50" clDescription="identifier of the community "
+            clNotNull="True" clIsUnique="True" />
+        <Column clName="clValueType" clType="VARCHAR" clTypeLength="10" clDescription="type of data associated to value" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_configurations" >
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="130" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clValue" clType="TEXT" />
+        <Column clName="clDescription" clType="VARCHAR" clTypeLength="150" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_cookie_storages" >
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clIdentifier" clType="VARCHAR" clTypeLength="70" clNotNull="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="30" clNotNull="True" />
+        <Column clName="clDateTime" clType="DATETIME" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_data_types" >
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="255" clNotNull="True" clIsUnique="True" />
+        <Column clName="clDescription" clType="TEXT" clDescription="data description" />
+        <Column clName="clRegex" clType="TEXT" clDescription="Regex used to validate data" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_groupauthorizations" >
+        <Column clName="clId" clType="Int" clTypeLength="10" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clGroup_Id" clType="Int" clTypeLength="10" clNotNull="True" clLinkType="tbigk_groups" />
+        <Column clName="clAuth_Id" clType="Int" clTypeLength="10" clNotNull="True" clLinkType="tbigk_authorizations" />
+        <Column clName="clGrant" clType="Int" clTypeLength="10" clDescription="Grant access depending on the authorization usage"
+            clNotNull="True" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_groups" >
+        <Column clName="clId" clType="Int" clTypeLength="10" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="255" clNotNull="True" clIsUnique="True" />
+        <Column clName="clDescription" clType="VARCHAR" clTypeLength="150" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_humans">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clGender" clType="VARCHAR" clTypeLength="1" clDescription="m or f for male or female" clNotNull="True" />
+        <Column clName="clFirstName" clType="VARCHAR" clTypeLength="100" />
+        <Column clName="clLastName" clType="VARCHAR" clTypeLength="100" clNotNull="True" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_infos">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="60" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clValue" clType="TEXT" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_mailinglist">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clEmail" clType="VARCHAR" clTypeLength="150" clNotNull="True" clIsUnique="True" />
+        <Column clName="clActive" clType="Int" clTypeLength="11" clDescription="0 non active" clNotNull="True" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_mailinglists">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clEmail" clType="VARCHAR" clTypeLength="60" clNotNull="True" clIsUnique="True" />
+        <Column clName="clState" clType="Int" clTypeLength="11" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_partners">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="33" clIsUnique="True" />
+        <Column clName="clCategory" clType="VARCHAR" clTypeLength="33"  />
+        <Column clName="clWebSite" clType="TEXT" />
+        <Column clName="clDescription" clType="TEXT" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_plugins">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="60" clNotNull="True" clIsUnique="True" />
+        <Column clName="clEmail" clType="TEXT" clDescription="Author's email " />
+        <Column clName="clRelease" clType="DATETIME" />
+        <Column clName="clVersion" clType="TEXT" clDescription="plugin version " />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_reference_models">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clModel" clType="VARCHAR" clTypeLength="255" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clNextValue" clType="Int" clTypeLength="11" clNotNull="True" />
+    </DataDefinition> 
+    <DataDefinition TableName="tbigk_subdomains">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="100" 
+			clDescription="Subdomain name. exemple. 'mail'  in the .domain.com will be mail.domain.dom"
+            clNotNull="True" clIsPrimary="True" 
+			clIsUnique="True"/>
+        <Column clName="clCtrl" clType="VARCHAR" clTypeLength="33" clDescription="Controller name" clNotNull="True" />
+        <Column clName="clView" clType="TEXT" clDescription="Entry" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_systemuri">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="255" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clUri" clType="VARCHAR" clTypeLength="255" />
+    </DataDefinition>
+  
+    <DataDefinition TableName="tbigk_user_info_types">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="33" clNotNull="True" clIsUnique="True" />
+		 <Column clName="clDataType" clType="VARCHAR" clTypeLength="5"  clDescription="data type name"
+            clNotNull="True" clNotNull="True" />
+        <Column clName="clRegex" clType="VARCHAR" clTypeLength="100"  clDescription="Expression used to valiate data"
+            />
+        <Column clName="clCardinality" clType="Int" clTypeLength="11" clDescription="cardinality of this value. 0 is infinite or more than 0."
+            clNotNull="True" />
+        <Column clName="clType" clType="Int" clTypeLength="11" clDescription="1: regex expression to validate the data. 0: database data"
+            clNotNull="True" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_user_infos">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clUser_Id" clType="Int" clTypeLength="11" clNotNull="True" clLinkType="tbigk_users" />
+        <Column clName="clUserInfoType_Id" clType="Int" clTypeLength="11" clNotNull="True" clLinkType="tbigk_user_info_types" />
+        <Column clName="clValue" clType="VARCHAR" clTypeLength="255" clDescription="stored data. not that if data if data length is more than 255 used a table to store that data" />
+        <Column clName="clDescription" clType="VARCHAR" clTypeLength="150" clDescription="description of that value" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_usergroups" >
+        <Column clName="clId" clType="Int" clTypeLength="10" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clUser_Id" clType="Int" clTypeLength="10" clLinkType="tbigk_users" />
+        <Column clName="clGroup_Id" clType="Int" clTypeLength="10" clLinkType="tbigk_groups" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_users" >
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clLogin" clType="VARCHAR" clTypeLength="60" clIsUnique="True" />
+        <Column clName="clPwd" clType="VARCHAR" clTypeLength="60" clNotNull="True" clInsertFunction="MD5" clUpdateFunction="MD5" />
+        <Column clName="clFirstName" clType="VARCHAR" clTypeLength="60" />
+        <Column clName="clLastName" clType="VARCHAR" clTypeLength="60" />
+        <Column clName="clDisplay" clType="Text" />
+        <Column clName="clLocale" clType="VARCHAR" clTypeLength="2" clDefault="fr" />
+        <Column clName="clPicture" clType="VARCHAR" clTypeLength="255" clDescription="uri of 255 max length" />
+        <Column clName="clLevel" clType="Int" clTypeLength="11" clNotNull="True" />
+        <Column clName="clStatus" clType="Int" clTypeLength="11" clDefault="-1" clDescription="state of the account, -1 = not activated, 1=activated, 0or2=blocked" clNotNull="True" />
+        <Column clName="clDate" clType="DATETIME" clDescription="registration date" clNotNull="True" />
+        <Column clName="clLastLogin" clType="DATETIME" clDescription="last login" clNotNull="True" />
+        <Column clName="clParent_Id" clType="Int" clTypeLength="11" clDescription="Parent of this account" clLinkType="tbigk_users" />
+        <Column clName="clClassName" clType="VARCHAR" clTypeLength="255" clDescription="if clParent_Id then object refer to class name that initialize the sub user" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_users_reference_models" >
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clUser_Id" clType="Int" clTypeLength="11" clNotNull="True" clLinkType="tbigk_users" />
+        <Column clName="clModel" clType="VARCHAR" clTypeLength="255" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clNextValue" clType="Int" clTypeLength="11" clNotNull="True" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_who_uses">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clWebSite" clType="VARCHAR" clTypeLength="100" clNotNull="True" clIsUnique="True" />
+        <Column clName="clState" clType="Int" clTypeLength="11" />
+        <Column clName="clDateTime" clType="DATETIME" clNotNull="True" />
+        <Column clName="clIP" clType="VARCHAR" clTypeLength="15" />
+    </DataDefinition>
+	
+	 <DataDefinition TableName="tbigk_connexions">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clUser_Id" clType="Int" clNotNull="true" clLinkType="tbigk_users" />
+        <Column clName="clDateTime" clType="DATETIME" clNotNull="True" />
+        <Column clName="clFrom" clType="VARCHAR" clTypeLength="15" />
+    </DataDefinition>
+</data-schemas>

@@ -1,0 +1,50 @@
+<?php
+// @file: UtilityActions.php
+// @author: C.A.D. BONDJE DOUE
+// @description: 
+// @copyright: igkdev © 2020
+// @license: Microsoft MIT License. For more information read license.txt
+// @company: IGKDEV
+// @mail: bondje.doue@igkdev.com
+// @url: https://www.igkdev.com
+
+///<summary>Represente namespace: IGKApi</summary>
+/**
+* Represente IGKApi namespace
+*/
+namespace IGKApi;
+// DIRECT RENDERINGuse IGKIO;
+///<summary>Represente class: UtilityActions</summary>
+/**
+* Represente UtilityActions class
+*/
+class UtilityActions{
+    var $ctrl;
+    var $target;
+    ///<summary>Represente __construct function</summary>
+    ///<param name="ctrl"></param>
+    ///<param name="t"></param>
+    /**
+    * Represente __construct function
+    * @param  $ctrl
+    * @param  $t
+    */
+    public function __construct($ctrl, $t){
+        $this->ctrl=$ctrl;
+        $this->target=$t;
+    }
+    ///<summary>Represente rmDir function</summary>
+    /**
+    * Represente rmDir function
+    */
+    public function rmDir(){
+        $n=igk_getr("clName");
+        if(!empty($n)){
+            $f=igk_io_dir(igk_io_basedir());
+            $d=igk_io_basedir()."/__temp_dir";
+            rename($f."/".$n, $d);
+            IGKIO::RmDir($d);
+            igk_wln("ok");
+        }
+    }
+}

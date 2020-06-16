@@ -1,0 +1,41 @@
+<?php
+//R::ngets("lb.Find")
+
+use function igk_resources_gets as __;
+$doc->Title=__("global configurations");
+$doc->Theme->addTempFile($this->getStylesDir()."/conf.setting.pcss");
+if(file_exists($ftfile=IGK_LIB_DIR."/Default/R/Fonts/global.ttf")){
+    $doc->Theme->addFont("global", $ftfile);
+}
+unset($ftfile);
+igk_google_addfont($doc, "Roboto");
+$t->clearChilds();
+$t["class"]="google-Roboto";
+$doc->head->addCssStyle("base", 0)->setAttribute("type", "text/css")->Content=<<<EOF
+@bg_color:transparent;
+body.igk-body{
+background-color:@bg_color;
+}
+EOF;
+
+$bbox=$t->addDiv();
+$bbox->setClass("overflow-y-a fith");
+$hd=$bbox->addDiv()->setClass("header");
+if(!($ref=$this->getParam("referer"))){
+    $ref=igk_sys_srv_referer() ?? igk_io_baseuri();
+    $this->setParam("referer", $ref);
+}
+$hd->addA($this->getUri("back"))->addFontSymbol("global", 0xF001);
+$hd->addSectionTitle(4)->Content=R::ngets("title.balafonconfsettings");
+$h=$bbox->addDiv();
+$f=$h->addForm();
+$f["style"]="padding:4px;";
+$f["action"]=$this->getUri("configure_search_ajx");
+$f["onsubmit"]="return false;";
+$r=$f->addDiv();
+$r->addLabel("Find")->setClass("dispib floatl");
+$r->addInput("clsearch", "text")->setClass("dispi floatl")->setAttribute("onkeyup", "javascript: ns_igk.ajx.fn.postData(this.form.action, this, '#vr'); return ;");
+$r->addClearTab();
+$r->addInput("btn.search", "submit")->setClass("dispn");
+$h=$bbox->addDiv()->setId("vr")->setClass("overflow-y-a loc_l loc_b loc_r");
+$h->addAJXUriLoader($this->getUri("configure_search_ajx"));
