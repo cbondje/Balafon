@@ -44,11 +44,3 @@ final class IGKGoogleConfigurationSetting extends IGKConfigCtrlBase{
 		parent::initComplete();		
 	}
 }
-function igk_google_apikey(){
-	$k = IGKGoogleConfigurationSetting::API_KEY;
-	$ctrl = igk_getctrl("com.igkdev.googleapi");
-	if ($ctrl)
-		return igk_ctrl_get_setting($ctrl,$k);
-	return null;
-} 
-?>

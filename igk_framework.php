@@ -28628,7 +28628,11 @@ function igk_zip_folder($outfile, $dir, $folder=null, $regex=null){
     if($zip->open($outfile, ZIPARCHIVE::CREATE)){
         if($ar){
             foreach($dir as $m){
-                igk_zip_dir($m, $zip, basename($m));
+                $kname = basename($m);
+                if ($folder && ($b = strstr($m, $folder))){
+                    $kname = substr(igk_html_uri(substr($m, strlen($folder))), 1);
+                }
+                igk_zip_dir($m, $zip, $kname);
             }
         }
         else{
