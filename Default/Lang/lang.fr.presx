@@ -1571,7 +1571,12 @@ $l["firstname"]=  "Prenom";
 $l["lastname"]=  "Nom";
 $l["email"]=  "Email";
 $l["message"]=  "Message";
+$l["Send"]=  "Envoyer";
+$l["Contact Us"]=  "Nous contacter";
+$l["your mail"]=  "E-mail";
 
 
 $l["menu.sqlite3database"] = "SQLite3";
 $l["Clear"]="Vider";
+$l["Name"] = "Nom";
+$l["Description"] = "Description";

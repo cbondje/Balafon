@@ -153,7 +153,10 @@ define('IGK_FORM_CREF', 128);
 define('IGK_CFG_USER', 129);
 define('IGK_TOOLS', 130);
 define('IGK_SESS_ROUTES', 131);
+define('IGK_ENV_CSS_GLOBAL_CONF_FILES', 132);
 
+
+define("IGK_ENV_SESS_DOM_LIST", 0x201);
 define("IGK_CUSTOM_CTRL_PARAM", 0x400);
 
 //+ -----------------------------------------------------------------------

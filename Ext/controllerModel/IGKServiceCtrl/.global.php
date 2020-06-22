@@ -7,13 +7,9 @@
 
 function igk_srv_bind_cookie($lie, $s){
 	preg_replace_callback("/(?P<name>([^;=])+)=(?P<value>([^;])+)/i", function($m)use($lie){
-		//igk_ilog($m);
 		$n= igk_getv($m, "name");
 		$v= igk_getv($m, "value");
-		
-		// igk_ilog($n."=".$v);
-		$lie->__setCookie($n,$v);
-		
+		$lie->__setCookie($n,$v);		
 	}, $s);	
 }
 function igk_srv_soap_call($u, $name, $args){	
@@ -21,11 +17,8 @@ function igk_srv_soap_call($u, $name, $args){
 	"uri"=>$u,
 	"location"=>$u,
 	"trace"=>1,
-	"exceptions"=>0));	
-	
-	
+	"exceptions"=>0));
 	if (igk_get_env(__FUNCTION__."://prevent_session")){
-		
 		$tab = igk_srv_soap_LastHeader();
 		if ($tab){
 			$cook = $tab["Set-Cookie"];

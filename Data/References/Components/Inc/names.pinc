@@ -1,7 +1,7 @@
 <?php
 /** DESC: Generated Display Name of Component functions 
 * file : names.pinc 
-* date : 2020-29-05_01:01:44 
+* date : 2020-18-06_12:41:26 
 */
 $htab["Style"]="Style";
 $htab["TextEdit"]="TextEdit";

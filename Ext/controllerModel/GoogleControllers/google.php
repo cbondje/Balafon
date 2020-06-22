@@ -47,9 +47,11 @@ function igk_google_addfont($doc, $family, $size='100;200;400;700;900', $temp=1)
 function igk_google_apikey(){
     $k=IGKGoogleConfigurationSetting::API_KEY;
     $ctrl=igk_getctrl("com.igkdev.googleapi");
-    if($ctrl)
-        return igk_ctrl_get_setting($ctrl, $k);
-    return null;
+    $api_key = null;
+    (($ctrl &&  ($api_key=igk_ctrl_get_setting($ctrl, $k))) || 
+    ($api_key = igk_app()->Configs->{"google.apikey"}));
+
+    return $api_key;
 }
 ///<summary>get condensed family name for URI </summary>
 /**

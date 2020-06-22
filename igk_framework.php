@@ -2403,7 +2403,7 @@ function igk_css_bind_file($ctrl, $f, $theme=null){
     if(!file_exists($f)){
         igk_ilog('bind file failed '.$f);
         return;
-    }
+    } 
 	$doc = igk_get_last_rendered_document() ?? igk_app()->Doc;;
     if(defined("IGK_FORCSS")){
         if($theme == null){
@@ -2476,7 +2476,7 @@ function igk_css_bind_file($ctrl, $f, $theme=null){
 */
 function igk_css_bind_sys_global_files($theme=null, $bindfile=1){
     $theme=$theme ?? igk_app()->Doc->getSysTheme() ?? igk_die("can't bind global files");
-    $tab=igk_get_env("sys://css/file/global_files") ?? array();
+    $tab=igk_get_env(IGK_ENV_CSS_GLOBAL_CONF_FILES) ?? array();
     $cfile=igk_css_get_theme_files($theme);
     foreach($tab as $d=>$s){
         if(file_exists($d)){
@@ -3288,6 +3288,12 @@ function igk_css_reg_font_package($fontname, $file, $document=null, $format="Tru
 function igk_css_reg_global_style_file($fname, $theme=null, $ctrl=null, $temp=0){
     $s=igk_html_uri(igk_realpath($fname));
     $app=igk_html_uri($ctrl !== null ? "|".$ctrl->Name: "");
+    if (empty($s)){
+        igk_ilog(__FILE__.':'.__LINE__, "filename not found ".$fname);
+        return;
+    }
+    /// TODO: BIND CSS FILE collapse string
+    // igk_wln_e(__FILE__.':'.__LINE__, $s, igk_io_collapse_path(igk_io_dir($s)));
     if(igk_current_context() != IGKAppContext::initializing){
         $doc=igk_app()->getDoc();
         if($doc){
@@ -3314,9 +3320,10 @@ function igk_css_reg_global_style_file($fname, $theme=null, $ctrl=null, $temp=0)
         }
     }
     if(file_exists($s) && preg_match("/(pgcss|css|pcss)/", igk_io_path_ext($s))){
-        $tab=igk_get_env("sys://css/file/global_files", array());
+        $tkey = IGK_ENV_CSS_GLOBAL_CONF_FILES;
+        $tab=igk_get_env($tkey, array());
         $tab[$s]=1;
-        igk_set_env("sys://css/file/global_files", $tab);
+        igk_set_env($tkey, $tab);
     }
 }
 ///<summary>Represente igk_css_reg_global_tempfile function</summary>
@@ -19367,6 +19374,14 @@ function igk_preg_match($pattern, $value, $key, $index=0){
     }
     return null;
 }
+function igk_prepare_components_storage(){
+    return (object)array(
+        "objs"=>array(),
+        "ids"=>array(),
+        "uris"=>array(),
+        "srcs"=>array()
+    );
+}
 ///<summary>Represente igk_print function</summary>
 ///<param name="msg"></param>
 /**
@@ -23384,7 +23399,7 @@ function igk_svg_bind_svgs($doc, $dir=IGK_LIB_DIR."/Data/R/svg/icons"){
 * @param  $file
 */
 function igk_svg_bindfile($name, $file){
-    $source=igk_app()->Session->getParam(IGK_SVG_REGNODE_KEY);
+    $source=igk_environment()->{IGK_SVG_REGNODE_KEY};
     if($source){
         $f=$source->getParam("file", function(){
             return array();
@@ -23462,7 +23477,7 @@ function igk_svg_content($s){
 * Represente igk_svg_get_regicons function
 */
 function igk_svg_get_regicons(){
-    $source=igk_app()->Session->getParam(IGK_SVG_REGNODE_KEY);
+    $source=igk_environment()->{IGK_SVG_REGNODE_KEY};
     if($source)
         return $source->getParam("file");
     return null;
@@ -23485,14 +23500,16 @@ function igk_svg_register($doc, $name, $file){
                 $b=$_newfc();
                 igk_set_env("sys://node/svg_regnode", $b);
             }
-            igk_app()->Session->setParam(IGK_SVG_REGNODE_KEY, $b);
+            igk_environment()->{IGK_SVG_REGNODE_KEY} = $b;
             igk_svg_bindfile($name, $file);
             return $b;
         }
         return null;
     }
     $n=$doc->body->addNodeCallback("svgregister", function() use ($_newfc){
-        $n=igk_app()->Session->getParam(IGK_SVG_REGNODE_KEY, $_newfc) ?? igk_die("can't create node");
+ 
+        $n = igk_environment()->{IGK_SVG_REGNODE_KEY} ?? $_newfc() ?? igk_die("svg node not created"); 
+        igk_environment()->{IGK_SVG_REGNODE_KEY} = $n;
         return igk_html_node_clonenode($n);
     });
     igk_svg_bindfile($name, $file);
@@ -23502,11 +23519,9 @@ function igk_svg_register($doc, $name, $file){
 /**
 * register svg list document in directory
 */
-function igk_svg_register_icons($doc, $dir=IGK_LIB_DIR."/Data/R/svg/icons"){
-    $file=0;
+function igk_svg_register_icons($doc, $dir=IGK_LIB_DIR."/Data/R/svg/icons"){     
     foreach(IGKIO::GetFiles($dir, "/\.svg$/i") as $k=>$v){
-        igk_svg_register($doc, igk_io_basenamewithoutext($v), $v);
-        $file++;
+        igk_svg_register($doc, igk_io_basenamewithoutext($v), $v); 
     }
 }
 ///<summary>Represente igk_svg_render_ajx function</summary>
@@ -23516,7 +23531,7 @@ function igk_svg_register_icons($doc, $dir=IGK_LIB_DIR."/Data/R/svg/icons"){
 * @param  $o the default value is null
 */
 function igk_svg_render_ajx($o=null){
-    $c=igk_app()->Session->getParam(IGK_SVG_REGNODE_KEY);
+    $c=igk_environment()->{IGK_SVG_REGNODE_KEY};
     if(!$c)
         return;
 	$key = "sys://svg/lists";
@@ -23535,8 +23550,8 @@ function igk_svg_render_ajx($o=null){
             else
                 $t->RenderAJX();
         }
-        $c->getParam($key, null);
-        igk_app()->Session->getParam(IGK_SVG_REGNODE_KEY, null);
+        $c->getParam($key, null); 
+        igk_environment()->{IGK_SVG_REGNODE_KEY} = null;
     }
 }
 ///<summary>use svg image</summary>
@@ -23544,10 +23559,10 @@ function igk_svg_render_ajx($o=null){
 * use svg image
 */
 function igk_svg_use($name, $context=null){
-    $c=igk_app()->Session->getParam(IGK_SVG_REGNODE_KEY);
+    $c=igk_environment()->{IGK_SVG_REGNODE_KEY};
     if($c == null){
         igk_svg_register_icons(igk_app()->Doc);
-        $c=igk_app()->Session->getParam(IGK_SVG_REGNODE_KEY) ?? igk_die("failed to sused registrating node");
+        $c=igk_environment()->{IGK_SVG_REGNODE_KEY} ?? igk_die("failed to used svg registrating node");
         (function(){
             $n=igk_createnode("div");
             igk_set_env("sys://node/svg_regnode", $n);
@@ -35723,7 +35738,8 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
             IGK_CURRENT_DOC_INDEX_ID =>-1,
             "appInfo"=>(object)[
                 "controllers"=>[],
-                "documents"=>[]
+                "documents"=>[],
+                "components"=>igk_prepare_components_storage()
             ]
         ]; 
     }
@@ -35840,7 +35856,6 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
             }
             else{
                 $tab=array();
-				// igk_wln_e("init param", $appinfo->session  );
 				$appinfo->session = $tab; 
             }
 			$sm_session=new IGKSession($this, $tab);
@@ -35860,7 +35875,9 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
     * Represente getSubDomainCtrl function
     */
     public function getSubDomainCtrl(){
-        return igk_getv($this->_f, IGK_SUBDOMAIN_CTRL);
+        return igk_environment()->subdomainctrl; 
+        //igk_get_env("app$this->getTem
+        //return igk_getv($this->_f, IGK_SUBDOMAIN_CTRL);
     }
     ///<summary>Represente getSubDomainCtrlInfo function</summary>
     /**
@@ -36339,7 +36356,8 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
     * @param  $v
     */
     protected function setSubDomainCtrl($v){
-        return $this->setFlag(IGK_SUBDOMAIN_CTRL, $v);
+        igk_environment()->subdomainctrl = $v;
+        //return $this->setFlag(IGK_SUBDOMAIN_CTRL, $v);
     }
     ///<summary>Represente setSubDomainCtrlInfo function</summary>
     ///<param name="v"></param>
@@ -41336,7 +41354,7 @@ final class IGKControllerAndArticlesCtrl extends IGKConfigCtrlBase {
     */
     private function __updateview($ctrl){
         if($ctrl && $ctrl->getIsVisible()){
-            if(($this->CurrentPageFolder == IGK_CONFIG_PAGEFOLDER) && igk_reflection_class_extends(get_class($ctrl), "IGKConfigCtrlBase"))
+            if(($this->CurrentPageFolder == IGK_CONFIG_PAGEFOLDER) && igk_reflection_class_extends(get_class($ctrl), IGKConfigCtrlBase::class))
                 $ctrl->showConfig();
             else
                 $ctrl->View();
@@ -41658,7 +41676,7 @@ final class IGKControllerAndArticlesCtrl extends IGKConfigCtrlBase {
         $p=$target->addDiv();
         $p["class"]="igk-cnf-ctrl-info";
         $p->addDiv(array("class"=>"igk-cnf-selected-ctrl"))->Content=$this->SelectedController;
-        $p->addDiv()->Content=R::ngets("Q.ISWEBPAGECTRL_1", igk_parsebools(igk_reflection_class_extends(get_class($ctrl), "IGKDefaultPageController"))->getValue());
+        $p->addDiv()->Content=R::ngets("Q.ISWEBPAGECTRL_1", igk_parsebools(igk_reflection_class_extends(get_class($ctrl), IGKDefaultPageController::class))->getValue());
         $p->addDiv()->Content=R::ngets("lb.CtrlType")->getValue(). " : ". igk_sys_ctrl_type($ctrl);
         $p->addDiv()->Content=R::ngets("lb.Location_1", $ctrl->getDeclaredDir());
         $p->addBr();
@@ -49380,7 +49398,7 @@ final class IGKPICRESCtrl extends IGKConfigCtrlBase {
     * Represente getPicRes function
     */
     public function getPicRes(){
-        return $this->getParam("@PictureRes");
+        return $this->getEnvParam("@PictureRes");
     }
     ///<summary>Represente getResFiles function</summary>
     /**
@@ -49633,7 +49651,7 @@ final class IGKPICRESCtrl extends IGKConfigCtrlBase {
     * @param  $t
     */
     protected function setPicRes($t){
-        $this->setParam("@PictureRes", $t);
+        $this->setEnvParam("@PictureRes", $t);
     }
     ///<summary>Represente show_loadfile_frame function</summary>
     /**
@@ -50714,8 +50732,10 @@ final class IGKReferenceCtrl extends IGKConfigCtrlBase {
     * get html elements 
     */
     public function getHtmlElements(){
+        $key = "sys://htmlitems";
         if(!IGKViewMode::IsWebMaster()){
-            $d=igk_get_cached("sys://htmlitems");
+            // $d=igk_get_cached($key);
+            $d=$this->getEnvParam($key);
             if($d != null)
                 return $d;
         }
@@ -50751,7 +50771,8 @@ final class IGKReferenceCtrl extends IGKConfigCtrlBase {
         }
         $keys=array_keys($b);
         igk_array_sortbykey($b);
-        igk_set_cached("sys://htmlitems", $b);
+        // igk_set_cached($key, $b);
+        $this->setEnvParam($key, $b);
         return $b;
     }
     ///<summary>Represente getHtmlExpresionTab function</summary>
@@ -51712,10 +51733,10 @@ final class IGKSystemUriActionCtrl extends IGKConfigCtrlBase implements IIGKUriA
             igk_debug_wln("Invoke Ctrl Uri Pattern is not allowed");
         }
         igk_set_env("sys://call/".__METHOD__, 1);
-        $this->setParam("targetctrl", $ctrl);
+        $this->setEnvParam("targetctrl", $ctrl);
         igk_set_env(IGK_ENV_URI_PATTERN_KEY, $pattern);
         igk_app()->getControllerManager()->InvokePattern($pattern);
-        $this->setParam("targetctrl", null);
+        $this->setEnvParam("targetctrl", null);
         if($render){
             igk_render_doc();
             igk_exit();
@@ -56393,7 +56414,7 @@ final class IGKCacheCtrl extends IGKNonVisibleControllerBase {
 // * component manager controller
 // */
 final class IGKComponentManagerCtrl extends IGKNonVisibleControllerBase{
- 
+    
     ///<summary> Dispose all component</summary>
     /**
     *  Dispose all component
@@ -56404,8 +56425,7 @@ final class IGKComponentManagerCtrl extends IGKNonVisibleControllerBase{
                 $v->Dispose();
             }
         }
-        $this->m_objs=array();
-        $this->m_ids=array();
+        igk_app()->settings->appInfo->components = null;
     }
     ///<summary>Represente Exists function</summary>
     ///<param name="obj"></param>
@@ -56507,15 +56527,11 @@ final class IGKComponentManagerCtrl extends IGKNonVisibleControllerBase{
     */
     public function & getSettings(){
         static $setting;
-        if($setting == null){
-            if(!($setting=$this->getParam("settings"))){
-                $setting=(object)array(
-                    "objs"=>array(),
-                    "ids"=>array(),
-                    "uris"=>array(),
-                    "srcs"=>array()
-                );
-                $this->setParam("settings", $setting);
+        if($setting === null){
+            $setting = igk_app()->settings->appInfo->components;
+            if(!$setting){
+                $setting= igk_prepare_component_storage();
+                igk_app()->settings->appInfo = $setting;
             }
         }
         return $setting;
@@ -58594,15 +58610,15 @@ final class IGKNotificationCtrl extends IGKControllerBase implements IIGKNotifyM
         if($notify){
             $c=igk_getv($notify, $name);
             if(($c == null) && ($reg)){
-                $c=new IGKHtmlNotificationItemNode($this, $name);
-                $notify[$name]=$c;
+                // $c=new IGKHtmlNotificationItemNode($this, $name);
+                $notify[$name]=[];
                 igk_app()->Session->notifications=$notify;
             }
         }
         else{
             if(($c == null) && ($reg)){
-                $c=new IGKHtmlNotificationItemNode($this, $name);
-                igk_app()->Session->notifications=array($name=>$c);
+                // $c=new IGKHtmlNotificationItemNode($this, $name);
+                igk_app()->Session->notifications=array($name=>[]);
             }
         }
         return $c;
@@ -60002,8 +60018,7 @@ final class IGKControllerManagerObject extends IGKObject {
                     $g=trim($k);
                     if(empty($g))
                         continue;
-                    list($n, $rn)
-                    =explode("|", $g);
+                    list($n, $rn) = explode("|", $g);
                     if(class_exists($n, false)){
                         $v_ctrl=new $n();
                         $this->_registerCtrl($v_ctrl, empty($rn) ? null: $rn);
@@ -69069,12 +69084,18 @@ final class IGKHtmlDoc extends IGKHtmlComponentNodeItem {
     * get the gobal system theme
     */
     public function getSysTheme(){
-        if($r=igk_app()->Session->getParam(IGKSession::SESS_GLOBAL_THEME, function(){
-            return new IGKHtmlDocTheme(igk_app()->getDoc(), "sys://document");
-        })){
-            return $r;
+        static $sys_theme;
+        if ($sys_theme===null){
+            $sys_theme = new IGKHtmlDocTheme($this, 0, "sys://document");
         }
-        igk_die("sys theme not created");
+        return $sys_theme;
+        // igk_wln_e("sys theme , ", $th);
+        // if($r=igk_app()->Session->getParam(IGKSession::SESS_GLOBAL_THEME, function(){
+        //     return new IGKHtmlDocTheme(igk_app()->getDoc(), "sys://document");
+        // })){
+        //     return $r;
+        // }
+        //igk_die("sys theme not created");
     }
     ///<summary>Represente getTemporaryCssDef function</summary>
     ///<param name="minfile"></param>
@@ -69202,11 +69223,8 @@ final class IGKHtmlDoc extends IGKHtmlComponentNodeItem {
     */
     private function prepareScriptManager(){
         if(self::$sm_scriptManager != null)
-            return self::$sm_scriptManager;
-        $q=$this;
-        self::$sm_scriptManager=igk_get_class_instance(IGKHtmlScriptManager::class, function() use ($q){
-            return new IGKHtmlScriptManager($q);
-        });
+            return self::$sm_scriptManager;        
+        self::$sm_scriptManager = new IGKHtmlScriptManager($this);        
         return self::$sm_scriptManager;
     }
     ///<summary>register a component to the current document</summary>
@@ -77508,7 +77526,7 @@ final class IGKSession extends IGKObject implements IIGKParamHostService {
     * Represente setdomainBaseFile function
     * @param  $v
     */
-    public function setdomainBaseFile($v){
+    public function setdomainBaseFile($v){ 
         return $this->setParam(self::SESS_DOMAIN_BASEFILE, $v);
     }
     ///<summary>Represente setEvents function</summary>
@@ -77708,7 +77726,8 @@ final class IGKSubDomainManager extends IGKObject{
     * Represente Clear function
     */
     public function Clear(){
-        igk_app()->Session->setParam(IGK_SESS_DOM_LIST, null);
+        igk_environment()->{IGK_ENV_SESS_DOM_LIST} = null;
+        //igk_app()->Session->setParam(IGK_ENV_SESS_DOM_LIST, null);
     }
     ///<summary>Represente domainList function</summary>
     /**
@@ -77755,9 +77774,12 @@ final class IGKSubDomainManager extends IGKObject{
     * Represente getRegList function
     */
     public function getRegList(){
-        return igk_app()->Session->getParam(IGK_SESS_DOM_LIST, function(){
+        return igk_environment()->get(IGK_ENV_SESS_DOM_LIST, function(){
             return array();
         });
+        // return igk_app()->Session->getParam(IGK_ENV_SESS_DOM_LIST, function(){
+        //     return array();
+        // });
     }
     ///<summary>Represente GetSubDomain function</summary>
     /**
@@ -77911,7 +77933,8 @@ final class IGKSubDomainManager extends IGKObject{
     * @param  $t
     */
     private function updateRegList($t){
-        igk_app()->Session->setParam(IGK_SESS_DOM_LIST, $t);
+        igk_environment()->{IGK_ENV_SESS_DOM_LIST} = $t;
+        // igk_app()->Session->setParam(IGK_ENV_SESS_DOM_LIST, $t);
     }
 }
 ///<summary>represent information pattern</summary>
@@ -82122,14 +82145,14 @@ unset($file);
 define("IGK_BALAFON_JS_VERSION", "4.5.0.0507");
 define("IGK_FRAMEWORK", "IGKDEV-WFM");
 !defined("IGK_WEBFRAMEWORK") && define("IGK_WEBFRAMEWORK", "11.0");
-!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".0.0610");
+!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".0.0621");
 define("IGK_AUTHOR", "C.A.D. BONDJE DOUE");
 define("IGK_AUTHOR_CONTACT", "bondje.doue@igkdev.com");
 define("IGK_AUTHOR_2", "R. TCHATCHO");
 define("IGK_AUTHOR_CONTACT_2", "gerald.romeo@tbnsolaris.com");
 define("IGK_AUTHORS", "C.A.D. BONDJE DOUE & R. TCHATCHO");
 define("IGK_PLATEFORM_NAME", "BALAFON");
-define("IGK_RELEASE_DATE", "07/05/2020");
+define("IGK_RELEASE_DATE", "21/06/2020");
 define("IGK_START_DATE", "01/01/2013");
 define("IGK_COPYRIGHT", "IGKDEV &copy; 2011-".date('Y')." all rights reserved");
 define("IGK_WEB_SITE", "https://www.igkdev.com");
@@ -82159,7 +82182,7 @@ IGKApp::InitStatic();
 igk_init_html_basic_method();
 igk_reg_class_instance_key(IGKHtmlScriptManager::class, 0xc0);
 igk_reg_class_instance_key(IGKControllerManagerObject::class, 0xc1);
-define("IGK_SESS_DOM_LIST", 0x201);
+
 igk_reg_event("sys://event/onbeforeexit", "igk_session_block_exit_callback");
 igk_register_autoload_class(function($n){
     if($n == 'IGKAppModule'){

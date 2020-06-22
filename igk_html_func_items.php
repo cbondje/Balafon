@@ -510,7 +510,7 @@ function igk_html_node_arraylist($list, $tag="li", $callback=null){
 * bind article
 */
 function & igk_html_node_article($ctrl, $name, $raw=null, $showAdminOption=1){
-    $n=igk_html_node_NoTagNode();
+    $n=igk_html_node_NoTagNode();    
     igk_html_article($ctrl, trim($name), $n, $raw, null, true, true, $showAdminOption);
     return $n;
 }
@@ -2081,7 +2081,7 @@ function igk_html_node_obdata($data, $nodeType="div"){
     $n=igk_createnode($nodeType);
     if(is_callable($data)){
         IGKOb::Start();
-        $s=$data();
+        $s=$data($n);
         $g=IGKOb::Content();
         IGKOb::Clear();
         $s=$g;

@@ -595,10 +595,13 @@ EOF;
     */
     public static function & GetApps(){
         if(IGKApplicationController::$sm_apps === null){
-            $m=igk_app()->Session->getParam(__METHOD__);
+            // igk_wln_e("application get Apps : call");
+            // $m=igk_app()->Session->getParam(__METHOD__);
+            $m = igk_environment()->get(self::IGK_CTRL_APPS_KEY);
             if($m === null){
                 $m=(object)array('_'=>array());
-                igk_app()->Session->setParam(self::IGK_CTRL_APPS_KEY, $m);
+                // igk_app()->Session->setParam(self::IGK_CTRL_APPS_KEY, $m);
+                igk_environment()->set(self::IGK_CTRL_APPS_KEY, $m);
             }
             IGKApplicationController::$sm_apps=& $m;
         }
@@ -619,7 +622,20 @@ EOF;
         $app=igk_app();
 		if (!empty($function)){
 			$function = igk_str_rm_start($function, "/");
-		}
+        }
+        
+        // igk_wln_e(__METHOD__,
+        //     [
+        //         "getClass: "=>get_class($this),
+        //         "objectid: "=>spl_object_id($this),
+        //         "subobjectid: "=>spl_object_id($app->SubDomainCtrl),
+        //         "SubDomainCtrl?"=>$app->SubDomainCtrl !== null,
+        //         "SubDomainCtrl class"=>get_class($app->SubDomainCtrl),
+        //         "isEntry : "=> self::IsEntryController($this),
+        //         "check ? "=>igk_app()->SubDomainCtrl === $this
+        //     ]
+        // );
+
         if(self::IsEntryController($this)){
             if($app->SubDomainCtrl === $this){
                 $g=$app->SubDomainCtrlInfo->clView;

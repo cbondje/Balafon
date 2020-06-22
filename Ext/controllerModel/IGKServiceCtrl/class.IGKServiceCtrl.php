@@ -1,10 +1,12 @@
 <?php
+use function igk_resources_gets as __;
 
 define("IGK_SERVICE_BASE_URI", "services");
 
 ///<summary>represent a wsdl service controller type </summary>
 abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 {
+	private static $sm_services = [];
 	public function getRootUri(){
 		return 	igk_io_baseUri()."/".IGK_SERVICE_BASE_URI;
 	}
@@ -28,10 +30,9 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 		// igk_wln("page folder changed ? ");
 		// exit;
 	}
-	protected function register_service(){
-		//igk_wln("register services...");
+	protected function register_service(){ 
 		$c = "^/".IGK_SERVICE_BASE_URI."/".$this->getServiceName();	
-		$k = $this->getParam("appkeys");
+		$k = $this->getEnvParam("appkeys");
 		if (!empty($k))
 		{
 			igk_sys_ac_unregister($k);
@@ -42,18 +43,18 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 			$k = "".$c.IGK_REG_ACTION_METH;//"(/:function(/:params+)?)?";			
 			//igk_wln($k);
 			igk_sys_ac_register($k, $this->getUri("evaluateUri"));
-			$this->setParam("appkeys", $k);
+			$this->setEnvParam("appkeys", $k);
 		}
-		$t = $this->App->Session->getParam("sys://services/register");		
+		$t = & self::$sm_services; //$this->getEnvParam($key);
 		if ($t ==null){
 			$t =array();
 			$c = "^/".IGK_SERVICE_BASE_URI."(/){0,1}$";//.IGK_REG_ACTION_METH;
 			$f =  $this->getUri("baseEvaluateUri&m=global");
 			igk_sys_ac_register($c, $f);
+			self::$sm_services = & $t;
 			
 		}
 		$t[] = $this;
-		$this->App->Session->setParam("sys://services/register", $t);	
 	}
 
 	public static function GetAdditionalConfigInfo()
@@ -72,8 +73,8 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 		return 1;
 	}
 	
-	public final function getServices(){
-		return $this->App->Session->getParam("sys://services/register");
+	public final function getServices(){  
+		return self::$sm_services;
 	}
 	public final function baseEvaluateUri(){		
 		$f = dirname(__FILE__)."/".IGK_VIEW_FOLDER."/default.phtml";
@@ -81,17 +82,16 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 		
 		$doc->setParam("sys://designMode/off",1);
 		
-		$t = $this->App->Session->getParam("sys://service/node") ?? igk_createNode("div"); 
+		$t =   igk_createNode("div"); 
 		
 		igk_doc_set_favicon($doc, dirname(__FILE__)."/Data/R/favicon.ico");
 		
 		$doc->addTempScript(dirname(__FILE__)."/Scripts/services.js");
 		$t->clearChilds();		
-		$this->regSystemVars(null);
-		$this->setParam(IGK_CURRENT_DOC_PARAM_KEY, $doc);
+		$this->regSystemVars(null); 
 		//igk_debug(1);
 		//add extra parameter to view
-		$this->regSystemVars(array("services"=>$this->getServices()));//App->Session->getParam("sys://services/register")));
+		$this->regSystemVars(array("services"=>$this->getServices()));
 		// $d  = $this->getSystemVars();
 		//$t->resetParam();
 		// $t->setParam("inf", "D");
@@ -105,8 +105,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 		$doc->RenderAJX();
 		
 		// $d  = $this->getSystemVars();		
-		
-		$this->App->Session->setParam("sys://service/node", $t);		
+		 	
 		
 		$u = igk_io_fullBaseRequestUri();
 		igk_set_session_redirection($u);		
@@ -114,8 +113,8 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 	}
 	public final function evaluateUri()
 	{
-		$inf = igk_sys_ac_getpatterninfo();		
-		$p = $inf->getParams();
+		($inf = igk_sys_ac_getpatterninfo()) || die("uri evaluation setting action not resolved");
+		$p = $inf->getQueryParams();
 		$c = igk_getv($p, "function");
 		$p = igk_getv($p, "params");
 		header("content-type: text/html");
@@ -135,7 +134,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 		
 		if (preg_match('#\$metadata$#i', trim($u))){
 			
-			igk_setheader('404 not found');
+			igk_set_header('404 not found');
 			igk_exit();
 		}
 		// igk_ilog("Request  : ".$u);
@@ -145,7 +144,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 			if (empty($c))
 			{
 				//render discovery information
-				// igk_setheader('200', "Content-Type: text/xml");
+				// igk_set_header('200', "Content-Type: text/xml");
 				// $this->wsdl(null,0);
 				// exit;
 				//igk_ilog("render default doc.... \$f = ".$c);
@@ -158,7 +157,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 				if (method_exists($this, $c))
 				{
 					ini_set('default_charset', null);
-					//igk_setheader('200', "Content-Type: text/xml");
+					//igk_set_header('200', "Content-Type: text/xml");
 					if (is_array($p) == false)
 						$p = array($p);			
 					call_user_func_array(array($this, $c), $p);		
@@ -171,7 +170,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 		}
 		ob_clean();
 		// igk_ilog("wsdl");
-		igk_setheader('200', "Content-Type: application/xml");
+		igk_set_header('200', "Content-Type: application/xml");
 		$this->wsdl();
 		exit;
 	}
@@ -197,11 +196,17 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 	}
 	protected function _initCssStyle(){
 		parent::_initCssStyle();
-		if (igk_getv(igk_get_env(IGK_ENV_INVOKE_ARGS), "m")=="global")
-		igk_css_bind_file($this, dirname(__FILE__)."/Styles/default.pcss");		
+		if (igk_getv(igk_get_env(IGK_ENV_INVOKE_ARGS), "m")=="global"){
+			// igk_css_bind_file($this, dirname(__FILE__)."/Styles/default.pcss");	
+			igk_ctrl_bind_css_file($this, dirname(__FILE__)."/Styles/default.pcss");	
+			// igk_css_reg_global_style_file(
+			// 	dirname(__FILE__)."/Styles/default.pcss",
+			// 	null,
+			// 	$this);
+		}	
 	}
 	protected function getWsdlFile(){
-		return $this->getDataDir()."/service.wsdl";
+		return igk_io_dir($this->getDataDir()."/service.wsdl");
 	}
 	///<summary>call this function to generate a wsdl file</summary>
 	public function wsdl($a=null, $appxml=1){
@@ -218,7 +223,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 		
 		if ($appxml)
 			header("Content-Type: application/xml");
-			igk_wl($s);
+		igk_wl($s);
 		igk_exit();
 	}
 	
@@ -416,13 +421,15 @@ EOF;
 		return $funclist;
 	}
 	public static function controllerLoaded(){
-		igk_wn("getConrollerLoaded");
-		igk_wln("services");
-		igk_wln(igk_count(self::$sm_services));
-		exit;
+		igk_wln_e(__FILE__.':'.__LINE__,
+			"getConrollerLoaded"
+		,"services"
+		,igk_count(self::$sm_services));		
 	}
 	
 	private function __getMethodParameter($method){
+		if (empty($method) || !method_exists($this, $method))
+			return null;
 		$rf = new ReflectionMethod($this, $method);
 		return  $rf->getParameters();
 	}
@@ -442,8 +449,9 @@ EOF;
 			$dv = $t->addDiv()->setClass("args")->setStyle("background-color:#efefef");
 			$table = $dv->addTable();
 			$r = $table->addTr();
-			$r->addTh()->Content = R::ngets("lb.name");
-			$r->addTh()->Content = R::ngets("lb.desc");
+			$r->addTh()->Content = __ ("Name");
+			$r->addTh()->Content = __ ("Type");
+			$r->addTh()->Content =__("Description"); 
 			
 			// $r = $table->addTr();
 			// $f = ".json";
@@ -472,8 +480,9 @@ EOF;
 				$nn= $v->name;
 				$r = $table->addTr();
 				$r->addTd()->Content = $nn;//addObData($v);
+				$r->addTd()->Content = "";
 				$v = igk_getv($jdata, $nn);				
-				$r->addTd()->Content = ($v) ? igk_getv($v, $lg ) : IGK_HTML_SPACE;//addObData($v);		
+				$r->addTd()->Content = ($v) ? igk_getv($v, $lg ) : IGK_HTML_SPACE;	
 					if ($store){
 						$jdata->$nn  =(object)array($lg=>"");
 					}
@@ -487,13 +496,12 @@ EOF;
 	}
 
 
-	public function getServiceViewTitle($m){
-		
+	public function getServiceViewTitle($m){ 
 		$c = $this->__getMethodParameter($m);
 		$ct = igk_count($c);//$this->__getMethodParameter($m);
 		$n = igk_createNode("div");
 		if (igk_is_conf_connected()){
-			$n->addA("")->setAttribute("onclick", "javascript: ns_igk.services.invoke('{$m}',{$ct}); return false;")->Content =$m;
+			$n->addA("#")->setAttribute("onclick", "javascript: ns_igk.services.invoke('{$m}',{$ct}); return false;")->Content =$m;
 		}else{
 			$n->Content = $m;
 		}
@@ -506,12 +514,9 @@ EOF;
 		
 		$f = $this->getArticlesDir()."/".$m.".json";
 		if (file_exists($f)){
-					$n->addJSAExtern("openFile", igk_io_to_uri($f))
-				->setClass("igk-btn igk-btn-default igk-active")->Content = R::ngets("btn.Edit");
+			$n->addJSAExtern("openFile", igk_io_to_uri($f))->setClass("igk-btn igk-btn-default igk-active")->Content = R::ngets("btn.Edit");
 		}
-		$s= $n->Render();
-		//$this->setEnvParam("extra",$s);
-		 // igk_ilog($s);
+		$s= $n->Render(); 
 		return $s;
 	}
 	public function initRowView($m){
@@ -525,9 +530,3 @@ EOF;
 igk_set_env("sys://controller/loaded", array("IGKServiceCtrl", "controllerLoaded"));
 
 
-///exposed additional method
-///<param name="n">name</param>
-///<param name="ctrl">controller</param>
-// function igk_service_reg($n,$ctrl){	
-// }
-?>

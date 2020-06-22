@@ -75,14 +75,11 @@ function igk_html_node_faceBookTimeLine($id){
 		
 	$n["class"]="fb-like";
 	$n["data-href"] = "https://www.facebook.com/".$id;
-	$n["data-layout"] = "light";//$theme;//"https://twitter.com/".$id;
+	$n["data-layout"] = "light";
 	$n["data-size"] = "small";
-	$n["data-show-faces"]="true";
-	
-//	$fb_js = realpath(dirname(__FILE__)."/Scripts/.fb.js");
+	$n["data-show-faces"]="true";	
 	$b = igk_html_node_OnRenderCallback(igk_create_expression_callback(igk_fb_LibExpression(),array("n"=>$n)));
-	$n->add($b);	
-	$n->Content ="FACEBOO3-----------------";
+	$n->add($b);	 
 	return $n;
 }
 
@@ -158,7 +155,4 @@ igk_community_register_followus_service("facebook", function($cmd,$t,$v=null){
 		default:
 		break;
 	}
-});
-
-
-?>
+}); 
