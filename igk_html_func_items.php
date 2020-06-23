@@ -2036,7 +2036,7 @@ function igk_html_node_notifyhost($name=null, $autohide=1){
     $n["class"]="notify-host";
     $n["title"]=$name;
     $c=igk_notifyctrl();
-    $g=$c->setNotifyHost($n, $name);
+    $g=$c->setNotifyHost($n, $name); 
     if($g){
         $g->setAutohide($autohide);
     }

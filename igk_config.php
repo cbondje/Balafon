@@ -156,6 +156,7 @@ define('IGK_SESS_ROUTES', 131);
 define('IGK_ENV_CSS_GLOBAL_CONF_FILES', 132);
 define('IGK_CLIENT_IP', 133);
 define('IGK_CLIENT_AGENT', 134);
+define('IGK_CONNEXION_FRAME', 193);
 
 
 define("IGK_ENV_SESS_DOM_LIST", 0x201);

@@ -18730,7 +18730,7 @@ function igk_notify_error($msg, $target=null){
         $ctrl->addError($msg);
     }
     else{
-        igk_wln("<div class=\"igk-notify-box igk-notify-box-error\" >".$msg."</div>");
+        igk_wl("<div class=\"igk-notify-box igk-notify-box-error\" >".$msg."</div>");
     }
 }
 ///<summary>Represente igk_notify_post function</summary>
@@ -40536,9 +40536,9 @@ EOF;
         , null);
         $frm["method"]="POST";
         $frm["action"]=$this->getUri("connectToConfig");
-        $a=igk_createnode("a")->AppendAttributes(array("href"=>new IGKHtmlRelativeUriValueAttribute()));
-        $a->Content="Go to index ";
-        $a["style"]="color:white;";
+        // $a=igk_createnode("a")->AppendAttributes(array("href"=>new IGKHtmlRelativeUriValueAttribute()));
+        // $a->Content="Go to index ";
+        // $a["style"]="color:white;";
         $c=null;
         $android=0;
         if(igk_agent_isandroid()){
@@ -40569,7 +40569,10 @@ EOF;
             $frm->addDiv()->setClass("dispb posfix fitw no-overflow loc_l loc_b")->setAttribute("style", "font-size:0.8em; position:fixed; height:48px;")->addDiv()->Content="{$igk_framename} - ( ".IGK_PLATEFORM_NAME." ) - {$igk_version}<br />Configuration";
         }
         else{
-            $frm->addNotifyHost();
+            // $g = igk_notifyctrl("connexion:frame");
+            // $g->addMsg("ok notification");
+          
+            // $frm->addNotifyHost("connexion:frame");
             $lang=function($n){
                 return __($n);
             };
@@ -40596,9 +40599,9 @@ EOF;
 	<li><label class="cllabel alignl" for="clAdmPwd" >{$lang('Password')}</label>
 	<input type="password" name="clAdmPwd" id="clAdmPwd" class="clpassword" autocomplete="current-password" placeholder="{$lang('Admin password')}" /><br /></li>
 	</ul>
-	<div class="igk-row" >
-		<a href="{$baseuri}" class="floatl" >{$lang('Go home')}</a>
-		<input type="submit" class="clsubmit alignr floatr" name="connect" value="{$lang('Connexion')}" />
+	<div class="igk-row" style="margin:0px;" >
+    <input type="submit" class="clsubmit alignr floatr" name="connect" value="{$lang('Connexion')}" />
+    <a href="{$baseuri}" class="igk-btn dispib alignr floatr clsubmit" >{$lang('Go home')}</a>
 	</div>
 
 </div>
@@ -40620,8 +40623,8 @@ EOF;
             $i=$g->getElementById("id_board");
             $c=$g->getElementById("igk_cpv");
             $notz=$g->getElementById("notify-z");
-            if($notz){
-                igk_notifyctrl()->setNotifyHost($notz, "connexion:frame");
+            if($notz){ 
+                $notz->addNotifyHost("connexion:frame");  
             }
             if(is_object($i)){
                 $i->add($a);
@@ -58509,8 +58512,14 @@ class IGKNotifyStorage{
         }
         $cl = __CLASS__;
         $o = new $cl();
-        $o->$tab = $tab;
+        $o->tab = $tab;
         return $o;
+    }
+    public function addMsg($msg){ 
+        $this->tab[] = ["type"=>"default","msg"=>$msg];
+    }
+    public function clear(){
+       // array_splice($this->tab, 0);
     }
 }
 
@@ -58683,26 +58692,18 @@ final class IGKNotificationCtrl extends IGKControllerBase implements IIGKNotifyM
         }
         $notify=igk_app()->Session->notifications;
         $c=null;
-        if($notify){
-            $c=igk_getv($notify, $name);
-            if(($c === null) && ($reg)){
-                // $c=new IGKHtmlNotificationItemNode($this, $name);
-                $notify[$name]=[];
-                igk_app()->Session->notifications=$notify;
-                $c = IGKNotifyStorage::Create($notify[$name]);
-                $storage[$name]=$c;
+        if(!$notify){
+            $g = array($name=>[]);             
+            $notify = $g;     
+        }
+        else {
+            if (!isset($notify[$name])){
+                $notify[$name] = [];
             }
         }
-        else{
-            
-            // igk_wln_e("notificiation not provided", __FILE__.':'.__LINE__, $name, $g);
-            if(($c == null) && ($reg)){   
-                $g = array($name=>[]);             
-                igk_app()->Session->notifications= $g;
-                $c = IGKNotifyStorage::Create($g[$name]);
-                $storage[$name]=$c;
-            }
-        }
+        igk_app()->Session->notifications = $notify; 
+        $c = IGKNotifyStorage::Create($notify[$name]);
+        $storage[$name]=$c;        
         return $c;
     }
     ///<summary>Represente getNotificationEvent function</summary>
@@ -58750,16 +58751,26 @@ final class IGKNotificationCtrl extends IGKControllerBase implements IIGKNotifyM
     * @param  $n
     * @param  $name
     */
-    public function NotificationIsVisible($n, $name){
-        if(empty($name)){
-            $g=igk_notifyctrl()->TargetNode->ChildCount > 0;
-            if($g){
-                $s=new IGKHtmlSingleNodeViewer($this->TargetNode);
-                igk_html_add($s, $n);
+    public function NotificationIsVisible($target, $host, $name){
+        $c = igk_notifyctrl($name);      
+        if (count($c->tab)>0){
+            foreach($c->tab as $inf){
+                $host->add("div")->setClass("igk-".$inf["type"])->Content = $inf["msg"];
             }
-            return $g;
-        }
-        return ($n != null) && $n->getHasChilds();
+            $c->clear();  
+            return true;
+        } 
+        // igk_wln_e(__FILE__.':'.__LINE__, "NotIs Visible", $name,  count($c->tab));
+        return false;
+        // if(empty($name)){
+        //     $g=igk_notifyctrl()->TargetNode->ChildCount > 0;
+        //     if($g){
+        //         $s=new IGKHtmlSingleNodeViewer($this->TargetNode);
+        //         igk_html_add($s, $n);
+        //     }
+        //     return $g;
+        // }
+        // return ($n != null) && $n->getHasChilds();
     }
     ///<summary>Represente notify_ajx function</summary>
     /**
@@ -58887,26 +58898,33 @@ EOF;
     * @param  $options the default value is null
     */
     public function setNotifyHost($notifyhost, $name=null, $options=null){
-        if($name == null)
-            $this->m_notifyhost=$notifyhost;
+    
         if($notifyhost){
             $n=$this->getNotification($name);
-            if(($n == null) || ($name == null)){
-                $n=$this->TargetNode;
-                $s=new IGKHtmlSingleNodeViewer($n);
-                igk_html_add($s, $notifyhost);
+            if ($n){
+                $m = igk_createnode("NoTagNode"); 
+                $s=new IGKHtmlSingleNodeViewer($m); 
+                $tab = igk_create_node_callback([$this, "NotificationIsVisible"], [$m, $name]);
+                $s->setCallback("getIsVisible", $tab);
+                $notifyhost->add($s);
             }
-            else{
-                if($n != null){
-                    $s=new IGKHtmlSingleNodeViewer($n);
-                    igk_html_add($s, $notifyhost);
-                }
-            }
-            $tab=array($this, "NotificationIsVisible", $notifyhost, $name);
-            $notifyhost->setCallback("getIsVisible", $tab);
-            return $n;
+            // igk_wln(__FILE__.':'.__LINE__, "notify data : ", $name,  $n);
+            // if(($n == null) || ($name == null)){
+            //     $n=$this->TargetNode;
+            //     $s=new IGKHtmlSingleNodeViewer($n);
+            //     igk_html_add($s, $notifyhost);
+            // }
+            // else{
+            //     if($n != null){
+            //         $s=new IGKHtmlSingleNodeViewer($n);
+            //         igk_html_add($s, $notifyhost);
+            //     }
+            // }
+            // $tab=array($this, "NotificationIsVisible", $notifyhost, $name);
+            // $notifyhost->setCallback("getIsVisible", $tab);
+            // return $n;
         }
-        return null;
+        return $this;
     }
     ///<summary>unregister notification</summary>
     ///<remark>if obj is null will clear the notification event list</remark>
@@ -65015,7 +65033,7 @@ abstract class IGKHtmlItemBase extends IGKObject implements ArrayAccess, IIGKHtm
                 if($b->$sourceDeepth<=0){
                     unset($b->$sourceDeepth);
                     unset($b->$sourceParam);
-                }
+                } 
                 return true;
             }
             else{
@@ -65649,24 +65667,27 @@ abstract class IGKHtmlItemBase extends IGKObject implements ArrayAccess, IIGKHtm
     */
     public function setCallback($n, $callable){
         $g=$this->getFlag(IGK_CALLBACK_FLAG);
+        $k = $n."Params";
         if($callable == null){
             unset($g[$n]);
-            $this->setParam($n."Params", null);
+            $this->setParam($k, null);
         }
         else{
             $g[$n]=$callable;
             $tb=array_slice(func_get_args(), 2);
             if((count($tb) > 0) && is_array($tb[0])){
-                $this->setParam($n."Params", $tb[0]);
+                $this->setParam($k, $tb[0]);
             }
             if(!$g){
                 $g=array();
             }
         }
+        
+
         if(igk_count($g) == 0)
             $this->unsetFlag(IGK_CALLBACK_FLAG);
         else
-            $this->setFlag(IGK_CALLBACK_FLAG, $g);
+            $this->setFlag(IGK_CALLBACK_FLAG, $g); 
         return $this;
     }
     ///<summary>register a namespace key to resolv function that will be call for the callback</summary>
