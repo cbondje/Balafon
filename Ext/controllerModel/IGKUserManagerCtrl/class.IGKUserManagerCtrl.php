@@ -58,12 +58,8 @@ abstract class IGKUserManagerCtrl extends IGKCtrlTypeBase
 		$obj = igk_db_getobj($this->getDataTableInfo());
 		$obj->clLogin = $login;
 		$obj->clPwd = $pwd;
-		
-		IGKApp::$DEBUG = true;
-		$s = igk_db_select_where($this, array("clLogin"=>$login, "clPwd"=>$pwd));
-		igk_wln(mysql_error());
-		
-		
+		 
+		$s = igk_db_select_where($this, array("clLogin"=>$login, "clPwd"=>$pwd)); 
 		
 		if (($s) && ($s->getRowCount() == 1))
 		{

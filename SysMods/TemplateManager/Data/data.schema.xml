@@ -2,7 +2,7 @@
 	<Entries />
 	<DataDefinition TableName="tbigk_templates" Description="Liste des templates installé localement">
 		<Column clName="clId" clAutoIncrement="true" clIsPrimary="true" clNotNull="true" clType="Int" />
-		<Column clName="clPackageName" clType="VARCHAR" clTypeLength="255" clNotNull="true" clIsUnique="true" />
+		<Column clName="clPackageName" clType="VARCHAR" clTypeLength="170" clNotNull="true" clIsUnique="true" />
 		<Column clName="clTitle" clType="Text" clNotNull="true" clTypeLength="60" />
 		<Column clName="clInstallDate" clType="DateTime" clNotNull="true" />
 		<Column clName="clVersion" clType="Int" clNotNull="true" clDefault="1.0" />

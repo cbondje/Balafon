@@ -154,6 +154,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                     $error=false;
                     $ctrl=igk_getctrl(igk_getv($args, 1));
                     $u=igk_get_user_bylogin(igk_getv($args, 2));
+                    $g = "";
                     $srv=($srv=igk_getv($args, 0)) ? $srv: igk_getr("clServer");
                     if(!$ctrl || !$u || empty($srv)){
                         $error=true;

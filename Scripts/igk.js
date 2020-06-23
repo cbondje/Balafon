@@ -18931,8 +18931,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 		if (typeof(this.attribs)=='undefined')
 			this.attribs = {};
 		
-		if (this.attribs.tabattribs){
-			console.debug("already defined");
+		if (this.attribs.tabattribs){ 
 			return;
 		}
 		
@@ -20091,7 +20090,7 @@ igk.ready(function () {
 		w = (((m.getLines() + '').length * w) + 10) & 0xFFFA;
 		// console.debug("width "+w);
 
-		igk.css.appendRule(q.getCssSelector() + " > div > span.ln { width:" + w + "px; background-color:#444} ");
+		igk.css.appendRule(q.getCssSelector() + " > div > span.ln {text-align:right; width:" + w + "px;}");
 
 		// var sl = this.qselect('div > span').each_all(
 		// function(){
