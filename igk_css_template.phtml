@@ -285,7 +285,7 @@ igk_css_regcolor("igk-lborder-bg", "#50D39A");
 $def[".igk-bullet"]="width:32px; height:32px; background-repeat:no-repeat;";
 $def[".igk-bullet.igk-active"]="background-position:-32px 0px;";
 $theme->reg_keyFrames($def, "igk-progress-frame", " from {background-position: 0px 0; } to { background-position: 40px 0; }");
-$def[".igk-progressbar"]="{sys:dispib, alignc}; background-color:indigo; height:4px; max-width: 300px;";
+$def[".igk-progressbar"]="{sys:dispib, alignc}; background-color:indigo; height:16px; min-width: 300px;";
 $def[".igk-progressbar:after"]="display:inline-block; width: 0%; content: ' '; height:100%; background-color:[cl:progressBarCur, red];";
 $def[".igk-progressbar-cur"]="height:16px; {sys:dispb} [sysbgcl:progressCursorBackground]";
 $def[".igk-progressbar-cur.igk-pull-top"]="{sys:dispb, fitw}";
@@ -571,7 +571,7 @@ $m[".igk-xlg-only"]="display:block !important;";
 $m[".igk-xlg-dispn"]="display:none;";
 $def[".igk-php"]="font-family: consolas, courier new; color:#555; min-width:600px; min-height:200px; display:inline-block;";
 $def[".igk-cleara:after"]="clear:both; content:' '; display:table;";
-$def[".igk-row"]="padding:0px; margin-left: -10px; margin-left:-10px;";
+$def[".igk-row"]="padding:0px; margin-left: -10px; margin-right:-10px;";
 $def[".igk-row-cell"]="float:left;";
 $def["igk-container .igk-row:not(:first-child)"]="margin-top: {$pad22};";
 $def[".igk-row:after"]="{sys:clearb}";
@@ -928,3 +928,12 @@ if(igk_sys_env_production()){
 } 
 $prop["buttonPadding"] = "8px"; 
 
+
+
+$def[".igk-google-line-waiter"] = "{sys:no-overflow, fitw} height:4px; background-color:#e6e6e6";
+$def[".igk-google-line-waiter:after"] = "{sys:fith,posab, loc_l} width: 70%; content:' '; background-color:#4BC281; [anim:google-linewaiter-infinite 3s infinite, google-linewaiter-infinite2 3s infinite]";
+
+
+// combobox
+$def[".igk-winui-combobox + ul"] = "background-color:#444; color: white";
+$def[".igk-winui-combobox + ul > li"] = "padding:4px;";

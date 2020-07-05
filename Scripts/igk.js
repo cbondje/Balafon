@@ -209,7 +209,7 @@ Name:balafon.js
 		
 		
 		
-		// console.debug(c);
+		
 		if (igk.validator.isUri(uri)){
 			if ((window.location.protocol != c.protocol)|| 
 				(window.location.host != c.host)
@@ -281,13 +281,13 @@ Name:balafon.js
 				if (this.isReady()){
 					 _o.data = xhr.responseText;
 				
-					// console.debug("entries : finish");
-					// console.debug(callback);
+					
+					
 					// _o.data = _data;
 					callback(_o);
-					// console.debug("baba + "+uri);
+					
 				}else{
-					// console.debug("ready state:  "+xhr.status + " vs "+ xhr.readyState);
+					
 					if ((xhr.readyState==4) && (xhr.status !=200)){
 						_o.data = null;
 						_o.errorCode = xhr.status;					 
@@ -322,10 +322,10 @@ Name:balafon.js
 		ob.addClass("bdr-1");
 		ob.reg_event("load", function (evt) {
 	
-			// console.debug("loaded : "+mimetype + " : "+uri);
-			// console.debug(ob.o.type);
+			
+			
 			// igk.show_prop(ob.o);
-			// console.debug(evt);
+			
 			// // if (!ob.o.contentDocument || ob.o.contentDocument.readyState!="complete")
 			// // return;
 			var _o = {
@@ -338,8 +338,8 @@ Name:balafon.js
 			if (callback) {
 				var o = ob.o;
 				if (ob.o.data == "") {
-					// console.debug("load error data is empty " + ob.o + "but uri is " + uri);
-					// console.debug(ob.o.contentDocument);
+					
+					
 
 					var e = callback.error;
 					if (e)
@@ -373,8 +373,8 @@ Name:balafon.js
 		
 		}).reg_event("error", function (evt) {
 
-// console.debug("error append: "+igk.navigator.getFirefoxVersion());
-// console.debug(evt);
+
+
 			ob.remove();
 			var e = callback.error;
 			if (__loaded || (igk.navigator.isFirefox() && igk.navigator.getFirefoxVersion() >= 50)
@@ -388,9 +388,9 @@ Name:balafon.js
 				_promise.reject();				
 				return;
 			}
-			// console.error("error : 3333"+uri);
-			// console.debug("error load data .. _r_fc"+ob.o.readyState);
-			// console.error("/!\\  Error when try to load file :\"" + uri + "\" : " + ob.o.type);
+			
+			
+			
 			if (e)
 				e();
 			else if (callback) {
@@ -411,7 +411,7 @@ Name:balafon.js
 			// try{
 				
 			// catch(ex){
-				// console.debug("....failed to ad object to------------------------- ");
+				
 				// if (!_data_first){
 					// ob.o.data = uri;
 					// _body.prepend(ob);
@@ -467,7 +467,7 @@ Name:balafon.js
 			select: function (selector, item) {// select in expression
 				if (!item)
 					return null;
-				// console.debug("select expression ..."+selector +item);
+				
 				var pk = null;
 				var v_it = null;
 				var b = false;
@@ -583,7 +583,7 @@ Name:balafon.js
 						}
 						
 					}else{
-						// console.debug("resolv : "+h);
+						
 						var tb = h.split(" ");
 						h = tb[tb.length - 1];
 						uri = _readUri(h, 0);
@@ -643,12 +643,12 @@ Name:balafon.js
 						}
 						if ((_cidx = u.indexOf('@'))!=-1){
 							//for firefox
-							// console.debug(" DMD : contains :::: "+u.substr(_cidx+1));
+							
 							u = u.substr(_cidx+1);
 						}
-						// console.debug("for : "+tdb[idx]);
-						// console.debug("treat : "+u);
-						// console.debug("uri :"+u);
+						
+						
+						
 						stackinfo.push({
 							src:tdb[idx],
 							text: x,
@@ -665,7 +665,7 @@ Name:balafon.js
 					idx++;
 				}
 				
-				// console.debug(stackinfo);
+				
 				
 				if (stackinfo.length==1){
 					e = stackinfo[0];
@@ -675,7 +675,7 @@ Name:balafon.js
 				
 				
 				
-				// console.debug(ex.stack);
+				
 				// var tdb = (ex.stack+'').split('\n');
 				// var cidx = 1;
 				// var h = tdb[idx];
@@ -683,17 +683,17 @@ Name:balafon.js
 				
 				// if (/^Error/.test(h)){
 					// //ie and chrome promt Error tag on stack
-					// // console.debug("start as error");
+					
 					// cidx ++;
 					// h = tdb[cidx].trim();
-					// // console.debug("main :"+cidx+" :"+h);
+					
 					
 					// while( (cidx <= (tdb.length-1)) && /eval code/.test(h)) {//edge evaluation colode
 						// cidx++;
-						// // console.debug("for evaluation code : "+h);
+						
 						// h = tdb[cidx].trim();
 					// }
-					// // console.debug("-----------------------"+h);
+					
 					// if(h.startsWith("at")){
 						// e = _readChromeUri(h);
 						// return e;
@@ -724,12 +724,12 @@ Name:balafon.js
 					// }
 
 				// }
-				// // console.debug(e);
+				
 			// } else {
 				// //old safari does not support stack property
-				// console.debug(ex);
-				// console.debug(ex.toString());
-				// console.error("[BJS] - No 'stack' property found for Exception");
+				
+				
+				
 				// return null;
 			// }
 		}
@@ -752,8 +752,8 @@ Name:balafon.js
 	function igk_item_inherit_class(p, n) {
 		var q = n;
 		while (q) {
-			// console.debug("for : "+ q);
-			// console.debug("cl : "+ q.className);
+			
+			
 			if (igk_item_match_class(p, q)) {
 				return !0;
 			}
@@ -972,7 +972,7 @@ Name:balafon.js
 		if (typeof (win) == 'undefined') {
 			throw 'win is not defined';
 		}
-		// console.debug(a);
+		
 		var _fileSrc = (d && d.fileSrc) || igk_getCurrentScript().src;
 		if ((_fileSrc == "") && (_iswin)) {
 			_fileSrc = "@" + m_LibScript;
@@ -980,8 +980,8 @@ Name:balafon.js
 			// throw new Error("script is not in script tag or dynamically call code. " + a+ " is win ?"+_iswin);
 			// }
 			// catch(e){
-			// console.debug(StackTrace.fromError(e));
-			// console.debug(e);
+			
+			
 			// }
 			// return null;
 		}
@@ -1016,9 +1016,9 @@ Name:balafon.js
 					// fullname: n,
 					// hierarchie:,
 					getParent: function () {
-						// console.debug("parent  : ");
-						// console.debug(n);
-						// console.debug(mps);
+						
+						
+						
 						return this.hierarchie.getParent();
 					},
 					getType: function () {
@@ -1117,7 +1117,7 @@ Name:balafon.js
 	}
 	// register getComputedStyle if not defined
 	if (typeof (getComputedStyle) == IGK_UNDEF) {
-		// console.debug("define a custom computed style");
+		
 		createNS("window", {
 			getComputedStyle: function (item, selector) {
 
@@ -1262,7 +1262,7 @@ Name:balafon.js
 			case "auto":
 				if (cibling && cibling.parentNode) {
 					var v = igk_getPixel($igk(cibling.parentNode).getComputedStyle(property));
-					// console.debug("--parent pixel : "+v);
+					
 					// d=v *(d /100.0);
 					return v;
 				}
@@ -1282,10 +1282,10 @@ Name:balafon.js
 								return o;
 								break;
 							case "%":
-								// console.debug("get percent value");
+								
 								if (cibling && cibling.parentNode) {
 									var v = igk_getPixel($igk(cibling.parentNode).getComputedStyle(property));
-									// console.debug("parent pixel : "+v);
+									
 									d = v * (d / 100.0);
 									return d;
 								}
@@ -1440,8 +1440,8 @@ Name:balafon.js
 					}
 				};
 				
-				// console.debug("no prope ...."+name);
-				// console.debug(target[name]);
+				
+				
 				if (igk && igk.navigator && !igk.navigator.isSafari())
 					target[name] = t;
 			}
@@ -1664,13 +1664,13 @@ Name:balafon.js
 			return;
 
 		// TODO: PRELOAD IMAGe Failed on configuration pages
-		// console.debug("preload call "+node);
+		
 
 		function __preload() {
 			var v_timg = node.getElementsByTagName("igk-img");
 			if (!v_timg || (v_timg.length <= 0)) {
-				// console.debug("no item found");
-				// console.debug($igk(node).getHtml());
+				
+				
 				return;
 			}
 			var v_tab = new Array();
@@ -1701,7 +1701,7 @@ Name:balafon.js
 						var j = source.attributes[x];
 						if (j.name == "src") continue;
 						try {
-							// console.debug("copy atttribute "+ j.name +"="+j.value);
+							
 							dest.setAttribute(j.name, j.value);
 						}
 						catch (Exception) {
@@ -1710,13 +1710,13 @@ Name:balafon.js
 					}
 				}
 			};
-			// console.debug("preload image");
-			// console.debug("length: "+v_timg.length);
+			
+			
 			var i = 0;
 			for (; i < v_tab.length; i++) {
 				// new Image();// 
 				var src = v_tab[i].getAttribute("src");
-				// console.debug("src: "+i+ " : "+v_tab[i].getAttribute("src"));
+				
 				if (src) {
 					v_cimg = document.createElement("img");
 					v_cimg.source = v_tab[i];
@@ -2106,7 +2106,7 @@ Name:balafon.js
 		// get parent node
 		var node = n || window.igk.getParentScriptByTagName('div');
 		var node = $igk(n || window.igk.getParentScriptByTagName('div'));
-		// console.debug("remove powered");	
+		
 		igk.ready(function(){
 		var q = $igk(".igk-powered-viewer").last();
 		
@@ -2157,7 +2157,7 @@ Name:balafon.js
 						// igk_debug_t('igk_init_powered', 'no cibling node found');
 				// }
 				// else
-					// console.debug("no ctrl found for powered manager");
+					
 			// });
 		// }
 	
@@ -2279,7 +2279,7 @@ Name:balafon.js
 		// format: function(n){
 			// if (typeof(_R[n]) == "undefined")
 				// return n;
-			// console.debug("argument length "+arguments.length);
+			
 			// format string
 			// var txt_ = _R[n];
 			// return txt_;
@@ -2428,13 +2428,13 @@ Name:balafon.js
 							break;
 					}
 				}
-					// console.debug(ruri);
-					// console.debug(luri);
+					
+					
 				
 				_opts.uri = ruri+'/'+luri;
 				_opts.request = '/'+luri;
-				// console.debug(_opts);
-				// console.debug(_NS.baseUriDomain());
+				
+				
 				// throw new Error("b");
 				
 			}else {
@@ -2469,7 +2469,7 @@ Name:balafon.js
 			var _loc = igk.system.io.getdir(uri);
 			var _uri = igk.resources.getlang(_loc, _lang); 
 
-			// console.debug("loadLangRes :::::: "+_uri);
+			
 			// error.apply(this);
 			// return null;
 			var _promise = {
@@ -2498,7 +2498,7 @@ Name:balafon.js
 
         }
         catch (ex) {
-			// console.debug("error :::: not support await ");
+			
             _getRes = function () {
                 // var _ext = igk.navigator.isIE() ? ".ejson" : ".json";//because of mime type        
                 var _ext = ".json"; // get data will get from ajx of mime type        
@@ -2513,9 +2513,9 @@ Name:balafon.js
 						}
 					});
 				}else{
-					// console.info("__getResIE : ObjectDemand");
+					
 					igk.system.io.getData(_uri, function (o) {
-						// console.info("__getResIE : result");
+						
 						if (e.__then__ && o.data && o.data.length > 0)
 							e.__then__(JSON.parse(o.data));
 						else if (e.__catch__)
@@ -2542,7 +2542,7 @@ Name:balafon.js
 					callback(o);
                     // var _res = o;
                     if (_promise.__then) {
-						// console.debug("invoke then");
+						
                         _promise.__then();
                     }
                     // igk.winui.events.raise(_sysnode, "resLoaded");
@@ -2560,7 +2560,7 @@ Name:balafon.js
 		getlang: function(_loc, t){
 			if (!t)
 				t = igk.dom.html().getAttribute("lang") || igk.navigator.getLang();
-			// console.debug("loading lang : "+_loc);
+			
 			return _loc+'/Lang/res.'+t+'.json';
 		}
 	});
@@ -2777,7 +2777,7 @@ Name:balafon.js
 				// return;
 				// }
 
-				// console.debug("SSD : "+u);
+				
 				__jsload[u] = 1;
 				__jstoload[u] = 0;
 				var sc = document.createElement("script");
@@ -2954,7 +2954,7 @@ Name:balafon.js
 			$igk(d).select('script').each_all(function () {
 				var s = this.o.src;
 				var r = this.getAttribute("reloaded");
-				// console.debug("reload "+this.getAttribute("reloaded"));
+				
 				if (s && (!(s in __jsload) || r)) {
 					if (r) {
 						l.push(s);
@@ -3085,13 +3085,13 @@ Name:balafon.js
 					var c = n.childNodes.length;
 					var i = 0;
 					var m = null;
-					// console.debug(c);
-					// console.debug(n);
+					
+					
 					// copy node
 
 					while (c > 0) {
 						m = n.childNodes[i];
-						// console.debug(m.nodeType);
+						
 						switch (m.nodeType) {
 							case 8:// comment
 							case 3:// empty text node
@@ -3130,7 +3130,7 @@ Name:balafon.js
 						eCb.apply(ob);
 					}
 					// alert("error for : "+u);
-					// console.debug("/!\\error: "+u);		
+					
 					f.apply(document, [{
 						error: 1,
 						data: evt,
@@ -3139,7 +3139,7 @@ Name:balafon.js
 					ob.remove();
 				});
 				ob.reg_event("load", function (evt) {
-					// console.debug("load data "+u + " " +document.domain);
+					
 					// alert(ob.o.contentDocument.readyState);
 					try {
 						if (!ob.o.contentDocument || ob.o.contentDocument.readyState != "complete")
@@ -3490,7 +3490,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 		},
 		unregister: function () {
 			// unregister functions. delete mecanism
-			// console.debug("unregister ... call unregisters functions");
+			
 			// unregevents 
 			var m_unregfuncs = this.getUnregfunc();
 
@@ -3955,7 +3955,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 			if (!this.isSr()) {
 				var e = this.o[n];
 				if (e != null) {
-					// console.debug(e);
+					
 					// ei make some error
 					if (arguments.length > 1) {
 						igk.appendProperties(e, arguments[1]);
@@ -4001,7 +4001,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 					}
 					else {
 						// this will raise UnpsecifiedEventTypeError in ie8 not supporting createEvent Method
-						// console.debug("document can't create event");
+						
 						// alert(" disp "+document.dispatchEvent);
 						// e= document.createEventObject(window.event); // document.createEventObject(q.o);
 						// igk_appendProp(e,p);
@@ -4017,7 +4017,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 						this.raiseEventCreated(n);
 					}
 					catch (e) { // failed to add property 
-						// console.debug(typeof(this.o));
+						
 					}
 				}
 			}
@@ -4123,7 +4123,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 						}
 					}
 					ch = __appendClass(this, tab) || __rmClass(this, rm);
-					// console.debug(rm);
+					
 				}
 
 				if (ch) {
@@ -4155,7 +4155,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 						for (var i = 0; i < tab.length; i++) {
 							s = tab[i];
 							//if(s == classname){
-								// console.debug("removing "+s + " vs "+ classname);
+								
 								index = cur.indexOf(s); 
 								if(index != -1){
 									delete(cur[index]);
@@ -4194,7 +4194,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 							}
 							o += tab[i] + " ";
 							// cur = cur.replace(_rg, '');		
-							// console.debug("add "+o);
+							
 						}
 						cur = o;
 						var h = igk.system.string.trim(cur);
@@ -4391,7 +4391,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 			function __init_scroll() {// on 		
 				var offsetParent = it.getscrollParent();
 				if (offsetParent == null) {
-					// console.debug("!. offsetParent is null");
+					
 					return null;
 				}
 				return new (function () {
@@ -4410,7 +4410,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 					v_ttloc.y += it.o.scrollTop;
 					v_ttloc.x += it.o.scrollLeft;
 					var v_tloc = it.getscrollLocation(offsetParent.o);
-					// console.debug("scroll to : "+v_loc + " ?? "+v_ttloc + " :: "+v_tloc + " "+property.orientation);						
+					
 					// fixed data
 					// if((v_loc.y==v_tloc.y) &&(v_loc.x==v_tloc.x))
 					// {
@@ -4420,7 +4420,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 					if (!property.orientation) {
 						// auto detect orientation 
 						var pp = it.getOffsetScreenLocation(self);
-						// console.debug(pp);
+						
 						orientation = pp.orientation;
 					}
 					else {
@@ -4439,7 +4439,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 						d = endscroll - startpos;// - 0;// v_loc.x;
 						q.dir = (d > 0) ? "goright" : "goleft";
 
-						// console.debug("d: "+d + " scrollleft "+it.o.scrollLeft);
+						
 					}
 					// calculate the normal step	
 					distance = Math.abs(d);
@@ -4523,12 +4523,12 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 				igk.winui.unreg_event(this, 'transitionend', __transition_end);
 			};
 			if (ts && trf) {// item support animation and transitions
-				// console.debug("use transition to scroll");
+				
 				scrollprop = __init_scroll();
 				counter = 0;
 				if (scrollprop && scrollprop.distance != 0) {
 					if (!scrollprop.getTransform) {
-						// console.debug(scrollprop);
+						
 						throw ("[IGK] no scrollprop.getTransform function found");
 						return;
 					}
@@ -4631,7 +4631,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 					if (d == 0) {
 						return !0;
 					}
-					// console.debug("disstance is "+d + " pso "+this.startpos);
+					
 					var v_o = this.offsetParent != null ? this.offsetParent : this.getOwner();
 					var y = 0;
 					var end = false;
@@ -4641,10 +4641,10 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 
 
 					this.pos = y;// Math.min(this.startpos +d ,y);		
-					// console.debug("position : " +(this.getEllapsed()/this.getDuration()));
+					
 					end = (this.getEllapsed() / this.getDuration()) >= 1.0;
 					// (y- this.startpos)==d);// d( this.pos - d);(this.pos >=this.startpos +d);							
-					// console.debug("up^date ::: end ??? "+this.startpos+"  "+end);
+					
 					switch (this.dir) {
 						case "godown":
 							v_o.scroll(0, y);// this.startpos + this.pos); 							
@@ -4653,7 +4653,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 							v_o.scroll(0, y);// this.startpos - this.pos); 							
 							break;
 						case "goright":
-							// console.debug("go right "+y);
+							
 							v_o.scroll(y, 0);// (this.startpos + this.pos,0); 
 							break;
 						case "goleft":
@@ -4700,10 +4700,10 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 			var q = this;
 
 			function __function_end(evt) {
-				// console.debug(evt);
-				// console.debug(q.o);
+				
+				
 				if (evt.target == q.o) {
-					// console.debug("end remove "+q.getComputedStyle("transitionProperty"));
+					
 					if (typeof (n) == "function")
 						n.apply(q);
 					else {
@@ -4748,7 +4748,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 			return this;
 		}
 		, istouchable: function () {// utility
-			// console.debug(navigator.maxTouchPoints);
+			
 			if (
 				(typeof (this.o.ontouchstart) != IGK_UNDEF) &&
 				(typeof (this.o.ontouchend) != IGK_UNDEF) &&
@@ -4864,7 +4864,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 			}
 			else {
 				try {
-					// console.debug(v);
+					
 					this.o.innerHTML = v;
 					if (evalScript) { 
 						igk.system.evalScript(this.o);
@@ -5126,11 +5126,11 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 				var o = "horizontal";
 				while (q && (q != igk.dom.body().o)) {
 					if (q == t.o) {
-						// console.debug(this.getScreenLocation());
-						// console.debug(v2);
-						// console.debug(v4);
+						
+						
+						
 						if (t.o.offsetWidth < v2.x) {
-							// console.debug("horienation");
+							
 						}
 						if (((v4.x == 0) && (v4.y != 0)) || (t.o.offsetHeight < v2.y)) {
 							o = "vertical";
@@ -5428,7 +5428,7 @@ function __igk_event(q,p,n){
 				return s;
 			}
 			return null;
-			// console.debug(lst['igk-xsl-node']);
+			
 		},
 		createText: function (s) {
 			return __igk(document.createTextNode(s));
@@ -5438,7 +5438,7 @@ function __igk_event(q,p,n){
 			return igk.createText(o.textContent);
 		},
 		clearTimeout: function (timeout) {
-			// console.debug("clear timeout "+timeout);
+			
 			window.clearTimeout(timeout);
 		},
 		eval: igk_eval,
@@ -5453,8 +5453,8 @@ function __igk_event(q,p,n){
 			var uri = null;
 			var p = m_scriptTag;// get the current script tag
 			if (p) {
-				// console.debug(window.location.pathname);
-				// console.debug(p.getAttribute("src"));
+				
+				
 				uri = igk.constants.http_scheme + document.domain + igk_getdir(window.location.pathname + "") + "/" + igk_getdir(p.getAttribute("src")) + "/" + filename;
 			}
 
@@ -5587,7 +5587,7 @@ function __igk_event(q,p,n){
 		},
 		eval_all_script: igk_eval_all_script,
 		init_document: function (s) { //initialize document 
-			// console.debug("init_document");		
+			
 			igk.ctrl.init_controller();
 			igk_preload_image(document);
 			igk_preload_anim_image(document);
@@ -5701,7 +5701,7 @@ function __igk_event(q,p,n){
 			if (item.querySelectorAll) {
 				var p = item.querySelectorAll(pattern);
 				for (var i = 0; i < p.length; i++) {
-					// console.debug(i);
+					
 					v_sl.push($igk(p[i]));
 				}
 			}
@@ -5717,10 +5717,10 @@ function __igk_event(q,p,n){
 			// query selector detection
 			var v_list = pattern.split(',');
 			if (v_list.length > 1) {
-				// console.debug("multy selection not implement");
+				
 				for (var sm = 0; sm < v_list.length; sm++) {
 					var v_cq = igk.select(item, v_list[sm]);
-					// console.debug(v_cq.getCount());
+					
 					if (v_cq.getCount() > 0) {
 						v_sl.load(v_cq);
 					}
@@ -5756,9 +5756,9 @@ function __igk_event(q,p,n){
 			if (igk.system.string.startWith(pattern, '^')) {
 				//+ parent search 
 				// sample : ^div
-				// console.debug("search "+pattern);
+				
 				var spattern = pattern.split(" ");
-				// console.debug("s pattern : "+spattern);
+				
 				pattern = spattern[0];
 
 				if ((/^\^[\w\-_]+$/.exec(pattern))) {
@@ -5798,7 +5798,7 @@ function __igk_event(q,p,n){
 				// search on next sibling
 				var h = $igk(item).o.nextSibling;
 				var spattern = pattern.substr(1).split(" ");
-				// console.debug("s pattern : "+spattern);
+				
 				pattern = spattern[0];
 				while (h) {
 					if (igk.css.isMatch(h, pattern)) {
@@ -5854,7 +5854,7 @@ function __igk_event(q,p,n){
 						break;
 				}
 
-				// if(igk.DEBUG) console.debug("test   "+pattern);
+				
 				if (!item.getElementsByTagName) {
 					// return empty selection. becoause of item not supported getElementsByTagName
 					if (igk.DEBUG) console.debug("/!\ selection will failed because element not support getElementByTagName");
@@ -5899,7 +5899,7 @@ function __igk_event(q,p,n){
 					}
 					else if ((/^\>[\w\-_]+$/.exec(pattern))) {// search by child node tagname
 						// if(igk.DEBUG) 
-						// console.debug("test 2  "+pattern);
+						
 						pattern = pattern.substring(1);
 						exp = new RegExp("(" + pattern + ")", "i");
 						for (var i = 0; i < v_it.length; i++) {
@@ -5910,7 +5910,7 @@ function __igk_event(q,p,n){
 						}
 					}
 					else {
-						// console.debug("vsearch "+pattern);
+						
 						if ((igk.constants.regex.idSearch.exec(pattern))) {// search in id
 							fid = !0;
 							pattern = pattern.substring(1);
@@ -5923,15 +5923,15 @@ function __igk_event(q,p,n){
 							}
 						}
 						else {
-							// console.debug("load :::::"+pattern);
-							// if(igk.DEBUG) console.debug("test 3  "+pattern);
+							
+							
 							var m = igk_select_exp(pattern);
 							// if(pattern==".igk-body#query-s-r"){
-							// console.debug(m);
-							// console.debug(m.getCount());
+							
+							
 							// m.debug=1;
 							// }
-							// console.debug(m);
+							
 							if (m != null) {
 								m.select(v_sl, item);
 							}
@@ -5992,15 +5992,15 @@ function __igk_event(q,p,n){
 		
 			//executing script name
 			
-			// console.debug("is develop ? "+igk.isdevelop());
-			// console.debug(igk.getScriptLocation().location.split('/').pop()); //.split('.').pop());
+			
+			
 			
 		
 			var s = igk_getCurrentScript();
 			var t = igk.system.array.slice(arguments, 1);
 			igk.ready(function () {
 				// script :  readyinvoke
-				// console.debug("ready invoke : "+n);
+				
 				var ns = igk.system.getNS(n);
 				if (typeof (ns) == 'function') {
 					var bck = m_scriptNode;
@@ -6019,7 +6019,7 @@ function __igk_event(q,p,n){
 			// if (typeof(document.DOMContentLoad) == 'undefined'){
 			// return;
 			// }
-			// console.debug("ok");
+			
 			priority = igk.isDefine(priority, 10);
 			var k = "igk.event.contentLoad";
 			var g = igk.system.getNS(k) || igk.system.createNS(k, { isRegister: 0 });
@@ -6052,9 +6052,9 @@ function __igk_event(q,p,n){
 			function _async_call(e, document, i){
 				//@i : name of the measurement function for 'warning duration violation' raise in chrome
 				 // if (i=="f5")
-					  // console.debug(e);
+					  
 				setTimeout(function(){
-					// console.debug(i);
+					
 					e.apply(document);
 				},10);
 			}
@@ -6286,9 +6286,9 @@ function __igk_event(q,p,n){
 			if (typeof (element.igk) == igk.constants.undef) {
 				// build element igk property
 				(function () {
-					// console.time("initprop");
+					
 					this.igk = new __igk_nodeProperty(element);
-					// console.timeEnd("initprop");
+					
 					this.igk.$ = window.igk;
 
 				}).apply(element);
@@ -6455,12 +6455,12 @@ function __igk_event(q,p,n){
 				}
 			},
 			publish: function (n, prop) {
-				// console.debug("publish : "+n);		
+				
 				var e = m_publisher[n];
 				if (typeof (e) == IGK_UNDEF)
 					return;
 				// m_names.push(n);
-				// console.debug("Name is "+this.name);
+				
 				// array copy
 				var tab = [];
 				for (var i = 0; i < e.s.getCount(); i++) {
@@ -6484,7 +6484,7 @@ function __igk_event(q,p,n){
 					}
 				}
 				else {
-					// console.debug("register non statics "+obj.constructor.getName());
+					
 					for (var i in ns) {
 						if (obj.constructor == ns[i])
 							return i;
@@ -6604,11 +6604,11 @@ function __igk_event(q,p,n){
 
 			var q = $igk(igk.getParentScript()); 
 			
-			// console.debug("try to load "+uri);
+			
 			(function () {
 				igk.io.file.load(uri, function (d) {
-					// console.debug("loading ..."+uri);
-					// console.debug(d);
+					
+					
 					if (!d.error) {
 						var c = igk.createNode("dummy");
 						var d =  igk.utils.getBodyContent(d.data);
@@ -6639,14 +6639,14 @@ function __igk_event(q,p,n){
 				// igk.dom.body().prepend(ob);
 				// ob.reg_event("error",function(evt){			
 				// igk.show_notify_error("Loading ...","check update failed");	
-				// console.debug("error");
+				
 				// });
 
 				// ob.reg_event("load",function(evt){
 				// if(!ob.o.contentDocument || ob.o.contentDocument.readyState!="complete")
 				// return;	
 				// var data=getNodeData(ob.o.contentDocument);
-				// console.debug(uri+ " : " +data);
+				
 				// ob.remove();
 				// q.remove();
 
@@ -6684,7 +6684,7 @@ function __igk_event(q,p,n){
 					}
 					var k = igk.utils.getBodyContent(d.data);
 					var m = igk.createNode('div').setHtml(k);
-					// console.debug(m.o);// .data
+					
 					var uk = m.select('ruri').first().o.innerHTML;
 					// var not=igk.winui.notify.getView();
 
@@ -6996,7 +6996,7 @@ function __igk_event(q,p,n){
 			// h=(h / 255 * 360) % 360;
 			// s=(s / 255);
 			// v=(v / 255);
-			// // console.debug(h + " "+ s + " " + v);
+			
 			// if(s==0)
 			// {
 			// // If s is 0,all colors are the same.
@@ -7072,7 +7072,7 @@ function __igk_event(q,p,n){
 	}
 	createNS("igk.system.colors", {
 		toFloatArray: function (n) { // convert expression color to float array of argb
-			// console.debug("request "+n);
+			
 			var c = 0;// igk.system.colors[n.toLowerCase()];
 			if (igk.isInteger(n)) {
 
@@ -7234,9 +7234,9 @@ function __igk_event(q,p,n){
 
 	function __dom_get_root(e) {
 		var r = null;
-		// console.debug("get root for "+e);
+		
 		// igk.DEBUG=1;
-		// console.debug("get root for "+__igk(e).select(">>"));
+		
 		// igk.DEBUG=0;	
 		$igk(e).select(">>").each(function () {
 			if (this.o.nodeType == 1) {
@@ -7245,7 +7245,7 @@ function __igk_event(q,p,n){
 			}
 			return true;
 		});
-		// console.debug("r is  "+r);
+		
 		return r;
 
 	};
@@ -7305,12 +7305,12 @@ function __igk_event(q,p,n){
 			var cs = 1;
 			ns = ns || "http://www.w3.org/1999/xhtml";
 
-			// console.debug("create doc "+typeof(document.implementation.createHTMLDocument) );
+			
 			if (document.implementation) {
 				// if(typeof(document.implementation.createHTMLDocument) !=igk.constants.undef){
 				// d=document.implementation.createHTMLDocument('');
 				// }else 
-				// console.debug("create ....");
+				
 				if (typeof (document.implementation.createDocument) != igk.constants.undef) {
 					// in ie createDocument create an XMLDocument object
 					d = document.implementation.createDocument(null, t, null);
@@ -7319,7 +7319,7 @@ function __igk_event(q,p,n){
 			} else {
 
 				if (igk.navigator.$ActiveXObject()) {
-					// console.debug("create document with activexobject");
+					
 					d = __new_activeDocumentObject(); // new ActiveXObject("htmlfile");
 					cs = 0; // disable the register event location
 
@@ -7328,7 +7328,7 @@ function __igk_event(q,p,n){
 
 			if (d) {
 				if (cs && !d.load) {
-					// console.debug("phase 1"+("load" in d));
+					
 					d.load = function (l, callback) {
 						m_cb = callback;
 						var fc = d.async ? function (xhr) {
@@ -7337,7 +7337,7 @@ function __igk_event(q,p,n){
 							e.initEvent("readystatechange", false, false);
 							e.readyState = xhr.readyState;
 							e.xhr = xhr;
-							// console.debug(xhr.status);
+							
 							if ((xhr.readyState == 4) && (xhr.status == 200)) {
 								__replace_xml_doc(d, xhr.responseText);
 								if (m_cb)
@@ -7357,7 +7357,7 @@ function __igk_event(q,p,n){
 					d.async = 1;
 				}
 				else if (d.load && d.async) {
-					// console.debug("phase 2: "+("load" in d));
+					
 					var bfc = d.load;
 					// replace load function					
 					d.load = function (l, callback) {
@@ -7366,7 +7366,7 @@ function __igk_event(q,p,n){
 						return d;
 					};
 					// __igk(d).reg_event("load",function(){
-					// console.debug("loaded");
+					
 					// });
 					__igk(d).reg_event("readystatechange", function () {
 						if (m_cb && ((d.readyState == "complete") || (d.readyState == 4))) {
@@ -7433,37 +7433,37 @@ function __igk_event(q,p,n){
 				var xsltProcessor = new XSLTProcessor();
 				xsltProcessor.importStylesheet(xsl);
 				ex = xsltProcessor.transformToFragment(xml, document);
-				// console.debug("xml");
-				// console.debug(xml);
-				// console.debug(ex);
+				
+				
+				
 				if (ex) {
 					// get root node
 					ex = __dom_get_root(ex);
 				}
 
 			} else if (igk.navigator.$ActiveXObject() || (xml.responseType == "msxml-document")) {
-				// console.debug("transform with active x document");
+				
 				if (xml.responseType == "msxml-document") {
 					ex = xml.transformNode(xsl);
 				} else {
-					// console.debug("bef:");
+					
 					var srcTree = new ActiveXObject("Msxml2.DOMDocument.6.0");
 					srcTree.async = false;
 					// You can substitute other XML file names here.
-					// console.debug("xml -------------------------");
-					// console.debug($igk(xml.documentElement).getOuterHtml());				
-					// console.debug("?xml -----------------------");
+					
+					
+					
 					// srcTree.documentElement=xml.documentElement;
-					// console.debug("?xml -----------------------"+srcTree.documentElement);
-					// console.debug("ddd  : "+$igk(xml.documentElement).getOuterHtml());
+					
+					
 					srcTree.loadXML($igk(xml.documentElement).getOuterHtml());
 
 
 					if (srcTree.parseError.errorCode != 0)
 						console.debug("srcTree : error code " + srcTree.parseError.errorCode + " : " + srcTree.parseError.reason);
 
-					// console.debug(srcTree.innerHTML);
-					// console.debug("g:");
+					
+					
 					var xsltTree = new ActiveXObject("Msxml2.DOMDocument.6.0");
 					xsltTree.async = false;
 					xsltTree.validateOnParse = false;
@@ -7495,15 +7495,15 @@ function __igk_event(q,p,n){
 				xsltTree.async = false;
 				xsltTree.validateOnParse = false;
 				xsltTree.loadXML(sxsl);
-				// console.debug(xsltTree.xml);
+				
 				// xsltTree.replaceChild(xsl.documentElement,xsltTree.xml);
 				if (xsltTree.parseError.errorCode != 0) {
 					console.debug("xsl : error code " + xsltTree.parseError.errorCode + " : " + xsltTree.parseError.reason);
 					return 0;
 				}
-				// console.debug(xsltTree.xml);
+				
 
-				// console.debug("k:"+typeof(srcTree.transformNode));
+				
 				ex = igk.dom.loadXML(srcTree.transformNode(xsltTree));
 			}
 			else {
@@ -7514,7 +7514,7 @@ function __igk_event(q,p,n){
 					var xsl = igk.dom.loadXML(sxsl);
 					var xml = igk.dom.loadXML(sxml);
 					if (xsl && xml) {
-						// console.debug(document.implementation.createDocument('http://www.w3.org/1999/xhtml','msxml-document', null));
+						
 						var dsl = document.implementation.createDocument(null, 'xml', null);// msxml-document');
 						// 	  alert(dsl.documentElement);
 						dsl.replaceChild(xsl, dsl.documentElement);
@@ -7526,13 +7526,13 @@ function __igk_event(q,p,n){
 
 						xsltProcessor.importStylesheet(dsl);
 						ex = xsltProcessor.transformToFragment(dxl, document);
-						// console.error("kjd"+ex);
-						// console.debug(ex);
+						
+						
 
 						// if(ex){
 						// get root node
-						// console.debug(ex.innerHTML);
-						// console.debug(ex);
+						
+						
 						// ex=__dom_get_root(ex);
 						// }
 					}
@@ -7548,18 +7548,18 @@ function __igk_event(q,p,n){
 				doc.async = true;
 				doc.load && doc.load(u_xml,
 					function (evt) {
-						// console.debug(doc);
+						
 						var doc2 = igk.dom.createDocument();
 						doc2.async = false;
 						doc2.validateOnParse = false;
 						var xsl = doc2.load(u_xsl);
 						var _ch = igk.navigator.isChrome() || igk.navigator.isSafari();
-						// console.debug(doc.validateOnParse);
-						// console.debug("doc2>>>>");
-						// console.debug(doc2);
-						// console.debug(doc2.validateOnParse);
-						// console.debug("xsl>>>>");
-						// console.debug(xsl);
+						
+						
+						
+						
+						
+						
 						if (_ch) {
 							var dh = null;
 							// correct html tag tag because ignore by those navigator implementation
@@ -7573,7 +7573,7 @@ function __igk_event(q,p,n){
 
 						if (_ch && (ex.tagName.toLowerCase() == "igk-html")) {
 							ex = $igk(ex).replaceTagWith("html").o;
-							// console.debug(ex.getElementsByTagName("table"));
+							
 							// igk.DEBUG=1;
 							// order is important
 							$igk(ex).select(" igk-th,igk-td,igk-tr,igk-table").each(function () {
@@ -7582,7 +7582,7 @@ function __igk_event(q,p,n){
 							});
 							// igk.DEBUG=0;
 						}
-						// console.debug("ex");
+						
 						ex && callback(ex);
 					}
 				);
@@ -7613,14 +7613,14 @@ function __igk_event(q,p,n){
 			if ("DOMParser" in window) {
 				var g = (new window.DOMParser()).parseFromString(s, "text/xml");
 				r = __dom_get_root(g);
-				// console.debug(r);
+				
 				if (r && r.tagName.toLowerCase() == "parsererror") {
 					return null;
 				}
 			}
 			else {
 				// TODO
-				// console.error("/!\\ NO DOMParser");
+				
 				r = igk.dom.activeXDocument();
 				r.load(s);
 
@@ -7655,12 +7655,12 @@ function __igk_event(q,p,n){
 					var opts = igk.JSON.parse(_y.getAttribute("xslt:data"));
 					var rgx = 0;
 					if (opts) {
-						// console.debug(opts);
+						
 						for (var s in opts) {
 							rgx = new RegExp("%" + s + "%", "g");
 							_dxsl = _dxsl.replace(rgx, opts[s]);
 						}
-						// console.debug(_sxsl);
+						
 					}
 
 
@@ -7744,7 +7744,7 @@ function __igk_event(q,p,n){
 			parse: function (js, target) {
 				var q = null;
 				source = target;
-				// console.debug(opt);
+				
 				try {
 					if ((js != null) && (typeof (js) == "string"))
 						q = eval('(' + js + ')');
@@ -7814,7 +7814,7 @@ function __igk_event(q,p,n){
 		}
 		// else{
 		// igk.winui.notify.showErrorInfo("Error ","Item not found : "+s + " | "+q);
-		// q.each_all(function(){ console.debug(this.o); });
+		
 		// }
 		return null;
 	};
@@ -8098,10 +8098,10 @@ function __igk_event(q,p,n){
 			var s = e.stack + "";
 			var t = s.trim().split("\n");
 
-			// console.debug("stack info ");
-			// console.debug(e.stack);
 			
-			// console.info();
+			
+			
+			
 			// var tt=t[c];
 			// get chain list
 			var li = [];
@@ -8112,21 +8112,21 @@ function __igk_event(q,p,n){
 			for (var i = 0; i < t.length; i++) {
 				if (regex.test(t[i])) {
 					li.push(t[i]);
-					// console.debug("push "+t[i]);
+					
 				}
 			}
 			c = c || li.length - 1;
 			var tt = li[c];
 			if (tt) {
 				var uri = regex.exec(tt)[0];
-				// 	console.debug(regex.exec(tt));				
-				// console.debug("uri:"+uri);
+				
+				
 				_m.module_src = uri;// module start source
 				_m.dir = uri.substring(0, uri.lastIndexOf("/"));
 			}
 			_m.stack = e.stack;
 			_m.stack_list = li;
-			// console.debug(_m);
+			
 
 		} else {
 			// can't get stack in strick mode or SAFARI < 6
@@ -8145,7 +8145,7 @@ function __igk_event(q,p,n){
 	// define the a module script. set the root module
 	function igk_defineModule(n) {
 		m_currentModule = n;
-		// console.debug("module : "+n);
+		
 		//try {
 		var e = new Error();
 		
@@ -8244,8 +8244,8 @@ function createObject (T, t, args){
 				return null;
 				
 			}
-			// console.debug("out");
-			// console.debug(this.getCurrentNS());
+			
+			
 			// var tn = '';
 			var p = null;
 			if(typeof(tn) == 'object'){
@@ -8303,8 +8303,8 @@ function createObject (T, t, args){
 			});
 			fc.__fullname__ = ns.fullname + '.'+tn;
 			// [x].data = "base";
-			// console.debug([x]);			
-			// console.debug( fc instanceof igk.system.class); 
+			
+			
 			
 			
 			
@@ -8325,7 +8325,7 @@ function createObject (T, t, args){
 			if (typeof(p)=='string'){
 				var r = igk.system.getNS(p);
 				if (r == null){
-					// console.error ("[igk] - parent not found : "+p); 
+					
 				
 					var bfc = fc;
 					
@@ -8504,7 +8504,7 @@ function createObject (T, t, args){
 						switch (v.length) {
 							case 8:
 								var result = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(v);
-								// console.debug("res : v : "+v +" : "+result[2]);
+								
 								return Math.round(parseInt(result[1], 16) * 100 / 255) / 100;
 								break;
 							case 4:
@@ -8720,8 +8720,8 @@ function createObject (T, t, args){
 						callback(q);
 					}
 				});
-				// console.debug("Module : "+(_m.dir + n));
-				// console.debug(_m.dir);
+				
+				
 				
 				q.o.src = _m.dir + n;
 			}
@@ -9037,12 +9037,12 @@ function createObject (T, t, args){
 				document.head.appendChild(n);
 			}
 			else {// internet explorer 8 no get head property defined for document
-				// console.debug("no head ");
+				
 				igk.ready(function () {
 					// set the head
 					document.head = document.getElementsByTagName("head")[0];
 					document.head.appendChild(n);
-					// console.debug("no head fff" + document.getElementsByTagName("head")[0])
+					
 					
 				});
 			}
@@ -9056,7 +9056,7 @@ function createObject (T, t, args){
 		cancel: igk_animate_cancel
 	});
 
-	// console.debug("failed to create event : on ie event "+n);
+	
 	function _CustomEvent(event, params) {
 		params = params || { bubbles: false, cancelable: false, detail: undefined };
 		var evt = document.createEvent('CustomEvent');
@@ -9283,7 +9283,7 @@ function createObject (T, t, args){
 		};
 	}
 	
-	// console.debug("padding " + "b".padStart(10, '0'));
+	
 	
 	
 	
@@ -9572,7 +9572,7 @@ function createObject (T, t, args){
 
 	// used to animate . callback must return 1 in oder to continue animation
 	function igk_animate (callback) {
-		// console.debug("no webkit animation implementation");
+		
 		var animFrame = igk.animation.getAnimationFrame();
 		var animObj = {
 			cancel: function () {
@@ -9593,7 +9593,7 @@ function createObject (T, t, args){
 
 		// used to animated rendering scene
 
-		// console.debug(animFrame);
+		
 		if (typeof (animFrame) == "undefined") {
 			__doCall();
 		}
@@ -9642,7 +9642,7 @@ function createObject (T, t, args){
 			register: function (item, method, func) {
 				if (!item || !func || (typeof (func) != IGK_FUNC) || (m_key == item)) // last to avoid recursion
 					return;
-				// 	console.debug("register : "+method);
+				
 				m_key = item;
 				var i = m_obj.indexOf(item);
 				var o = null;
@@ -9660,9 +9660,9 @@ function createObject (T, t, args){
 					var dic = m_value.getItemAt(i);
 					if (dic) {
 						if (dic.containKey(method)) {
-							// console.debug("already contains method : "+method + " "+dic.getItem(method).funcs.getCount());			
+							
 							dic.getItem(method).funcs.add(func);
-							// console.debug("already contains method : "+method + " "+dic.getItem(method).funcs.getCount());	
+							
 						}
 						else {
 							var o = { target: item, funcs: new igk.system.collections.list(), method: method };
@@ -9674,7 +9674,7 @@ function createObject (T, t, args){
 				m_key = null;
 			},
 			unregister: function (item, method, func) {
-				// console.debug("unregister > "+method);
+				
 				if (m_unreg)
 					return
 				m_unreg = 1;
@@ -9693,8 +9693,8 @@ function createObject (T, t, args){
 					dic = m_value.getItemAt(i);
 					var tab = dic.getValues();
 					if (method) {
-						// console.debug("remove method func "+method);
-						// console.debug(dic);
+						
+						
 						// remove all method registrated
 						if (typeof (func) == 'undefined') {
 							for (var t = 0; t < tab.length; t++) {
@@ -9708,7 +9708,7 @@ function createObject (T, t, args){
 								}
 							}
 						} else {
-							// console.debug("unregister method ::: ");
+							
 							for (var t = 0; t < tab.length; t++) {
 								if (tab[t].method == method) {
 									var c = tab[t].funcs.toArray();
@@ -9731,7 +9731,7 @@ function createObject (T, t, args){
 					for (var t = 0; t < tab.length; t++) {
 						// 							
 						var c = tab[t].funcs.toArray();
-						// console.debug("unregister ....  "+ o + " " + tab[t].method +" "+c.length+ " "+c[0]);
+						
 						for (var x = 0; x < c.length; x++) {
 							igk.winui.unreg_event(o, tab[t].method, c[x]);
 						}
@@ -9740,7 +9740,7 @@ function createObject (T, t, args){
 					m_value.removeAt(i);
 				}
 				// else{
-				// console.debug("item not found "+i);
+				
 				// }
 				m_unreg = 0;
 				m_ukey = null;
@@ -9901,7 +9901,7 @@ function createObject (T, t, args){
 				// note: offsetParent is only available for item with  display not equal to 'none'
 				var q = item.offsetParent;//  || item.parentNode;
 				var cq = 0;
-				// console.debug(typeof(q) +" : : "+q + " "+item.parentNode);
+				
 				while ((q != null) && (q.tagName.toLowerCase() != 'body')) {
 						cq = $igk(q);
 					if (q.offsetParent == null){
@@ -9911,14 +9911,14 @@ function createObject (T, t, args){
 				
 					
 					if (cq.fn.hasVScrollBar() || cq.fn.hasHScrollBar()){
-						// console.debug("--------------------contains scrollbar ....");
-						// console.debug(cq.getHeight()+" vs "+cq.o.offsetHeight+ " vs "+ cq.o.scrollHeight);
-						// console.debug(cq.getWidth()+" vs "+cq.o.offsetWidth + " vs " + cq.o.scrollWidth);
+						
+						
+						
 						break;
 					}
 					q = q.offsetParent;// || q.parentNode;
 				}
-				// console.debug("offset tagname "+q.tagName);
+				
 				return q;
 			}
 			return null;
@@ -9949,11 +9949,11 @@ function createObject (T, t, args){
 			if (!evt || !touchv[evt.type])
 				return igk.math.vector2d(0, 0).clone();
 			var i = index || 0;
-			// console.debug(evt);
-			// console.debug(i + " "+evt.touches.length);
+			
+			
 			var s = ((evt.touches.length > 0) && (i < evt.touches.length)) ? evt.touches.item(i) : null;
 
-			// console.debug("s is "+s);
+			
 			if (s == null)
 				return igk.math.vector2d(0, 0).clone();
 			
@@ -9961,7 +9961,7 @@ function createObject (T, t, args){
 			loc.x = s.pageX - (isNaN(loc.x) ? 0 : loc.x);
 			loc.y = s.pageY - (isNaN(loc.y) ? 0 : loc.y);
 
-			// console.debug(loc.x +" x "+ loc.y);
+			
 			return loc;
 		},
 		// >@@get if the child has a mouse input
@@ -10056,16 +10056,16 @@ function createObject (T, t, args){
 			return igk.winui.unreg_system_event(window, method, func, useCapture);
 		},
 		reg_system_event: function (item, method, func, useCapture) {
-			// console.debug("reg system event ... "+method);
+			
 			if (item == null)
 				return !1;
 
 
-			// console.debug(item.igk);
-			// console.debug("on method "+ method + " : "+typeof(item[method]));			
+			
+			
 			// igk.debug.assert( method=="webkittransitionend","register please handle transitionend");
 			if (typeof (item[method]) == igk.constants.undef) {
-				// console.debug("reg "+method + "="+ typeof(item[method]));
+				
 				if (item["on" + method] + "" == igk.constants.undef) {
 					var e = igk.winui.events.exceptionEvent;
 					if (e.contain(method)) {
@@ -10085,10 +10085,10 @@ function createObject (T, t, args){
 				if (igk.DEBUG) {
 					console.debug("attachevent " + method);
 				}
-				// console.debug("used attachEvent for "+method);		
+				
 				if (igk.navigator.IEVersion() == 7) {
 					// 
-					// console.debug("used attachEvent for win7 "+method);	
+					
 					var ftp = function (evt) {
 						evt.preventDefault = function () {
 						};
@@ -10117,7 +10117,7 @@ function createObject (T, t, args){
 				return !0;
 			}
 			else {
-				// console.debug("used bb for "+method);	
+				
 				var m = item["on" + method];
 				if (typeof (m) == "function") {
 					item["on" + method] = function () {
@@ -10135,7 +10135,7 @@ function createObject (T, t, args){
 		reg_event: function (item, method, func, useCapture) {// global	
 
 			// if (item == document){
-			// console.debug("document "+method);
+			
 			// }
 			var g = method.split(' ');
 			var s = 0;
@@ -10205,7 +10205,7 @@ function createObject (T, t, args){
 			// >@@ eventContextOwner: the context o
 			// >@@ property used to register 
 			if ((properties == null) || (eventContextOwner == null) || (igk_getRegEventContextByOwner(eventContextOwner) != null)) {
-				// console.debug("/!\\ No properties or eventContext to register or the element already host the event object");				
+				
 				return null;
 			}
 			function __eventContextObject(eventContextOwner, properties) {
@@ -10280,7 +10280,7 @@ function createObject (T, t, args){
 					}
 					else if (s instanceof eventCibling) {
 						// unregister event cibling
-						// console.debug("unregister event cibling");
+						
 						igk.winui.unreg_event(s.target, s.name, s.func);
 					}
 				};
@@ -10331,7 +10331,7 @@ function createObject (T, t, args){
 						igk.winui.reg_event(v_cibling.target, v_cibling.name, v_cibling.func);
 
 						var key = name + ":" + target;
-						// console.debug(key);
+						
 						if (typeof (m_col[key]) == igk.constants.undef)
 							m_col[key] = v_cibling;
 						else {
@@ -10581,7 +10581,7 @@ function createObject (T, t, args){
 				console.debug("is already a class control " + q.fn.controlName);
 				return;
 			}
-			// console.debug("init all m_class_control   --- "+m_rg);
+			
 			if (!m_rcg)
 				m_rcg = new RegExp("((^| )+)(" + m_rg + ")($| )");
 			var t = this.className;
@@ -10590,9 +10590,9 @@ function createObject (T, t, args){
 
 
 				var m = m_rcg.exec(t);
-				// console.debug('test '+t);	
-				// console.debug(m);
-				// console.debug(m[2]);
+				
+				
+				
 				var n = m[3];
 				var g = m_class_control[n];
 				if (!g) {
@@ -10685,7 +10685,7 @@ function createObject (T, t, args){
 			var c = this;
 			var b = m_class_control;
 			var fc = null;
-			// console.debug(c);
+			
 			for (var i in b) {
 				fc = b[i].data.func;
 				if (fc) {
@@ -10736,14 +10736,14 @@ function createObject (T, t, args){
 		var m_dlgx = []; // list of opened dialog
 		var m_d = 0; // demand for showing a dialog
 		function __setupview(div) {
-			// console.debug("doik : "+div.getHeight());
+			
 			div.setCss({
 				"height": "auto" // auto by default
 			});// .forceview();	
-			// console.debug("doik after : "+div.getHeight());		
+			
 			var _h = div.getHeight();
 			var p = -(_h / 2.0);
-			// console.debug("doik after : "+p);
+			
 			var pn = div.getParentNode();
 			var t = 0;// to get half position
 			var h = div.getHeight() + "px";
@@ -10751,13 +10751,13 @@ function createObject (T, t, args){
 
 			if (pn) {
 				t = pn.getHeight() / 2.0;
-				// console.debug("parent node define");
+				
 			}
 			else {
 				t = div.getTop();
 			}
 			if ((t + p) < 0) {
-				// 	console.debug("fset ");
+				
 				// p=-t;
 				if (pn.getHeight() < div.getHeight()) {
 					h = pn.getHeight() + "px";
@@ -10765,7 +10765,7 @@ function createObject (T, t, args){
 				}
 
 			}
-			// console.debug("top : "+p);
+			
 			div.setCss({
 				"marginTop": p + "px"
 			});
@@ -10798,7 +10798,7 @@ function createObject (T, t, args){
 			// div.setCss({
 			// "marginTop": p+"px"
 			// });		
-			// console.debug( h + " ?="+div.getComputedStyle('height'));			
+			
 			// if(h!=div.getComputedStyle('height'))
 			// {
 			// ========				
@@ -10890,7 +10890,7 @@ function createObject (T, t, args){
 		createNS("igk.winui", {
 			showDialog: function (id) {
 				var s = $igk(id);
-				// console.debug(s);
+				
 				if (s != null) {
 					__show_dialog(s);
 				}
@@ -10947,32 +10947,36 @@ function createObject (T, t, args){
 		var _keyns = createNS("igk.winui.inputKeys",{
 		});
 		var _keys={
-			Enter:13, Escape:27
+			Enter:13, 
+			Escape:27,
+			Left:37, Up:38, Right:39, Down:40
 		};
 		function _defkey(k){
 			return function (){
 					return _keys[k];
 				};
 		};
+		function _getCode(event){
+			return event.charCode || event.keyCode;
+		};
 		
 		for(var k in _keys){
 			igk_defineProperty(_keyns, k,  {get:_defkey(k)});
-
 		}
 		//register key event
 		createNS("igk.winui", {
 			keyPress: function (event, code, callback) {
-				var c = event.charCode || event.keyCode;
+				var c = _getCode(event); 
 				if (c == code) {
-					callback();
+					callback(event);
 					event.preventDefault();
 					event.stopPropagation();
 				}
 			},
 			keyUp: function (event, code, callback) {
-				var c = event.keyCode;
+				var c = _getCode(event);
 				if (c == code) {
-					callback();
+					callback(event);
 					event.preventDefault();
 					event.stopPropagation();
 				}
@@ -11447,8 +11451,8 @@ function createObject (T, t, args){
 	(function () {
 		createNS("igk.winui.history", {
 			push: function (uri, data, t) {
-				// console.debug(" push history [ "+uri);
-				// console.debug(" push history [ "+data.uri);
+				
+				
 				if (typeof (window.history.pushState) == "function") {
 					window.history.pushState(data, t, uri);
 				}
@@ -11476,9 +11480,9 @@ function createObject (T, t, args){
 				// u=e.state.uri;
 				// if(u){
 				// igk.ajx.get(u,null,igk.ajx.fn.append_to_body);
-				// console.debug(u);
+				
 				// }else{
-				// console.debug("uri is empty ");
+				
 				// }
 			}
 
@@ -11487,7 +11491,7 @@ function createObject (T, t, args){
 			// if(u){
 			// u+="/default/goback";
 			// igk.ajx.get(u,null,igk.ajx.fn.append_to_body);
-			// // console.debug(u);
+			
 			// }
 
 			// }
@@ -11647,7 +11651,7 @@ function createObject (T, t, args){
 				v = 0;
 			};
 			function __q_click(evt) {
-				// console.debug("click");
+				
 				q.close();
 			};
 			function __q_scroll(evt) {
@@ -11664,7 +11668,7 @@ function createObject (T, t, args){
 			};
 
 			$igk(id).reg_event("click", function (evt) {
-				// console.debug("click "+v);
+				
 				if (v == 0) {
 					q.show();
 					evt.preventDefault();
@@ -11733,7 +11737,7 @@ function createObject (T, t, args){
 					switch (evt.keyCode) {
 						case 27: // escape
 							if (igk.winui.framebox.currentFrame == null) {
-								// console.debug("exist "+m.length);
+								
 								var t = m.pop();
 								if (p.complete) {
 									p.complete.apply(this, [evt]);
@@ -12761,8 +12765,8 @@ function createObject (T, t, args){
 		function __ajx_setExtraData(ajx, extradata) {
 			extradata = extradata || m_exajxdata;
 			if (extradata) {
-				// console.debug(extradata);
-				// console.debug(ajx);
+				
+				
 				igk_appendProp(ajx, extradata);
 				if('responseType' in extradata)
 				{
@@ -12823,15 +12827,15 @@ function createObject (T, t, args){
 							}
 						}
 						else {
-							// console.error("mark");
-							// console.log(n.innerHTML);
-							// console.debug("// preloading image");
+							
+							
+							
 							igk_preload_image(n); // preload n
 							// igk_eval_all_script(n);					
 							var ct = $igk(n).select("script");
-							// console.debug("// init scripts image");
+							
 							ct.each(function () {
-								// console.debug("do some");
+								
 								var _t = this.getAttribute("type");
 								// var _s=this.getAttribute("src"); 
 								if (_t == 'text/balafonjs') {
@@ -13020,8 +13024,8 @@ function createObject (T, t, args){
 									};
 									break;
 								case 'object':
-									// console.debug("register object ");
-									// console.debug(method);
+									
+									
 									var fc = method.complete ? function () { method.complete.apply(method, [q.xhr, method]); } : null;
 									q.xhr.onreadystatechange = null;// ,fc;
 									q.xhr.onload = fc;// method.complete? function(){ method.complete.apply(method, [q.xhr, method]);  }; // method.complete;
@@ -13054,14 +13058,14 @@ function createObject (T, t, args){
 
 						// this.xhr.setRequestHeader("Content-Type","multipart/form-data");   		
 						// this.xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=iso-8859-1");
-						// console.debug("d");
+						
 						// TODO: help microsoft to create a xml in result
-						// console.debug("====:::"+this["ajx.xhr"]);
+						
 						if (this["ajx.xhr"]) {
 							igk_appendProp(this.xhr, this["ajx.xhr"]);
 						}
 						// this.xhr.responseType="msxml-document";
-						// console.debug("after : "+this.xhr.responseType);
+						
 						// default request header
 						__initheader.apply(this);
 						if (postargs) {
@@ -13134,7 +13138,7 @@ function createObject (T, t, args){
 					return this.post(uri, param, func, true);
 				},
 				get: function (uri, param, func, async, savestate, extradata) {
-					// console.debug("get "+uri);
+					
 					// extradata used to init ajx object
 					var ajx = new igk.ajx.ajx(m_ajx_monitorListener);
 					if (typeof (async) == igk.constants.undef)
@@ -13236,6 +13240,8 @@ function createObject (T, t, args){
 							if (this.isReady()) {
 								lw.remove();
 								$igk(form).select(".actions").rmClass("dispn");
+							} else if (xhr.readyState ==4){
+								lw.remove();
 							}
 						};
 					}
@@ -13246,8 +13252,7 @@ function createObject (T, t, args){
 						{
 							var obj = 0;
 							var data = 0;
-							if (obj = form.getAttribute("form-data")){
-								console.debug(typeof(obj));
+							if (obj = form.getAttribute("form-data")){ 
 								data = obj;
 								if(typeof(data) =='object')
 									data = JSON.stringify(data);
@@ -13287,9 +13292,7 @@ function createObject (T, t, args){
 						}
 					}
 					else {
-						// if(igk.winui.lineWaiter){
-						// igk.winui.lineWaiter.prependTo(form);
-						// }
+						 
 						for (var i = 0; i < form.length; i++) {
 							e = form.elements[i];
 
@@ -13301,8 +13304,7 @@ function createObject (T, t, args){
 									}
 									break;
 								case "file":
-									if (e.files.length > 0) {
-										// igk.ajx.uploadInputFile(e,uri,true,null,null);
+									if (e.files.length > 0) { 
 										frmData.append(e.id, e.files[0]);
 									}
 									break;
@@ -13355,7 +13357,7 @@ function createObject (T, t, args){
 								j('[BJS] failed to get : ' + uri);
 							};
 					
-							// console.debug("body not found---------------");
+							
 							igk.ajx.get(uri, null, function(xhr){
 								console.debug("for : "+ xhr.status);
 								if (this.isReady()){
@@ -13374,7 +13376,7 @@ function createObject (T, t, args){
 						fc.error = function () { 						
 							j(new Error('[BJS] - objdata failed: ' + uri+ ', '+mimetype));
 						};
-						 // console.debug("get DATA .... ");
+						 
 						igk.system.io.getData(uri, fc, mimetype);
 					}); 
 					return p;
@@ -13426,7 +13428,7 @@ function createObject (T, t, args){
 						console.debug("Error : " + v_ajx.xhr.statusText);
 						console.debug(v_ajx.xhr);
 
-						// console.debug(evt);
+						
 					};
 
 					// async registration function
@@ -13465,14 +13467,14 @@ function createObject (T, t, args){
 					xhr.setRequestHeader("Content-Type", "charset=utf-8; boundary=" + Math.random().toString().substr(2));
 					//"Content-type","multipart/form-data; charset=utf-8; boundary=" + Math.random().toString().substr(2));
 
-					// console.debug(" send ");
-					// console.debug(m);		
-					// console.debug(file);
-					// console.debug(file.type);
+					
+					
+					
+					
 					var r = file;
 					var filer = false;
 					if (m != 'blob') {
-						// console.debug("send async");
+						
 						if (typeof (FileReader) != IGK_UNDEF)
 							filer = new FileReader();
 						if (!filer) {
@@ -13482,7 +13484,7 @@ function createObject (T, t, args){
 						reader = filer;
 						reader.onprogress = function (evt) {
 							console.debug("progress read");
-							// console.debug("file read progress uploaded ...." + Math.round(((evt.loaded/evt.total) * 100))+"%");
+							
 						};
 						reader.onload = function (evt) {
 							// igk.winui.notify.showMsg("<div class=\"igk-notify igk-notify-default\">"+ igk.html.getDefinition(xhr)+"</div>");
@@ -13508,13 +13510,13 @@ function createObject (T, t, args){
 						// xhr.send(data);
 					}
 					else {
-						// console.debug("blob meth "+async);
+						
 						if (r.slice) {
 							bob = r.slice(0, file.size);
 							// important to avoid
 							try {
-								// console.debug("send data .... ");
-								// console.debug(bob);
+								
+								
 								xhr.send(bob);
 							}
 							catch (ex) {
@@ -13538,7 +13540,9 @@ function createObject (T, t, args){
 					igk.appendProperties(this, {
 						loadstart: function (evt) { igk.publisher.publish('sys://ajx/loadstart', { evt: evt }); },
 						loadend: function (evt) { igk.publisher.publish('sys://ajx/loadend', { evt: evt }); },
-						loadprogress: function (evt) { igk.publisher.publish('sys://ajx/loadprogress', { evt: evt }); }
+						loadprogress: function (evt) {
+							 igk.publisher.publish('sys://ajx/loadprogress', { evt: evt }); 
+						}
 					});
 				}
 		});
@@ -13562,12 +13566,7 @@ function createObject (T, t, args){
 
 		igk_appendProp(igk.ajx.ajx.prototype,			
 			{
-				isReady: function () {
-					
-						// console.debug("status : "+this.xhr.status);
-						// console.debug("readyState : "+this.xhr.readyState);
-						// console.debug("statusText : "+this.xhr.statusText);
-						
+				isReady: function () { 
 						return ( this.xhr.readyState == 4) && (this.xhr.status == 200); 
 							// (
 							// (( this.xhr.readyState == 4) && (this.xhr.status == 200)) 
@@ -13579,7 +13578,7 @@ function createObject (T, t, args){
 				setResponseTo: function (q, unregister) { // q is node
 						if (q && (typeof (q.innerHTML) != IGK_UNDEF)) { // set response to node
 							if (q == igk.dom.body().o) {
-								// console.debug("replace body..	");
+								
 								this.replaceBody();
 							}
 							else {
@@ -13656,7 +13655,7 @@ function createObject (T, t, args){
 				}
 			
 				,appendResponseTo: function (q) {
-								// console.debug("appendResponseTo " + q);
+								
 								var s = igk.createNode("dummy");
 								s.setHtml(this.xhr.responseText);
 								var f = s.o.firstChild;
@@ -13696,7 +13695,7 @@ function createObject (T, t, args){
 			var r = '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">';
 
 			var g = igk.createNode("soap:Body", ns);
-			// console.debug(g.o);
+			
 			// return;
 			var m = data.method;
 			if (m) {
@@ -13712,17 +13711,17 @@ function createObject (T, t, args){
 			// <soap:Body><getCountry><name>abc</name></getCountry></soap:Body></soap:Envelope>
 			r += g.o.outerHTML;
 			r += "</soap:Envelope>";
-			// console.debug(r);
+			
 			igk.ajx.post(data.uri, r, function (xhr) {
 				if (this.isReady()) {
-					// console.debug(xhr.status);
+					
 
 					var q = igk.createNode("div");
 					q.setHtml(xhr.responseText);
 					if (xhr.status == 200) {
 						if (m && data.ready) {
 							var g = q.getElementsByTagName(m + "_result")[0];
-							// 	console.debug(g);
+							
 							data.ready({ data: g.innerHTML });
 						}
 					} else {
@@ -13758,7 +13757,7 @@ function createObject (T, t, args){
 			}
 		};
 		function _initnode(c) {
-			// console.debug("_initnode :  "+$igk(c).select(".igk-svg-lst").getCount());
+			
 			_bready(c);
 			// _rootDepth++;		
 			// evaluate all script in this 
@@ -13770,8 +13769,8 @@ function createObject (T, t, args){
 			// call ready on node
 			igk.ajx.fn.nodeReady(c);
 			// _rootDepth = Math.max(0, --_rootDepth);
-			// console.debug("rootdepth:"+_rootDepth);
-			// console.debug("call ");
+			
+			
 			var p= igk.publisher;
 			p.publish("sys://node/init", {
 				target: c, rootDepth: 0// _rootDepth 
@@ -13857,7 +13856,7 @@ function createObject (T, t, args){
 			getfortarget: function (u, t) {
 				// u:uri
 				// t:target
-				// console.debug("get for starget "+u+" "+t);
+				
 				if (!t)
 					return;
 				igk.ajx.get(u, null, function (xhr) { if (this.isReady()) { this.setResponseTo(t); igk.ajx.fn.initnode(t); } });
@@ -13884,9 +13883,9 @@ function createObject (T, t, args){
 							igk.ajx.fn.replace_or_append_to(igk.dom.body().o).apply(this, [xhr]);
 						}
 						else {
-							// console.debug(document.readyState + " "+xhr + $igk(host).getConfig("igk:callAttribBindingData") + xhr.responseText);
-							// console.debug("replace content");
-							// console.debug(xhr.responseURL);
+							
+							
+							
 							this.setResponseTo(host, true);
 						}
 					}
@@ -13964,7 +13963,7 @@ function createObject (T, t, args){
 					if (st) {
 						var t = $igk(st).first();
 						if (t) {
-							// console.debug("replace", t.o);
+							
 							var s = q.select(">>");
 							if (s.getCount() == 1) {
 								s.each(function () {
@@ -14024,7 +14023,7 @@ function createObject (T, t, args){
 
 
 								if (c.tagName && (c.tagName.toLowerCase() == 'igk-body') && ($igk(target).o == igk.dom.body().o)) {
-									// console.debug("replace ...");
+									
 									igk.dom.body().replaceWith(c);
 									igk.ajx.fn.initbody();
 									ct++;
@@ -14130,9 +14129,9 @@ function createObject (T, t, args){
 							// -- -
 							// because of the readyState will initialize all "component" on 'complete' no need to call init node
 							// -- -
-							// console.debug("binding node...."+q.c.innerHTML);
+							
 							// igk.ajx.fn.initnode(q.c);					
-							// console.debug(q.c);
+							
 							// igk.ajx.eval(q.c);	
 							// evaluate binding Attrib Data
 							// igk.ctrl.callBindAttribData(q.c);	
@@ -14544,7 +14543,7 @@ function createObject (T, t, args){
 		var __u = igk.constants.undef;
 
 		// var mut = new MutationObserver(function(e){
-		// console.debug(e[0].removedNodes);
+		
 		// });
 		// igk.ready(function(){
 		// mut.observe(igk.dom.body().o, {childList:true});
@@ -14592,17 +14591,17 @@ function createObject (T, t, args){
 							// tinyMCE.init({ selector: el.elements });
 						// });
 					// }
-					// console.debug(el);
+					
 					// var s = $igk(el.elements);
 					// if (s.getCount()==1)
 					// {
 					// if (s.first().isOnDocument()){
 					// igk.tinyMCE.init(el);
 					// }else{
-					// console.debug("not on document");
+					
 					// }
 					// }
-					// console.debug($igk(el.elements).first().isOnDocument());
+					
 				},
 				init: function (elements, op) {
 					// var prop={
@@ -14881,7 +14880,7 @@ function createObject (T, t, args){
 				}
 			}
 			// if (igk.BINDING)
-			// console.debug("kjkjkjkj :::: end "+cnf);
+			
 			// mark it as binding data
 			q.setConfig("igk:callAttribBindingData", 1);
 		}
@@ -15153,7 +15152,7 @@ function createObject (T, t, args){
 				// -------------------------------------------------------------------------
 				$igk(q).reg_event("change", __changez)
 					.reg_event("keyup", function (evt) {
-						// console.debug("key code" + evt.keyCode);
+						
 						var kc = evt.keyCode || 0;
 						switch (kc) {
 							case 37:// LEFT
@@ -15171,10 +15170,10 @@ function createObject (T, t, args){
 				// $igk(q).o.setAttribute("onchange","javascript: alert('value chagne'); ");		
 				// igk.data=q;
 				__changez();
-				// console.debug(t.o);
-				// console.debug(q.o);
-				// console.debug($igk(q.o).getParentBody());
-				// console.debug( $igk($igk(q.o).getParentBody()).select("#clInputType").first().o );
+				
+				
+				
+				
 				// alert("bad===="+$igk(q).getParentBody());		
 				if (q.o.form) {
 					// restore the default view
@@ -15184,7 +15183,7 @@ function createObject (T, t, args){
 						var i = s.first();
 						if (i) {
 							q.o.value = i.o.value;
-							// console.debug(q.o.selectedIndex);
+							
 							__changez();
 						}
 					});
@@ -15518,8 +15517,8 @@ function createObject (T, t, args){
 								v_t = 1;
 							}
 						}
-						// console.debug(stylelist);
-						// console.debug("value is "+v_prop.toString());
+						
+						
 						return v_prop.toString();
 
 						break;
@@ -15543,7 +15542,7 @@ function createObject (T, t, args){
 						rb.setCss({"display":"none", "clear":"both", "width":"auto"});
 						document.body.appendChild(rb.o);
 						for(var i in props){
-							// console.debug(i +" = "+rb.getComputedStyle(props[i]));
+							
 							domProp[i] = rb.getComputedStyle(props[i]);
 							if(i=="width"){
 								console.debug(i+" x = "+domProp[i] );
@@ -15551,7 +15550,7 @@ function createObject (T, t, args){
 						}
 						rb.remove();
 					}
-					// console.debug(domProp);
+					
 					return domProp;
 				},
 				getStyleValue: function (stylelist, n) {
@@ -15559,7 +15558,7 @@ function createObject (T, t, args){
 					// @stylelist: get width getComputedStyle function
 					// @n : the name of the property to get
 
-					// console.debug("n:"+ n + " : "+typeof(stylelist[n]));
+					
 					return __getStyleValue(stylelist, n);
 				},
 				getValue: function (item, name) {
@@ -15614,7 +15613,7 @@ function createObject (T, t, args){
 						// that notation work only for firefox
 						// item.setCss({[n]: value});						
 					}
-					// console.debug('name '+n +" : "+value);
+					
 					// setting real value
 
 					__setProperty(item, k);
@@ -15934,7 +15933,7 @@ function createObject (T, t, args){
 				}
 				igk.winui.reg_event(window, "load", __show);
 				if (!nc) {
-					// console.debug("reg keypress on document");
+					
 					if (igk.navigator.isFirefox()) {
 						igk.winui.reg_event(document, "keypress", fc);
 					} else {
@@ -15960,7 +15959,7 @@ function createObject (T, t, args){
 					if (!igk.is_readyRegister(__show)) {
 						_setupview();
 					}
-					// console.debug("ready on show");
+					
 					div.setCss({
 						"zIndex": "800",// set to top index
 						"top": "50%",
@@ -16040,7 +16039,7 @@ function createObject (T, t, args){
 			init: function () {// initialize a notification controler
 				// init this current node as a message box 
 				var q = $igk(igk.getParentScript());
-				// console.debug(q.o);
+				
 				if (q && (q.o.parentNode != null)) {
 					igk.ready(function () {
 						var t = q.select('.title').first().getHtml();
@@ -16150,21 +16149,21 @@ function createObject (T, t, args){
 				});
 
 				m_eventcontext.reg_event(m_q, "dragenter", function (evt) {
-					// console.debug("drag _____ enter");	
+					
 					evt.preventDefault();
 					if (m_properties && m_properties.enter) {
 						m_properties.enter.apply(q, arguments);
 					}
 				});
 				m_eventcontext.reg_event(m_q, "dragleave", function (evt) {
-					// console.debug("drag _____ leave");
+					
 					// m_target.setCss({backgroundColor:"red"});
 					if (m_properties && m_properties.leave) {
 						m_properties.leave.apply(q, arguments);
 					}
 				});
 				m_eventcontext.reg_event(m_q, "dragover", function (evt) {
-					// console.debug("drag _____ over");
+					
 					// allow drop on item 
 					// evt.dataTransfer.effectAllowed="copy";
 					evt.preventDefault();
@@ -16175,7 +16174,7 @@ function createObject (T, t, args){
 				});
 				// not define on firefox
 				// m_eventcontext.reg_event(m_q,"dragdrop",function(evt){
-				// console.debug("drag _____ dragdrop");
+				
 				// evt.preventDefault();
 
 				// });
@@ -16191,7 +16190,7 @@ function createObject (T, t, args){
 					}
 				});
 				// m_eventcontext.reg_event(m_q,"drag",function(evt){
-				// console.debug("drag _____ drag");				
+				
 				// });
 				// set up
 				m_target.setAttribute("draggable", false);
@@ -16271,10 +16270,10 @@ function createObject (T, t, args){
 			return !1;
 		},
 		close_all_frames: function () {
-			// console.debug("removing "+document.readyState);
+			
 			igk.winui.notify.closeAlls();
 			igk.ready(function () {
-				// console.debug("removing "+document.readyState);
+				
 				var t = [];
 				igk.dom.body().select(".igk-notify-box").each_all(function () {
 					var q = this;
@@ -16445,8 +16444,8 @@ function createObject (T, t, args){
 			
 			var loc = igk.resources.getlang(dir, _lang); // + "/Lang/res." + _lang + _ext; 			
 			// TODO: Load language resources files ::::: in productions
-			// console.debug("Core Lang : "+loc);
-			// console.debug("baseURI:  "+document.baseURI);
+			
+			
 			// return;
 			// alert("loading : "+loc);
 			
@@ -16483,7 +16482,7 @@ function createObject (T, t, args){
 			if(p.buzy){
 				return;
 			}
-			// console.debug(p);
+			
 			p.buzy = !0;
 			if (evt.dataTransfer && igk.system.array.isContain(evt.dataTransfer.types, "Files")) {
 				var _t = evt.dataTransfer.files.length;
@@ -16493,7 +16492,7 @@ function createObject (T, t, args){
 				var _r =  function (){
 					_t--;
 					
-					// console.debug("doning ...."+_t);
+					
 					if (_t<=0){
 						p.buzy =  null;
 						p.current = 0;
@@ -16526,7 +16525,7 @@ function createObject (T, t, args){
 				evt.preventDefault();
 				evt.stopPropagation(); 
 				// important must stop propagation 
-				// console.debug("uploading : to "+evt.target);
+				
 				var target = this;
 				var p = target.getProperties();
 				__sendFile(evt, target, p.async, p.update, p.start, p.progress, p.done);
@@ -16544,7 +16543,7 @@ function createObject (T, t, args){
 	// var m=igk.winui.dragdrop.init(ns_igk.getParentScript(),{
 	// uri: uri,
 	// update:function(evt){
-	// console.debug("drag _____ drop ___end");
+	
 	// avoid default action .. link click
 	// evt.preventDefault();
 
@@ -16591,11 +16590,11 @@ function createObject (T, t, args){
 				// var csv='a,b,c\n1,2,3\n';
 				var data = new Blob([v], { "type": t });
 				igk.dom.body().appendChild(a.o); // not require in IE 
-				// console.debug(n);
+				
 				a.o.download = n || "file.data";// f
 				a.o.href = URL.createObjectURL(data);
 				a.o.type = t;
-				// console.debug(a.o.href);
+				
 				a.o.click();
 				a.remove();
 				return 1;
@@ -16606,7 +16605,7 @@ function createObject (T, t, args){
 				var doc = new DOMParser();
 				var xml = doc.parseFromString(txt, type || "text/xml");
 				if (xml.documentElement.nodeName == "parsererror") {
-					// console.debug("parse error");		
+					
 					// document.write("Error in XML<br><br>" + xml.documentElement.childNodes[0].nodeValue);
 					// alert("Error in XML\n\n" + xml.documentElement.childNodes[0].nodeValue);
 					return false;
@@ -16631,56 +16630,56 @@ function createObject (T, t, args){
 		// xml.loadXML(xmltxt);
 		// igk_show_prop(xml);
 		// igk.io.xml.parseString("info");
-		// console.debug("done");
+		
 
 		// var doc =igk.dom.createDocument();// document.implementation.createDocument(null,"root",null);
-		// console.debug("doc as sync "+doc.async);
-		// console.debug(doc.async);
+		
+		
 		// doc.async=false;
 		// __igk(doc).reg_event("readystatechange",function(evt){
-		// console.debug("state ehangeddd >>> "+evt.readyState);
-		// console.debug(evt);
+		
+		
 		// if(evt.readyState==4){
-		// console.debug(doc.firstChild);
+		
 		// doc =igk.dom.createDocument();
 		// doc.async=false;
 		// xsl =doc.load("Lib/igk/Scripts/demo.xsl").firstChild;
 
-		// console.debug(xsl);
+		
 
-		// console.debug(evt.xhr.responseText);
+		
 		// }
-		// console.debug(evt);
+		
 		// });
-		// console.debug(doc);
+		
 		// igk.ready(function(){
 		
-		// console.debug(""+doc.firstChild);
-		// console.debug(doc.firstChild.innerHTML);
-		// console.debug(doc.firstChild.namespaceURI);
-		// console.debug(doc.firstChild.outerHTML);
-		// console.debug("done");
+		
+		
+		
+		
+		
 		// document.write(doc.firstChild.outerHTML);
 		// });
 		// doc.load && doc.load("Lib/igk/Scripts/data.xml",function(evt){
 
-		// console.debug(doc);
+		
 		// var doc2 =igk.dom.createDocument();
 		// doc2.async=false;
 		// var	xsl=doc2.load("Lib/igk/Scripts/demo.xsl");
 
-		// console.debug(xsl);
+		
 
 		// var ex=igk.dom.transformXSL(doc,xsl);
 
-		// console.debug("transform");
-		// console.debug(ex);
+		
+		
 
 		// var ex= doc.firstChild.transformNode(xsl);
-		// console.debug(ex);
-		// console.debug(evt.xhr.responseText);
+		
+		
 		// }
-		// console.debug(evt);
+		
 
 
 		// );
@@ -16689,7 +16688,7 @@ function createObject (T, t, args){
 
 
 		// doc.open("Lib/igk/Scripts/data.xml");		
-		// console.debug(igk.io.xsl.transformTxt(igk.io.xml.parseUri("Lib/igk/Scripts/data.xml"),igk.io.xml.parseUri("Lib/igk/Scripts/demo.xsl")));
+		
 
 	})();
 
@@ -16709,7 +16708,7 @@ function createObject (T, t, args){
 	function __global_ready(evt) {
 		igk.context = "global_ready";
 		if (document.readyState == "complete") {			
-			// console.debug("raise ready");
+			
 		    igk.ready(null, "readystatechange");
 		}
 	};
@@ -16726,7 +16725,7 @@ function createObject (T, t, args){
 			m_scriptNode = this.o;
 			(new Function(src)).apply(this);
 			m_scriptNode = _bck;
-			// console.debug("kj");
+			
 		}catch(e){
 			console.debug(src);
 			console.error(e); 
@@ -16835,12 +16834,12 @@ igk.ctrl.bindAttribManager("igk-js-fix-loc-scroll-width", function () {
 					return;
 				}
 				var animprop = {};
-				// console.debug("init "+s);
+				
 				if (s == 1) {
 					igk.appendProperties(animprop, { "right": "0px" });
 					if (g.fn.hasVScrollBar()) {
 						animprop.right = g.fn.vscrollWidth() + "px";
-						// console.debug(animprop);
+						
 					}
 				}
 				if (h == 1) {
@@ -16904,7 +16903,7 @@ igk.ctrl.bindAttribManager("igk-js-fix-loc-scroll-width", function () {
 		var q = this;
 		var k = this.getHtml();
 		__reg_key(k, q);
-		// console.debug("add prop");
+		
 		// q.reg_context_options("modkeyv",k);
 		// q.reg_context_options("delkeyv",k);
 
@@ -16915,14 +16914,14 @@ igk.ctrl.bindAttribManager("igk-js-fix-loc-scroll-width", function () {
 		q.reg_event("contextmenu", function (evt) {
 			evt.preventDefault();
 
-			// console.debug("context ...");
+			
 			var langctrl = igk.ctrl.getRegCtrl("c_l");
 			if (langctrl) {
 				var p = q.getParentCtrl();
 				var k = q.getHtml();
 				var pid = p ? p.o.id : '';
 
-				// console.debug(p.getAttribute("igk-type-id")+ " vs "+pid);
+				
 				igk.ajx.post(langctrl.getUri("mod_key&ajx=1"), "key=" + k + "&ctrl=" + pid,
 					igk.ajx.fn.replace_or_append_to_body,
 					true);
@@ -17002,7 +17001,7 @@ igk.ctrl.bindAttribManager("igk-js-fix-loc-scroll-width", function () {
 		});
 		if (t == null) {
 			// init node key
-			// console.debug("init igk-new-lang-key");
+			
 			__register_lang_key($igk(this));
 		}
 
@@ -17015,7 +17014,7 @@ igk.ctrl.bindAttribManager("igk-js-fix-loc-scroll-width", function () {
 				if (n != v) {
 					$igk('.igk-new-lang-key').each_all(function () {
 						if (this.getHtml() == n) {
-							// console.debug('text'+this.getHtml()); 
+							
 							// this.setHtml(v);
 							var idx = this.getAttribute("igk:data") || 0;
 							d && (v = d[idx]);
@@ -17051,7 +17050,7 @@ igk.system.createNS("igk.winui.navlink", {
 				// igk.dom.body()
 				var q = $igk(b).getscrollParent();
 				// igk.show_prop(b.o);					
-				// console.debug("nav click "+ q);
+				
 				if (q) {
 					q.scrollTo(b.o, {
 						duration: 500,
@@ -17187,7 +17186,7 @@ igk.ctrl.bindAttribManager("igk-js-anim-msover", function () {
 	});
 	// mouseenter not supported for safari window
 	// this.reg_event("mouseenter",function(){ 
-	// console.debug("mouseleave enter .... ");
+	
 	// });
 	// mouseout vs mouseleave . safari error
 	this.reg_event("mouseout", function () {
@@ -17401,7 +17400,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 		reg_event: function (item, func, useCapture) {	// click host handler
 			// if($igk(item).istouchable())
 			// {			
-			// console.debug("susppp touch");
+			
 			// igk.winui.reg_system_event(item,"click",__disable_func,useCapture);
 			// igk.winui.reg_system_event(item,"click",func,useCapture);
 			// return igk.winui.reg_system_event(item,"touchend",func,useCapture);
@@ -17558,7 +17557,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 				var o = igk.winui.unreg_system_event(item, "click", c.bind);
 				//console.debug("unbind event : "+ 
 				_unbindEventData(c, n);
-				// console.debug("unreg data : "+_unregEventData(e.n,item,func));
+				
 				return o;
 			}
 		}
@@ -17569,7 +17568,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 			reg_event: function (item, func, useCapture) {
 				var c = {
 					n: n, index: 0, i: item, h: 0, "func": func, bind: function (evt) {
-						// console.debug("type : "+evt.type);
+						
 
 						if (evt.type == mobe) {
 							if (useCapture && !useCapture.passive) {
@@ -17600,7 +17599,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 						o = igk.winui.unreg_system_event(item, mobe, c.bind);
 					}
 					// var o=igk.winui.unreg_system_event(item,"click",c.bind);				
-					// console.debug("unreg data : "+_unregEventData(e.n,item,func));
+					
 					return o;
 				}
 			}
@@ -17614,7 +17613,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 	// {
 	// reg_event: function(item,func,useCapture){
 	// var c={n:'igkTouchStart',index: 0,i: item,h: 0,"func":func,bind: function(evt){
-	// // console.debug("type : "+evt.type);
+	
 
 	// if(evt.type=="touchend"){
 	// evt.preventDefault();
@@ -17644,7 +17643,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 	// o = igk.winui.unreg_system_event(item,"touchstart",c.bind);
 	// }		
 	// // var o=igk.winui.unreg_system_event(item,"click",c.bind);				
-	// // console.debug("unreg data : "+_unregEventData(e.n,item,func));
+	
 	// return o;
 	// }
 	// }		
@@ -17731,7 +17730,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 	}
 	// register webkit event
 	function _reg_webkitevent(n) {
-		// console.debug("init reg event "+n);
+		
 		var kn = 'onwebkit' + n;
 		return {
 			reg_event: function (item, func, useCapture) {// trans
@@ -17739,10 +17738,10 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 				if (item == null)
 					return;
 
-				// console.debug("start ::: item "+item[kn]);
-				// console.debug("start ::: window "+window[kn]);
-				// console.debug("start ::: ?1: "+((typeof(item[kn]) !=igk.constants.undef)));
-				// console.debug("start ::: ?2: "+((item!=window) && (typeof(window[kn] ) !=igk.constants.undef)));
+				
+				
+				
+				
 
 				if ((typeof (item[kn]) != igk.constants.undef)
 					||
@@ -17750,7 +17749,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 				) {
 					// if(kn=="onwebkittransitionend"){
 					// window[kn]=function(){
-					// console.debug("transition end");
+					
 					// };
 					// return ;
 					// }
@@ -17775,7 +17774,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 				}
 				// register 		
 				if (item.addEventListener) {
-					// 	console.debug(n+'   :  ');
+					
 					item.addEventListener(n, func, useCapture);
 				}
 			},
@@ -17784,7 +17783,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 				if (item == null)
 					return;
 				if (webkit.contains(func)) {
-					// console.debug("remove "+ item + " "+webkit_e.getCount() + " x " +webkit.getCount());			
+					
 					if (item != window) {
 						if (!__unreg_item_func(item, func)) {
 							return;
@@ -17868,7 +17867,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 						return;
 					}
 				}
-				// console.debug(kn);
+				
 				igk.winui.reg_event(item, kn, func, useCapture);
 			},
 			unreg_event: function (item, func, useCapture) {
@@ -17878,10 +17877,10 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 				if (item == null)
 					return;
 
-				// console.debug("start ::: item "+item[kn]);
-				// console.debug("start ::: window "+window[kn]);
-				// console.debug("start ::: ?1: "+((typeof(item[kn]) !=igk.constants.undef)));
-				// console.debug("start ::: ?2: "+((item!=window) && (typeof(window[kn] ) !=igk.constants.undef)));
+				
+				
+				
+				
 				var kn = __gettabname(item, tab);
 				if (!kn) {
 					if (fallbackitem && (fallbackitem != item)) {
@@ -17947,12 +17946,12 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 		var m_eventContext = igk.winui.RegEventContext(this, $igk(this));
 		if (m_eventContext) {
 			m_eventContext.reg_window("resize", function () {
-				// console.debug(r.getHeight());
+				
 				q.setCss({ height: r.getHeight() + "px" });
 			});
 		}
 		// r.reg_event('resize',function(){
-		// console.debug("elememnt resize");
+		
 		// });
 		
 		// for(var s in r.o){
@@ -17975,7 +17974,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 
 		// return;
 		// }
-		// console.debug(' on '+s);
+		
 		// };
 
 		// })(s);
@@ -18105,8 +18104,8 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 			var noa = this.getAttribute("igk-ajx-form-no-autoreset");
 			var no_c = this.getAttribute("igk-ajx-form-no-close");
 			var ajxdata = igk.JSON.parse(this.getAttribute("igk-ajx-form-data"));
-			// console.debug(r_obj);
-			// console.debug(r  );
+			
+			
 			if (((r == 1) || r_obj) && (this.o.tagName.toLowerCase() == "form")) {
 
 				var b = r_obj && r_obj.targetid ? r_obj.targetid : self.getAttribute("igk-ajx-form-target");
@@ -18115,7 +18114,12 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 					evt.preventDefault();
 					evt.stopPropagation();
 					igk.ajx.postform(self.o, self.o.action, function (xhr) {
-						if (this.isReady()) {
+						 
+						if ((xhr.readyState ==4) &&  (xhr.status != 200)){ 
+							close(self);
+							return;
+						}
+						if (this.isReady()) { 
 							if (b) {
 								var k = null;
 
@@ -18262,7 +18266,7 @@ else
 				// 
 		// init system web item class registration 
 		// 
-		// console.debug("bas::::");
+		
 		// (function(){
 		// rollowner manager
 		// igk-roll-in-hover
@@ -18319,8 +18323,8 @@ else
 			// - -igk.getPixel(n.getComputedStyle("marginLeft"), n.o)
 			// - igk.getPixel(n.getComputedStyle("marginRight"), n.o);
 
-		// // console.debug(n.getComputedStyle("margin-left"));
-		// // console.debug(w);
+		
+		
 		// n.setCss({ width: w + "px" });
 
 	// };
@@ -18373,10 +18377,10 @@ else
 
 			// }
 			// else {
-				// console.debug("item not found " + c);
+				
 			// }
 		// } else {
-			// console.info("warning: no igk-fixed-action-bar-target attribute found");
+			
 		// }
 	// };
 
@@ -18388,7 +18392,7 @@ else
 	
 	igk.ready(function () {
 		// roll owner specification
-		// console.time("rollstart");
+		
 		igk.ctrl.registerReady(function (e) {
 			if (igk.system.regex.item_match_class("igk-roll-owner", this)) {
 				__init_roll_owner($igk(this));
@@ -18398,7 +18402,7 @@ else
 		new __bind_roll();
 
 
-		// console.timeEnd("rollstart");
+		
 	});
 	
 })();
@@ -18432,8 +18436,8 @@ else
 			- -igk.getPixel(n.getComputedStyle("marginLeft"), n.o)
 			- igk.getPixel(n.getComputedStyle("marginRight"), n.o);
 
-		// console.debug(n.getComputedStyle("margin-left"));
-		// console.debug(w);
+		
+		
 		n.setCss({ width: w + "px" });
 
 	};
@@ -18628,8 +18632,8 @@ else
 				if (m_frame == null)
 					return;
 				if (m_closeBtn == null) {
-					// console.debug("no close button");
-					// console.error("no close button");
+					
+					
 					igk.winui.notify.showErrorInfo("Error", '/!\\ JS: frame init :: No close button found.');
 					return;
 				}
@@ -18644,14 +18648,14 @@ else
 				};
 
 				// center dialog
-				// console.debug(p);
-				// console.debug("match class "+ igk.system.regex.item_match_class("igk-android",p));
-				// console.debug("match class "+ igk.system.regex.item_inherit_class("igk-android",p));
+				
+				
+				
 				if (igk.system.regex.item_inherit_class("igk-android", p)) {
 					var m = $igk(p).rmClass("resizable").addClass("dispb fit overflow-y-a")
 						.select(".datas");
-					// console.debug(m);
-					// console.debug(igk.winui.screenSize());
+					
+					
 
 					igk.winui.reg_event(window, 'resize', function () {
 						__setSize(m);
@@ -18751,7 +18755,7 @@ else
 					var p = frame.frameDialogOwner;
 					var s = $igk(frame);
 					if (s.unregEventContext) {
-						// console.debug("unregister context");
+						
 						s.unregEventContext();
 					}
 
@@ -18766,7 +18770,7 @@ else
 				if (f) {
 					// unreg event
 					__close_frame(f);
-					// console.debug("close current frame");	
+					
 				}
 			},
 			init_confirm_frame: function (p, uri, ajxcontext) {
@@ -18791,7 +18795,7 @@ else
 								frm.submit();
 							}
 							else {
-								// console.debug("close server frame");
+								
 								igk.ajx.post(
 									frm["frame-close-uri"].value + "&id=" + frm["frame-id"].value,
 								 	null, null, false);
@@ -18944,7 +18948,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 		if (typeof (tab.init) == "undefined") {
 			init_tab_control.apply(tab);
 		}
-		// console.debug("init tab control ...////....");
+		
 
 		var q = tab.select('.igk-tabcontent').first();
 		var self = this;
@@ -19006,7 +19010,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 					r = igk.getNumber(q.getComputedStyle("paddingTop")) +
 						igk.getNumber(q.getComputedStyle("paddingBottom"));
 					H -= r;
-					// console.debug("H "+H + " "+q.getComputedStyle("paddingTop")+" currsor : "+self.c.getComputedStyle("paddingTop"));
+					
 					var dirup = igk.system.regex.item_match_class("igk-dir-up", q.o);
 					var hv = false;
 					if (dirup) {
@@ -19106,8 +19110,8 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 			var obj = igk.JSON.parse(m, q);
 			var opxhr = null;
 			q.reg_event("click", function (evt) {
-				// console.debug("prevent click .... 1");
-				// console.debug(evt);
+				
+				
 							
 				if (evt.handle || evt.defaultPrevented){
 					return;
@@ -19129,9 +19133,9 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 				else if (tn){
 					r = q.select(tn).first() || $igk(tn).first(); // || q.select(tn).first();
 				}
-				// console.debug("the target : " + tn);
-				// console.debug(r);
-				// console.debug(obj.target);
+				
+				
+				
 
 				if (r != null) {
 					if (rpm == "content"){
@@ -19142,7 +19146,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 					// if (t)
 						// fc = igk.ajx.fn.replace_content(t.o);
 					// else {
-						// console.debug("target not found");
+						
 						// q.select(tn).first();
 					// }
 				}
@@ -19182,7 +19186,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 		}
 	};
 	igk.ctrl.bindAttribManager("igk-callback", function (t, v) {
-		// console.debug("register call setting "+v);
+		
 		var c = igk.JSON.parse(v);
 		var g = {};
 		if (c) {
@@ -19323,7 +19327,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 			this.reg_event("click", __click);
 
 		if (co_id) {
-			// console.debug("cookie def "+co_id);
+			
 			var s = igk.web.getcookies(co_id);
 			if (s) {
 				this.o.click();
@@ -19482,10 +19486,10 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 
 		function __initview() {
 			var g = t.getScreenLocation();
-			// console.debug("item scroll "+ c.o.scrollTop);
-			// console.debug(o.offset);
+			
+			
 			var npos = 0;
-			// console.debug(npos = t.getComputedStyle("position"));
+			
 			if (npos == 'fixed'){
 				if (c.o.scrollTop <= o.offset) {
 					t.rmClass("posfix");
@@ -19574,7 +19578,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 			var g = this.q.getScreenLocation();	
 			var c = this.p;
 			var offset = this.o.offset || 0;
-			// console.debug("item scroll "+ t.getHeight());
+			
 			if (c.o.scrollTop > offset) {
 				console.debug("bind ...");
 				c.addClass("igk-js-autofix-host");
@@ -19653,7 +19657,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 
 
 
-// console.debug("SF Version "+ igk.navigator.SafariVersion());
+
 
 // if(i!=-1)	
 // {	
@@ -19670,23 +19674,23 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 // dic.add("testd",1);
 // dic.remove("test3");
 
-// console.debug(" function :" +dic + " "+dic.getItem("test3") );
+
 // dic.add("test",1);
 
 
 
 // var d=igk.createNode("div").o;
 
-// console.debug(window.Array);
+
 
 
 // function dummyd(){
-// console.debug("dummy d");
+
 // }
 
 // d.reg_event("click",dummyd);
 
-// console.debug("un -------------------");
+
 
 // d.unregister();
 
@@ -19694,9 +19698,9 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 // delete(d);
 
 
-// console.debug("support animation : "+d.isCssSupportAnimation());
 
-// console.debug(igk.navigator.isIE());7
+
+
 // -------------------------------------------------------------------------------------
 
 // var js=igk.createNode("object")
@@ -19706,7 +19710,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 // .setAttribute("data",'../Lib/igk/Scripts/lang/fr.xml')
 // .reg_event("load",function(e){
 // s= igk.system.string.trim(igk.file.get_loaded_text(this));
-// console.debug(s.trim());
+
 // this.parentNode.removeChild(this);
 // });
 // window.document.getElementsByTagName('*')[0].appendChild(js.o);
@@ -19718,7 +19722,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 
 // if(w!=null){
 // $igk(w.document).reg_event("load",function(){
-// console.debug("state");
+
 // w.close();
 // });
 
@@ -19728,7 +19732,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 // var s=w.igk.dom.body().innerHTML;
 
 
-// console.debug(s);
+
 // }
 
 
@@ -19761,19 +19765,19 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 
 
 // $igk(document).reg_event("scroll",function(){
-// console.debug("in ");
+
 // });
 
 // document.onscroll=function(){
-// console.debug("in scroll document");
+
 // };
 // window.onscroll=function(){
-// console.debug("in scroll window");
+
 // };
 // igk.ready(function(){
 // igk.qselect(".overflow-y-a").reg_event("scroll",function(evt){
 // evt.preveDefault
-// console.debug("in scroll window item scroll ");
+
 // });
 // });
 
@@ -19839,7 +19843,7 @@ igk.ready(function () {
 	}
 	function _slider_click(evt) {
 
-		// console.debug("slider click");
+		
 		evt.preventDefault();
 		_slide_to.apply(this);
 	}
@@ -19920,10 +19924,10 @@ igk.ready(function () {
 		
 		// var q= this;
 		// this.reg_event("invalid",function(evt){
-		// console.debug("form validate ....");
+		
 		// });
 		this.reg_event("submit", function (evt) {
-			// console.debug("submit validate ....");
+			
 
 			if ((typeof (q.o.checkValidity) != igk.constants.undef) && !q.o.checkValidity()) {
 				console.debug("data ivalie");
@@ -19932,7 +19936,7 @@ igk.ready(function () {
 			}
 			var _o = false;
 			$igk(this).select("input").each(function () {
-				// console.debug(this);
+				
 				if (typeof (this.igkCheckIsInvalid) != igk.constants.undef) {
 					_o |= this.igkCheckIsInvalid();
 				}
@@ -19981,8 +19985,8 @@ igk.ready(function () {
 		igk.dom.body().addClass(mt);
 		var mt = igk.css.getMediaType();
 		igk.publisher.register(igk.publisher.events.mediachanged, function (e) {
-			// console.debug("media changed ..."+mt);
-			// console.debug(e);
+			
+			
 			igk.dom.body().rmClass(mt).addClass(e.mediaType);
 			mt = e.mediaType;
 		});
@@ -20031,7 +20035,7 @@ igk.ready(function () {
 	function __init_code_area() {
 		var q = this;
 		if (!q) {
-			// console.error("no code");
+			
 			return;
 		}
 		if (q.hightlight)
@@ -20040,7 +20044,7 @@ igk.ready(function () {
 		m_codes.push(q);
 
 
-		// console.debug("init code area");
+		
 		// return;
 		// q.addClass("dispib");
 		var c = '';
@@ -20056,7 +20060,7 @@ igk.ready(function () {
 		q.addClass("code-php");
 		var s = q.o.innerHTML;// .getHtml().trim();
 		var t = s.split('\n');
-		// console.debug(q.o);
+		
 		// return;
 		// clear node
 		q.setHtml("");
@@ -20075,7 +20079,7 @@ igk.ready(function () {
 		var l = "";
 		for (var i = 0; i < t.length; i++) {
 			l = t[i];
-			// console.debug(i + " : "+l);
+			
 			var d = q.add("div");
 			d.setHtml(m.evals(l));
 			// break;
@@ -20084,11 +20088,11 @@ igk.ready(function () {
 		var w = igk.getNumber(o.getComputedStyle('width'));
 		o.remove();
 		// delete(o);
-		// console.debug("width "+w);
-		// console.debug("length "+m.getLines());
-		// console.debug("length "+((m.getLines()+'').length *w));
+		
+		
+		
 		w = (((m.getLines() + '').length * w) + 10) & 0xFFFA;
-		// console.debug("width "+w);
+		
 
 		igk.css.appendRule(q.getCssSelector() + " > div > span.ln {text-align:right; width:" + w + "px;}");
 
@@ -20097,7 +20101,7 @@ igk.ready(function () {
 		// this.setCss({width:w+'px'});
 		// }
 		// );		
-		// console.debug(sl.getCount());
+		
 
 	}
 	function igk_e() {// evaluator
@@ -20130,10 +20134,10 @@ igk.ready(function () {
 			} else {
 				break;
 			}
-			// console.debug("update "+inf.s + " "+inf.pos);
+			
 			inf.pos++;
 		}
-		// console.debug("word : "+w);
+		
 		// delete(c);
 		if (w.length == 0)
 			inf.read = 0;
@@ -20227,7 +20231,7 @@ igk.ready(function () {
 								sp.add("span").addClass("v").setHtml("$" + w);
 								inf.pos--;
 								// inf.read = 0;
-								// console.debug (inf);							
+								
 								break;
 							case "&":
 								if (inf.mode == 0) {
@@ -20249,7 +20253,7 @@ igk.ready(function () {
 							default:
 								if (inf.mode == 0) {
 									if (",.?|()#[]-+{}\\/%*><;:=".indexOf(ch) != -1) { // igk.char.isPonctuation(ch)){
-										// console.debug("ponctuation"+ch);
+										
 										m = sp.add("span").addClass("pc").setHtml(ch);
 
 									} else {
@@ -20301,7 +20305,7 @@ igk.ready(function () {
 		if (this.tagName && this.tagName.toLowerCase() == "code" && this.getAttribute('igk-code')) {
 			__init_code_area.apply($igk(this));
 		}
-		// console.debug("init ready");
+		
 	});
 	
 	igk.system.createNS("igk.winui.codes", {
@@ -20327,12 +20331,12 @@ igk.ready(function () {
 	r.addClass('igk-media-type');
 
 	// for chrome navigator require to register
-	// console.debug("loading ::: ");
+	
 	// if(igk.navigator.isChrome()){
 
 	// igk.ready(function(){
 	// // r.setCss({position:'absolute',zIndex:40});
-	// // console.debug("call");
+	
 	// // register media to bottom
 	// igk.dom.body().add("div").setCss({position:'absolute',visibility:'hidden',overflow:'hidden','height':'0px', 'bottom':'0px'})
 	// .addClass("igk-m-i")// media info
@@ -20341,8 +20345,8 @@ igk.ready(function () {
 	// igk.css.appendRule(".igk-media-type:before{position:absolute;}");
 	// igk.css.appendRule(".igk-device:before{position:absolute;}");
 	// igk.publisher.publish("sys://css/info",{});	
-	// console.debug("publish...");		
-	// // console.debug("z-index : " + r.getComputedStyle('z-index',':before'));
+	
+	
 	// });
 	// }
 
@@ -20390,17 +20394,17 @@ igk.ready(function () {
 
 				igk.defineProperty(t.o.style, n, {
 					get: function () {
-						// console.debug("get value ????????????? "+t.getComputedStyle(n) + " vs "+_os );
+						
 						if (mark)
 							return _os;
 						return t.getComputedStyle(n);
 					},
 					set: function (v) {
-						// 	console.debug("set : "+n);
+						
 						if (v == 'auto') {
 							t.o.style.setProperty(n, 'auto');
 							var r = t.getComputedStyle(n);
-							// console.debug("auto not allowed "+t.getComputedStyle(n));
+							
 							t.o.style.setProperty(n, _os);
 							setTimeout(function () {
 								t.o.style.setProperty(n, r);
@@ -20427,9 +20431,9 @@ igk.ready(function () {
 				// init width default property
 				t.o.style.setProperty(n, v);
 			}
-			// console.debug("name: "+n);
-			// console.debug("computed :"+v);
-			// console.debug("style :"+s);
+			
+			
+			
 
 			_initPropertyStyle(t, n);
 
@@ -20475,8 +20479,8 @@ igk.ready(function () {
 		},
 		appendRule: function (c) { // append rule to balafon.css.php or css definition 
 			rule = rule || __getRule(corecss);
-			// console.debug("rule");
-			// console.debug(rule);
+			
+			
 			if (rule)
 				rule.insertRule(c, rule.cssRules.length);
 		},
@@ -20520,7 +20524,7 @@ igk.ready(function () {
 						document.head.appendChild(s);
 						m_chtheme = s;
 
-						// console.debug(xhr.responseText);
+						
 						// igk.css.appendRule(xhr.responseText, 0);
 					}
 				}
@@ -20645,9 +20649,9 @@ igk.ready(function () {
 		var dev = igk.css.getDevice();
 		var m_c = igk.css.getMediaType();// current
 		function __checkMedia() {
-			// console.debug("checkmedia");
+			
 			var i = igk.css.getMediaType();
-			// console.debug("mediatype "+i);
+			
 			var d = null;
 			if (i != m_c) {
 				B.rmClass(m_c).addClass(i);
@@ -20765,7 +20769,7 @@ function igk_getFilterProp(o){
 		// o.setCss({filter:'progid:DXImageTransform.Microsoft.Blur(PixelRadius="5")'});
 		if (igk.navigator.isIEEdge()){
 			o.setCss({filter:r});
-			// console.debug(o.o.getContext('2d').filter);
+			
 			//return null;
 		}
 		o.setCss({filter:r});
@@ -20958,7 +20962,7 @@ function igk_getFilterProp(o){
 			// >uri: uri to send the picked file
 			// >p: property to manage picking file
 			// >osrc: source of the requesting
-			// console.debug(p);			
+			
 			igk.dom.body().prepend(s);
 			function __change() {
 				if (uri == null){
@@ -21051,7 +21055,7 @@ function igk_getFilterProp(o){
 // igk.ready(function(){
 // $igk("*").each(
 // function(){
-// console.debug("z-index : "+this.getComputedStyle("zIndex"));
+
 // return !0;
 // }
 // );
@@ -21069,18 +21073,18 @@ function igk_getFilterProp(o){
 		var q = this;
 		var tip = null;
 		this.reg_event("mouseover", function (evt) {
-			// console.debug("over");
+			
 			if (tip == null)
 				tip = igk.winui.tooltip.show(q, p.data);
 			else
 				tip.show();
 		});
 		// .reg_event("mouseout",function(evt){
-		// console.debug("out");
+		
 		// if(tip)
 		// tip.hide();
 		// }).reg_event("mouseleave", function(){
-		// console.debug("leave");
+		
 		// if(tip)
 		// tip.hide();
 		// });
@@ -21113,9 +21117,9 @@ function igk_getFilterProp(o){
 					.setHtml(this.data);
 				var b = this.owner.getScreenBounds();
 				var loc = this.owner.getScreenLocation();
-				// console.debug(loc);
-				// console.debug(this.data);
-				// console.debug(b);
+				
+				
+				
 				t.setCss({ left: loc.x + "px", top: (loc.y + (b.h / 2)) + "px" });
 				igk.dom.body().appendChild(t.o);
 			},
@@ -21192,7 +21196,7 @@ igk.ready(
 	function () {
 
 		function __load(j) {
-			// console.debug(j.o.getBoundingClientRect);
+			
 			// var loc=j.getBoundingClientRect(); // j.o.getBoundingClientRect ? 
 			// j.o.getBoundingClientRect(): {x:0,y:0};// \{x:j.getscrollLeft(),
 			// y:j.getscrollTop()
@@ -21204,37 +21208,37 @@ igk.ready(
 			// get screen visibility
 			// var vsb=((loc.x>=0) &&(loc.x<=size.width) &&(loc.y>=0) &&(loc.y<=size.height));
 
-			// console.debug("visible : "+vsb);// + " size : "+size + " : "+loc);
-			// console.debug(j.getLocation() + " : "+j.getScreenLocation() + " : "+j.getScreenBounds());
-			// console.debug(j.getScreenBounds() + " ::: "+loc);
+			
+			
+			
 
-			// console.debug(j.getscrollLocation());
-			// console.debug("location");
+			
+			
 
-			// console.debug(loc);
+			
 			// firefox : scrollHeight ok ... other not ok
 			// iternet chrome
-			// console.debug(igk.system.stringProperties(j.o));
+			
 			// igk.show_prop(j.o);
 
 
-			// console.debug("size");
+			
 			// var s=j.getSize();
-			// console.debug(s);
+			
 
-			// console.debug("screen size");
-			// console.debug(size);
+			
+			
 
-			// console.debug("intersect : "+ igk.math.rectangle.intersect({x:loc.x,y:loc.y,w:Math.max(1,s.w),h:Math.max(1,s.h) },{x:0,y:0,w:size.width,h:size.height}));
+			
 			
 
 			if (j.data["img-js.loaded"]) {
-				// console.debug("already loaded="+j.data["img-js.loaded"]);
+				
 				return !1;
 			}
 			if (j.getisVisible()) {
 				j.data["img-js.loaded"] = 1;
-				// console.debug("try to load .....");
+				
 				// load image
 				var i = document.createElement("img");
 				$igk(i).reg_event("load", function (evt) {
@@ -21252,15 +21256,15 @@ igk.ready(
 
 
 		// var items=[];
-		// console.debug("scroll...reg");
+		
 		function __fcScroll(evt) {
-			// console.debug("scroll...------".);
-			// console.debug($igk(evt.target).data["img-js"].items);
+			
+			
 			var tab = $igk(evt.target).data["img-js"].items;// items;// copy tab
 			var _ctab = [];
 			// view all item
-			// console.debug(this);
-			// console.debug("scrol on "+evt.target);	
+			
+			
 			// __load.apply(this,[$igk(evt.target)]);
 			// t
 			for (var i = 0; i < tab.length; i++) {
@@ -21291,7 +21295,7 @@ igk.ready(
 					q.data["img-js"] = {
 						items: []
 					};
-					// console.debug("reg parent");
+					
 				}
 				// store item affected
 				// 	 items.push(this);
@@ -21344,7 +21348,7 @@ igk.ready(
 		}
 	}
 	function __init_doc_scrollloader() {
-		// 	console.debug("init  scroll loader");
+		
 		igk.dom.body().select("igk-scroll-loader").each(function () {
 			__init_tag(this);
 			return !0;
@@ -21356,15 +21360,15 @@ igk.ready(
 		if (t.data["igk-scroll-loader"])
 			return;
 		// this.o.offsetParent;
-		// console.debug(p);
+		
 		p = t.getscrollParent().o;
 		var sk = "igk-scroll-loader.parentScroll";
-		// console.debug(this.getscrollParent().o);
-		// console.debug(this.getoffsetParent().o);
+		
+		
 		if (p != null) {
 			var q = $igk(p);
 			if (!q.data[sk]) {
-				// console.debug(q.o);
+				
 				q.reg_event("scroll", __load);
 				q.data[sk] = 1;
 				q.data["igk-scroll-loader.items"] = [];
@@ -21394,7 +21398,7 @@ igk.ready(
 
 	// igk.ajx.fn.registerNodeReady(function(){
 	// var q=$igk(this);
-	// console.debug(q.o);
+	
 	// });
 
 })();
@@ -21438,12 +21442,12 @@ igk.ready(
 			dir: 1,// direction
 			penWidth: 2,// pen width
 			render: function (v, cl, of_set) {
-				// console.debug(this.canva.o);
+				
 				var w = igk.getNumber(this.canva.getComputedStyle("width"));
 				var h = igk.getNumber(this.canva.getComputedStyle("height"));
 				var v1 = 0;
 				var v2 = 0;
-				// console.debug("Render : width  "+w + " height "+h +" v:"+v);
+				
 				var cx = w / 2;
 				var cy = h / 2;
 				var penw = this.penWidth || 4;
@@ -21498,9 +21502,9 @@ igk.ready(
 
 		function _getData() {
 			if (_dat == null) {
-				// console.debug("story board transition :"+q.data.storyboard.getComputedStyle("transition"));
-				// console.debug(evt.propertyName);
-				// console.debug(q.data.storyboard.getComputedStyle('content',':before'));
+				
+				
+				
 				var _s = q.data.storyboard.getComputedStyle('content', ':before');
 				var _t = /^"((.)+)"$/i.exec(_s);
 				_dat = igk.JSON.init_data({ stop: 'width', mode: 1 }, (_t ? _t[1].replace(/\\\"/g, "\"") : null), function (s) {
@@ -21538,8 +21542,8 @@ igk.ready(
 
 			})
 			.reg_event("transitionstart", function (evt) {
-				// console.debug('transition start');
-				// console.debug(evt);
+				
+				
 			})
 			// .addClass("dispn")	
 			.setCss(
@@ -21568,7 +21572,7 @@ igk.ready(
 					var x = igk.getNumber(n.getComputedStyle("width"));
 					var y = igk.getNumber(n.getComputedStyle("height"));
 					var cl = n.getComputedStyle('color');
-					// console.debug(y+" "+n.getComputedStyle("height"));
+					
 					q.data.render(
 						Math.round((x / 100.0) * 100) / 100,
 						cl,
@@ -21608,13 +21612,13 @@ igk.ready(
 			var cH = s.o.clientHeight;// .o.parentNode.parentNode.clientHeight;// p.o.clientHeight;
 			var sT = m.o.parentNode.offsetTop;
 
-			// console.debug(m.o);
-			// console.debug(p.o);
-			// console.debug("start "+ cH +" x "+sT + " "+$igk(m.o.parentNode).getisVisible());
+			
+			
+			
 			if (sT > 0) {
 				if (!(sT < cH)) {
 					y = sT - cH + Math.ceil(igk.getNumber(m.getComputedStyle('height')));
-					// console.debug("ch :: "+y);
+					
 					p.setCss({ 'transform': 'translateY(-' + (y) + 'px)' });
 				}
 			}
@@ -21625,8 +21629,8 @@ igk.ready(
 			// // igk.getNumber(m.getComputedStyle('font-size')));
 			// if (y>0){
 			// // m.setCss({fontSize:"2em"});
-			// console.debug("translate .... "+y);
-			// console.debug("translate .... font - size "+igk.getNumber(m.getComputedStyle('font-size')));
+			
+			
 			// p.setCss({'transform':'translateY(-'+(y)+'px)'});
 			// igk.publisher.publish("sys://doc/changed", {target:p});
 			// }
@@ -21657,11 +21661,11 @@ igk.ready(
 		q.data["igk-scroll-b"] = 1;
 		p.addClass("igk-scroll-host");
 
-		// console.debug("init scroll......");
+		
 
 		function init_view() {
-			// console.debug("init view: "+cur.getComputedStyle("top"));
-			// console.debug(p.getComputedStyle("transform"));
+			
+			
 			var real_size = p.getOffsetBounds();
 			// // {x:0, y:0, w:0, h:0};
 			// // for(var n = 0; n < p.o.childNodes.length; n++){
@@ -21679,12 +21683,12 @@ igk.ready(
 			// // real_size.w -= loc.x;
 			// // real_size.h -= loc.y;
 			m_psize  = real_size;
-			// console.debug(real_size);
-			// console.debug(p.o.offsetHeight);
-			// console.debug(p.o.scrollHeight);
+			
+			
+			
 			
 			// igk.winui.transform.getData(p);
-			// console.debug(p.o);
+			
 			// 1=> p.o.scrollHeight
 			// x=> p.o.offsetHeight;
 			var x = 0;
@@ -21706,7 +21710,7 @@ igk.ready(
 					s = Math.floor(Math.max(32, (x * p.o.clientHeight))); // p.o.offsetHeight)));
 					// var bh = cur.getHeight();
 					cur.setCss({"Height" : s + "px" });
-					// console.debug("the offset height  "+bh+ ": "+s + " offsetHeight: "+p.o.offsetHeight + " VSDD "+p.o.scrollHeight +					 
+					
 					// " Height: "+p.getHeight());
 					// p.o.scrollTo(0,200);
 				}
@@ -21715,10 +21719,10 @@ igk.ready(
 				if (!m_init) {
 					// setup marking position
 					// must show the 
-					// console.debug("scrollHeight : "+p.o.scrollHeight);
-					// console.debug("offsetHeight : "+p.o.offsetHeight);
-					// console.debug("ciblingHeisd : "+igk.winui.transform.getData(cibling).getY());// p.o.offsetHeight);
-					// console.debug("upos "+m_spos);
+					
+					
+					
+					
 					if (orn == 'v') {
 						// t = Math.floor(p.o.offsetHeight * (m_spos / p.o.scrollHeight));
 						t = Math.floor(p.o.offsetHeight * (m_spos / p.o.clientHeight));
@@ -21727,7 +21731,7 @@ igk.ready(
 						t = Math.floor(p.o.offsetWidth * (m_spos / p.o.scrollWidth));
 						cur.setCss({ left: t + 'px' });
 					}
-					// console.debug("t : "+t);
+					
 					// __update();
 					m_init = 1;
 				}
@@ -21742,7 +21746,7 @@ igk.ready(
 				e.value = 0;
 				// var dir=evt.deltaY > 0? -1: 1;
 				// step :: heigh scroll by 10
-				// console.debug(evt);
+				
 				_u_cur(cur, e, 0);
 			}
 
@@ -21777,9 +21781,9 @@ igk.ready(
 			else
 				t = Math.min(t, maxt);
 			var x = (t / maxt);
-			// console.debug(t + " vs "+ maxt); //e.value);
+			
 			// if (e.value == x){
-				// console.debug("value is em: "+x + " "+e.value);
+				
 				// return;
 			// }
 			var d = 0;
@@ -21791,12 +21795,12 @@ igk.ready(
 				cur.setCss({ "top": t + "px" });
 				d = (-p.o.clientHeight + m_psize.h) * e.value;
 			}
-			// console.debug("scroll value : "+d);
+			
 			// maxt==> 1
 			// t==> x
 			
 		// (t / maxt);
-			// console.debug("value : " + e.value+ " top: "+t + " height "+cur.getHeight());
+			
 			// p.o.clientHeight==>100%
 			// p.o.offsetHeight==>x
 			// 
@@ -21804,9 +21808,9 @@ igk.ready(
 			// var d = (p.o.scrollHeight -  p.o.offsetHeight) * e.value;
 			// var d = (-p.o.clientHeight + m_psize.h) * e.value;
 			// var d=Math.min(100,(p.o.offsetHeight * 100) /p.o.clientHeight );
-			// console.debug(e.value );
-			// console.debug("psize : "+d+ " pscrollHeight "+p.o.scrollHeight);
-			// console.debug(m_psize);
+			
+			
+			
 
 			e.childs.each(function () {
 				if ((this != q) && !this.data["igk-scroll-b"]) {
@@ -21867,14 +21871,14 @@ igk.ready(
 		p.reg_event("mouseover", function () {
 			init_view();
 		}).reg_event("mouseleave", function () {
-			// console.debug("mouse leave");
+			
 			if (cur.data["s:/msdown"])
 				return;
 			q.rmClass("igk-show");
 		}).reg_event("mouseup", function (evt) {
-			// console.debug("mouse uping "+evt.target);
-			// console.debug(p);
-			// console.debug(evt.target);
+			
+			
+			
 			if (!p.getScreenBounds().contains(evt.clientX, evt.clientY)) {
 				q.rmClass("igk-show");
 			}
@@ -21892,8 +21896,8 @@ igk.ready(
 				e.value = 0;
 				var dir = evt.deltaY > 0 ? -1 : 1;
 				// step :: heigh scroll by 10
-				 // console.debug("wheel");
-				 // console.debug(evt);
+				 
+				 
 				_u_cur(cur, e, dir * 10);
 
 				
@@ -21930,7 +21934,7 @@ igk.ready(
 
 					if (igk.winui.mouseButton(evt) != igk.winui.mouseButton.Left) {
 						// cause of drag and drop in chrome
-						// console.debug("cancel");
+						
 						return;
 					}
 					var e = cur.data["s:/msprop_s"];
@@ -21955,13 +21959,13 @@ igk.ready(
 							if ((this != q) && !this.data["igk-scroll-b"]) {
 								// method 1 if transform support for performance
 								var data = igk.winui.transform.getData(this);
-								// console.debug(data);
+								
 								data.setTranslateX(-d);
 								this.setCss({ "transform": data.toString() });
 								// "translateX("+(-d)+"px)"
 								// method 2 in global
 								// this.setCss({"top":(-d)+"px"});						
-								// console.debug(data);						
+								
 							}
 							return !0;
 						});
@@ -22050,8 +22054,8 @@ igk.system.createNS("igk.system", {
 		if (/^matrix\(/i.exec(s)) {
 			// matrix pattern;
 			var tb = s.match(/^matrix\((.+)\)$/)[1].split(',');
-			// console.debug("matrix pattern "+tb);
-			// console.debug(tb);
+			
+			
 			m0 = parseFloat(tb[0]); m1 = parseFloat(tb[1]); m2 = parseFloat(tb[2]);
 			m3 = parseFloat(tb[3]); tx = parseFloat(tb[4]); ty = parseFloat(tb[5]);
 		}
@@ -22098,7 +22102,7 @@ igk.system.createNS("igk.system", {
 		getData: function (n) {
 			var s = $igk(n).getComputedStyle("transform");
 			// string type
-		    // console.debug(s);
+		    
 			return new __transform_data(s || 'none');
 		}
 	});
@@ -22174,16 +22178,16 @@ igk.system.createNS("igk.system", {
 		var _src = q.getAttribute('igk:link');
 
 		q.o.removeAttribute('igk:link');
-		// console.debug(_src);
+		
 
 		var _data = {
 			img: _src == null ? null : q.add("img").addClass("posab dispn").setAttribute("src", _src).reg_event("load", function (evt) {
 				_data.render();
 				q.o.removeAttribute('igk:link');
-				// console.debug( q.getAttribute('igk:link'));
+				
 			}).reg_event("error", function () {
 				console.error("/!\\ Error on loading image " + _src);
-				// console.debug(evt);
+				
 			}),
 			storyline: (function () {
 				var s = q.add("div").addClass("posab dispn story-line");
@@ -22205,7 +22209,7 @@ igk.system.createNS("igk.system", {
 				var v_bdrcl = _data.storyline.bdr.getComputedStyle("color");
 				var v_bg = _data.storyline.bg.getComputedStyle("background-color");
 				var v_bdrs = igk.getNumber(_data.storyline.bdr.getComputedStyle("height")) || 4;
-				// console.debug(v_bdrcl);
+				
 
 				var _ctx = this.ctx;
 				var cx = w / 2;
@@ -22243,7 +22247,7 @@ igk.system.createNS("igk.system", {
 					var zx = _W / this.img.o.width;
 					var zy = _H / this.img.o.height;
 					var zx = Math.min(zx, zy);
-					// console.debug(zx + ": "+this.img.o.width);
+					
 					_ctx.drawImage(this.img.o, 4 + ((_W - (this.img.o.width * zx)) / 2), 4, this.img.o.width * zx, this.img.o.height * zx);
 					// igk.drawing.effect.stackBlur(_ctx,0,0,w,h,5);
 				}
@@ -22347,7 +22351,7 @@ igk.system.createNS("igk.system", {
 			}
 			t = m_roles["next"];
 			var s = (def.length > 0) && (v_idx < def.length);
-			// console.debug(s);
+			
 			for (var k = 0; k < t.length; k++) {
 				if (s) {
 
@@ -22387,7 +22391,7 @@ igk.system.createNS("igk.system", {
 						// goTo(def[obj.n]);
 
 						// else if(v_idx<def.length){
-						// // console.debug("y idnex");
+						
 						// goTo(def[v_idx]);
 						// v_idx++;
 						// }
@@ -22411,26 +22415,26 @@ igk.system.createNS("igk.system", {
 			v_idx = 1;
 		// scroll to the begining
 		q.scrollTo(def[0]);
-		// console.debug("init "+v_idx);
-		// console.debug("init "+q.o.innerHTML);
+		
+		
 		// igk.winui.reg_event(window,"transitionend", function(evt){
-		// // console.debug(evt);
-		// // console.debug(q.o.scrollLeft);
-		// // if (cur){console.debug("move ");
+		
+		
+		
 		// // goTo(cur);
 		// // }
 		// });
-		// console.debug(v_idx);
+		
 		// because of file
 		igk.winui.reg_event(window, "resize", function () {
 			var b = q.getComputedStyle("transition");
 			if (b) {
 				q.setTransition("none");
 			}
-			// console.debug("re+"+q.getComputedStyle("transition"));
+			
 			setTimeout(function () {
 				if (cur) {
-					// console.debug("move ");
+					
 					goTo(cur);
 				}
 			}, 2000);
@@ -22498,7 +22502,7 @@ igk.system.createNS("igk.system", {
 				var ns = p.getNS();
 				var stop = 1;
 				while (stop && c.read()) {
-					// console.debug("read ....."+o+ " "+c.type);
+					
 					switch (c.type) {
 						case PROCESSOR:
 							throw "not used";
@@ -22531,7 +22535,7 @@ igk.system.createNS("igk.system", {
 								cnode = root;
 							} else {
 								if (cnode == null) {
-									// console.debug("root already defined");
+									
 									cnode = p.createElement("dummy");
 									cnode.appendChild(root);
 									root = cnode;
@@ -22643,11 +22647,11 @@ igk.system.createNS("igk.system", {
 							var h = __readAttributes();
 							if (h.length > 0) {
 								this.hasAttrib = 1;
-								// console.debug("attributes");
-								// console.debug(h);
+								
+								
 								this.type = ATTRIBUTE;
 								this.attribs = __loadAttribs(h);
-								// console.debug(this.attribs);
+								
 								return 1;
 							} else if (this.isEmpty) {
 								this.type = END_ELEMENT;
@@ -22678,7 +22682,7 @@ igk.system.createNS("igk.system", {
 										var c_pos = this.pos++;
 										v_ch = "";// read text
 										v_temp = __readTo("<");
-										// console.debug("text read : "+v_temp);
+										
 										if (v_temp.length > 0) {
 											this.type = TEXT;
 											this.value = v_temp;
@@ -22726,7 +22730,7 @@ igk.system.createNS("igk.system", {
 										this.type = START_ELEMENT;
 										this.isEmpty = false;
 										this.hasAttrib = false;
-										// console.debug(this.name);
+										
 										v_enter = 0;
 
 										return true;
@@ -22795,7 +22799,7 @@ igk.system.createNS("igk.system", {
 						}
 						// if (q.read()){
 
-						// console.debug(q.value);
+						
 						// }
 						var e = 0;
 						while (!e && __canRead()) {
@@ -22903,7 +22907,7 @@ igk.system.createNS("igk.system", {
 	function __init() {
 		var n = this.getAttribute("igk:svg-name");
 		var g = m_symbols[n];
-		// console.debug("init svg : " + n + " >>> "+g);
+		
 		if (g) {
 			var c = g.clone();
 			// append attribute to node class
@@ -22922,12 +22926,12 @@ igk.system.createNS("igk.system", {
 	};
 	function __initsymbol() {
 		var n = this.getAttribute("id");
-		// console.debug("init svg symbol: "+n);
+		
 		if (!m_symbols[n]) {
-			// console.debug("load "+n);
+			
 
 			// if egdge for xbox one load outer document
-			// console.debug("load symbold "+n+ " "+this.o);
+			
 			var ot = this.o.outerHTML;
 			var doc = ot ? $igk(__loadSvg(ot)) : null;
 			if (!doc) {
@@ -22938,42 +22942,42 @@ igk.system.createNS("igk.system", {
 				m_symbols.push(doc);
 				m_symbols[n] = doc;
 			}
-			// console.debug("class : "+this.getAttribute("class"));
+			
 			// doc.setAttribute("class",this.getAttribute("class"));
 
 			if (m_keyloads[n]) {
 
-				// console.debug("try lo load symboles ready " +n);
-				// console.debug(m_keyloads[n]);
-				// console.debug(m_keyloads[n].length);
+				
+				
+				
 				for (var ii = 0; ii < m_keyloads[n].length; ii++) {
-					// console.debug("inf "+n);
+					
 					var t = m_keyloads[n][ii].t;
 					// debug=1;
-					// console.debug(t);
+					
 					__init.apply(t);
 					// debug=0;
-					// console.debug("s .... ");
+					
 				}
-				// console.debug("o .... ");
+				
 				m_keyloads[n] = null;
 				delete (m_keyloads[n]);
-				// console.debug("done");
-				// console.debug(m_keyloads);
+				
+				
 			}
 
 		}
 	};
 	function __loadSymbols(f) {
-		// console.debug("load symbols ???? " + igk.getSettings().nosymbol + " "+f);
+		
 		if (igk.getSettings().nosymbol) {
 			// because of no symbol required IE specification 
 			return;
 		}
-		// console.debug("load symbol from "+f);
+		
 		igk.io.file.load(f, function (d) {
 
-			// console.debug("load symbol from  init "+f);
+			
 			if (typeof (d.data) != "string") {
 				if (d.error) {
 					return;
@@ -22989,7 +22993,7 @@ igk.system.createNS("igk.system", {
 							// load multiple svg document
 							var m = this;
 							// select child svg
-							// console.debug("init childs"+m.select(">> svg"));
+							
 							m.select(">> svg").each_all(function () {
 								this.fn.svg = f;
 								__initsymbol.apply(this);
@@ -23005,7 +23009,7 @@ igk.system.createNS("igk.system", {
 				return !0;
 			});
 
-			// console.debug("symbold loaded "+ m_symbols);
+			
 			igk.publisher.publish("sys://svg/lds", { target: this, file: f, count: svg_c, selector: t }); // loaded symbol
 		});
 	};
@@ -23021,7 +23025,7 @@ igk.system.createNS("igk.system", {
 		getLoadedKey: function () {
 			var t = [];
 			for (var i = 0; i < m_symbols.length; i++) {
-				// console.debug(m_symbols[i].getAttribute("id"));
+				
 				t.push(m_symbols[i].getAttribute("id"));
 			}
 			return t;
@@ -23058,9 +23062,9 @@ igk.system.createNS("igk.system", {
 
 		if (h && (h != 'none')) {
 			var lst = h.replace(/"/g, '').split(',');
-			// console.debug(igk.dom.body());
+			
 			for (var i = 0; i < lst.length; i++) {
-				// console.debug("load svg symboles :>> "+lst[i]);
+				
 				igk.svg.loadSymbols(lst[i]);
 			}
 		}
@@ -23075,7 +23079,7 @@ igk.system.createNS("igk.system", {
 (function () {
 	function __init() {
 		igk.initpowered(this.o);
-		// console.debug("init powered");
+		
 	}
 	igk.winui.initClassControl("igk-powered", __init, {
 		desc: "manage powered message"
@@ -23134,7 +23138,7 @@ igk.system.createNS("igk.system", {
 		var s = igk.winui.screenSize();
 		var w = s.width;
 		var h = s.height;
-		// console.debug(w);
+		
 		for (var i = 0; i < m_pages.length; i++) {
 			var k = m_pages[i];
 			_update_i(k, w, h);
@@ -23187,10 +23191,10 @@ igk.system.createNS("igk.system", {
 		var q = this;
 		var def = "sys://control/inputregex";
 
-		// console.debug(this.o.type);
-		// console.debug(q.data[def]);
+		
+		
 		if (q.data[def]) {
-			// console.debug("already init from "+q.data[def+"/class"]);
+			
 			return !1;
 		}
 		q.data[def] = 1;
@@ -23229,7 +23233,7 @@ igk.system.createNS("igk.system", {
 					if (_e_id_msg) {
 						var _st = $igk(_e_id_msg);
 						if (_st) {
-							// console.debug(_st.getHtml());
+							
 							_ms_n.setHtml("?????" + _st.getHtml());
 						}
 					} else {
@@ -23249,11 +23253,11 @@ igk.system.createNS("igk.system", {
 		// if(_emsg)
 		// this.o.setCustomValidity(_emsg);
 		_rg = new RegExp(_rg, _rg_opt);
-		// console.debug(_rg);
-		// console.debug(_rg.exec("test"));
+		
+		
 
 		this.reg_event("invalid", function () {
-			// console.debug("valid");
+			
 			q.o.setCustomValidity(_emsg);
 		});
 
@@ -23265,8 +23269,8 @@ igk.system.createNS("igk.system", {
 			var altKey = evt.altKey;
 			var ch = evt.char || evt.key; // get char expression ie vs modzilla
 			// igk.show_prop(evt);	
-			// console.debug(evt);			
-			// console.debug("keypress:"+evt.key+":c:"+c + " char "+ch);
+			
+			
 			// if(!ctrlkey && !altKey &&(c > 31)&&(evt.key.length==1) && !_rg.exec(ch))
 			// evt.preventDefault();
 
@@ -23276,7 +23280,7 @@ igk.system.createNS("igk.system", {
 			return !1;
 		});
 		// this.reg_event("keyup",function(evt){
-		// console.debug("keyup");
+		
 		// evt.stopPropagation();
 		// evt.preventDefault();
 		// return !1;
@@ -23286,18 +23290,18 @@ igk.system.createNS("igk.system", {
 			q.o.setCustomValidity("");
 		});
 		// this.reg_event("change",function(evt){
-		// console.debug("change reg event");
+		
 		// evt.preventDefault();
 		// });
 		// protect for paste data
 		this.reg_event("paste", function (evt) {
-			// console.debug("paste");
+			
 			if (evt.clipboardData.types <= 0)
 				return;
 			// var t=evt.clipboardData.types[0];
 			// igk.show_prop(evt.clipboardData.types);
 			var d = evt.clipboardData.getData("text/plain");
-			// console.debug("data "+d);
+			
 			for (var i = 0; i < d.length; i++) {
 				if (!_rg.exec(d[i])) {
 					evt.stopPropagation();
@@ -23386,7 +23390,7 @@ igk.system.createNS("igk.system", {
 
 					if (new RegExp(self.options.regex).exec(old))// new RegExp(""+self.options.regex+"","i").exec(old))
 					{
-						// console.debug(" old is : "+old + " match : "+self.options.regex);
+						
 
 						if (old == "-")
 							evt.target.value = "-";
@@ -23553,7 +23557,7 @@ igk.system.createNS("igk.system", {
 			n.o.removeAttribute("type");
 			n.o.removeAttribute("igk:uri");
 			n.o.removeAttribute("igk:param");
-			// console.debug("removing ....");
+			
 			q = n;
 		}
 		q.reg_event('click', function (evt) {
@@ -23615,10 +23619,10 @@ igk.system.createNS("igk.system", {
 	igk.winui.initClassControl("igk-xsl-node", function (
 		// 	o,m
 	) {
-		// console.debug("init xsl node ....");
-		// console.debug(arguments);
-		// console.debug(o);
-		// console.debug(m);
+		
+		
+		
+		
 		// var attr = igk.winui.ClassRequireAttribute.apply(this, "igk:xslt-data");
 
 
@@ -23629,7 +23633,7 @@ igk.system.createNS("igk.system", {
 				igk.dom.transformXSLUri(u.xml, u.xsl, function (d) {
 					if (u.target) {
 						var s = $igk(d).select(u.target);
-						// console.debug(u.target);
+						
 						var t = s && (s.o.length == 1) && s.first();
 						if (t) {
 							q.setHtml(t.o.innerHTML);
@@ -23688,12 +23692,12 @@ igk.system.createNS("igk.system", {
 		});
 		// igk.ready(function(){__update.apply(q,[v])},0);
 		igk.winui.reg_event(window, "resize", g = function () {
-			// console.debug("resize");
+			
 			// if(!q.getpresentOnDocument()){
 			// igk.winui.unreg_event(window,"resize",g);
 			// }
-			// console.debug("is visible "+ q.getisVisible() + ' ???? '+ q.getpresentOnDocument());
-			// console.debug(arguments);
+			
+			
 			__update.apply(q, [v]);
 		});
 		q.fix.update();
@@ -23724,10 +23728,10 @@ igk.system.createNS("igk.system", {
 	});
 	igk.winui.initClassControl("igk-ajx-uri-loader", function () {
 		var u = this.getAttribute("igk:href");
-		var a = this.getAttribute("igk:append");
+		var a = this.getAttribute("igk:append"); 
 		var self = this;
 		if (u) {
-			var lw = this.add("div").addClass("igk-google-line-waiter");
+			// var lw = this.add("div").addClass("igk-google-line-waiter");
 			var q = $igk(this.o.parentNode);
 			var ta = q.select(a).first();
 			igk.ajx.get(u, null, function (xhr) {
@@ -23746,12 +23750,15 @@ igk.system.createNS("igk.system", {
 							q.setHtml(xhr.responseText).init();
 
 						}
-						lw.remove();
+						// lw.remove();
 						self.remove();
 					});
+				} else if (xhr.readyState==4) {
+					// lw.remove();
+					self.remove();
 				}
 			}, true);
-			// console.debug("b");
+			
 		}
 	},
 		{
@@ -23765,14 +23772,14 @@ igk.system.createNS("igk.system", {
 // igk.system.createNS("igk.html5.drawing.webgl",{
 // shader: function(){// singleton shader object
 // if(sm_shader){
-// console.debug("single ton instaance");
+
 // return sm_shader;
 // }
 // if(this instanceof igk.object){	
 // return  new igk.html5.drawing.webgl.shader();
 // }
-// console.debug(this);
-// console.debug(this instanceof igk.object);			
+
+
 // igk.appendProperties(this,{
 // loadAndCompile: function(gl,arraylistVShader,arraylistFShader){
 // var p=null; // program data
@@ -23789,13 +23796,13 @@ igk.system.createNS("igk.system", {
 // gl.compileShader(vertexShader);
 
 // if(!gl.getShaderParameter(vertexShader,gl.COMPILE_STATUS)){
-// console.error("Error when compiling vertext shader ! ",gl.getShaderInfoLog(vertexShader));
+
 // return;
 // }
 
 // gl.compileShader(fragmentShader);
 // if(!gl.getShaderParameter(fragmentShader,gl.COMPILE_STATUS)){
-// console.error("Error when compiling fragment shader ! ",gl.getShaderInfoLog(fragmentShader));
+
 // return;
 // }
 
@@ -23809,9 +23816,9 @@ igk.system.createNS("igk.system", {
 // gl.compileShader(vertexShader);
 
 // if(!gl.getShaderParameter(vertexShader,gl.COMPILE_STATUS)){
-// console.error("Error when compiling vertext shader ! ",gl.getShaderInfoLog(vertexShader));
-// console.log(v_str);
-// console.log(vertexShader);
+
+
+
 // return;
 // }
 // vshader[i]=vertexShader;
@@ -23826,7 +23833,7 @@ igk.system.createNS("igk.system", {
 // gl.shaderSource(fragmentShader,v_str);
 // gl.compileShader(fragmentShader);
 // if(!gl.getShaderParameter(fragmentShader,gl.COMPILE_STATUS)){
-// console.error("Error when compiling fragment shader ! ",gl.getShaderInfoLog(fragmentShader));
+
 // return;
 // }
 // fshader[i]=fragmentShader;
@@ -23840,13 +23847,13 @@ igk.system.createNS("igk.system", {
 // link program
 // gl.linkProgram(program);
 // if(!gl.getProgramParameter(program,gl.LINK_STATUS)){
-// console.error("Error when compiling program link failed shader ! ",gl.getProgramInfoLog(program));
+
 // return;
 // }
 
 // gl.validateProgram(program);
 // if(!gl.getProgramParameter(program,gl.VALIDATE_STATUS)){
-// console.error("Validate program ! ",gl.getProgramInfoLog(program));
+
 // return;
 // }
 
@@ -24076,11 +24083,11 @@ igk.system.createNS("igk.system", {
 				},
 				capture: function (u, w, h) {
 					_pause = 1;
-					// console.debug("size :w:: "+this.canvas.width);
-					// console.debug("size :h:: "+this.canvas.height);
+					
+					
 					var c = $igk(this.canvas).getParent().select(".scene").first();
 					var v_bck = $igk(this.canvas).o.style;
-					// console.debug($igk(this.canvas).getComputedStyle("position"));
+					
 					$igk(this.canvas).setCss({ position: "fixed" });
 					this.updateSize(_def.gl, w, h);
 					this.tick(_def.gl);
@@ -24125,14 +24132,14 @@ igk.system.createNS("igk.system", {
 			var _mcl = _m.getComputedStyle("backgroundColor");
 
 
-			// console.debug("set color "+_mcl);
-			// console.debug("Opactity "+_m.getComputedStyle("opacity"));
+			
+			
 
 			var _clbg = igk.system.colorFromString(_m.getComputedStyle("backgroundColor")).toInt();// String(); 
-			// console.debug(_clbg);
+			
 			// _m.remove();
 			// 	return 0;
-			// console.debug("gl context "+canvas);
+			
 			if (!gl) {
 				if (igk.navigator.isSafari())
 					return 0;
@@ -24174,7 +24181,7 @@ igk.system.createNS("igk.system", {
 				return new fc();
 			};
 
-			// console.debug(_ol);
+			
 
 			if (_ol) {
 				switch (typeof (_ol)) {
@@ -24210,7 +24217,7 @@ igk.system.createNS("igk.system", {
 				// return 0;
 			}
 
-			// console.debug(igk.system.getType(_ol).getFullName());
+			
 
 			var cl = igk.system.colors.toFloatArray(_clbg);
 			if (!_ol) {
@@ -24219,13 +24226,13 @@ igk.system.createNS("igk.system", {
 				gl.clearColor(cl.r, cl.g, cl.b, cl.a);
 
 				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-				// console.debug("clear base");
+				
 				return 0;
 			} else {
 				// init _ol
 				gl.TRUE = 1;
 				gl.FALSE = 0;
-				// console.debug(cl);
+				
 				_ol.setBgColor(cl);
 				_ol.initGame(gl);// init game environment
 				_ol.updateSize(gl);// 
@@ -24291,9 +24298,9 @@ igk.system.createNS("igk.system", {
 		var m_inf = {};
 		function __media_change() {
 			console.debug("media change");
-			// console.debug(this);
+			
 			var c = igk.css.getMediaType();
-			// console.debug("media query : "+c);
+			
 
 
 			if ((c != 'global') && !(c in m_inf)) {
@@ -24352,41 +24359,41 @@ igk.system.createNS("igk.system", {
 					// return;
 
 					// throw ('data');
-					// console.debug("parallax scrolling"+evt.target.scrollTop);
-					// console.debug(evt.target);
-					// 	console.debug('init position '+evt.target.scrollTop);
+					
+					
+					
 					var of; // off in percent
 					var m_t = $igk(evt.target).getscrollMaxTop();
 					var v_c = q.o;
 					var c_h = q.o.scrollHeight;
 
-					// console.debug("offsetTop"+q.o.offsetTop);
+					
 
 
 
-					// 	console.debug(m_t + " :::: "+evt.target.scrollTopMax);
+					
 					if (m_t > 0)
 						of = parseInt((evt.target.scrollTop / m_t) * 100.0);
 					else {
 						of = 0;
 					}
-					// console.debug(of);
+					
 					// if (of==0){
-					// // console.debug('set only');
+					
 					// // q.setCss({backgroundPosition: "center"});	
 					// }else{
-					// console.debug('of '+of);
+					
 					// firefox raise warning for scrolling effect position
 					var p = Math.round((of / 200.0) * 10) * 2;
 					var cl = "igk-pos-" + p;
-					// console.debug("p : "+p);
+					
 					if (!(new RegExp(cl + "$")).test(q.o.className)) {
 						q.rmAllClass("^igk-pos-(.)+$")
 							.addClass(cl);
-						// console.debug("class is = "+cl + " for "+q.o.className);
+						
 					}
 					// else{
-					// console.debug("class already set");
+					
 					// }
 					// q.setCss({backgroundPosition: "center "+(-of)+"px"});
 					// }
@@ -24416,50 +24423,50 @@ igk.system.createNS("igk.system", {
 // // --------------------------------------------------------------
 // // style fixed followed box 
 // // --------------------------------------------------------------
-// // console.debug('init : '+q.getOffsetScreenLocation(q).y);
-// // console.debug('init position '+q.o.scrollTop);
-// // console.debug(q.o);
+
+
+
 // var m = new function(){
 // igk.appendProperties(this, {
 // callback:function(evt){
 // // return;
 
 // // throw ('data');
-// // console.debug("parallax scrolling"+evt.target.scrollTop);
-// // console.debug(evt.target);
-// // 	console.debug('init position '+evt.target.scrollTop);
+
+
+
 // var of; // off in percent
 // var m_t = \$igk(evt.target).getscrollMaxTop();
 // var v_c = q.o;
 // var c_h = q.o.scrollHeight;
 
-// // console.debug(q.o.offsetTop);
 
 
 
-// // 	console.debug(m_t + " :::: "+evt.target.scrollTopMax);
+
+
 // if (m_t>0)
 // of = parseInt((evt.target.scrollTop/m_t)*100.0);
 // else{
 // of = 0;
 // }
-// // console.debug(of);
+
 // // if (of==0){
-// // // console.debug('set only');
+
 // // // q.setCss({backgroundPosition: "center"});	
 // // }else{
-// // console.debug('of '+of);
+
 // // firefox raise warning for scrolling effect position
 // var p = Math.round((of/200.0)*10)*2;
 // var cl = "igk-pos-"+p;
-// console.debug("p : "+p);
+
 // if ( !(new RegExp(cl+"$")).test(q.o.className)){
 // q.rmAllClass("^igk-pos-(.)+$")
 // .addClass(cl);
-// // console.debug("class is = "+cl);
+
 // }
 // // else{
-// // console.debug("class already set");
+
 // // }
 // // q.setCss({backgroundPosition: "center "+(-of)+"px"});
 // // }
@@ -24472,7 +24479,7 @@ igk.system.createNS("igk.system", {
 
 
 // // igk.winui.reg_event(window, 'scroll', function(){
-// // console.debug("windows scrolling ....");
+
 // // });
 // });
 
@@ -24489,31 +24496,31 @@ igk.system.createNS("igk.system", {
 // (function(){
 // igk.ready(function(){
 // igk.dom.body().onunload=function(){
-// console.debug("body unload");
+
 // };
 // window.onunload = function(){
-// console.debug("unload");
+
 // };
 // igk.winui.reg_event(window, "unload",function(evt){
-// console.debug("you close");
+
 // igk.ajx.post("http://192.168.0.50/igkdev/testapi/clien_exit");
 // });
-// console.debug("y reg close");
+
 
 // });
 // })();
 
-// console.debug("donne");
+
 // (function(){
 // var s=igk.system.regex.split("\\s*([^,]+)[\\s,]*","cubic-bezier(0,0,1,1),cubic-bezier(0,0,1,1)");
-// console.debug("iyt "+(new RegExp("([^,(]+(\\(.+?\\))?[\\s,]*)").exec("cubic-bezier(1,3,5),width")));
+
 // var s=igk.system.regex.split("([^,(]+(\\(.+?\\))?)[\\s,]*","cubic-bezier(1,3,5),width");
-// console.debug(s);
+
 // })(); 
 // var count = 0;
 // igk.publisher.register("sys://doc/changed",function(p){
-// console.debug("doc changed...."+count);
-// console.debug(p);
+
+
 // count++;
 
 // }) 
@@ -24556,7 +24563,7 @@ igk.system.createNS("igk.system", {
 		q.closeBySubmit = 1;
 		igk.appendProperties(this, {
 			mediachanged: function (e) {
-				// console.debug(e);
+				
 				q.initLoc();
 			},
 			close: function (evt) {
@@ -24576,8 +24583,8 @@ igk.system.createNS("igk.system", {
 				var W = igk.getNumber(g.getComputedStyle("width"));
 				var w = -(W / 2);
 				var h = (-igk.getNumber(g.getComputedStyle("height")) / 2);
-				// console.debug(W);
-				// console.debug(igk.winui.screenSize().width);
+				
+				
 				if (W != igk.winui.screenSize().width) {
 					g.setCss({
 						position: "fixed",
@@ -24599,7 +24606,7 @@ igk.system.createNS("igk.system", {
 			subfunc: function (frm) {
 				return function (evt) {
 					evt.preventDefault();
-					// console.debug("form submitting");
+					
 					igk.ajx.postform(frm.o, frm.getAttribute("action"), function (xhr) {
 						if (this.isReady()) {
 							if (q.closeBySubmit)
@@ -24697,7 +24704,7 @@ igk.system.createNS("igk.system", {
 (function () {
 	// remove all item if item visible
 	function _rm_js_hide() {
-		// console.debug("remove hidded : igk-js-hide class");
+		
 		igk.qselect(".igk-js-hide").each_all(function () {
 			this.rmClass("igk-js-hide");
 		});
@@ -24720,8 +24727,8 @@ igk.system.createNS("igk.system", {
 	function __transition_end(evt) {
 		if ((c_toast == null) || (evt.target != c_toast.o) || (evt.propertyName != "opacity"))
 			return;
-		// console.debug("transition end");
-		// console.debug(evt);
+		
+		
 		// c_toast.remove();		
 		igk.winui.unreg_event(c_toast, "transitionend", __transition_end);
 		c_toast.remove();
@@ -24838,12 +24845,12 @@ igk.system.createNS("igk.system", {
 					var i = 0;
 					g.each_all(function () {
 						// 
-						// console.debug("replacing..."+s + " "+i);
+						
 						var _ie = tv; // insert element
 						if (i) {
-							// console.debug("cloning");
+							
 							_ie = tv.clone();
-							// console.debug(_ie);
+							
 						}
 						this.o.parentNode.replaceChild(
 							_ie.o,
@@ -24915,7 +24922,7 @@ igk.system.createNS("igk.system", {
 			// replace 
 			var g = $igk(m_item[n]).clone();
 			var p = this.o.parentNode;
-			// console.debug("ready .... ");
+			
 			$igk(p).addClass("igk-svg-host");
 			p.replaceChild(g.o, this.o);
 		} else {
@@ -24923,7 +24930,7 @@ igk.system.createNS("igk.system", {
 		}
 	};
 	function __initlist() {
-		// console.debug(this.o.childNodes);
+		
 		for (var i = 0; i < this.o.childNodes.length; i++) {
 			var j = this.o.childNodes[i];
 			m_item[j.tagName.toLowerCase()] = $igk(j).select("svg").first();
@@ -24932,7 +24939,7 @@ igk.system.createNS("igk.system", {
 	};
 	// svg list init svg list
 	function __init_svg_l() {
-		// console.debug("init _svg_l");
+		
 		igk.dom.body().select(".igk-svg-lst").each_all(__initlist);
 		// var s = igk.dom.body().add("style");
 		// s.o["type"]="text/css";
@@ -24944,7 +24951,7 @@ igk.system.createNS("igk.system", {
 	igk.ready(__init_svg_l);
 
 	igk.winui.initClassControl("igk-svg-lst", function () {
-		// console.error("init .... glovalll");
+		
 		__initlist.apply(this);
 
 	});
@@ -24963,7 +24970,7 @@ igk.system.createNS("igk.system", {
 		}
 	};
 	// igk.ajx.fn.registerNodeReady(function(){	
-	// // console.debug("init ....ready "+this.innerHTML);	
+	
 	// $igk(this).select(".igk-svg-lst").each_all(__initlist);
 	// });
 })();
@@ -24974,14 +24981,14 @@ igk.system.createNS("igk.system", {
 	igk.ajx.fn.registerNodeReady(function () {
 		if (!this.tagName || this.tagName.toLowerCase() != "style")
 			return;
-		// console.debug("the "+this);
+		
 		// $igk(this).select("style").each_all(function(){
 		var f = $igk("#" + $igk(this).getAttribute("igk:from")).first();
 		if (f) {
 			f.setHtml(this.innerHTML);
 			$igk(this).remove();
 		}
-		// console.debug(f);// this.tagName);
+		
 		// });
 	});
 
@@ -25141,7 +25148,7 @@ igk.system.createNS("igk.system", {
 
 
 		while ((s = tab.pop())) {
-			// console.debug("node type "+s.n.nodeType);
+			
 			if (s.e) {
 				console.debug("end");
 				m = igk.createNode("div").addClass("l");
@@ -25188,7 +25195,7 @@ igk.system.createNS("igk.system", {
 					}
 					break;
 				case 3:// text element
-					// console.debug(s.n);
+					
 					// return;
 					// m = igk.createNode("div");
 					// m.add("span").setHtml("&lt;");
@@ -25442,3 +25449,17 @@ igk.system.createNS("igk.system", {
 	});
 	
 })();  
+
+(function(){
+	//utility extension html to str
+	var _d=0;
+	igk.system.createNS("igk", {
+		toStr: function(v){
+			if(!_d){
+				_d = igk.createNode("div");
+			}
+			return _d.setHtml(v).o.innerText;
+		}
+	});
+	
+})();

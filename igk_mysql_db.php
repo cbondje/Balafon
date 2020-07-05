@@ -354,6 +354,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
             $this->m_dbManager->setOpenCallback(array($this, 'openCallback'));
         }
     }
+	
     ///<summary>Represente __createManager function</summary>
     /**
     * Represente __createManager function
@@ -870,6 +871,13 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
         }
         return null;
     }
+	public function escape_string($v){
+		 $b=IGKSQLManager::GetResId();
+		 if ($b){  
+			 return mysqli_real_escape_string($b, $v); 
+		 }
+		 return;
+	}
     ///<summary>Represente __toString function</summary>
     /**
     * Represente __toString function
@@ -887,8 +895,7 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
 	}
 	public function set_charset($u){
 		 $b=IGKSQLManager::GetResId();
-		 if ($b){
-			 igk_wln("bin");
+		 if ($b){ 
 			 return mysqli_set_charset($b);
 		 }
 		return "";

@@ -334,8 +334,7 @@ EOF
 * @param  $t
 */
 function igk_html_demo_googlelinewaiter($t){
-    $n=igk_createNode();
-    $n->setClass("igk-google-line-waiter");
+    $n= igk_html_node_googlelinewaiter(); 
     $t->add($n);
     return $n;
 }

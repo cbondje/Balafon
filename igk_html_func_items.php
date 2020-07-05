@@ -164,8 +164,17 @@ function igk_html_create_container_section($t){
     return $r;
 }
 
+function igk_html_node_menukey($menus, $ctrl=null, $root="ul", $item="li", $callback=null){
+	$n = igk_createnode("ul");
+	igk_html_load_menu_array($n, $menus, $item, $root, $ctrl, $callback);
+	return $n;
+}
+
 ///<summary>build menu </summary>
 function igk_html_node_menu($tab, $uriListener=null, $callback=null){
+    if(!is_array($tab)){
+        igk_die("must set an array of menu items");
+    }
     $ul = igk_createnode("ul");
 	  if ($uriListener){
 			if (!is_callable($uriListener)){
@@ -176,19 +185,35 @@ function igk_html_node_menu($tab, $uriListener=null, $callback=null){
 					 $uriListener=null;
 			}			   
 	}
-	
-    if (is_array($tab)){
+    $tarray = array(["menu"=> $tab, "c"=>null, "ul"=>$ul]);
+    $c = 0;
+    while($q = array_pop($tarray)){
+        $c = $q["c"];
+        $tab = $q["menu"];
+        $ul = $q["ul"];
+
         foreach($tab as $i=>$v){
-           $li = $ul->addLi()->setClass("m-l");
-           if ($callback)
-               $callback(1, $li);
-		   $uri = $v["uri"];
-		   if ($uriListener){
-			   $uri = $uriListener($uri);
-		   }
-           $li->addA($uri)->Content = $v["text"];    
+            
+            $li = $ul->addLi()->setClass("m-l");
+            // if (is_array($v)){
+            //     $li->setClass("m-group");
+            //     $li->Content = __($i);
+            //     $ul = $li->add("ul");
+            //     array_push( $tarray, ["menu"=>$v, "c"=>$c+1, "ul"=>$ul]);
+            //     continue;  
+            // }
+            $li = $ul->addLi()->setClass("m-l");
+            if ($callback)
+                $callback(1, $li);
+            $uri = $v["uri"];
+            if ($uriListener){
+                $uri = $uriListener($uri);
+            }
+            
+            $li->addA($uri)->Content = igk_getv($v, "text", $i);    
         }
     }
+    
     return $ul;
 }
 ///<summary>handle used to render css style</symmary>
@@ -455,9 +480,10 @@ function igk_html_node_ajxupdateview($cibling){
     $n["igk:target"]=$cibling;
     return $n;
 }
-///@append: add element after node content or replace.
-/**
-*/
+
+///<summary>append item that will be used for uri loader</summary>
+///<param name="uri">uri to load async</param>
+///<param name="append">append result to parent node</param>
 function igk_html_node_ajxuriloader($uri, $append=0){
     $n=igk_createnode("div");
     $n->setAttribute("igk:href", $uri);
@@ -858,9 +884,9 @@ function igk_html_node_colviewbox(){
     return $n;
 }
 ///<summary>Represente igk_html_node_combobox function</summary>
-///<param name="id"></param>
-///<param name="tab"></param>
-///<param name="options" default="null"></param>
+///<param name="id">identify the node</param>
+///<param name="tab">list o items</param>
+///<param name="options" default="null"> options to manage the combobox</param>
 /**
 * Represente igk_html_node_combobox function
 * @param  $id
@@ -869,7 +895,11 @@ function igk_html_node_colviewbox(){
 */
 function igk_html_node_combobox($id, $tab, $options=null){
     $n=igk_createnode("select")->setId($id);
-    igk_html_build_select_option($n, $tab, $options);
+    $n["class"] = "igk-winui-combobox";
+    igk_html_build_select_option($n, $tab, $options ?? (object)[
+        "valuekey"=>"value",
+        "displaykey"=>"text"
+    ]);
     return $n;
 }
 ///<summary>function igk_html_node_communitylink</summary>
@@ -1861,10 +1891,15 @@ EOF
 * @param callback 
 */
 function igk_html_node_livenodecallback($listener, $name, $callback){
+    static $livenode = null;
+    if ($livenode=== null){
+        $livenode = [];
+    }
+    $f = null;//the settings
     $c=$listener->getParam(IGK_NAMED_NODE_PARAM, array());
     if(isset($c[$name])){
         $f=$c[$name];
-        return $f;
+        // return $f;
     }
     if(!is_callable($callback)){
         if(!is_string($callback) || (strtolower($callback) == "componentnodecallback"))
@@ -1878,7 +1913,7 @@ function igk_html_node_livenodecallback($listener, $name, $callback){
     $args=array_merge(array($listener, $name), array_slice(func_get_args(), 3));
     $h=call_user_func_array($callback, $args);
     if($h){
-        $c[$name]=$h;
+        $c[$name]=[]; // $h;
         $h->setParam(IGK_NAMED_ID_PARAM, $name);
         $listener->setParam(IGK_NAMED_NODE_PARAM, $c);
         return $h;
@@ -2263,6 +2298,7 @@ function igk_html_node_progressbar(){
     $n->m_cur=$n->addDiv()->setClass("igk-progressbar-cur igk-progress-0");
     return $n;
 }
+
 ///<summary>function igk_html_node_readonlytextzone</summary>
 ///<param name="file"></param>
 /**

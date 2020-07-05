@@ -78,7 +78,7 @@ function igk_html_demo_progressbar($t){
     $n=igk_createNode();
     $n["class"]="igk-progressbar";
     $n["data-number"]="50.0";
-    $n->m_cur=$n->addDiv()->setClass("igk-progressbar-cur igk-progress-0");
+    $n->m_cur=$n->addDiv()->setClass("igk-progressbar-cur -igk-progress-0 -igk-progress-10");
     $t->add($n);
     return $n;
 }

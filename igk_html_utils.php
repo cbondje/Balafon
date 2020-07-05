@@ -629,7 +629,8 @@ function igk_html_extract_id($id){
 * @param  $data
 */
 function igk_html_form_buildformfield($frm, $data){
-    $frm->addObData(function() use ($data){igk_wl(igk_html_utils_buildformfield($data));
+    $frm->addObData(function() use ($data){
+        igk_wl(igk_html_utils_buildformfield($data));
     });
     return $frm;
 }
@@ -682,6 +683,7 @@ function igk_html_form_fields($formFields, $render=0){
             break;
             case "textarea":
             $o .= "<textarea name=\"{$k}\" id=\"{$k}\" ";
+            $load_attr($v, $o);
             $o .= ">{$_value}</textarea>";
             break;
             case "radiogroup":
@@ -1200,7 +1202,7 @@ function igk_html_utils_buildformfield($formfields){
             case "password":default: 
             if(empty($_id))
                 $_id=' id="'.$k.'"';
-            $o .= "<input type=\"{$_type}\" value=\"{$_value}\" name=\"{$k}\"{$_id} ";
+            $o .= "<input type=\"{$_type}\" value=\"{$_value}\" name=\"{$k}\"{$_id} class=\"clinput cl{$_type}\" ";
             if(isset($v["maxlength"])){
                 $o .= "maxlength=\"{$v["maxlength"]}\" ";
             }

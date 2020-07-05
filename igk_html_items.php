@@ -2374,6 +2374,10 @@ OF;
 * represent language selection options
 */
 final class IGKHtmlMemoryUsageInfoNodeItem extends IGKHtmlComponentNodeItem {
+    public function & getSetting(){
+        $m = [];
+        return $m;
+    }
     ///<summary>Represente __construct function</summary>
     /**
     * Represente __construct function

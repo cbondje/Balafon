@@ -856,9 +856,11 @@ EOF;
             $m=$actionctrl->matche($page[0]);
             $ck=$this->getEnvParam("appkeys");
             if($m !== null){
-                if($m->action === $ck){
-                    if(igk_sys_is_subdomain() || (igk_get_defaultwebpagectrl() === $this)){
-                        $m="Misconfiguration. Subsequent call of domain controller is not allowed. ".igk_io_request_uri();
+                if($m->action === $ck){ 
+                    if(igk_sys_is_subdomain() && ( ($loc = igk_get_defaultwebpagectrl()) === $this)){
+                        $m="Misconfiguration. Subsequent call of domain controller is not allowed. ".igk_io_request_uri().
+						"<br />".$this->getName().
+						"<br />";
                         throw new IGKUriActionException($m, $u, 0x1a001);
                     }
                 }

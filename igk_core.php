@@ -170,6 +170,11 @@ function igk_wl_pre($p){
     print_r($p);
     echo "</pre>";
 }
+function igk_dev_wln(){
+    if (igk_environment()->is("DEV")){
+        call_user_func_array("igk_wln", func_get_args());
+    }
+}
 ///<summary>Represente igk_wln function</summary>
 ///<param name="msg" default=""></param>
 /**

@@ -20,11 +20,15 @@ $group=$box->addformgroup();
 $group->addlabel("size", __('Size'));
 $group->addInput('size', 'text');
 $uri=$this->geturi('install');
-$box->addbutton("btn.install")->setcontent(__("Install Or Update"))->on("click", "this.form.action='{$uri}'; this.form.submit()");
+$box->addbutton("btn.install")
+->setClass("igk-btn igk-btn-default")
+->setContent(__("Install Or Update"))->on("click", "this.form.action='{$uri}'; this.form.submit()");
 
 
 if (!igk_sys_env_production())
-	$t->addDiv()->addA($this->geturi("resave"))->Content = "Resave";
+    $t->addDiv()->addA($this->geturi("resave"))
+    ->setClass("igk-btn igk-btn-default")
+    ->Content = "Resave";
 
 $box=$frm->addPanelBox();
 $box->add("h2")->Content=__("Intalled font");

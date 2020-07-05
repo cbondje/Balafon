@@ -211,6 +211,10 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     private static $sm_connexions;
     private static $sm_list;
     private static $sm_sql;
+	
+	public function escape_string($v){
+		    return "from sqlite3: ". $this->sql->escapeString($v);
+	}
     ///<summary>Represente beginTransaction function</summary>
     /**
     * Represente beginTransaction function
