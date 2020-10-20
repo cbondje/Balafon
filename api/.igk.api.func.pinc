@@ -1,7 +1,7 @@
 <?php
 // @file: .igk.api.func.pinc
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -21,8 +21,8 @@ function igk_api_build_ctrl_manifest($ctrl, $node){
 ///<param name="server" default="null"></param>
 /**
 * Represente igk_api_syncfrom_ctrl function
-* @param  $ctrl
-* @param  $server the default value is null
+* @param mixed $ctrl
+* @param mixed $server the default value is null
 */
 function igk_api_syncfrom_ctrl($ctrl, $server=null){
     $server=$server ? $server: igk_getr("clServer", IGK_WEB_SITE);
@@ -50,8 +50,8 @@ function igk_api_syncfrom_ctrl($ctrl, $server=null){
 ///<param name="server" default="null"></param>
 /**
 * Represente igk_api_syncto_ctrl function
-* @param  $ctrl
-* @param  $server the default value is null
+* @param mixed $ctrl
+* @param mixed $server the default value is null
 */
 function igk_api_syncto_ctrl($ctrl, $server=null){
     $server=$server ? $server: igk_getr("clServer");

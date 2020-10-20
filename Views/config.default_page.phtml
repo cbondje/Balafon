@@ -4,12 +4,14 @@
 //TODO: CACHE TOOL
 
 use function igk_resources_gets as __;
-$this->setSelectedConfigCtrl(null);
 
-$box= igk_html_ctrl_view_config($this, $cnf_n, "title.frameworkInfo", null);
-$this->_selectMenu("home", "IGKConfigCtrl::setpage");
+
+$ctrl->setSelectedConfigCtrl(null);
+
+$box= igk_html_ctrl_view_config($ctrl, $cnf_n, "title.frameworkInfo", null);
+$ctrl->_selectMenu("home", "IGKConfigCtrl::setpage");
 $ul=$box->add("ul");
- 
+
 
 $ul->addLi()->Content="FrameworkCodeName : ". IGK_PLATEFORM_NAME;
 $ul->addLi()->Content="FrameworkVersion : ". IGK_VERSION;
@@ -35,7 +37,7 @@ $ul->addLi()->Content="IsLocal : ". igk_parsebool(IGKServerInfo::IsLocal());
 $ul->addLi()->Content="BaseDir : ". igk_io_basedir();
 $ul->addLi()->Content="LibDir : ". IGK_LIB_DIR;
 $frm=$box->addForm();
-$frm["action"]=$this->getUri("conf_install_platform");
+$frm["action"]=$ctrl->getUri("conf_install_platform");
 $frm["class"]="dispn";
 $i=$frm->addInput("clFile", "file");
 $i["accept"]=".zip";
@@ -43,14 +45,14 @@ $i["onchange"]="javascript: ns_igk.os.install(this.form, {wait:'please wait... i
 $i["class"]="igk-btn igk-btn-default alignl dispib";
 $frm=$box->addForm();
 $frm->addLineWaiter();
-$u=$this->getUri("checkForUpdate&v=".IGK_VERSION);
+$u=$ctrl->getUri("checkForUpdate&v=".IGK_VERSION);
 
 $frm->addBalafonJS()->Content=<<<EOF
 igk.os.checkupdate('{$u}');
 
 EOF;
 $uform=$box->addPanelBox()->addDiv();
-if(function_exists("zip_open")){
+if(igk_io_basedir_is_root() && function_exists("zip_open")){
     $uri=igk_register_temp_uri(IGKBalafonInstaller::Class);
     $uform->addDiv()->setClass("igk-update-button")->addAJXPickFile($uri."/upload", "{complete:igk.core.install('".$uri."/update"."', '#update_target'),"."progress:igk.core.progress('#update_target'),"."accept:'.zip'"."}")->setAttribute("value", __("Update CoreLib"));
     $uform->addDiv()->setId("update_target");
@@ -61,7 +63,7 @@ $div=$box->addPanelBox()->addDiv();
 igk_html_add_title($div, "title.AdministrativeConfig");
 $div->addHSep();
 $frm=$div->addForm()->setClass("fitw");
-$frm["action"]=$this->getUri("update_domain_setting");
+$frm["action"]=$ctrl->getUri("update_domain_setting");
 igk_notify_sethost($frm->addDiv(), "update_domain_setting");
 $frm->addSLabelInput("company_name", "text", $app->Configs->company_name);
 $frm->addBr();
@@ -77,13 +79,13 @@ $dv=$frm->addDiv();
 $dv->addBtn("btn_domainName", __("Update"));
 $frm=$box->addPanelBox()->addForm();
 $frm->setId("adminpwd-form");
-$frm["action"]=$this->getUri("update_adminpwd");
+$frm["action"]=$ctrl->getUri("update_adminpwd");
 igk_notify_sethost($frm->addDiv(), "update_adminpwd");
-$frm->addSLabelInput("passadmin", "password");
+$frm->addSLabelInput("passadmin", "password", null, ["autocomplete"=>"new-password"]);
 $frm->addBr();
 $frm->addBtn("btn.updateadminpwd", __("Update"));
 $frm=$box->addPanelBox()->addForm();
-$frm["action"]=$this->getUri("update_defaultlang");
+$frm["action"]=$ctrl->getUri("update_defaultlang");
 $frm->addHSep();
 if(!$app->Configs->default_lang){
     $app->Configs->default_lang=R::GetCurrentLang();
@@ -99,13 +101,13 @@ $select["class"]="igk-form-control cltext";
 $frm->addBr();
 $frm->addBtn("btn.updateCurrentLang", __("Update"));
 $frm=$box->addPanelBox()->addForm();
-$frm["action"]=$this->getUri("update_default_tagname");
+$frm["action"]=$ctrl->getUri("update_default_tagname");
 $frm->addHSep();
 $frm->addSLabelInput("cldefault_node_tagname", "text", $app->Configs->app_default_controller_tag_name);
 $frm->addBr();
 $frm->addBtn("btn.updateGlobalSetting", __("Update"));
 $frm=$box->addPanelBox()->addForm();
-$frm["action"]=$this->getUri("conf_update_setting");
+$frm["action"]=$ctrl->getUri("conf_update_setting");
 $div=$frm->addDiv();
 $ul=$div->add("ul");
 $ul["class"]="igk-row other-conf-setting";
@@ -118,7 +120,7 @@ $tab=array(
         "clautochepage"=>"allow_auto_cache_page"
     );
 foreach($tab as $s=>$t){
-    $this->_checkedItemConfig($ul->addLi()->setClass("igk-col fitw igk-col-lg-3-1")->addDiv(), $s, $t);
+    $ctrl->_checkedItemConfig($ul->addLi()->setClass("igk-col fitw igk-col-lg-3-1")->addDiv(), $s, $t);
 }
 $li=$ul->addLi()->setClass("igk-col fitw igk-col-lg-3-1")->addDiv();
 $li->addLabel()->Content=R::ngets("lb.clcache_file_time");
@@ -127,17 +129,17 @@ $dv=$frm->addDiv()->setStyle("margin-top:2em");
 $dv->addABtn(igk_io_baseuri()."/Configs!Settings")->setclass("clsubmit igk-btn-default")->Content=__("General Configuration");
 $dv->addBtn("btn_updatedebugmode", __("Update"));
 if(IGKServerInfo::IsLocal() || igk_is_conf_connected() || !igk_sys_env_production()){
-    $dv->add('a')->setClass("clsubmit igk-btn igk-btn-default")->setAttribute("href", $this->getUri("clearcache"))->setAttribute("onclick", "javascript: ns_igk.ajx.get(this.href+'&ajx=1', null,{src:this,complete:function(xhr){ ns_igk.ajx.fn.prepend_to(xhr,this.src.parentNode); }});  return false;")->Content=__("Clear cache");
+    $dv->add('a')->setClass("clsubmit igk-btn igk-btn-default")->setAttribute("href", $ctrl->getUri("clearcache"))->setAttribute("onclick", "javascript: ns_igk.ajx.get(this.href+'&ajx=1', null,{src:this,complete:function(xhr){ ns_igk.ajx.fn.prepend_to(xhr,this.src.parentNode); }});  return false;")->Content=__("Clear cache");
 }
 $v_cache_t=$box->addPanelBox()->addDiv();
-$this->__init_cache_tools($v_cache_t);
-$this->__init_log_tools($box->addPanelBox()->addDiv());
+$ctrl->__init_cache_tools($v_cache_t);
+$ctrl->__init_log_tools($box->addPanelBox()->addDiv());
 $fx=$box->addPanelBox();
 $frm=$fx->addForm();
-$frm["action"]=$this->getUri("resetconfig");
+$frm["action"]=$ctrl->getUri("resetconfig");
 $frm["class"]="dispib";
 $frm->addBtn("btn_resetconfig", R::ngets("btn.resetconfig"));
 $frm=$fx->addForm();
-$frm["action"]=$this->getUri("conf_runCtrlConfig");
+$frm["action"]=$ctrl->getUri("conf_runCtrlConfig");
 $frm["class"]="dispib";
 $frm->addBtn("btn_runctrlconfig", R::ngets("btn.runctrlSetupConfig"));

@@ -1,7 +1,7 @@
 <?php
 // @file: IGKGooglePackage.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -34,7 +34,7 @@ class IGKGooglePackage{
     ///<param name="name"></param>
     /**
     * Represente CreateNode function
-    * @param  $name
+    * @param mixed $name
     */
     public function CreateNode($name){
         if(method_exists($this, $name)){

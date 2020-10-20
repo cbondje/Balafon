@@ -2,7 +2,7 @@
 
 final class IGKGoogleConfigurationSetting extends IGKConfigCtrlBase{
 	const API_KEY = "google.ApiKey";
-	
+
 	public function getConfigPage(){return "google.sdk";}
 	public function getConfigGroup(){return "google";}
 	public function getName(){return "com.igkdev.googleapi"; }
@@ -16,11 +16,11 @@ final class IGKGoogleConfigurationSetting extends IGKConfigCtrlBase{
 		return igk_io_dir(IGK_DATA_FOLDER."/google.".IGK_CTRL_CONF_FILE);
 	}
 	public function showConfig(){
-		parent::showConfig();		
+		parent::showConfig();
 		$cnf = $this->ConfigNode;
-		$box = $cnf->addPanelBox();		
+		$box = $cnf->addPanelBox();
 		$box->addDiv()->setClass("igk-title-4")->setStyle("line-height:1; margin-bottom:1em")->Content = R::gets("Google Settings");
-		
+
 		$frm = $box->addDiv()->addForm();
 		$frm["action"] = $this->getUri("storeApiKey");
 		$frm->add("label")->Content = "DEV API KEY";
@@ -37,8 +37,8 @@ final class IGKGoogleConfigurationSetting extends IGKConfigCtrlBase{
 		$this->Configs->$k = $key;
 		$this->storeConfigSettings();
 	}
-	
+
 	function initComplete(){
-		parent::initComplete();		
+		parent::initComplete();
 	}
 }

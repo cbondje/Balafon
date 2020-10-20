@@ -33,10 +33,10 @@ class DragDropZoneItem extends IGKHtmlItem
 igk.winui.dragdrop.init(IGK.getParentScript());
 EOF;
 		igk_html_add($this->m_scriptNode, $this);
-		$o = parent::Render($xmloption);	
+		$o = parent::Render($xmloption);
 		return $o;
-		
+
 	}
-	
+
 }
 ?>

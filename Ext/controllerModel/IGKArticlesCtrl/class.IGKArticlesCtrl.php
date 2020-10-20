@@ -8,7 +8,7 @@ abstract class IGKAtriclesCtrlBase extends IGKCtrlTypeBase
 	///<summary>bind primary articles</summary>
 	public function bindArticle($ctrl, $name, $target, $row){
 		$f = $this->getArticle($name);
-		if ($file_exists($f)){
+		if (file_exists($f)){
 			igk_html_binddata($ctrl, $target, $f, $row);
 		}
 	}

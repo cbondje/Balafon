@@ -1,7 +1,7 @@
 <?php
 // @file: utility.phtml
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -9,10 +9,12 @@
 // @url: https://www.igkdev.com
 
 use IGKApi\UtilityActions;
+use function igk_resources_gets as __ ;
+
 igk_google_addfont($doc, "Roboto");
 $t->clearChilds();
-igk_view_handle_actions($fname, new UtilityActions($this, $t), $params);
+igk_view_handle_actions($fname, new UtilityActions($ctrl, $t), $params);
 $t->setStyle("font-weight: 100");
 $t->setClass("google-Roboto");
 $doc->Title="Utility service";
-$t->addSectionTitle(4)->Content="Api Utility Service";
+$t->addSectionTitle(4)->Content= __("Api Utility Service");

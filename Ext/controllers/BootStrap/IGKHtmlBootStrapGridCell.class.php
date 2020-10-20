@@ -1,6 +1,7 @@
 <?php
 class IGKHtmlBootStrapGridCell extends IGKHtmlItem
 {
+	/** @var IGKHtmlItem */
 	private $m_vcontent;
 	// private $m_box;
 	private $m_i;
@@ -14,12 +15,12 @@ class IGKHtmlBootStrapGridCell extends IGKHtmlItem
 		parent::__construct("div");
 		$this->m_vcontent = parent::add("div");
 		$this->m_vcontent["class"] = "igk-grid-cell-content";
-		
+
 	}
 	public function getCellNode(){
 		return $this->m_vcontent;
 	}
-	
+
 	// public function getBox(){return $this->m_box; }
 	public function getContent(){
 		return $this->m_vcontent->Content ;
@@ -39,12 +40,12 @@ class IGKHtmlBootStrapGridCell extends IGKHtmlItem
 		if ($this->m_vcontent->HasChilds){
 	//		igk_wln("child ");
 			$p = igk_getv($this->m_vcontent->Childs , 0);
-			if ($p && (get_class($p) == "HtmlBootStrapGrid")){			
+			if ($p && (get_class($p) == "HtmlBootStrapGrid")){
 				//igk_wln("contains grid ". get_class($p) == "HtmlBootStrapGrid");
-				//remove 
+				//remove
 				$this->m_vcontent ["class"] = "+igk-grid-cell-container";
 			}
-			else 
+			else
 				$this->m_vcontent ["class"] = "-igk-grid-cell-container";
 		}
 		return $this->m_vcontent->Render($options);

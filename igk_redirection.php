@@ -6,12 +6,16 @@
 // description: redirection handler
 //TODO : BASE :
 
+
 if(defined("IGK_REDIRECTION") && (IGK_REDIRECTION == 1))
     return;
 define("IGK_REDIRECTION", 1);
 require_once(dirname(__FILE__)."/igk_framework.php");
 require_once(dirname(__FILE__)."/igk_mysql_db.php");
 $server_info=(object)array();
+
+
+
 foreach(array(
         "REQUEST_URI"=>'',
         "SERVER_PROTOCOL"=>'',

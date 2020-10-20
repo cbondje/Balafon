@@ -11,7 +11,7 @@ $def[IGK_CSS_MEDIA_TYPE_CLASS] = "z-index:-9999; content:'global'";
 
 
 $def["*"]  = "padding:0px; margin:0px; box-sizing: border-box";
-$def["html, body, ul, div, p"] = "padding:0px; margin:0px; position:relative;";		
+$def["html, body, ul, div, p"] = "padding:0px; margin:0px; position:relative;";
 
 
 
@@ -19,17 +19,17 @@ $def["html, body, ul, div, p"] = "padding:0px; margin:0px; position:relative;";
 $def["a"] = "[sysfcl:linkForeColor] text-decoration:none;";
 $def["body li"] = "list-style-type:none;";
 $def["body a, body img, body a:hover, body a:focus"]= "text-decoration:none; list-style-type:none; border:none;";
-$def["body a:hover"]="[sysfcl:linkHoverForeColor]";		
+$def["body a:hover"]="[sysfcl:linkHoverForeColor]";
 $def["html, body"] = "width:100%; height:100%;";
 $def["span"]="white-space: normal";//for span white space are not interprete as the same IE#firefox
 //define shortcut icon theme
 
-$def[".posab"] = "position:absolute;";		
-$def[".posfix"]="position:fixed;";		
+$def[".posab"] = "position:absolute;";
+$def[".posfix"]="position:fixed;";
 $def[".posr"] = "position:relative;";
 $def[".poss"] = "position:static;";
 $def[".floatl"] = "float:left;";
-$def[".floatr"] = "float:right;";		
+$def[".floatr"] = "float:right;";
 $def[".clearb"] = "clear:both;";
 $def[".clearl"] = "clear:left;";
 $def[".clearr"] = "clear:right;";
@@ -55,6 +55,7 @@ $def[".igk-text-c"] ="text-align:center !important; vertical-align: middle !impo
 $def[".ztop"] ="z-index: 9000;";
 $def[".zback"] ="z-index: -9000;";
 $def[".fitw"] ="width:100%;";
+$def[".fitw-i"] ="width:100% !important;";
 $def[".fitw-a"] = "width:auto !important;";
 $def[".fith-a"] = "height:auto !important;";
 $def[".fit"] ="width:100%; height:100%;";
@@ -92,12 +93,12 @@ $def[".igk-article-options .mark .igk-symbol"]="background-repeat:no-repeat !imp
 $def[".igk-article-options .mark svg"]="width:100%; height:100%";
 
 //
-$def[".".IGK_SESSION_CTRL] = "{sys:posfix, loc_r, loc_t} top:32px; right:32px;  z-index: 10000;";		
+$def[".".IGK_SESSION_CTRL] = "{sys:posfix, loc_r, loc_t} top:32px; right:32px;  z-index: 10000;";
 $def[".capitalize"] = "text-transform:capitalize;";
 $def[".uppercase"] = "text-transform:uppercase;";
 $def[".lowercase"] = "text-transform:lowercase;";
 $def[".fith"] ="height:100%;";
-$def[".hide"] ="display:none;";		
+$def[".hide"] ="display:none;";
 $def[".halfw"] ="width:50%;";
 $def[".halfh"] ="height:50%;";
 
@@ -127,13 +128,13 @@ $def[".no-outline"]="outline:none !important; outline-style:none;";
 $def[".no-appearance"]="[resolv:appearance:none;]";
 
 $def[".no-scrollbar::-webkit-scrollbar"] = "display:none;";
-$def[".no-scrollbar"] = "scrollbar-width:none; -ms-overflow-style:none;"; 
+$def[".no-scrollbar"] = "scrollbar-width:none; -ms-overflow-style:none;";
 $def[".no-cursor"] = "cursor: none;";
 
 $def[".ellipsis"]= "text-overflow:ellipsis;";
 $def[".wrapnormal"] = "white-space:normal;";
 $def[".loc_b"]="bottom:0px;";
-$def[".loc_l"]="left:0px;";		
+$def[".loc_l"]="left:0px;";
 $def[".loc_mid"]="left:50%; top: 50%;";
 $def[".loc_r"]="right:0px;";
 $def[".loc_t"] = "top:0px;";
@@ -155,11 +156,11 @@ $def["*:before, *:after"]= "box-sizing: border-box";
 
 
 $def[".scroll_h_x"] = "overflow-x:hidden;";
-$def[".scroll_h_y"] = "overflow-y:hidden;"; 
-$def[".scroll_x"] = "overflow-x: scroll;"; 
-$def[".scroll_y"] = "overflow-y: scroll;"; 
-$def[".scroll_ay"] = "overflow-y: auto;"; 
-$def[".scroll_ax"] = "overflow-x: auto;"; 
+$def[".scroll_h_y"] = "overflow-y:hidden;";
+$def[".scroll_x"] = "overflow-x: scroll;";
+$def[".scroll_y"] = "overflow-y: scroll;";
+$def[".scroll_ay"] = "overflow-y: auto;";
+$def[".scroll_ax"] = "overflow-x: auto;";
 $def[".autoh"] = "height:auto;";
 $def[".autow"] = "width:auto;";
 
@@ -167,12 +168,12 @@ $def[".puce_circle"]= "list-style-type:disc;";
 
 $def[".dispn"] = "display:none;";
 $def[".dispb"] = "display:block;";
-$def[".dispi"] = " display:inline;"; 
+$def[".dispi"] = " display:inline;";
 $def[".dispib"] = "display:inline-block;";
 
 $def[".dispn_i"] = "display:none !important;";
 $def[".dispb_i"] = "display:block !important;";
-$def[".dispi_i"] = " display:inline !important;"; 
+$def[".dispi_i"] = " display:inline !important;";
 $def[".dispib_i"] = "display:inline-block !important;";
 
 
@@ -186,7 +187,7 @@ $def[".disptabr"] = " display: table-row;min-height:0px;";
 $def[".dispflex"] = "display: flex;";
 $def[".flex-no-wrap"] = "flex-wrap: nowrap;";
 $def[".flex-wrap"] = "flex-wrap: wrap;";
-$def[".flex-wrap-reverse"] = "flex-wrap: wrap-reverse;"; 
+$def[".flex-wrap-reverse"] = "flex-wrap: wrap-reverse;";
 $def[".flex-a-center"] = "justify-content: center; align-items: center;";
 
 
@@ -215,18 +216,18 @@ $def[".igk-ctrl-options ul li"] = "{sys:dispib} vertical-align:middle;";
 
 //frame box;
 $def[".frame_textarea"] = "width: 500px; height:300px";
-$def[".igk-msbox-dialog"] = $def[".igk-framebox-dialog"] = "background-color: [cl:frameboxDialogBgColor, white]; padding: 4px;"; 
-$def[".igk-msbox-dialog-title"] = 
-$def[".framebox-dialog-title"]="position:relative; overflow:hidden; min-height:32px; font-size:14pt; [bgcl:igk-framebox-title-bgcl] [fcl:igk-framebox-title-fcl] cursor:move; padding-right: 64px;"; 
+$def[".igk-msbox-dialog"] = $def[".igk-framebox-dialog"] = "background-color: [cl:frameboxDialogBgColor, white]; padding: 4px;";
+$def[".igk-msbox-dialog-title"] =
+$def[".framebox-dialog-title"]="position:relative; overflow:hidden; min-height:32px; font-size:14pt; [bgcl:igk-framebox-title-bgcl] [fcl:igk-framebox-title-fcl] cursor:move; padding-right: 64px;";
 
-$def[".hseparator"]="{sys:fitw} height: 16px; [res:hsep];"; 
+$def[".hseparator"]="{sys:fitw} height: 16px; [res:hsep];";
 $def[".hidden"]="display:none;";
 
-$def[".transparent"] ="background-color:transparent; color:transparent;";		
+$def[".transparent"] ="background-color:transparent; color:transparent;";
 $def[".igk-bodyinfo"] = "display:none;";
 
-$def[".config-fileviewdir"]="[res:folder_16x16]; background-repeat: no-repeat; text-indent: 24px; display:inline-block;"; 
-$def[".config-fileviewfile"]="[res:file_16x16]; background-repeat: no-repeat; text-indent: 24px; display:inline-block;"; 
+$def[".config-fileviewdir"]="[res:folder_16x16]; background-repeat: no-repeat; text-indent: 24px; display:inline-block;";
+$def[".config-fileviewfile"]="[res:file_16x16]; background-repeat: no-repeat; text-indent: 24px; display:inline-block;";
 
 
 $def[".framebox-dialog .cltextarea"]="width:100%;min-height:124px";
@@ -236,8 +237,8 @@ $def[".framebox-title .framebox_close "]= "{sys:alignm, posab} right: 4px; top: 
 //---------------------------------------------------------
 //CONFIG Home page for apage editor
 //---------------------------------------------------------
-$def[".igk-page-editor .framebox-dialog .cllabel "] = "{sys:alignr, dispib} width: 200px;"; 
-$def[".igk-page-editor .framebox-dialog  input,.igk-page-editor .framebox-dialog  select"] = "{sys:dispib, igk-form-control} width: 200px"; 
+$def[".igk-page-editor .framebox-dialog .cllabel "] = "{sys:alignr, dispib} width: 200px;";
+$def[".igk-page-editor .framebox-dialog  input,.igk-page-editor .framebox-dialog  select"] = "{sys:dispib, igk-form-control} width: 200px";
 $def[".igk-page-editor .framebox-dialog  input.clsubmit"] = "(sys:.igk-btn)";
 
 
@@ -258,7 +259,7 @@ $def[".bold"] = "font-weight: 400";
 $btnstyle = "[sysbgcl:buttonBackgroundColor] [sysfcl:buttonTextColor] border:none; {sys:dispib} display:inline-block; margin:2px; padding-right:4px; height:32px; vertical-align: top; text-align:center;".
 "cursor:pointer;";
 
-	
+
 
 
 $def["body .igk-cnf-connexion-div"] = "{sys:posab} left:50%; top:50%; margin-left:-150px; margin-top:-200px;background-color:white; padding:5px;";
@@ -271,15 +272,15 @@ $def[".igksessionctrl"] = "position:fixed; right:32px; top:32px; z-index:10000;"
 $def[".bodyBgColor"] = "[palbgcl:color_1]";
 $def[".bodyfColor"] = "[palfcl:color_2]";
 $def[".igk-btn-lnk"] = "(sys:.igk-btn)";
-$def[".igk-cnf-framebox .clbutton, .igk-cnf-framebox .clsubmit, .igk-cnf-framebox .clreset, .igk-cnf-framebox clbutton"] = $btnstyle;				
-		
+$def[".igk-cnf-framebox .clbutton, .igk-cnf-framebox .clsubmit, .igk-cnf-framebox .clreset, .igk-cnf-framebox clbutton"] = $btnstyle;
+
 
 $def["body.igk-cnf-body .framebox-dialog .cltext, body.igk-cnf-body .framebox-dialog .clpassword"] = "padding:4px; margin-bottom:4px;";
 
 $def[".igk-horizontal-separator"]="{sys:dispb} height:1px;  [bgcl:igk-hsep-bg] border-bottom: 1px solid [cl:igk-hsep-light, #eee]; margin-bottom:10px";
-$def[".igk-powered"] = "display:block; position:fixed; bottom:0px; z-index: 10000; font-size:0.68em; right:0px; background-color:rgba(115,115,115,0.8); border-radius:4px 0px 0px 0px; padding:4px 0px 0px 16px; ";
+$def[".igk-powered"] = "display:block; position:fixed; background-color: [cl:poweredBgColor,#222]; color:[cl:poweredColor, white]; bottom:0px; z-index: 10000; font-size:12px; right:0px; border-radius:4px 0px 0px 0px; padding:4px 0px 0px 16px; ";
 $def[".igk-powered a"] = "color:white;";
-$def[".igk-powered a:visited,.igk-powered a:hover"] = "color:white;";		
+$def[".igk-powered a:visited,.igk-powered a:hover"] = "color:white;";
 $def[".igk-notify.igk-notify-danger .error-code"] = "background-color:#eee; color:#555; padding:10px;";
 
 
@@ -292,12 +293,12 @@ $cl["igk-hsep-bg"] =
 $cl["igk-notify-w-fcl"] =
 $cl["igk-notify-i-fcl"] =
 $cl["igk-cnf-add-prop-color"] =
-$cl["igk-framebox-title-fcl"] 
+$cl["igk-framebox-title-fcl"]
 = "transparent";
 
-$cl["igk-framebox-title-fcl"] = "transparent"; 
+$cl["igk-framebox-title-fcl"] = "transparent";
 $cl["igk-hsep-bg"] = "transparent";
-$cl["igk-cnf-add-prop-color"] = "transparent"; 
+$cl["igk-cnf-add-prop-color"] = "transparent";
 $cl["configFocusAreaSelected"] = "red";
 $cl["breadcrumbsLinkHover"] = "red";
 $cl["tableLightLinkHoverForeColor"] = "red";

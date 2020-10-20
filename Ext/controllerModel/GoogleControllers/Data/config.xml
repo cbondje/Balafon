@@ -6,6 +6,5 @@
     <clParentCtrl />
     <clVisiblePages>*</clVisiblePages>
     <clDescription />
-    <clDataSchema />
-    <google.ApiKey>12321</google.ApiKey>
+    <clDataSchema />c
 </config>

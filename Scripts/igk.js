@@ -3061,7 +3061,30 @@ Name:balafon.js
 		};
 	}
 
+	(function () {
+		//igk.io
+		createNS("igk.io", {
+			copyToClipboard : function(s){
+				var g = document.createElement("textarea");
+				var selected = 
+				document.getSelection().rangeCount > 0    
+				? document.getSelection().getRangeAt(0)
+				: !1;
+				g.innerText = s;
+				g.style.position = "absolute";
+				g.style.left = "-9999";
+				document.body.appendChild(g);
+				g.select();
+				document.exec("copy");
+				$igk(g).remove(); 
 
+				if (selected){
+					document.getSelection().removeAllRanges();
+					document.getSelection().addRange(selected);
+				}
+			}
+		});
+	})();
 
 
 
@@ -3070,6 +3093,17 @@ Name:balafon.js
 	(function () {
 		// load files igk.io.file
 		createNS("igk.io.file", {
+			/**
+			 * download the current data
+			 * */
+			downloadData: function(name, data){
+				var a = igk.createNode("a");
+				igk.dom.body().appendChild(a.o); // not require in IE 
+				a.o.download = name; 
+				a.o.href = data;
+				a.o.click();
+				a.remove();
+			},
 			// load a html or text document,
 			// >u: uri
 			// >f: callback function on document recieve
@@ -8006,6 +8040,7 @@ function __igk_event(q,p,n){
 	// web utility functions
 	createNS("igk.web", {
 		setcookies: function (name, value, exdays) {
+		 
 			var exdate = new Date();
 			if (exdays)
 				exdate.setDate(exdate.getDate() + exdays);
@@ -13548,6 +13583,21 @@ function createObject (T, t, args){
 		});
 
 		createNS("igk.ajx", {
+			fetch: function(uri, data){
+				if (!window.Promise){
+					throw ("Promise not found - old browser");
+				} 
+				var p = new Promise(function(resolv, reject){
+					igk.ajx.aget(uri, data, function(xhr){
+							if (this.isReady()){						
+								resolv.apply(xhr);
+							}else if (xhr.readyState == 4 ){
+								reject.apply(xhr);
+							}						
+					});
+				});
+				return p;
+			},
 			postFormData: function(uri, data){
 				var f = igk.dom.body().add("form");
 				f.setAttribute("action", uri);
@@ -13566,6 +13616,7 @@ function createObject (T, t, args){
 
 		igk_appendProp(igk.ajx.ajx.prototype,			
 			{
+
 				isReady: function () { 
 						return ( this.xhr.readyState == 4) && (this.xhr.status == 200); 
 							// (
@@ -13573,7 +13624,12 @@ function createObject (T, t, args){
 							// || // for chrome
 							// ((this.xhr.readyState == 4) && (this.xhr.status == 200) && (/^(OK|No Error)/.test(this.xhr.statusText) ))
 						// );
-					},
+				},
+				isFailed: function(){
+					if (( this.xhr.readyState == 4))
+						return  (this.xhr.status != 200); 
+					return true;
+				},
 				toString: function () { return "igk.ajx"; },
 				setResponseTo: function (q, unregister) { // q is node
 						if (q && (typeof (q.innerHTML) != IGK_UNDEF)) { // set response to node
@@ -17867,8 +17923,8 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 						return;
 					}
 				}
-				
-				igk.winui.reg_event(item, kn, func, useCapture);
+				igk.winui.reg_system_event(item, kn, func, useCapture);
+				// igk.winui.reg_event(item, kn, func, useCapture);
 			},
 			unreg_event: function (item, func, useCapture) {
 				// 
@@ -18407,7 +18463,25 @@ else
 	
 })();
 
-
+//----------------------------------------------------------
+// BIND EVENT ATTRIB Management
+//----------------------------------------------------------
+(function(){
+	var _attribs = {};
+	igk.ctrl.registerAttribManager("igk:oninit", {});
+	igk.ctrl.bindAttribManager("igk:oninit", function (m,v) {
+		// alert("bind attrib management: "+v);
+		try{
+		var fc = Function(v);
+		fc.apply(this.o);
+		if (!_attribs["oninit"])
+			_attribs["oninit"] = [];
+		_attribs["oninit"].push(this);
+		} catch(e){
+			console.error(e);
+		}
+	});
+})();
 
 // 
 // class control: igk-fixed-action-bar
@@ -20033,9 +20107,9 @@ igk.ready(function () {
 		return new RegExp('((' + r + ')code)', 'i');
 	})(m_types);
 	function __init_code_area() {
+
 		var q = this;
-		if (!q) {
-			
+		if (!q) { 
 			return;
 		}
 		if (q.hightlight)
@@ -20058,8 +20132,8 @@ igk.ready(function () {
 			}
 		}
 		q.addClass("code-php");
-		var s = q.o.innerHTML;// .getHtml().trim();
-		var t = s.split('\n');
+		var s = q.o.textContent;// .getHtml().trim();
+		var t = s.split('\n'); 
 		
 		// return;
 		// clear node
@@ -20163,6 +20237,7 @@ igk.ready(function () {
 		return w + p;
 	}
 	function igk_php_eval() {// php evaluation code
+		
 		igk_e.apply(this);
 		var reserved = /((true|false)|(a(bstract|nd|rray|s))|(c(a(llable|se|tch)|l(ass|one)|on(st|tinue)))|(d(e(clare|fault)|ie|o))|(e(cho|lse(if)?|mpty|nd(declare|for(each)?|if|switch|while)|val|x(it|tends)))|(f(inal|or(each)?|unction))|(g(lobal|oto))|(i(f|mplements|n(clude(_once)?|st(anceof|eadof)|terface)|sset))|(n(amespace|ew))|(p(r(i(nt|vate)|otected)|ublic))|(re(quire(_once)?|turn))|(s(tatic|witch))|(t(hrow|r(ait|y)))|(u(nset|se))|(__halt_compiler|break|list|(x)?or|var|while))$/;
 		var w = 0;
@@ -20283,8 +20358,7 @@ igk.ready(function () {
 		};
 	}
 
-	function igk_xml_eval(){
-		
+	function igk_xml_eval(){		
 	};
 
 	igk.system.createNS("igk.highlightjs", {
@@ -20292,21 +20366,17 @@ igk.ready(function () {
 		'xml': igk_xml_eval
 	});
 
-
 	function __initCode() {
 		$igk("code.igk-code").each_all(__init_code_area);
-	}
-	igk.ready(function () {
-		__initCode();
-	});
+	};
+	igk.ready(__initCode);
 
 
-	igk.ctrl.registerReady(function () {
-		if (this.tagName && this.tagName.toLowerCase() == "code" && this.getAttribute('igk-code')) {
-			__init_code_area.apply($igk(this));
-		}
-		
-	});
+	// igk.ctrl.registerReady(function () {
+	// 	if (this.tagName && this.tagName.toLowerCase() == "code" && this.getAttribute('igk-code')) {
+	// 		__init_code_area.apply($igk(this));
+	// 	}		
+	// });
 	
 	igk.system.createNS("igk.winui.codes", {
 		getCodes: function(){
@@ -20454,6 +20524,14 @@ igk.ready(function () {
 
 	igk.system.createNS("igk.css", {
 		initAutoTransitionProperties: _initTransitionProperties,
+		loadLinks: function(t){ 
+			for(var i = 0; i < t.length; i++){
+				var c = document.createElement("link");
+				c.setAttribute("href", t[i]);
+				c.setAttribute("rel", "stylesheet");
+				igk.dom.body().add(c);
+			}
+		},
 		getEmSize: function (c, t) {
 			// return the em font size of this target element
 			var s = igk.getNumber($igk(c).getComputedStyle("font-size"));
@@ -20480,9 +20558,13 @@ igk.ready(function () {
 		appendRule: function (c) { // append rule to balafon.css.php or css definition 
 			rule = rule || __getRule(corecss);
 			
-			
-			if (rule)
-				rule.insertRule(c, rule.cssRules.length);
+			try{
+				if (rule)
+					rule.insertRule(c, rule.cssRules.length);
+			}
+			catch(e){
+				
+			}
 		},
 		appendStyle: function (uri) {
 			// plugin style to document
@@ -21037,16 +21119,6 @@ function igk_getFilterProp(o){
 
 
 
-// window.sessionStorage["igk/slider"]=1;
-// igk.ready(function(){
-// transition end
-
-// if(window.localStorage){
-// var v=window.localStorage["igk/slider"] || 1;
-// v++;
-// window.localStorage["igk/slider"]=v;
-// }
-// });
 
 
 

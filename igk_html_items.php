@@ -7,8 +7,8 @@
 ///<param name="ctrl" default="null"></param>
 /**
 * Represente igk_html_node_expression_node function
-* @param  $raw
-* @param  $ctrl the default value is null
+* @param mixed $raw
+* @param mixed $ctrl the default value is null
 */
 function igk_html_node_expression_node($raw, $ctrl=null){
     if($ctrl === null){
@@ -63,7 +63,7 @@ final class IGKHtmlAJXBindDataNodeItem extends IGKHtmlComponentNodeItem {
     ///<param name="options" default="null"></param>
     /**
     * Represente Render function
-    * @param  $options the default value is null
+    * @param mixed $options the default value is null
     */
     public function Render($options=null){
         if(!$this->m_invoked){
@@ -86,9 +86,9 @@ final class IGKHtmlAJXButtonItem extends IGKHtmlDiv {
     ///<param name="method" default="'POST'"></param>
     /**
     * Represente __construct function
-    * @param  $uri the default value is null
-    * @param  $reponse the default value is 'null'
-    * @param  $method the default value is 'POST'
+    * @param mixed $uri the default value is null
+    * @param mixed $reponse the default value is 'null'
+    * @param mixed $method the default value is 'POST'
     */
     public function __construct($uri=null, $reponse='null', $method='POST'){
         parent::__construct();
@@ -128,17 +128,17 @@ final class IGKHtmlAJXCtrlReplacementNode extends IGKHtmlItem {
     */
     public function __construct(){
         parent::__construct("igk:replace-ctrl");
-        $this->m_ctrls=array(); 
+        $this->m_ctrls=array();
     }
     ///<summary>Represente __getRenderingChildren function</summary>
     ///<param name="option" default="null"></param>
     /**
     * Represente __getRenderingChildren function
-    * @param  $option the default value is null
+    * @param mixed $option the default value is null
     */
     protected function __getRenderingChildren($option=null){
         $tab=array();
-        foreach($this->m_ctrls as $k=>$v){
+        foreach($this->m_ctrls as  $v){
             $t=$v->target ?? $v->ctrl->TargetNode;
             if($t->IsVisible){
                 $tab[]=$t;
@@ -151,8 +151,8 @@ final class IGKHtmlAJXCtrlReplacementNode extends IGKHtmlItem {
     ///<param name="target" default="null"></param>
     /**
     * Represente addCtrl function
-    * @param  $b
-    * @param  $target the default value is null
+    * @param mixed $b
+    * @param mixed $target the default value is null
     */
     public function addCtrl($b, $target=null){
         $this->m_ctrls[$b->Name]=(object)["ctrl"=>$b, "target"=>$target];
@@ -172,7 +172,7 @@ final class IGKHtmlAJXCtrlReplacementNode extends IGKHtmlItem {
     */
     protected function innerHTML(& $o=null){
         $so="";
-        foreach($this->m_ctrls as $k=>$v){
+        foreach($this->m_ctrls as  $v){
             $t=$v->target ?? $v->ctrl->TargetNode;
             if($t->IsVisible){
                 $so .= $t->Render($o);
@@ -200,8 +200,8 @@ final class IGKHtmlAJXReplacementNode extends IGKHtmlItem{
     ///<param name="tag" default="null"></param>
     /**
     * Represente addNode function
-    * @param  $n
-    * @param  $tag the default value is null
+    * @param mixed $n
+    * @param mixed $tag the default value is null
     */
     public function addNode($n, $tag=null){
         $this->m_nodes[]=$n;
@@ -235,7 +235,7 @@ final class IGKHtmlAJXReplacementNode extends IGKHtmlItem{
     */
     protected function innerHTML(& $o=null){
         $so="";
-        foreach($this->m_nodes as $k=>$v){
+        foreach($this->m_nodes as  $v){
             if($v->IsVisible)
                 $so .= $v->Render($o);
         }
@@ -252,19 +252,18 @@ final class IGKHtmlAJXTabControlItem extends IGKHtmlCtrlComponentNodeItemBase {
     private $m_tabcontent;
     private $m_tablist;
     private static $demoComponent;
-	
+
 	public function getSettings($key){
 		if ($this->m_tabViewListener){
 			return $this->m_tabViewListener->getParam($key);
 		}
 		return "isnull";
-		return null;
 	}
     ///<summary>Represente __AcceptRender function</summary>
     ///<param name="opt" default="null"></param>
     /**
     * Represente __AcceptRender function
-    * @param  $opt the default value is null
+    * @param mixed $opt the default value is null
     */
     public function __AcceptRender($opt=null){
         if($this->m_tabViewListener !== null){
@@ -293,10 +292,10 @@ final class IGKHtmlAJXTabControlItem extends IGKHtmlCtrlComponentNodeItemBase {
     ///<param name="method" default="GET"></param>
     /**
     * Represente addTabPage function
-    * @param  $content the default value is null
-    * @param  $uri the default value is null
-    * @param  $active the default value is false
-    * @param  $method the default value is "GET"
+    * @param mixed $content the default value is null
+    * @param mixed $uri the default value is null
+    * @param mixed $active the default value is false
+    * @param mixed $method the default value is "GET"
     */
     public function addTabPage($content=null, $uri=null, $active=false, $method="GET"){
         $li=$this->m_tablist->add("li");
@@ -328,7 +327,7 @@ final class IGKHtmlAJXTabControlItem extends IGKHtmlCtrlComponentNodeItemBase {
     ///<param name="t"></param>
     /**
     * Represente initDemo function
-    * @param  $t
+    * @param mixed $t
     */
     public function initDemo($t){
         $s=igk_get_component(__METHOD__);
@@ -357,9 +356,9 @@ EOF;
     ///<param name="method" default="'GET'"></param>
     /**
     * Represente replaceContent function
-    * @param  $t
-    * @param  $uri
-    * @param  $method the default value is 'GET'
+    * @param mixed $t
+    * @param mixed $uri
+    * @param mixed $method the default value is 'GET'
     */
     private function replaceContent($t, $uri, $method='GET'){
         $t->addBalafonJS(1)->Content=<<<EOF
@@ -370,7 +369,7 @@ EOF;
     ///<param name="i"></param>
     /**
     * Represente select function
-    * @param  $i
+    * @param mixed $i
     */
     public function select($i){
         if($this->m_selected){
@@ -392,15 +391,15 @@ EOF;
     ///<param name="param" default="null"></param>
     /**
     * Represente setComponentListener function
-    * @param  $listener
-    * @param  $param the default value is null
+    * @param mixed $listener
+    * @param mixed $param the default value is null
     */
     public function setComponentListener($listener, $param=null){}
     ///<summary>Represente setTabViewListener function</summary>
     ///<param name="o"></param>
     /**
     * Represente setTabViewListener function
-    * @param  $o
+    * @param mixed $o
     */
     public function setTabViewListener($o){
         $this->m_tabViewListener=$o;
@@ -443,7 +442,7 @@ final class IGKHtmlAJXViewItem extends IGKHtmlDiv {
     ///<param name="options" default="null"></param>
     /**
     * Represente AcceptRender function
-    * @param  $options the default value is null
+    * @param mixed $options the default value is null
     */
     public function AcceptRender($options=null){
         if(!empty($this->m_uri)){
@@ -475,7 +474,7 @@ final class IGKHtmlAJXViewItem extends IGKHtmlDiv {
     ///<param name="script"></param>
     /**
     * Represente setScript function
-    * @param  $script
+    * @param mixed $script
     */
     public function setScript($script){
         $this->m_scriptfunction=$script;
@@ -485,7 +484,7 @@ final class IGKHtmlAJXViewItem extends IGKHtmlDiv {
     ///<param name="uri"></param>
     /**
     * Represente setUri function
-    * @param  $uri
+    * @param mixed $uri
     */
     public function setUri($uri){
         $this->m_uri=$uri;
@@ -501,7 +500,7 @@ class IGKHtmlAJXViewNodeItem extends IGKHtmlItem{
     ///<param name="option" default="null"></param>
     /**
     * Represente __AcceptRender function
-    * @param  $option the default value is null
+    * @param mixed $option the default value is null
     */
     protected function __AcceptRender($option=null){
         if(!igk_is_ajx_demand())
@@ -512,7 +511,7 @@ class IGKHtmlAJXViewNodeItem extends IGKHtmlItem{
     ///<param name="tag" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $tag the default value is null
+    * @param mixed $tag the default value is null
     */
     public function __construct($tag=null){
         if($tag == null)
@@ -567,10 +566,10 @@ final class IGKHtmlArticleConfigNode extends IGKHtmlItem{
     ///<param name="forceview"></param>
     /**
     * Represente __construct function
-    * @param  $ctrl the default value is null
-    * @param  $target the default value is null
-    * @param  $filename the default value is null
-    * @param  $forceview the default value is 0
+    * @param mixed $ctrl the default value is null
+    * @param mixed $target the default value is null
+    * @param mixed $filename the default value is null
+    * @param mixed $forceview the default value is 0
     */
     public function __construct($ctrl=null, $target=null, $filename=null, $forceview=0){
         parent::__construct("div");
@@ -616,7 +615,7 @@ final class IGKHtmlArticleConfigNode extends IGKHtmlItem{
     ///<param name="v"></param>
     /**
     * Represente setdropFileUri function
-    * @param  $v
+    * @param mixed $v
     */
     public function setdropFileUri($v){
         $this->m_dropfileUri=$v;
@@ -638,9 +637,9 @@ final class IGKHtmlArticleViewItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="row" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $file the default value is null
-    * @param  $ctrl the default value is null
-    * @param  $row the default value is null
+    * @param mixed $file the default value is null
+    * @param mixed $ctrl the default value is null
+    * @param mixed $row the default value is null
     */
     public function __construct($file=null, $ctrl=null, $row=null){
         parent::__construct("div");
@@ -652,7 +651,7 @@ final class IGKHtmlArticleViewItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="option" default="null"></param>
     /**
     * Represente __getRenderingChildren function
-    * @param  $option the default value is null
+    * @param mixed $option the default value is null
     */
     protected function __getRenderingChildren($option=null){
         if($this->m_InnerOnly){
@@ -664,9 +663,9 @@ final class IGKHtmlArticleViewItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="o" default="null"></param>
     /**
     * Represente AcceptRender function
-    * @param  $o the default value is null
+    * @param mixed $o the default value is null
     */
-    public function AcceptRender($o=null){
+    public function AcceptRender($options=null){
         if($this->m_iview){
             $this->initView();
         }
@@ -718,7 +717,7 @@ final class IGKHtmlArticleViewItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="v"></param>
     /**
     * Represente setFile function
-    * @param  $v
+    * @param mixed $v
     */
     public function setFile($v){
         $this->m_view=$v;
@@ -729,7 +728,7 @@ final class IGKHtmlArticleViewItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="v"></param>
     /**
     * Represente setInnerOnly function
-    * @param  $v
+    * @param mixed $v
     */
     public function setInnerOnly($v){
         $this->m_InnerOnly=$v;
@@ -740,7 +739,7 @@ final class IGKHtmlArticleViewItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="v"></param>
     /**
     * Represente setRow function
-    * @param  $v
+    * @param mixed $v
     */
     public function setRow($v){
         $this->m_row=$v;
@@ -761,9 +760,9 @@ class IGKHtmlAuthorizationNodeItem extends IGKHtmlItem {
     ///<param name="authCtrl" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $tag the default value is null
-    * @param  $accesskey the default value is null
-    * @param  $authCtrl the default value is null
+    * @param mixed $tag the default value is null
+    * @param mixed $accesskey the default value is null
+    * @param mixed $authCtrl the default value is null
     */
     public function __construct($tag=null, $accesskey=null, $authCtrl=null){
         parent::__construct($tag);
@@ -798,7 +797,7 @@ class IGKHtmlAuthorizationNodeItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setAccessKey function
-    * @param  $v
+    * @param mixed $v
     */
     public function setAccessKey($v){
         $this->m_AccessKey=$v;
@@ -808,7 +807,7 @@ class IGKHtmlAuthorizationNodeItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setAuthCtrl function
-    * @param  $v
+    * @param mixed $v
     */
     public function setAuthCtrl($v){
         $this->m_authCtrl=$v;
@@ -847,7 +846,7 @@ class IGKHtmlBindDataNodeItem extends IGKHtmlCtrlNodeItemBase{
     ///<param name="t"></param>
     /**
     * Represente initProperties function
-    * @param  $t
+    * @param mixed $t
     */
     public function initProperties($t){
         foreach($t as $k=>$v){
@@ -858,7 +857,7 @@ class IGKHtmlBindDataNodeItem extends IGKHtmlCtrlNodeItemBase{
     ///<param name="options" default="null"></param>
     /**
     * Represente Render function
-    * @param  $options the default value is null
+    * @param mixed $options the default value is null
     */
     public function Render($options=null){
         $this->ClearChilds();
@@ -869,7 +868,7 @@ class IGKHtmlBindDataNodeItem extends IGKHtmlCtrlNodeItemBase{
     ///<param name="value"></param>
     /**
     * Represente setFile function
-    * @param  $value
+    * @param mixed $value
     */
     public function setFile($value){
         $this->m_File=$value;
@@ -878,7 +877,7 @@ class IGKHtmlBindDataNodeItem extends IGKHtmlCtrlNodeItemBase{
     ///<param name="value"></param>
     /**
     * Represente setRow function
-    * @param  $value
+    * @param mixed $value
     */
     public function setRow($value){
         $this->m_Row=$value;
@@ -902,8 +901,8 @@ final class IGKHtmlBreadCrumbsItem extends IGKHtmlItem{
     ///<param name="content"></param>
     /**
     * Represente addItem function
-    * @param  $uri
-    * @param  $content
+    * @param mixed $uri
+    * @param mixed $content
     */
     public function addItem($uri, $content){
         $li=$this->add("li");
@@ -921,7 +920,7 @@ final class IGKHtmlCanvaNodeItem extends IGKHtmlItem {
     ///<param name="ctrl" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $ctrl the default value is null
+    * @param mixed $ctrl the default value is null
     */
     public function __construct($ctrl=null){
         parent::__construct("canvas");
@@ -957,7 +956,7 @@ final class IGKHtmlCanvaNodeItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setUri function
-    * @param  $v
+    * @param mixed $v
     */
     public function setUri($v){
         $this->m_uri=$v;
@@ -973,7 +972,7 @@ final class IGKHtmlChildNodeViewItem extends IGKHtmlItem {
     ///<param name="basicTag" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $basicTag the default value is null
+    * @param mixed $basicTag the default value is null
     */
     public function __construct($basicTag=null){
         parent::__construct("igk:childnodeview");
@@ -1000,7 +999,7 @@ final class IGKHtmlChildNodeViewItem extends IGKHtmlItem {
     ///<param name="o" default="null"></param>
     /**
     * Represente Render function
-    * @param  $o the default value is null
+    * @param mixed $o the default value is null
     */
     public function Render($o=null){
         $k=0;
@@ -1010,7 +1009,7 @@ final class IGKHtmlChildNodeViewItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setBasicTag function
-    * @param  $v
+    * @param mixed $v
     */
     public function setBasicTag($v){
         $this->m_basic=$v;
@@ -1041,7 +1040,7 @@ final class IGKHtmlCodeViewerItem extends IGKHtmlItem {
     ///<param name="t"></param>
     /**
     * Represente initDemo function
-    * @param  $t
+    * @param mixed $t
     */
     public function initDemo($t){
         $this->Language="php";
@@ -1056,7 +1055,7 @@ EOF;
     ///<param name="v"></param>
     /**
     * Represente setLanguage function
-    * @param  $v
+    * @param mixed $v
     */
     public function setLanguage($v){
         $this["igk-type"]=$v;
@@ -1073,7 +1072,7 @@ final class IGKHtmlCommentItem extends IGKHtmlItem {
     ///<param name="value" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $value the default value is null
+    * @param mixed $value the default value is null
     */
     public function __construct($value=null){
         parent::__construct("igk-comment");
@@ -1091,8 +1090,8 @@ final class IGKHtmlCommentItem extends IGKHtmlItem {
     ///<param name="index" default="null"></param>
     /**
     * Represente _AddChild function
-    * @param  $item
-    * @param  $index the default value is null
+    * @param mixed $item
+    * @param mixed $index the default value is null
     */
     protected function _AddChild($item, $index=null){
         return false;
@@ -1101,10 +1100,11 @@ final class IGKHtmlCommentItem extends IGKHtmlItem {
     ///<param name="o" default="null"></param>
     /**
     * Represente AcceptRender function
-    * @param  $o the default value is null
+    * @param mixed $o the default value is null
     */
-    public function AcceptRender($o=null){
-        $this->forRendering=parent::AcceptRender($o);
+    public function AcceptRender($options=null){
+        parent::__AcceptRender();
+        $this->forRendering=parent::AcceptRender($options);
         return $this->forRendering;
     }
     ///<summary>Represente getContent function</summary>
@@ -1141,7 +1141,7 @@ final class IGKHtmlCommentItem extends IGKHtmlItem {
     ///<param name="o" default="null"></param>
     /**
     * Represente RenderComplete function
-    * @param  $o the default value is null
+    * @param mixed $o the default value is null
     */
     public function RenderComplete($o=null){
         $this->forRendering=false;
@@ -1153,17 +1153,21 @@ final class IGKHtmlCommentItem extends IGKHtmlItem {
 */
 final class IGKHtmlConnectFormItem extends IGKHtmlCtrlComponentNodeItemBase {
     private $m_badUri;
+
+	/** @var IGKHtmlItem */
     private $m_frm;
     private $m_goodUri;
+    /** @var IGKControllerBase */
+    private $Ctrl;
     ///<summary>Represente __construct function</summary>
     ///<param name="type" default="email"></param>
     /**
     * Represente __construct function
-    * @param  $type the default value is "email"
+    * @param mixed $type the default value is "email"
     */
     public function __construct($type="email"){
         parent::__construct("div");
-        $this->Ctrl=IGK_USER_CTRL;
+        $this->Ctrl= igk_getctrl(IGK_USER_CTRL);
         $this->m_loginType=$type;
         $this->setClass("igk-connect-form");
         $this->m_frm=parent::addForm();
@@ -1186,9 +1190,9 @@ final class IGKHtmlConnectFormItem extends IGKHtmlCtrlComponentNodeItemBase {
     ///<param name="index" default="null"></param>
     /**
     * Represente add function
-    * @param  $nameortag
-    * @param  $attribute the default value is null
-    * @param  $index the default value is null
+    * @param mixed $nameortag
+    * @param mixed $attribute the default value is null
+    * @param mixed $index the default value is null
     */
     public function add($nameortag, $attribute=null, $index=null){
         if($this->m_frm != null)
@@ -1259,7 +1263,7 @@ final class IGKHtmlConnectFormItem extends IGKHtmlCtrlComponentNodeItemBase {
     ///<param name="v"></param>
     /**
     * Represente setBadUri function
-    * @param  $v
+    * @param mixed $v
     */
     public function setBadUri($v){
         $this->m_badUri=$v;
@@ -1270,15 +1274,15 @@ final class IGKHtmlConnectFormItem extends IGKHtmlCtrlComponentNodeItemBase {
     ///<param name="param" default="null"></param>
     /**
     * Represente setComponentListener function
-    * @param  $listener
-    * @param  $param the default value is null
+    * @param mixed $listener
+    * @param mixed $param the default value is null
     */
     public function setComponentListener($listener, $param=null){}
     ///<summary>Represente setGoodUri function</summary>
     ///<param name="v"></param>
     /**
     * Represente setGoodUri function
-    * @param  $v
+    * @param mixed $v
     */
     public function setGoodUri($v){
         $this->m_goodUri=$v;
@@ -1288,7 +1292,7 @@ final class IGKHtmlConnectFormItem extends IGKHtmlCtrlComponentNodeItemBase {
     ///<param name="v"></param>
     /**
     * Represente setloginType function
-    * @param  $v
+    * @param mixed $v
     */
     public function setloginType($v){
         $this->m_loginType=$v;
@@ -1328,7 +1332,7 @@ final class IGKHtmlContactFormItem extends IGKHtmlComponentNodeItem {
     ///<param name="v"></param>
     /**
     * Represente getUri function
-    * @param  $v
+    * @param mixed $v
     */
     public function getUri($v){
         return $this->m_uri;
@@ -1341,7 +1345,7 @@ final class IGKHtmlContactFormItem extends IGKHtmlComponentNodeItem {
         $o=igk_get_robj();
         $this->m_msbox->ClearChilds();
         if(!igk_html_validate($o, array("clEmail"=>"mail"))){
-            $this->m_msbox->addNotifyBox("danger")->Content=igk_html_validate_error();
+            $this->m_msbox->addNotifyBox("danger")->Content= __("send message failed");
         }
         else{
             $this->m_msbox->Content=null;
@@ -1364,7 +1368,7 @@ final class IGKHtmlContactFormItem extends IGKHtmlComponentNodeItem {
     ///<param name="v"></param>
     /**
     * Represente setUri function
-    * @param  $v
+    * @param mixed $v
     */
     public function setUri($v){
         $this->m_uri=$v;
@@ -1392,8 +1396,8 @@ final class IGKHtmlCtrlSelectItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="entries"></param>
     /**
     * Represente bindExpression function
-    * @param  $expression
-    * @param  $entries
+    * @param mixed $expression
+    * @param mixed $entries
     */
     protected function bindExpression($expression, $entries){
         $c=new IGKHtmlItem("dummy");
@@ -1437,7 +1441,7 @@ final class IGKHtmlCtrlSelectItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="cond"></param>
     /**
     * Represente setCondition function
-    * @param  $cond
+    * @param mixed $cond
     */
     public function setCondition($cond){
         if(is_array($cond) || ($cond == null)){
@@ -1449,7 +1453,7 @@ final class IGKHtmlCtrlSelectItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="v"></param>
     /**
     * Represente setSelected function
-    * @param  $v
+    * @param mixed $v
     */
     public function setSelected($v){
         $this->m_selected=$v;
@@ -1459,7 +1463,7 @@ final class IGKHtmlCtrlSelectItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="v"></param>
     /**
     * Represente setTable function
-    * @param  $v
+    * @param mixed $v
     */
     public function setTable($v){
         $this->m_table=$v;
@@ -1477,7 +1481,7 @@ final class IGKHtmlCtrlViewNodeItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="tagName" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $tagName the default value is null
+    * @param mixed $tagName the default value is null
     */
     public function __construct($tagName=null){
         if($tagName == null)
@@ -1493,9 +1497,9 @@ final class IGKHtmlCtrlViewNodeItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="o" default="null"></param>
     /**
     * Represente AcceptRender function
-    * @param  $o the default value is null
+    * @param mixed $o the default value is null
     */
-    public function AcceptRender($o=null){
+    public function AcceptRender($options=null){
         igk_wln("accept render .".$this->IsVisible);
         return $this->IsVisible;
     }
@@ -1505,9 +1509,9 @@ final class IGKHtmlCtrlViewNodeItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="index" default="null"></param>
     /**
     * Represente add function
-    * @param  $nameorchilds
-    * @param  $attributes the default value is null
-    * @param  $index the default value is null
+    * @param mixed $nameorchilds
+    * @param mixed $attributes the default value is null
+    * @param mixed $index the default value is null
     */
     public function add($nameorchilds, $attributes=null, $index=null){
         return $this->m_content->add($nameorchilds, $attributes, $index);
@@ -1516,7 +1520,7 @@ final class IGKHtmlCtrlViewNodeItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="child"></param>
     /**
     * Represente attachChild function
-    * @param  $child
+    * @param mixed $child
     */
     public function attachChild($child){
         $this->m_content->attachChild($child);
@@ -1532,7 +1536,7 @@ final class IGKHtmlCtrlViewNodeItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="child"></param>
     /**
     * Represente detachChild function
-    * @param  $child
+    * @param mixed $child
     */
     public function detachChild($child){
         $this->m_content->detachChild($child);
@@ -1564,8 +1568,8 @@ final class IGKHtmlCtrlViewNodeItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="setParent" default="1"></param>
     /**
     * Represente remove function
-    * @param  $childs
-    * @param  $setParent the default value is 1
+    * @param mixed $childs
+    * @param mixed $setParent the default value is 1
     */
     public function remove($childs, $setParent=1){
         $this->m_content->remove($childs, $setParent);
@@ -1574,7 +1578,7 @@ final class IGKHtmlCtrlViewNodeItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="o" default="null"></param>
     /**
     * Represente RenderComplete function
-    * @param  $o the default value is null
+    * @param mixed $o the default value is null
     */
     public function RenderComplete($o=null){}
 }
@@ -1597,9 +1601,9 @@ final class IGKHtmlCurrentUserInfoItem extends IGKHtmlItem {
     ///<param name="o" default="null"></param>
     /**
     * Represente AcceptRender function
-    * @param  $o the default value is null
+    * @param mixed $o the default value is null
     */
-    public function AcceptRender($o=null){
+    public function AcceptRender($options=null){
         $u=IGKApp::getInstance()->Session->User;
         if($u == null)
             return false;
@@ -1618,7 +1622,7 @@ final class IGKHtmlCurrentUserInfoItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setDisplay function
-    * @param  $v
+    * @param mixed $v
     */
     public function setDisplay($v){
         $this->m_display=$v;
@@ -1642,14 +1646,14 @@ final class IGKHtmlDataEntryItem extends IGKHtmlDiv {
     ///<param name="visibleName" default="null"></param>
     /**
     * Represente LoadData function
-    * @param  $r
-    * @param  $visibleName the default value is null
+    * @param mixed $r
+    * @param mixed $visibleName the default value is null
     */
     public function LoadData($r, $visibleName=null){
         if($r == null)
             return;
         if(method_exists(get_class($r), "getRows")){
-            foreach($r->Rows as $k=>$v){
+            foreach($r->Rows as  $v){
                 $i=$this->add("item");
                 $i->setAttributes($v);
                 if($visibleName)
@@ -1660,14 +1664,14 @@ final class IGKHtmlDataEntryItem extends IGKHtmlDiv {
             $i=$this->add("item");
             $i->setAttributes($r);
             if($visibleName)
-                $i->Content=$v->$visibleName;
+                $i->Content=$r->$visibleName;
         }
     }
     ///<summary>Represente Render function</summary>
     ///<param name="options" default="null"></param>
     /**
     * Represente Render function
-    * @param  $options the default value is null
+    * @param mixed $options the default value is null
     */
     public function Render($options=null){
         return parent::innerHTML($options);
@@ -1682,7 +1686,7 @@ final class IGKHtmlDatePickerItem extends IGKHtmlItem{
     ///<param name="id" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $id the default value is null
+    * @param mixed $id the default value is null
     */
     public function __construct($id=null){
         parent::__construct("div");
@@ -1694,7 +1698,7 @@ final class IGKHtmlDatePickerItem extends IGKHtmlItem{
     ///<param name="id"></param>
     /**
     * Represente _initview function
-    * @param  $id
+    * @param mixed $id
     */
     private function _initview($id){
         $this->addLabel($id);
@@ -1704,7 +1708,7 @@ final class IGKHtmlDatePickerItem extends IGKHtmlItem{
     ///<param name="t"></param>
     /**
     * Represente initDemo function
-    * @param  $t
+    * @param mixed $t
     */
     public function initDemo($t){
         $this->_initview("sample");
@@ -1719,7 +1723,7 @@ final class IGKHtmlEmptyTagNodeItem extends IGKXmlNode{
     ///<param name="n"></param>
     /**
     * Represente __construct function
-    * @param  $n
+    * @param mixed $n
     */
     function __construct($n){
         parent::__construct($n);
@@ -1738,8 +1742,8 @@ class IGKHtmlExpressionNodeItem extends IGKHtmlItem{
     ///<param name="ctrl" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $args the default value is null
-    * @param  $ctrl the default value is null
+    * @param mixed $args the default value is null
+    * @param mixed $ctrl the default value is null
     */
     public function __construct($args=null, $ctrl=null){
         parent::__construct("igk:expression-node");
@@ -1757,7 +1761,7 @@ class IGKHtmlExpressionNodeItem extends IGKHtmlItem{
     ///<param name="options" default="null"></param>
     /**
     * Represente Render function
-    * @param  $options the default value is null
+    * @param mixed $options the default value is null
     */
     public function Render($options=null){
         $script_obj=igk_html_databinding_getobjforscripting($this->ctrl);
@@ -1820,7 +1824,7 @@ final class IGKHtmlGKDSNodeItem extends IGKHtmlItem {
     ///<param name="t"></param>
     /**
     * Represente initDemo function
-    * @param  $t
+    * @param mixed $t
     */
     public function initDemo($t){
         $t->addA("#")->Content="PickImage";
@@ -1830,7 +1834,7 @@ final class IGKHtmlGKDSNodeItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setUri function
-    * @param  $v
+    * @param mixed $v
     */
     public function setUri($v){
         $this["src"]=$v;
@@ -1845,7 +1849,7 @@ final class IGKHtmlGroupControlItem extends IGKHtmlItem{
     ///<param name="name" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $name the default value is null
+    * @param mixed $name the default value is null
     */
     public function __construct($name=null){
         parent::__construct("div");
@@ -1872,9 +1876,9 @@ final class IGKHtmlHMenuItem extends IGKHtmlItem {
     ///<param name="content" default="null"></param>
     /**
     * Represente addItem function
-    * @param  $name
-    * @param  $link the default value is null
-    * @param  $content the default value is null
+    * @param mixed $name
+    * @param mixed $link the default value is null
+    * @param mixed $content the default value is null
     */
     public function addItem($name, $link=null, $content=null){
         $li=$this->add("li");
@@ -1922,7 +1926,7 @@ final class IGKHtmlHomeButtonItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setTargetId function
-    * @param  $v
+    * @param mixed $v
     */
     public function setTargetId($v){
         $this->m_targetid=$v;
@@ -1940,7 +1944,7 @@ final class IGKHtmlIGKAppHeaderBarItem extends IGKHtmlItem {
     ///<param name="app"></param>
     /**
     * Represente __construct function
-    * @param  $app
+    * @param mixed $app
     */
     public function __construct($app){
         if($app == null)
@@ -1961,7 +1965,7 @@ final class IGKHtmlIGKAppHeaderBarItem extends IGKHtmlItem {
     ///<param name="t"></param>
     /**
     * Represente initDemo function
-    * @param  $t
+    * @param mixed $t
     */
     public function initDemo($t){}
     ///<summary>Represente initView function</summary>
@@ -2029,7 +2033,7 @@ class IGKHtmlIGKHeaderBarItem extends IGKHtmlItem {
     ///<param name="t"></param>
     /**
     * Represente initDemo function
-    * @param  $t
+    * @param mixed $t
     */
     public function initDemo($t){}
     ///<summary>Represente initView function</summary>
@@ -2050,7 +2054,7 @@ class IGKHtmlIGKHeaderBarItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setTitle function
-    * @param  $v
+    * @param mixed $v
     */
     public function setTitle($v){
         $this->m_title=$v;
@@ -2060,7 +2064,7 @@ class IGKHtmlIGKHeaderBarItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setUri function
-    * @param  $v
+    * @param mixed $v
     */
     public function setUri($v){
         $this->m_uri=$v;
@@ -2099,7 +2103,7 @@ class IGKHtmlImgItem extends IGKHtmlItem {
     ///<param name="uri" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $uri the default value is null
+    * @param mixed $uri the default value is null
     */
     public function __construct($uri=null){
         $this->m_img=igk_html_node_innerImg();
@@ -2114,7 +2118,7 @@ class IGKHtmlImgItem extends IGKHtmlItem {
     ///<param name="o" default="null"></param>
     /**
     * Represente __getRenderingChildren function
-    * @param  $o the default value is null
+    * @param mixed $o the default value is null
     */
     protected function __getRenderingChildren($o=null){
         return array($this->m_img);
@@ -2130,7 +2134,7 @@ class IGKHtmlImgItem extends IGKHtmlItem {
     ///<param name="tag"></param>
     /**
     * Represente _p_isClosedTag function
-    * @param  $tag
+    * @param mixed $tag
     */
     protected function _p_isClosedTag($tag){
         switch(strtolower($tag)){
@@ -2160,7 +2164,7 @@ class IGKHtmlImgItem extends IGKHtmlItem {
     ///<param name="loadedTag"></param>
     /**
     * Represente IsLoadedClosedTag function
-    * @param  $loadedTag
+    * @param mixed $loadedTag
     */
     public function IsLoadedClosedTag($loadedTag){
         switch(strtolower($loadedTag)){
@@ -2176,7 +2180,7 @@ class IGKHtmlImgItem extends IGKHtmlItem {
     ///<param name="key"></param>
     /**
     * Represente offsetGet function
-    * @param  $key
+    * @param mixed $key
     */
     public function offsetGet($key){
         if(strtolower($key) == "src")
@@ -2185,6 +2189,7 @@ class IGKHtmlImgItem extends IGKHtmlItem {
     }
     ///offsetSet src
     /**
+    * @return mixed
     */
     public function offsetSet($key, $value){
         if($key == "igk:src"){
@@ -2200,7 +2205,7 @@ class IGKHtmlImgItem extends IGKHtmlItem {
         if(strtolower($key) == "src"){
             $s=IGKValidator::IsUri($value) ? $value: igk_html_rm_base_uri($value);
             $this->setSrc($s);
-            return;
+            return $this;
         }
         if($value === $this->getStyle()){
             parent::offsetSet($key, $value);
@@ -2208,19 +2213,20 @@ class IGKHtmlImgItem extends IGKHtmlItem {
         else{
             $this->m_img->offsetSet($key, $value);
         }
+        return $this;
     }
     ///<summary>Represente RenderComplete function</summary>
     ///<param name="option" default="null"></param>
     /**
     * Represente RenderComplete function
-    * @param  $option the default value is null
+    * @param mixed $option the default value is null
     */
     public function RenderComplete($option=null){}
     ///<summary>Represente setSrc function</summary>
     ///<param name="value"></param>
     /**
     * Represente setSrc function
-    * @param  $value
+    * @param mixed $value
     */
     public function setSrc($value){
         if(empty($value))
@@ -2243,11 +2249,11 @@ final class IGKHtmlImgLnkItem extends IGKHtmlA{
     ///<param name="desc" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $uri the default value is null
-    * @param  $img the default value is null
-    * @param  $width the default value is "16px"
-    * @param  $height the default value is "16px"
-    * @param  $desc the default value is null
+    * @param mixed $uri the default value is null
+    * @param mixed $img the default value is null
+    * @param mixed $width the default value is "16px"
+    * @param mixed $height the default value is "16px"
+    * @param mixed $desc the default value is null
     */
     public function __construct($uri=null, $img=null, $width="16px", $height="16px", $desc=null){
         parent::__construct();
@@ -2270,7 +2276,7 @@ final class IGKHtmlImgLnkItem extends IGKHtmlA{
     ///<param name="v"></param>
     /**
     * Represente setAlt function
-    * @param  $v
+    * @param mixed $v
     */
     public function setAlt($v){
         $this->m_img["alt"]=$v;
@@ -2295,9 +2301,9 @@ class IGKHtmlItemComponentCallbackItem extends IGKHtmlComponentNodeItem{
     ///<param name="o" default="null"></param>
     /**
     * Represente AcceptRender function
-    * @param  $o the default value is null
+    * @param mixed $o the default value is null
     */
-    public function AcceptRender($o=null){
+    public function AcceptRender($options=null){
         return false;
     }
     ///<summary>Represente doaction function</summary>
@@ -2348,7 +2354,7 @@ final class IGKHtmlJSMsBoxItem extends IGKHtmlScript {
     ///<param name="o" default="null"></param>
     /**
     * Represente Render function
-    * @param  $o the default value is null
+    * @param mixed $o the default value is null
     */
     public function Render($o=null){
         $title=$this->Title;
@@ -2363,7 +2369,7 @@ OF;
     ///<param name="v"></param>
     /**
     * Represente setTitle function
-    * @param  $v
+    * @param mixed $v
     */
     public function setTitle($v){
         $this->m_title=$v;
@@ -2469,7 +2475,7 @@ final class IGKHtmlMenuBarItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="v"></param>
     /**
     * Represente setView function
-    * @param  $v
+    * @param mixed $v
     */
     public function setView($v){
         $this->m_view=$v;
@@ -2504,7 +2510,7 @@ final class IGKHtmlNonEmptyNodeItem extends IGKHtmlItem{
     ///<param name="tag" default="div"></param>
     /**
     * Represente __construct function
-    * @param  $tag the default value is "div"
+    * @param mixed $tag the default value is "div"
     */
     public function __construct($tag="div"){
         parent::__construct($tag);
@@ -2534,8 +2540,8 @@ final class IGKHtmlNothingItem extends IGKHtmlItem {
     ///<param name="index" default="null"></param>
     /**
     * Represente _AddChild function
-    * @param  $item
-    * @param  $index the default value is null
+    * @param mixed $item
+    * @param mixed $index the default value is null
     */
     protected function _AddChild($item, $index=null){
         return false;
@@ -2544,7 +2550,7 @@ final class IGKHtmlNothingItem extends IGKHtmlItem {
     ///<param name="options" default="null"></param>
     /**
     * Represente Render function
-    * @param  $options the default value is null
+    * @param mixed $options the default value is null
     */
     public function Render($options=null){
         return null;
@@ -2552,7 +2558,7 @@ final class IGKHtmlNothingItem extends IGKHtmlItem {
 }
 ///<summary>used to notify message </summary>
 /**
-* used to notify message 
+* used to notify message
 */
 final class IGKHtmlNotifyBoxItem extends IGKHtmlDiv {
     private $m_autohide;
@@ -2561,7 +2567,7 @@ final class IGKHtmlNotifyBoxItem extends IGKHtmlDiv {
     ///<param name="type" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $type the default value is null
+    * @param mixed $type the default value is null
     */
     public function __construct($type=null){
         parent::__construct();
@@ -2585,7 +2591,7 @@ EOF;
     ///<param name="v"></param>
     /**
     * Represente setAutohide function
-    * @param  $v
+    * @param mixed $v
     */
     public function setAutohide($v){
         $this->m_autohide->IsVisible=$v;
@@ -2595,7 +2601,7 @@ EOF;
     ///<param name="type"></param>
     /**
     * Represente setType function
-    * @param  $type
+    * @param mixed $type
     */
     public function setType($type){
         if($this->m_type)
@@ -2656,8 +2662,8 @@ EOF;
     ///<param name="msg"></param>
     /**
     * Represente show function
-    * @param  $title
-    * @param  $msg
+    * @param mixed $title
+    * @param mixed $msg
     */
     public function show($title, $msg){$this->m_title=$title;
         $this->m_Message=$msg;
@@ -2675,7 +2681,7 @@ final class IGKHtmlPagePreviewItem extends IGKHtmlItem {
     ///<param name="uri" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $uri the default value is null
+    * @param mixed $uri the default value is null
     */
     public function __construct($uri=null){
         parent::__construct("div");
@@ -2685,7 +2691,7 @@ final class IGKHtmlPagePreviewItem extends IGKHtmlItem {
     ///<param name="t"></param>
     /**
     * Represente initDemo function
-    * @param  $t
+    * @param mixed $t
     */
     public function initDemo($t){}
     ///<summary>Represente View function</summary>
@@ -2737,8 +2743,8 @@ final class IGKHtmlPaginationItem extends IGKHtmlItem {
     ///<param name="uri"></param>
     /**
     * Represente addPage function
-    * @param  $index
-    * @param  $uri
+    * @param mixed $index
+    * @param mixed $uri
     */
     public function addPage($index, $uri){
         $li=$this->add("li");
@@ -2768,7 +2774,7 @@ final class IGKHtmlPaginationItem extends IGKHtmlItem {
     ///<param name="t"></param>
     /**
     * Represente initDemo function
-    * @param  $t
+    * @param mixed $t
     */
     public function initDemo($t){
         $t->addDiv()->Content="Panigation - Demonstration";
@@ -2784,12 +2790,12 @@ final class IGKHtmlPaginationItem extends IGKHtmlItem {
     ///<param name="tag" default="'form'"></param>
     /**
     * Represente SetUp function
-    * @param  $max
-    * @param  $current
-    * @param  $visible
-    * @param  $uri
-    * @param  $shift the default value is 0
-    * @param  $tag the default value is 'form'
+    * @param mixed $max
+    * @param mixed $current
+    * @param mixed $visible
+    * @param mixed $uri
+    * @param mixed $shift the default value is 0
+    * @param mixed $tag the default value is 'form'
     */
     public function SetUp($max, $current, $visible, $uri, $shift=0, $tag='form'){
         $this->CurrentPage=$current;
@@ -2839,8 +2845,8 @@ final class IGKHtmlPhpCodeItem extends IGKHtmlCtrlNodeItemBase {
     ///<param name="index" default="null"></param>
     /**
     * Represente _AddChild function
-    * @param  $d
-    * @param  $index the default value is null
+    * @param mixed $d
+    * @param mixed $index the default value is null
     */
     public function _AddChild($d, $index=null){
         if($this->IsLoading){
@@ -2871,8 +2877,8 @@ final class IGKHtmlPhpEvalCodeItem extends IGKHtmlCtrlNodeItemBase{
     ///<param name="c"></param>
     /**
     * Represente __evalin function
-    * @param  $context
-    * @param  $c
+    * @param mixed $context
+    * @param mixed $c
     */
     private function __evalin($context, $c){
         extract($context);
@@ -2882,7 +2888,7 @@ final class IGKHtmlPhpEvalCodeItem extends IGKHtmlCtrlNodeItemBase{
     ///<param name="options" default="null"></param>
     /**
     * Represente __getRenderingChildren function
-    * @param  $options the default value is null
+    * @param mixed $options the default value is null
     */
     public function __getRenderingChildren($options=null){
         return array();
@@ -2891,7 +2897,7 @@ final class IGKHtmlPhpEvalCodeItem extends IGKHtmlCtrlNodeItemBase{
     ///<param name="o" default="null"></param>
     /**
     * Represente Render function
-    * @param  $o the default value is null
+    * @param mixed $o the default value is null
     */
     public function Render($o=null){
         $bck=$this->Content;
@@ -2915,7 +2921,7 @@ final class IGKHtmlPopWindowAItem extends IGKHtmlA{
     ///<param name="lnk" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $lnk the default value is null
+    * @param mixed $lnk the default value is null
     */
     public function __construct($lnk=null){
         parent::__construct();
@@ -2985,7 +2991,7 @@ final class IGKHtmlRegistrationFormItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setAction function
-    * @param  $v
+    * @param mixed $v
     */
     public function setAction($v){
         $this->m_action=$v;
@@ -2995,7 +3001,7 @@ final class IGKHtmlRegistrationFormItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setBadUri function
-    * @param  $v
+    * @param mixed $v
     */
     public function setBadUri($v){
         $this->m_baduri=$v;
@@ -3005,7 +3011,7 @@ final class IGKHtmlRegistrationFormItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setGoodUri function
-    * @param  $v
+    * @param mixed $v
     */
     public function setGoodUri($v){
         $this->m_gooduri=$v;
@@ -3035,9 +3041,9 @@ final class IGKHtmlRollOwnerItem extends IGKHtmlItem {
     ///<param name="b" default="null"></param>
     /**
     * Represente add function
-    * @param  $s
-    * @param  $t the default value is null
-    * @param  $b the default value is null
+    * @param mixed $s
+    * @param mixed $t the default value is null
+    * @param mixed $b the default value is null
     */
     public function add($s, $t=null, $b=null){
         return $this->m_content->add($s, $t, $b);
@@ -3067,7 +3073,7 @@ final class IGKHtmlRollOwnerItem extends IGKHtmlItem {
     ///<param name="t"></param>
     /**
     * Represente initDemo function
-    * @param  $t
+    * @param mixed $t
     */
     public function initDemo($t){
         $this->Content="Please Pass your mouse here";
@@ -3089,7 +3095,7 @@ final class IGKHtmlRollOwnerItem extends IGKHtmlItem {
     ///<param name="value"></param>
     /**
     * Represente setContent function
-    * @param  $value
+    * @param mixed $value
     */
     public function setContent($value){
         $this->m_content->setContent($value);
@@ -3110,8 +3116,8 @@ final class IGKHtmlRowColSpanItem extends IGKHtmlItem{
     ///<param name="classStyle" default="igk-col-lg-12-3"></param>
     /**
     * Represente __construct function
-    * @param  $cols the default value is 4
-    * @param  $classStyle the default value is "igk-col-lg-12-3"
+    * @param mixed $cols the default value is 4
+    * @param mixed $classStyle the default value is "igk-col-lg-12-3"
     */
     public function __construct($cols=4, $classStyle="igk-col-lg-12-3"){
         parent::__construct("div");
@@ -3125,8 +3131,8 @@ final class IGKHtmlRowColSpanItem extends IGKHtmlItem{
     ///<param name="index" default="null"></param>
     /**
     * Represente _AddChild function
-    * @param  $item
-    * @param  $index the default value is null
+    * @param mixed $item
+    * @param mixed $index the default value is null
     */
     public function _AddChild($item, $index=null){
         if($this->m_colindex == -1){
@@ -3142,8 +3148,8 @@ final class IGKHtmlRowColSpanItem extends IGKHtmlItem{
     ///<param name="classStyle"></param>
     /**
     * Represente _initRow function
-    * @param  $cols
-    * @param  $classStyle
+    * @param mixed $cols
+    * @param mixed $classStyle
     */
     private function _initRow($cols, $classStyle){
         $this->m_cols=array();
@@ -3160,7 +3166,7 @@ final class IGKHtmlRowColSpanItem extends IGKHtmlItem{
     * Represente ClearChilds function
     */
     public function ClearChilds(){
-        parent::ClearChils();
+        parent::ClearChilds();
         $this->_initRow($this->m_colsn, $this->m_classstyle);
     }
 }
@@ -3173,7 +3179,7 @@ final class IGKHtmlRowColSpanNode extends IGKHtmlItem{
     ///<param name="id"></param>
     /**
     * Represente __construct function
-    * @param  $id
+    * @param mixed $id
     */
     public function __construct($id){
         parent::__construct("div");
@@ -3184,8 +3190,8 @@ final class IGKHtmlRowColSpanNode extends IGKHtmlItem{
     ///<param name="index" default="null"></param>
     /**
     * Represente _AddChild function
-    * @param  $i
-    * @param  $index the default value is null
+    * @param mixed $i
+    * @param mixed $index the default value is null
     */
     protected function _AddChild($i, $index=null){
         $s=parent::_AddChild($i, $index);
@@ -3196,8 +3202,8 @@ final class IGKHtmlRowColSpanNode extends IGKHtmlItem{
     ///<param name="index" default="null"></param>
     /**
     * Represente _setUpChildIndex function
-    * @param  $child
-    * @param  $index the default value is null
+    * @param mixed $child
+    * @param mixed $index the default value is null
     */
     protected function _setUpChildIndex($child, $index=null){
         if($index === null){
@@ -3216,9 +3222,9 @@ final class IGKHtmlRowColSpanNode extends IGKHtmlItem{
     ///<param name="i" default="null"></param>
     /**
     * Represente add function
-    * @param  $n
-    * @param  $a the default value is null
-    * @param  $i the default value is null
+    * @param mixed $n
+    * @param mixed $a the default value is null
+    * @param mixed $i the default value is null
     */
     public function add($n, $a=null, $i=null){
         return parent::add($n, $a, $i);
@@ -3250,7 +3256,7 @@ final class IGKHtmlRowItem extends IGKHtmlDiv {
     ///<param name="classlist" default="null"></param>
     /**
     * Represente addCol function
-    * @param  $classlist the default value is null
+    * @param mixed $classlist the default value is null
     */
     public function addCol($classlist=null){
         return $this->addDiv()->setClass("igk-col ".$classlist);
@@ -3296,7 +3302,7 @@ final class IGKHtmlSearchBarItem extends IGKHtmlCtrlComponentNodeItemBase {
     ///<param name="v"></param>
     /**
     * Represente setAJX function
-    * @param  $v
+    * @param mixed $v
     */
     public function setAJX($v){
         $this->m_ajx=$v;
@@ -3306,7 +3312,7 @@ final class IGKHtmlSearchBarItem extends IGKHtmlCtrlComponentNodeItemBase {
     ///<param name="v"></param>
     /**
     * Represente setTargetId function
-    * @param  $v
+    * @param mixed $v
     */
     public function setTargetId($v){
         $this->m_targetid=$v;
@@ -3316,7 +3322,7 @@ final class IGKHtmlSearchBarItem extends IGKHtmlCtrlComponentNodeItemBase {
     ///<param name="v"></param>
     /**
     * Represente setUri function
-    * @param  $v
+    * @param mixed $v
     */
     public function setUri($v){
         $this->m_uri=$v;
@@ -3360,11 +3366,11 @@ final class IGKHtmlSearchItem extends IGKHtmlItem {
     ///<param name="target" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $uri the default value is null
-    * @param  $search the default value is null
-    * @param  $prop the default value is "q"
-    * @param  $ajx the default value is 0
-    * @param  $target the default value is null
+    * @param mixed $uri the default value is null
+    * @param mixed $search the default value is null
+    * @param mixed $prop the default value is "q"
+    * @param mixed $ajx the default value is 0
+    * @param mixed $target the default value is null
     */
     public function __construct($uri=null, $search=null, $prop="q", $ajx=0, $target=null){
         parent::__construct("div");
@@ -3465,7 +3471,7 @@ final class IGKHtmlSearchItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setAJX function
-    * @param  $v
+    * @param mixed $v
     */
     public function setAJX($v){
         $this->m_AJX=$v;
@@ -3475,7 +3481,7 @@ final class IGKHtmlSearchItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setMethod function
-    * @param  $v
+    * @param mixed $v
     */
     public function setMethod($v){
         $this->m_method=$v;
@@ -3485,7 +3491,7 @@ final class IGKHtmlSearchItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setTargetId function
-    * @param  $v
+    * @param mixed $v
     */
     public function setTargetId($v){
         $this->m_TargetId=$v;
@@ -3495,7 +3501,7 @@ final class IGKHtmlSearchItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setUri function
-    * @param  $v
+    * @param mixed $v
     */
     public function setUri($v){
         $this->m_uri=$v;
@@ -3505,7 +3511,7 @@ final class IGKHtmlSearchItem extends IGKHtmlItem {
     ///<param name="v"></param>
     /**
     * Represente setValue function
-    * @param  $v
+    * @param mixed $v
     */
     public function setValue($v){
         $this->m_search=$v;
@@ -3530,6 +3536,8 @@ final class IGKHtmlSelectLangNodeItem extends IGKHtmlItem {
     * Represente initView function
     */
     public function initView(){
+        igk_wln_e(__FILE__.':'.__LINE__, "Init View ");
+
         $this->ClearChilds();
         $ctrl=igk_getctrl(IGK_LANGUAGE_CTRL);
         $tab=array_merge($ctrl->Languages);
@@ -3555,7 +3563,7 @@ final class IGKHtmlToggleButtonItem extends IGKHtmlItem {
     ///<param name="c" default="1"></param>
     /**
     * Represente addBar function
-    * @param  $c the default value is 1
+    * @param mixed $c the default value is 1
     */
     public function addBar($c=1){
         $this->clearChilds();
@@ -3581,17 +3589,17 @@ final class IGKHtmlToggleButtonItem extends IGKHtmlItem {
     ///<param name="value"></param>
     /**
     * Represente setClassProperty function
-    * @param  $value
+    * @param mixed $value
     */
     public function setClassProperty($value){
-        return 
+        return
         $this["igk-toggle-class"]=$value;
     }
     ///<summary>Represente setTarget function</summary>
     ///<param name="target"></param>
     /**
     * Represente setTarget function
-    * @param  $target
+    * @param mixed $target
     */
     public function setTarget($target){
         if($target == null){
@@ -3634,9 +3642,9 @@ final class IGKHtmlTouchRollOwnerItem extends IGKHtmlItem {
     ///<param name="b" default="null"></param>
     /**
     * Represente add function
-    * @param  $s
-    * @param  $t the default value is null
-    * @param  $b the default value is null
+    * @param mixed $s
+    * @param mixed $t the default value is null
+    * @param mixed $b the default value is null
     */
     public function add($s, $t=null, $b=null){
         return $this->m_content->add($s, $t, $b);
@@ -3666,7 +3674,7 @@ final class IGKHtmlTouchRollOwnerItem extends IGKHtmlItem {
     ///<param name="t"></param>
     /**
     * Represente initDemo function
-    * @param  $t
+    * @param mixed $t
     */
     public function initDemo($t){
         $this->Content="Please Click here to show roll in";
@@ -3688,7 +3696,7 @@ final class IGKHtmlTouchRollOwnerItem extends IGKHtmlItem {
     ///<param name="value"></param>
     /**
     * Represente setContent function
-    * @param  $value
+    * @param mixed $value
     */
     public function setContent($value){
         $this->m_content->setContent($value);
@@ -3697,7 +3705,7 @@ final class IGKHtmlTouchRollOwnerItem extends IGKHtmlItem {
 }
 ///<summary> represent a trackbar winui item </summary>
 /**
-*  represent a trackbar winui item 
+*  represent a trackbar winui item
 */
 final class IGKHtmlTrackbarItem extends IGKHtmlItem {
     ///<summary>Represente __construct function</summary>
@@ -3713,7 +3721,7 @@ final class IGKHtmlTrackbarItem extends IGKHtmlItem {
     ///<param name="t"></param>
     /**
     * Represente initDemo function
-    * @param  $t
+    * @param mixed $t
     */
     public function initDemo($t){
         $this["igk-trb-data"]="{update: function(d){ if (typeof(d.bar.rep) == 'undefined'){ d.bar.rep = d.bar.target.add('div'); } d.bar.rep.setHtml(d.progress); }}";
@@ -3737,8 +3745,8 @@ final class IGKHtmlXmlViewerItem extends IGKHtmlDiv {
     ///<param name="depth"></param>
     /**
     * Represente __renderDepth function
-    * @param  $target
-    * @param  $depth
+    * @param mixed $target
+    * @param mixed $depth
     */
     private function __renderDepth($target, $depth){
         if($depth > 0){
@@ -3751,7 +3759,7 @@ final class IGKHtmlXmlViewerItem extends IGKHtmlDiv {
     ///<param name="t"></param>
     /**
     * Represente initDemo function
-    * @param  $t
+    * @param mixed $t
     */
     public function initDemo($t){
         $t->addDiv()->addSectionTitle(5)->Content="Samples ";
@@ -3767,15 +3775,15 @@ EOF
     ///<param name="context" default="XML"></param>
     /**
     * Represente Load function
-    * @param  $content
-    * @param  $context the default value is XML
+    * @param mixed $content
+    * @param mixed $context the default value is XML
     */
     public function Load($content, $context=IGKHtmlContext::XML){
         if(empty($content))
             return;
         $c=IGKHtmlReader::Load($content, $context);
         $root=null;
-        foreach($c->Childs as $k=>$v){
+        foreach($c->Childs as  $v){
             $c=$this->loadItem($v, $this);
             if(!$root && ($v->NodeType == IGKXMLNodeType::ELEMENT)){
                 $root=$v;
@@ -3789,9 +3797,9 @@ EOF
     ///<param name="depth"></param>
     /**
     * Represente loadItem function
-    * @param  $r
-    * @param  $target
-    * @param  $depth the default value is 0
+    * @param mixed $r
+    * @param mixed $target
+    * @param mixed $depth the default value is 0
     */
     public function loadItem($r, $target, $depth=0){
         $this->__renderDepth($target, $depth);
@@ -3818,7 +3826,7 @@ EOF
                     break;
                     case IGKXMLNodeType::TEXT:
                     $target->add("span")->setClass("tx")->Content=IGKHtmlUtils::GetValue($v->Content);
-                    break;default: 
+                    break;default:
                     $c=$this->loadItem($v, $this, $depth + 1);
                     break;
                 }
@@ -3835,5 +3843,5 @@ EOF
     }
 }
 igk_reg_html_component("expression-node", function(){
-    return igk_html_node_expression_node();
+    return igk_html_node_expression_node(null);
 });

@@ -7,7 +7,7 @@
 ///<param name="prefix" default="'tmp'"></param>
 /**
 * Represente igk_io_tempfile function
-* @param  $prefix the default value is 'tmp'
+* @param mixed $prefix the default value is 'tmp'
 */
 function igk_io_tempfile($prefix='tmp'){
     return tempnam(sys_get_temp_dir(), $prefix);
@@ -16,7 +16,7 @@ function igk_io_tempfile($prefix='tmp'){
 ///<param name="ns"></param>
 /**
 * Represente igk_templage_get_dir function
-* @param  $ns
+* @param mixed $ns
 */
 function igk_templage_get_dir($ns){
     return IGKIO::GetDir(igk_io_baseDir()."/".IGKApplicationManager::TEMPLATE_DIR."/".str_replace(".", "/", $ns));
@@ -45,19 +45,22 @@ function igk_template_create($n){
 */
 function igk_template_create_ctrl($n){
     $tc=igk_template_mananer_ctrl();
-    igk_assert_die(($tc == null) && !igk_sys_env_production(), ["code"=>1201, "message"=>"TemplateManager: controller [{$n}] not found or session data not valid. Failed to create [{$n}]", "code"=>0xAC0443]);
-    if($tc)
+    igk_assert_die(($tc == null) && !igk_sys_env_production(),
+    ["code"=>1201,
+    "message"=>"TemplateManager: controller [{$n}] not found or session data not valid. Failed to create [{$n}]",
+    ]);
+    if($tc===null)
         return null;
     $n=str_replace(".", "\\", $n);
     $cl=$n."\\Application";
     if($tc && $tc->created($n)){
-        if(!class_exists($cl, 0)){
+        if(!class_exists($cl, false)){
             igk_template_load_ns($n);
         }
         return $tc->getCreatedCtrl($n);
     }
     $o=null;
-    if(class_exists($n, 0)){
+    if(class_exists($n, false)){
         $o=new $n();
     }
     else{
@@ -100,7 +103,7 @@ function igk_template_createtemplateinfo(){
 ///<param name="name"></param>
 /**
 * Represente igk_template_default_content function
-* @param  $name
+* @param mixed $name
 */
 function igk_template_default_content($name){
     $c=dirname(__FILE__)."/Data/scripts/".$name.".default";
@@ -125,7 +128,7 @@ function igk_template_get_ctrls(){
         $db=$g->Db;
         if($db){
             $q=$g->Db->getTemplateNames();
-            if($q) foreach($q->Rows as $k=>$v){
+            if($q) foreach($q->Rows as $v){
                 $t[]=$v->clPackageName;
             }
         }
@@ -149,7 +152,7 @@ function igk_template_init_env(){
 ///<param name="ctrl"></param>
 /**
 * Represente igk_template_is_template_class function
-* @param  $ctrl
+* @param mixed $ctrl
 */
 function igk_template_is_template_class($ctrl){
     return igk_reflection_class_extends($ctrl, 'IGKApplicationBase');
@@ -158,7 +161,7 @@ function igk_template_is_template_class($ctrl){
 ///<param name="f"></param>
 /**
 * Represente igk_template_load function
-* @param  $f
+* @param mixed $f
 */
 function igk_template_load($f){
     $tns=igk_get_env("sys://templates/loaded", array());
@@ -208,7 +211,7 @@ function igk_template_mananer_ctrl(){
 ///<param name="packagename"></param>
 /**
 * Represente igk_template_name function
-* @param  $packagename
+* @param mixed $packagename
 */
 function igk_template_name($packagename){
     return str_replace(".", "\\", $packagename);
@@ -217,7 +220,7 @@ function igk_template_name($packagename){
 ///<param name="ns"></param>
 /**
 * Represente igk_template_package_exists function
-* @param  $ns
+* @param mixed $ns
 */
 function igk_template_package_exists($ns){
     $ctrl=igk_template_mananer_ctrl();
@@ -233,8 +236,8 @@ function igk_template_package_exists($ns){
 ///<param name="ctrl"></param>
 /**
 * Represente igk_template_view_assets_favicon function
-* @param  $n
-* @param  $ctrl
+* @param mixed $n
+* @param mixed $ctrl
 */
 function igk_template_view_assets_favicon($n, $ctrl){
     $n->addDiv()->setContent("set the default favicon");
@@ -245,8 +248,8 @@ function igk_template_view_assets_favicon($n, $ctrl){
 ///<param name="ctrl"></param>
 /**
 * Represente igk_template_view_badge function
-* @param  $n
-* @param  $ctrl
+* @param mixed $n
+* @param mixed $ctrl
 */
 function igk_template_view_badge($n, $ctrl){
     $n->addDiv()->setContent("set here bagde for many resolution");
@@ -257,8 +260,8 @@ function igk_template_view_badge($n, $ctrl){
 ///<param name="ctrl"></param>
 /**
 * Represente igk_template_view_btn_loadandinstall function
-* @param  $t
-* @param  $ctrl
+* @param mixed $t
+* @param mixed $ctrl
 */
 function igk_template_view_btn_loadandinstall($t, $ctrl){
     $dv=$t->addDiv();
@@ -271,7 +274,7 @@ function igk_template_view_btn_loadandinstall($t, $ctrl){
 ///<param name="ctrl"></param>
 /**
 * Represente igk_view_render_if_visible function
-* @param  $ctrl
+* @param mixed $ctrl
 */
 function igk_view_render_if_visible($ctrl){
     if($ctrl->IsVisible)

@@ -1,7 +1,7 @@
 <?php
 // @file: tab.ctrlinfo.phtml
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -12,7 +12,7 @@
 $p=$dv->addDiv();
 $p["class"]="igk-cnf-ctrl-info";
 $p->addDiv(array("class"=>"igk-cnf-selected-ctrl"))->Content=$s_ctrl->getName();
-$p->addDiv()->Content=R::ngets("Q.ISWEBPAGECTRL_1", igk_parsebools(igk_reflection_class_extends(get_class($s_ctrl), "IGKDefaultPageController"))->getValue());
+$p->addDiv()->Content=R::ngets("Q.ISWEBPAGECTRL_1", igk_parsebools(igk_reflection_class_extends(get_class($s_ctrl), "IGKDefaultPageController")))->getValue();
 $p->addDiv()->Content=R::ngets("lb.CtrlType")->getValue(). " : ". igk_sys_ctrl_type($s_ctrl);
 $p->addDiv()->Content=R::ngets("lb.Location_1", $s_ctrl->getDeclaredDir());
 $p->addBr();
@@ -31,9 +31,9 @@ if($v_parent != null){
     $tr=$table->addTr();
     $tr->addTd()->addLi()->add("a", array(
             "href"=>"#",
-            "onclick"=>"javascript:window.igk.fn.config.select_ctrl(this, '".$this->TargetNode["id"]."', '".$this->getUri('select_controller_ajx&n='.$s_ctrl->Configs->clParentCtrl)."'); "
+            "onclick"=>"javascript:window.igk.fn.config.select_ctrl(this, '".$ctrl->TargetNode["id"]."', '".$ctrl->getUri('select_controller_ajx&n='.$s_ctrl->Configs->clParentCtrl)."'); "
         ))->Content=$s_ctrl->Configs->clParentCtrl;
-    IGKHtmlUtils::AddImgLnk($tr->add("td", array("style"=>"min-with:16px; min-height:16px;")), $this->getUri("ca_remove_parent&clCtrl=".$s_ctrl->getName()."&clParent=".$s_ctrl->Configs->clParentCtrl), "drop_16x16");
+    IGKHtmlUtils::AddImgLnk($tr->add("td", array("style"=>"min-with:16px; min-height:16px;")), $ctrl->getUri("ca_remove_parent&clCtrl=".$s_ctrl->getName()."&clParent=".$s_ctrl->Configs->clParentCtrl), "drop_16x16");
 }
 else{
     $tr=$table->addTr();
@@ -53,10 +53,10 @@ if(igk_count($s_ctrl->Childs) > 0){
         $tr=$table->addTr();
         $tr->addTd()->add("a", array(
                 "href"=>IGK_JS_VOID,
-                "onclick"=>"javascript:window.igk.fn.config.select_ctrl(this, '".$this->TargetNode["id"]."', '".$this->getUri('select_controller_ajx&n='.$k->Name)."'); return false; "
+                "onclick"=>"javascript:window.igk.fn.config.select_ctrl(this, '".$ctrl->TargetNode["id"]."', '".$ctrl->getUri('select_controller_ajx&n='.$k->Name)."'); return false; "
             ))->Content=$k->Name;
         $tr->addTd()->Content=$k->TargetNode->Index;
-        IGKHtmlUtils::AddImgLnk($tr->add("td", array("style"=>"min-with:16px; min-height:16px;")), $this->getUri("ca_remove_child&clParentCtrl=".$s_ctrl->Name."&clChild=".$k->Name), "drop_16x16");
+        IGKHtmlUtils::AddImgLnk($tr->add("td", array("style"=>"min-with:16px; min-height:16px;")), $ctrl->getUri("ca_remove_child&clParentCtrl=".$s_ctrl->Name."&clChild=".$k->Name), "drop_16x16");
     }
 }
 else{

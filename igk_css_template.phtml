@@ -13,10 +13,10 @@
 // ::-moz-placeholder //firefox 19+
 //device orientation :: land-scape
 //filter:blur(4px);";
- 
- 
 
- 
+
+
+
 
 $pad1="8px";
 $pad2="10px";
@@ -43,11 +43,11 @@ $i_state=array("invalid");
 $margin=array("2", "4", "8", "16", "32", "48");
 $def["body div"]="";
 // $prop= & $theme->getProperties();
- 
-$prop["paddingSize"]=$pad2;
- 
 
- 
+$prop["paddingSize"]=$pad2;
+
+
+
 
 $ctn_lg=$theme->get_media(IGKHtmlDocThemeMediaType::CTN_LG_MEDIA);
 $ctn_xlg=$theme->get_media(IGKHtmlDocThemeMediaType::CTN_XLG_MEDIA);
@@ -118,7 +118,8 @@ foreach($screen_resolutions as $scr){
     }
     $$xn[$pn ]="{sys:floatl}";
 }
-$cl["textColor"]="#333";
+
+
 $def["body.igk-body"]="background-color:[syscl:backgroundColor]; color:[syscl:textColor]";
 $def["body.igk-body.xboxone"]="padding:0px !important; background-color:#222";
 $def["body.igk-body.xboxone .igk-powered"]="{sys:dispn}";
@@ -298,6 +299,9 @@ for($i=0; $i<=10; $i++){
     $def[".igk-progress-". ($i).
     ".igk-pull-top"]="height: ".($i * 10)."%;";
 }
+
+$def[".igk-tool-option div"]="padding: 4px; background-color:white";
+
 igk_css_regcolor("igk-progressbar-bg", "#00CBFF");
 igk_css_regcolor("igk-progressbar-cur-bg", "#ada");
 $def[".igk-shapes"]="{sys:no-border,no-repeat}";
@@ -346,6 +350,15 @@ $def[".igk-hmenu > li  ul.igk-show"]="opacity:1; display:block;";
 $def[".igk-hmenu > li > ul li:hover"]="[sysbgcl:igk-hmenu-si-bg]";
 $def[".igk-hmenu.igk-pull-right"]="{sys:alignr}";
 $def[".igk-hmenu.igk-pull-right:after"]="content:' '; display:table; clear:both;";
+
+//capitalize all input element
+$def["input[type='button']"] =
+$def["input[type='submit']"] =
+$def["input[type='reset']"] =
+"text-transform:capitalize;";
+
+
+
 igk_css_regcolor("submenu-bg", "#444");
 igk_css_regcolor("submenu-fcl", "#444");
 igk_css_regcolor("submenu-hightlight-fcl", "#77d");
@@ -463,7 +476,7 @@ igk_css_regcolor("igk-tabcontrol-c-bg", "#eaeff2");
 $def[".igk-glyph-home"]="font-size:1.4em";
 $def[".igk-gohome-btn"]="opacity: 0.0 !important; position:fixed; right:32px; bottom:32px; overflow:hidden; width:48px; height:48px; z-index:50;";
 $def[".igk-gohome-btn.igk-show"]="opacity:1.0 !important;";
-$m=array(4, 8, 10, 16);
+$m=array(4, 8, 10, 16, 20 , 24, 32);
 for($i=0; $i < igk_count($m); $i++){
     $v_ss=$m[$i];
     for($j=0; $j < igk_count($mt); $j++){
@@ -624,7 +637,7 @@ $def[".igk-configpage-editor select"]="vertical-align:middle; border:none;";
 $def[".igk-configpage-editor .close-bar"]="background-color: #888";
 $def[".igk-configpage-editor .close-bar:hover"]="background-color: #eee";
 $def[".igk-bodypage"]="{sys:fitw,fith,posr} overflow:hidden;";
-$def[".igk-session-block"]="{sys:posfix} [sysbgcl:sessionBlockBackground] [sysfcl:sessionBlockColor]";
+$def["body .igk-session-block"]="{sys:posfix} [sysbgcl:sessionBlockBackground] [sysfcl:sessionBlockColor]";
 igk_css_regcolor('sessionBlockBackground', "indigo", 1);
 $def[".igk-session-block .cllabel"]="{sys:dispb,alignt,alignl}";
 $def[".igk-session-button"]="[res:session_btn]; [trans: all 0.2s] cursor:pointer; z-index:{$ctrl_session_zindex}; top:0px; opacity:0.1";
@@ -904,7 +917,7 @@ igk_css_regcolor("igk-table-row-odd-bgcl", "#fdfdfd", 1);
 igk_css_regcolor("igk-table-row-odd-fcl", "#aaa", 1);
 igk_css_regcolor("igk-table-row-odd-hover-bgcl", "#ddf", 1);
 igk_set_env("sys://globalcolor", 0);
- 
+
 foreach([4, 10, 16, 20] as $pad){
 	$def[".pad-".$pad]="padding: {$pad}px;";
 	$def[".marg-".$pad]="margin: {$pad}px;";
@@ -921,12 +934,12 @@ $def[".igk-font-title-1"]="font-family: 'Roboto', 'Helvetica', 'Arial' , sans-se
 $def[".clcheckbox"]="margin-right:10px;";
 $def[".badge"]="padding: 4px; border-radius: 4px; background-color: #eee; ";
 $def[".igk-bg-img"]="{sys:posfix, loc_a, fit, fitc}";
-$cl["pickfileHoverBackground"]="indigo";
-$cl["buttonActiveBackground"]="red";
+
+
 if(igk_sys_env_production()){
     $def[".igk-winui-js-logger"]="{sys:dispn}";
-} 
-$prop["buttonPadding"] = "8px"; 
+}
+$prop["buttonPadding"] = "8px";
 
 
 
@@ -937,3 +950,12 @@ $def[".igk-google-line-waiter:after"] = "{sys:fith,posab, loc_l} width: 70%; con
 // combobox
 $def[".igk-winui-combobox + ul"] = "background-color:#444; color: white";
 $def[".igk-winui-combobox + ul > li"] = "padding:4px;";
+
+
+
+
+//+default theme color
+$cl["textColor"]="#222";
+$cl["backgroundColor"]="transparent";
+$cl["pickfileHoverBackground"]="indigo";
+$cl["buttonActiveBackground"]="red";

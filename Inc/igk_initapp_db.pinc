@@ -1,22 +1,22 @@
 <?php
 // @file: igk_initapp_db.pinc
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
-if($this->getCanInitDb()){
+if($ctrl->getCanInitDb()){
     parent::initDb();
-    $db=$this->getDb();
+    $db=$ctrl->getDb();
     if($db != null){
         $db->initdb();
     }
-    $this->resetParam();
+    $ctrl->resetParam();
 }
 if($s){
-    igk_navto($this->getAppUri());
+    igk_navto($ctrl->getAppUri());
 }
 ?>

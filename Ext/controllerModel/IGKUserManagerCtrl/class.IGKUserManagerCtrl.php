@@ -1,9 +1,10 @@
 <?php
 //represent a client user manager controller
 abstract class IGKUserManagerCtrl extends IGKCtrlTypeBase
-{	
+{
+	/** @var StdClass $m_user */
 	private $m_user;
-	
+
 	public function getUser(){return $this->m_user; }
 	public function View(){
 		parent::View();
@@ -11,7 +12,7 @@ abstract class IGKUserManagerCtrl extends IGKCtrlTypeBase
 	protected function InitComplete(){
 		parent::InitComplete();
 	}
-	
+
 	public function getDataTableName(){
 		return parent::getDataTableName();
 	}
@@ -35,19 +36,19 @@ abstract class IGKUserManagerCtrl extends IGKCtrlTypeBase
 		$obj->clPwd = "e2e34fb624962538094758f2ac061637";
 		$obj->clFirstName = "Charles";
 		$obj->clLastName = "BONDJE DOUE";
-		$obj->clAvailable = 1;		
-		$dbman->Insert($tb, (array)$obj);	
+		$obj->clAvailable = 1;
+		$dbman->Insert($tb, (array)$obj);
 		$obj = igk_db_getobj($tabInfo);
 		$obj = igk_db_getobj($this->getDataTableInfo());
 		$obj->clLogin = "info@igkdev.be";
 		$obj->clPwd = "e2e34fb624962538094758f2ac061637";
-		$obj->clAvailable = 1;		
+		$obj->clAvailable = 1;
 		$dbman->Insert($tb, (array)$obj);
-		$obj = igk_db_getobj($tabInfo);		
+		$obj = igk_db_getobj($tabInfo);
 		$obj->clLogin = "test@igkdev.be";
 		$obj->clPwd = "e2e34fb624962538094758f2ac061637";
-		$obj->clAvailable = 0;		
-		$dbman->Insert($tb, (array)$obj);		
+		$obj->clAvailable = 0;
+		$dbman->Insert($tb, (array)$obj);
 	}
 	public function getIsUserConnected(){
 		return ($this->m_user != null);
@@ -58,9 +59,9 @@ abstract class IGKUserManagerCtrl extends IGKCtrlTypeBase
 		$obj = igk_db_getobj($this->getDataTableInfo());
 		$obj->clLogin = $login;
 		$obj->clPwd = $pwd;
-		 
-		$s = igk_db_select_where($this, array("clLogin"=>$login, "clPwd"=>$pwd)); 
-		
+
+		$s = igk_db_select_wherec($this, array("clLogin"=>$login, "clPwd"=>$pwd));
+
 		if (($s) && ($s->getRowCount() == 1))
 		{
 			$obj = $s->getRowAtIndex(0);
@@ -93,7 +94,7 @@ abstract class IGKUserManagerCtrl extends IGKCtrlTypeBase
 	{
 		if (!$this->m_user)
 			return false;
-		$obj = igk_getr_obj();
+		$obj = igk_get_robj();
 		foreach($obj as $k=>$v)
 		{
 			if (isset($this->m_user->$k))
@@ -102,13 +103,13 @@ abstract class IGKUserManagerCtrl extends IGKCtrlTypeBase
 			}
 		}
 		igk_show_prev($this->m_user);
-		igk_db_update($this, $this->getDataTableName(), (array)$this->m_user, array("clId"=>$this->m_user->clId));		
+		igk_db_update($this, $this->getDataTableName(), (array)$this->m_user, array("clId"=>$this->m_user->clId));
 		igk_notifyctrl()->addMsgr("msg.userinfo.updated");
 		return true;
 	}
 	public function connect_frame(){
 		$this->setCurrentView("connexion", true);
-		$frame = igk_add_new_frame($this, "connexion");
+		$frame =  igk_html_frame($this, "connexion");
 		$frame->Title = R::ngets("title.connexion");
 		$frame->Render();
 	}

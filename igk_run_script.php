@@ -25,7 +25,7 @@ spl_autoload_register(function($n){
         igk_include_script($f, $ns);
     }
 });
-igk_reg_cmd_command("manager", IGK\Core\Manager\IGKBalafonFrameworkManager::class);
+igk_reg_cmd_command("manager", IGKBalafonFrameworkManager::class);
 $header=<<<EOF
 Balafon run_script command.
 version : 1.0

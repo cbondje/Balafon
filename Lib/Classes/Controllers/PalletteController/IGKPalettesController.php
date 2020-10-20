@@ -1,7 +1,7 @@
 <?php
 // @file: IGKPalettesController.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -12,7 +12,7 @@
 ///represent a Palette controller Model
 ///</summary>
 /**
-* 
+*
 *represent a Palette controller Model
 *
 */
@@ -59,7 +59,7 @@ final class IGKPaletteCtrl extends IGKNonVisibleControllerBase {
     ///<param name="fname"></param>
     /**
     * Represente loadFile function
-    * @param  $fname
+    * @param mixed $fname
     */
     public function loadFile($fname){
         if(!file_exists($fname))
@@ -105,7 +105,7 @@ final class IGKPaletteCtrl extends IGKNonVisibleControllerBase {
     ///<param name="id"></param>
     /**
     * Represente RemovePalette function
-    * @param  $id
+    * @param mixed $id
     */
     public function RemovePalette($id){
         $s=$this->getPaletteDir()."/".$id.".gkpal";

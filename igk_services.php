@@ -4,6 +4,7 @@
 // desc: manage webservices
 
 define("IGK_SERVICES_REQUEST", 1);
+defined("IGK_SERVICES_ENTRY_URL") || define("IGK_SERVICES_ENTRY_URL", "/services");
 ///<summary>get ctrl from request uri</summary>
 /**
 * get ctrl from request uri
@@ -14,7 +15,7 @@ function igk_get_ctrl_ruri($uri){
     return null;
 }
 require_once(dirname(__FILE__)."/igk_framework.php");
-$_SERVER["REQUEST_URI"]="/services";
+$_SERVER["REQUEST_URI"]=IGK_SERVICES_ENTRY_URL;
 $dir=realpath(dirname(__FILE__)."/../../");
 chdir($dir);
 include_once("index.php");
@@ -30,12 +31,12 @@ $ac=igk_getctrl(IGK_SYSACTION_CTRL);
 $srv=0;
 $actions=$ac->getActions();
 foreach($actions as $k=>$v){
-    if(preg_match_all("/^\^\/services\/(?P<name>([^\/\(])+)(\/)?/i", $k, $tab)){
+    if(preg_match_all("/^\^".IGK_SERVICES_ENTRY_URL."\/(?P<name>([^\/\(])+)(\/)?/i", $k, $tab)){
         $ctrl=igk_get_ctrl_ruri($v);
         $r=$ctn->addRow();
         $dv=$r->addCol()->addDiv();
         $nn=igk_getv($tab["name"], 0);
-        $dv->addDiv()->addA(igk_io_baseUri()."/services/".$nn)->setStyle("font-size:2.1em")->Content=$nn;
+        $dv->addDiv()->addA(igk_io_baseUri().IGK_SERVICES_ENTRY_URL."/".$nn)->setStyle("font-size:2.1em")->Content=$nn;
         $dv->addDiv()->Content=$ctrl->getServiceDescription();
         $srv++;
     }

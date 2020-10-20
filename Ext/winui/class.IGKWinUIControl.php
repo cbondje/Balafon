@@ -6,12 +6,12 @@
 //----------------------------------------------------------------
 abstract class IGKWinUIControl extends IGKHtmlItem
 {
-	private $m_id;	
+	private $m_id;
 
 	public function __construct($tagname)
 	{
 		$this->m_id = igk_new_id();
-		parent::__construct($tagname);		
-	}	
+		parent::__construct($tagname);
+	}
 }
 ?>

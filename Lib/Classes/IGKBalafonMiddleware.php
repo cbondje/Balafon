@@ -25,9 +25,9 @@ abstract class IGKBalafonMiddleware{
     ///<param name="wherelist"> list that store the all middleware for chain list</param>
     /**
     *  attach the middleware
-    * @param middle the middleware to attach
-    * @param service application service to initialize
-    * @param wherelist  list that store the all middleware for chain list
+    * @param mixed $middlethe middleware to attach
+    * @param mixed $serviceapplication service to initialize
+    * @param mixed $wherelist list that store the all middleware for chain list
     */
     public static function Attach($middle, $service){
         if($c=$service->GetLastMiddleware()){
@@ -42,9 +42,9 @@ abstract class IGKBalafonMiddleware{
     ///<param name="service" default="null"></param>
     /**
     * Represente CreateMiddleware function
-    * @param name 
-    * @param args 
-    * @param service 
+    * @param mixed $name
+    * @param mixed $args
+    * @param mixed $service
     */
     public static function CreateMiddleware($name, $args=null, $service=null){
         if($name === __CLASS__)
@@ -85,8 +85,8 @@ abstract class IGKBalafonMiddleware{
     ///<summary>initialize the middleware </summary>
     ///<param name="service">IIGKBalafonApplicationMiddlewareService instance</summary>
     /**
-    * initialize the middleware 
-    * @param service IIGKBalafonApplicationMiddlewareService instance
+    * initialize the middleware
+    * @param mixed $serviceIIGKBalafonApplicationMiddlewareService instance
     */
     protected function initialize($service){}
     ///<summary>Represente invoke function</summary>
@@ -110,8 +110,8 @@ abstract class IGKBalafonMiddleware{
     ///<param name="wherelist"></param>
     /**
     * Represente Process function
-    * @param service 
-    * @param wherelist 
+    * @param mixed $service
+    * @param mixed $wherelist
     */
     public static function Process($service, $wherelist){
         if(self::$sm_manager == null)

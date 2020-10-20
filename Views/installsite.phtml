@@ -1,7 +1,7 @@
 <?php
 // @file: installsite.phtml
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -13,7 +13,7 @@ if(isset($source_args)){
     extract($source_args);
 }
 igk_view_handle_actions($fname, ["install"=>function(){
-            if(!igk_html_valid_cref(1)){
+            if(!igk_valid_cref(1)){
                 return;}
             $LIB=igk_html_uri(IGK_LIB_DIR."/igk_framework.php");
             ($home=igk_getv($_SERVER, "HOME")) || ($home=igk_getv($_SERVER, "DOCUMENT_ROOT"));
@@ -59,7 +59,7 @@ EOF;
 $t->clearChilds();
 $t->addNotifyHost("site_install");
 $frm=$t->addForm();
-$frm["action"]=$this->getAppUri($fname."/install");
+$frm["action"]=$ctrl->getAppUri($fname."/install");
 $frm->add("h3")->Content=__("Install Site utility");
 $formfields=["diri"=>["type"=>"text",
             "label_text"=>__("Site"),

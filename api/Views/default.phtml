@@ -1,7 +1,7 @@
 <?php
 // @file: default.phtml
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -24,15 +24,13 @@ $dv["style"]="padding:2em";
 $dv->addSectionTitle(5)->Content="BALAFON <span>Api version <span>".IGKAPIInfo::VERSION."</span></span>";
 $c=$t->addDiv();
 $c=$c->addContainer();
-$listcallback=function($d){};
 if(igk_is_conf_connected()){
     $col=$c->addSingleRowCol();
     $dv=$col->addDiv();
-    $listcallback($dv);
 }
 $dv=$t->addDiv()->setStyle("padding-left:2em");
 $ul=$dv->add("ul");
 foreach(["datadb"] as $k){
-    $ul->add("li")->addA($this->getAppUri($k))->Content=$k;
+    $ul->add("li")->addA($ctrl->getAppUri($k))->Content=$k;
 }
 $t->addDiv()->setStyle("padding-left:2em")->addIGKCopyright();

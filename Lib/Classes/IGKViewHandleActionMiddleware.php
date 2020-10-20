@@ -18,9 +18,9 @@ class IGKViewHandleActionMiddleware extends IGKRunCallbackMiddleware{
     ///<param name="params"></param>
     /**
     * Represente __construct function
-    * @param fname 
-    * @param action 
-    * @param params 
+    * @param mixed $fname
+    * @param mixed $action
+    * @param mixed $params
     */
     public function __construct($fname, $action, $params){
         parent::__construct(function($service) use ($fname, $action, $params){

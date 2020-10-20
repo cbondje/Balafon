@@ -1,7 +1,7 @@
 <?php
 // @file: class.IGKGoogleMapCtrl.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -66,7 +66,7 @@ final class IGKHtmlGoogleMapNodeItem extends IGKHtmlItem{
     ///<param name="opt" default="null"></param>
     /**
     * Represente __acceptRender function
-    * @param  $opt the default value is null
+    * @param mixed $opt the default value is null
     */
     protected function __acceptRender($opt=null){
         $this->initView();
@@ -131,7 +131,7 @@ EOF;
     ///<param name="v"></param>
     /**
     * Represente setKey function
-    * @param  $v
+    * @param mixed $v
     */
     public function setKey($v){
         $this->m_key=$v;
@@ -141,7 +141,7 @@ EOF;
     ///<param name="v"></param>
     /**
     * Represente setLocation function
-    * @param  $v
+    * @param mixed $v
     */
     public function setLocation($v){
         $this->m_location=$v;
@@ -151,7 +151,7 @@ EOF;
     ///<param name="v"></param>
     /**
     * Represente setQuery function
-    * @param  $v
+    * @param mixed $v
     */
     public function setQuery($v){
         $this->m_query=$v;
@@ -161,7 +161,7 @@ EOF;
     ///<param name="v"></param>
     /**
     * Represente setType function
-    * @param  $v
+    * @param mixed $v
     */
     public function setType($v){
         $this->m_type=$v;

@@ -6,7 +6,7 @@ $CF = igk_ctrl_zone_init(__FILE__);
 function igk_html_node_ToggleStateButton($id,$value='on', $checked=0,$type="window10"){
 	$CF = igk_ctrl_zone(__FILE__);
 	$n = igk_createNode("div");
-	$n["class"] = "igk-winui-btn-toggle-state";	
+	$n["class"] = "igk-winui-btn-toggle-state";
 	$n->addOnRenderCallback(igk_create_expression_callback(
 	igk_io_read_allfile(dirname(__FILE__)."/.statebtn.func")
 	,
@@ -16,8 +16,8 @@ function igk_html_node_ToggleStateButton($id,$value='on', $checked=0,$type="wind
 	"name"=>$id,
 	"i_value"=>array("v"=>$value,"c"=>$checked)
 	)
-	));	
-	//on render bind css style to document	
+	));
+	//on render bind css style to document
 	return $n;
 }
 

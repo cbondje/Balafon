@@ -8,4 +8,4 @@ $file=dirname(__FILE__)."/../../index.php";
 IGKApp::
 $BASEDIR=dirname($file);
 $d=igk_getr("d");
-file_put_contents(igk_io_currentBasePath($d), file_get_contents("php://input"));
+file_put_contents(igk_io_basepath($d), file_get_contents("php://input"));

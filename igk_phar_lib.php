@@ -5,7 +5,7 @@
 $web = "/index.php";
 
 
-// if (!defined('IGK_PHAR_REQUEST') && 
+// if (!defined('IGK_PHAR_REQUEST') &&
 // isset($_SERVER["REQUEST_URI"]) && ($rui = $_SERVER["REQUEST_URI"]) && ($rui!='/') && ($rui!= $web))
 // {
 	// define('IGK_PHAR_REQUEST', __FILE__);
@@ -15,7 +15,7 @@ $web = "/index.php";
 	// $ln = strlen($furi);
 	// if (($ln>1)&&( $furi[$ln-1]=='/')){
 		// $furi = substr($furi,0, $ln-1);
-	// }	
+	// }
     // if (file_exists($furi) || file_exists($furi = $dir.$furi."/index.php")){
 		// if (preg_match("/\.ph(p|tml)$/i",$furi)){
 			// include($furi);
@@ -40,7 +40,7 @@ final class IGKPhar
 		header("Pragma: cache");
 		header("Cache-Control: max-age={$second}, public");
 	}
-	
+
 	//----------------------------------------------------------------------------
 	//export setting
 	//----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ define("IGK_MAIN_FILE", igk_html_uri(PHar::running(false)));
 // handle key
 $key = 'phar://handlerequest';
 $uri = igk_io_request_uri();
-if (!empty($uri) && ($uri!= $web) && ($uri !='/') && !igk_get_env($key)){    
+if (!empty($uri) && ($uri!= $web) && ($uri !='/') && !igk_get_env($key)){
     igk_set_env($key, $uri);
     igk_sys_handle_request($uri);
     igk_set_env($key, null);

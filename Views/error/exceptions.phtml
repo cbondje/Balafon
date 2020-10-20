@@ -1,12 +1,13 @@
 <?php
 // @file: exceptions.phtml
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
+/** @var string $trace */
 
 ?>
 <!DocType html>
@@ -22,17 +23,19 @@ padding:0px;
 <?php
 if(!defined("IGK_FORCSS")){
     ?><link type="text/css" rel="stylesheet" href="<?=igk_io_corestyle_uri() ?>" />
-<?php 
+<?php
 }
 else{
     ?>
 <style type="text/css">
 @import url("
-<?php 
+<?php
+/** @var string $error_style */
+/** @var callable $split_message */
     echo $error_style;
     ?>");
 </style>
-<?php 
+<?php
 }
 ?>
 </head>
@@ -42,18 +45,18 @@ else{
 </div>
 <!--content-->
 <div>
-<?php 
+<?php
 if(isset($trace)){
     ?>
 <div>
 <div>Trace</div>
 <div class="trace">
-<?php 
+<?php
     echo $trace;
     ?>
 </div>
 <div class="container">
-<?php 
+<?php
     $dv="<div>";
     foreach($last as $k=>$v){
         $dv .= "<div class=\"last\">";
@@ -71,7 +74,7 @@ if(isset($trace)){
 </div>
 
 </div>
-<?php 
+<?php
 }
 ?><div>
  </div>

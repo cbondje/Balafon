@@ -12,25 +12,23 @@
 			function _page_ready(q, i, t, cl, r){
 				return function(xhr){
 						if (this.isReady()){
-							
-							if (i.target)
-								q.select(i.target).setHtml(xhr.responseText).init();
-							else
-								igk.ajx.fn.replace_or_append_to_body.apply(this, [xhr]);
-							
-							if (typeof(r)=='undefined'){
-								//console.debug("push :  "+t);
-								igk.winui.history.push(t, {title:'change','igk-rol':'pagination','olduri':cl},'history page ');
+							if (xhr.status == 200){
+								if (i.target)
+									q.select(i.target).setHtml(xhr.responseText).init();
+								else
+									igk.ajx.fn.replace_or_append_to_body.apply(this, [xhr]); 
+								if (typeof(r)=='undefined'){ 
+									igk.winui.history.push("#!"+t, {title:'change','igk-rol':'pagination','olduri':cl},'history page ');
+								}
+								else{
+									console.debug("replace : "+t);
+									igk.winui.history.replace(t);
+								}
+								var p = $igk('.location').first();
+								if (p){
+									p.setHtml(cl);
+								}
 							}
-							else{
-								//console.debug("replace : "+t);
-								igk.winui.history.replace(t);
-							}
-							var p = $igk('.location').first();
-							if (p){
-								p.setHtml(cl);
-							}
-							
 						}
 				};
 			};
@@ -153,10 +151,7 @@
 })();
 
 
-(function(){
-	
-	
-	
+(function(){ 
 	igk.system.createNS("igk.winui.controls.pagination", {
 		init: function(){ // initialize the pagination control custom control
 			var q = igk.getParentScript();

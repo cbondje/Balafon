@@ -7,17 +7,17 @@ final class IGKHtmlBootstrapToolTipItem extends IGKHtmlItem
 		$this["data-placement"] = $v;
 		return $this;
 	}
-	
+
 	public function getDataPlacement($v){//direction
-		return $this["data-placement"];		
+		return $this["data-placement"];
 	}
 	public function __construct(){
 		parent::__construct("a");
 		$this["class"] = "";
 		$this["href"] = "#";
-		$this["data-toggle"] = "tooltip";		
+		$this["data-toggle"] = "tooltip";
 	}
-	
+
 	public function initDemo($t)
 	{
 		$this->ClearChilds();
@@ -37,25 +37,25 @@ final class IGKHtmlBootstrapPopoverItem extends IGKHtmlItem
 		$this["data-original-title"] = $v;
 		return $this;
 	}
-	
+
 	public function getTitle($v){//direction
-		return $this["data-original-title"];		
+		return $this["data-original-title"];
 	}
 	public function setMessage($v){//direction
 		$this["data-content"] = $v;
 		return $this;
 	}
-	
+
 	public function getMessage($v){//direction
-		return $this["data-content"];		
+		return $this["data-content"];
 	}
 	public function __construct(){
 		parent::__construct("a");
 		$this["class"] = "";
 		$this["href"] = "#";
-		$this["data-toggle"] = "popover";		
+		$this["data-toggle"] = "popover";
 	}
-	
+
 	public function initDemo($t)
 	{
 		$this->ClearChilds();
@@ -82,7 +82,7 @@ final class IGKHtmlBootstrapPopOverHtmlItemCtrl extends IGKNonVisibleControllerB
 		   $f =dirname(__FILE__)."/Styles/default.pcss";
         if (file_exists($f))
 		    include_once($f);
-	
+
 	}
 }
 ?>

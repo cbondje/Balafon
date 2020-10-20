@@ -1,7 +1,7 @@
 <?php
 // @file: default.phtml
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -13,4 +13,4 @@ $t->clearChilds();
 $dv=$t->addDiv();
 $box=$dv->addPanelBox();
 $box->addSectionTitle(4)->Content=R::gets("Security Manager");
-$box->addDiv()->addArticle($this, "help/security");
+$box->addDiv()->addArticle($ctrl, "help/security");

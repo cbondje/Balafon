@@ -9,9 +9,9 @@ $gdoc = igk_app()->Doc;
 igk_google_addfont($doc, "Roboto");
 
 //bind style
-$f = $this->getStylesDir()."/config.pcss";
+$f = $ctrl->getStylesDir()."/config.pcss";
 $gdoc->Theme->addTempFile($f);
-$confframe = $this->getConfigFrame();
+$confframe = $ctrl->getConfigFrame();
 
 igk_html_rm($confframe); //this->getConfigFrame());
 $t->ClearChilds();

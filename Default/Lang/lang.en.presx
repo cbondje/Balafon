@@ -1,4 +1,4 @@
-<?php 
+<?php
 $l["menu.console"]="Console";
 $l["balafon.warn.nodemonstrationavailable"]="/!\ No demonstration available for that component.";
 $l["bnt.getcomponentinfo"]="Component Info";

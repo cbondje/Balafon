@@ -1,7 +1,7 @@
 <?php
 // @file: IGKBalafonInstaller.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -50,13 +50,13 @@ class IGKBalafonInstaller implements IIGKActionResult{
         igk_flush_start();
         igk_set_timeout(0);
         $action=new InstallerMiddleWareActions();
-		 
-		
+
+
         if(igk_server()->IGK_LOCAL_TEST){
 			igk_ilog("testing: ");
-            $action->BaseDir='D:\wwwroot\tbnsolaris\Lavocation\9806\current\src\public';
-            $action->LibDir='D:\wwwroot\www\tbnsolaris\Lavocation\9806\current\src\application\Lib\igk';
-            $action->CoreZip='C:\Users\IGKBondje\Desktop\balafon.9.9.0.0903.zip';
+            $action->BaseDir= igk_server()->TEST_BASE_DIR;
+            $action->LibDir=igk_server()->LIB_DIR;
+            $action->CoreZip= igk_server()->CORE_ZIP;
             if(!file_exists($action->CoreZip)){
                 igk_flush_write($r ? "ok": "failed", "finish");
                 igk_flush_data();
@@ -96,7 +96,7 @@ class IGKBalafonInstaller implements IIGKActionResult{
     * Represente upload function
     */
     public function upload(){
-        $file=igk_io_sys_tempnam("igk");		
+        $file=igk_io_sys_tempnam("igk");
         rename($file, $file=$file.".zip");
         igk_app()->session->setParam("installer://uploadfile", igk_html_uri($file));
         session_write_close();
