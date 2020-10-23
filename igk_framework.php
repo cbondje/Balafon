@@ -14070,15 +14070,15 @@ function igk_include_file($file, $args=null){
 * @param mixed $ file to include
 * @param mixed $gglobal argument
 */
-function igk_include_on_global($f, $g=null){
-            global $d;
-    if($g){
-        foreach($g as $k=>$d){
-        }
-    }
-    unset($g);
+function igk_include_on_global($f, $g=null){   
     extract($GLOBALS);
     include($f);
+}
+function igk_inc_js($file , $args=[]){
+    ob_start();
+    $src =  igk_include_file($file, $args);
+    ob_end_content();
+    return $src;
 }
 ///<summary>include script in plugin lib</summary>
 ///<param name="file">mixed file or array </param>
@@ -40398,82 +40398,7 @@ final class IGKConfigCtrl extends IGKControllerBase implements IIGKConfigControl
             }
         }
         $uri=$this->getUri("configure_store_ajx");
-        $tab->addScript()->Content=<<<EOF
-			var q = \$igk(igk.getParentScriptByTagName('table'));
-
-igk.ready(function(){
-	var e_=null;
-	var u_='{$uri}';
-
-	function _start(){
-		if (e_==null){
-
-		}
-	}
-
-	q.select('.e').each(function(){
-		// console.debug('reg event');
-		this.reg_event("dblclick", function(){
-			 //console.debug("on dbl click");
-			 if (e_!=null){
-				 if (e_.t==this)
-					 return;
-				 //restore to default
-				 \$igk(e_.t).setHtml(e_.c);
-				 e_ = null;
-			 }
-			 var s = this.innerHTML;
-			 var i = this.parentNode.childNodes[0].innerHTML;
-			 e_ = {
-				 c:s,
-				 t:this
-			 };
-			 var n = ns_igk.createNode('form');
-			 n.o["action"] = u_;
-			 n.add('input').setAttributes({
-				 'id':'clName',
-				 'type':'hidden',
-				 'value':i
-			 });
-			 var v_s = n.add('input').setAttributes({
-				 'id':'clValue',
-				 'class':'cltext igk-form-control',
-				 'value':s
-			 }).reg_event("keypress", function(evt){
-				// console.debug(evt.keyCode);
-				switch (evt.keyCode){
-					case 13:
-					 evt.preventDefault();
-					 var mq=this.value;
-					 igk.ajx.post(u_, "clName="+this.form["clName"].value+"&clValue="+this.value, function(xhr){
-						 if (this.isReady()){
-							 if (!e_)return;
-							 \$igk(e_.t).setHtml(mq);
-
-							 if (e_.c!=mq){
-								 e_.t.parentNode.childNodes[2].innerHTML='<b>user define</b>';
-							 }
-							 e_ = null;
-						 }
-					 });
-					 break;
-					 case 27:
-							//restore
-							\$igk(e_.t).setHtml(e_.c);
-							e_ = null;
-						break;
-				 }
-			 });
-
-			 \$igk(this).setHtml('').add(n);
-			 v_s.o.focus();
-
-		});
-		return 1;
-	});
-
-});
-EOF;
+        $tab->addScript()->Content= igk_inc_js(IGK_LIB_DIR."/Inc/js/cons.setting.pjs", ["uri"=>$uri]);
     }
     ///<summary>Represente configure_store_ajx function</summary>
     /**
@@ -82970,7 +82895,7 @@ unset($file);
 define("IGK_BALAFON_JS_VERSION", "4.5.0.0507");
 define("IGK_FRAMEWORK", "IGKDEV-WFM");
 !defined("IGK_WEBFRAMEWORK") && define("IGK_WEBFRAMEWORK", "11.0");
-!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".4.1015");
+!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".4.1023");
 define("IGK_AUTHOR", "C.A.D. BONDJE DOUE");
 define("IGK_AUTHOR_CONTACT", "bondje.doue@igkdev.com");
 define("IGK_AUTHOR_2", "R. TCHATCHO");
