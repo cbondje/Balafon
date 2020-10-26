@@ -29,7 +29,7 @@ abstract class IGKJSScriptInitCtrl extends IGKCtrlTypeBase
 	}
 	public function pageFolderChanged()
 	{
-		$this->View();		
+		$this->View();
 	}
 	public function View()
 	{
@@ -38,10 +38,10 @@ abstract class IGKJSScriptInitCtrl extends IGKCtrlTypeBase
 			$this->m_script->Content  ="";
 			$v = $this->getArticleContent("default.js");
 			$this->m_script->Content =$v;
-			igk_html_add($this->m_script, $this->App->doc->body,10000);			
+			igk_html_add($this->m_script, $this->App->doc->body,10000);
 		}
 		else {
-			igk_html_rm($this->m_script);			
+			igk_html_rm($this->m_script);
 		}
 	}
 }

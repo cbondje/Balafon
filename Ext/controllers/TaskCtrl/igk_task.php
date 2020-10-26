@@ -11,26 +11,26 @@
 	// public function getIsSystemController()
 	// {
 		// return true;
-	// }	
-	// protected function InitComplete(){		
-		// parent::InitComplete();	
-		// $this->db = new TaskDbUtility($this);	
 	// }
-	
+	// protected function InitComplete(){
+		// parent::InitComplete();
+		// $this->db = new TaskDbUtility($this);
+	// }
+
 	// public function getConfigPage()
 	// {
 		// return "task";
 	// }
 	// public function View(){
-	
+
 	// }
 	// public function getTaskList($app){
-		
-		// $t = array();		
+
+		// $t = array();
 		// $r = $this->db->select("tbigk_task", array("clApp"=>$app->Name));
 		// return $t;
 	// }
-	
+
 // }
 
 // class TaskDbUtility extends IGKDbUtility{

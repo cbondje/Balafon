@@ -3,27 +3,47 @@
 // licence: IGKDEV - Balafon @ 2019
 
 use function igk_resources_gets as __;
+
+
+function igk_html_validate(){
+    //TODO: implement validation error
+    throw new Exception("Not Implement");
+}
+function igk_html_print_r($args){
+    igk_wl("<pre>");
+    print_r($args);
+    igk_wln("</pre>");
+}
+/**
+* @return mixed
+*/
+function igk_html_validate_error(){
+    //TODO: implement validation error
+    throw new Exception("Not Implement");
+}
+
 ///<summary>Represente igk_html_add_good_uri function</summary>
 ///<param name="t"></param>
 ///<param name="ctrl"></param>
 /**
 * Represente igk_html_add_good_uri function
-* @param  $t
-* @param  $ctrl
+* @param mixed $t
+* @param mixed
 */
 function igk_html_add_good_uri($t, $ctrl){
     if(($redirect=base64_decode(igk_getr("q")))){
         $redirect=igk_io_baseuri($redirect);
     }
     else if(!($redirect=igk_getr("goodUri"))){
-        return;}
+        return;
+    }
     $t->addInput("goodUri", "hidden", $redirect);
 }
 ///<summary>Represente igk_html_attribvalue function</summary>
 ///<param name="n"></param>
 /**
 * Represente igk_html_attribvalue function
-* @param  $n
+* @param mixed $n
 */
 function igk_html_attribvalue($n){
     if(!$n){
@@ -38,15 +58,15 @@ function igk_html_attribvalue($n){
 ///<param name="title"></param>
 /**
 * Represente igk_html_add_title function
-* @param  $node
-* @param  $title
+* @param mixed $node
+* @param mixed
 */
 function igk_html_add_title($node, $title){
     if($node == null)
-        return;
+        return null;
     $d=$node->addDiv();
     $d["class"]="igk-title";
-    $d->Content=R::gets($title);
+    $d->Content=__($title);
     return $d;
 }
 ///<summary>get paget title function</summary>
@@ -54,12 +74,12 @@ function igk_html_add_title($node, $title){
 ///<param name="title" >the text title</param>
 /**
 * get paget title function
-* @param ctrl the controller the application title. mixed string|control implement AppTitle property
-* @param title the text title
+* @param mixed ctrl the controller the application title. mixed string|control implement AppTitle property
+* @param mixed title the text title
 */
 function igk_html_app_page_title($ctrl, $title){
     return IGKLangKey::GetValueKeys(IGKConstants::STR_PAGE_TITLE, array(
-            R::gets($title),
+            __($title),
             is_string($ctrl) ? $ctrl: $ctrl->AppTitle
         ));
 }
@@ -68,19 +88,19 @@ function igk_html_app_page_title($ctrl, $title){
 ///<param name="title"></param>
 /**
 * Represente igk_html_apptitle function
-* @param  $ctrl
-* @param  $title
+* @param mixed $ctrl
+* @param mixed $title
 */
 function igk_html_apptitle($ctrl, $title){
-    return R::gets("title.app_2", $title, $ctrl->getAppTitle());
+    return __("title.app_2", $title, $ctrl->getAppTitle());
 }
 ///<summary>Represente igk_html_array_table function</summary>
 ///<param name="tab"></param>
 ///<param name="headercallback" default="null"></param>
 /**
 * Represente igk_html_array_table function
-* @param  $tab
-* @param  $headercallback the default value is null
+* @param mixed $tab
+* @param mixed $headercallback the default value is null
 */
 function igk_html_array_table($tab, $headercallback=null){
     $n=igk_createNode("table");
@@ -149,7 +169,7 @@ function igk_html_build_form($t, $data, $defaultTarget="li"){
             break;
             case "hidden":
             case "text":
-            case "password":default: 
+            case "password":default:
             $a=$li->addInput($id, $type);
             $a["type"]=strtolower($type);
             if($args){
@@ -211,13 +231,13 @@ function igk_html_build_menu($target, $menuTab, $user=null, $ctrl=null, $default
 ///<param name="callback" default="null"></param>
 /**
 * Represente igk_html_load_menu_array function
-* @param  $target
-* @param  $tab
-* @param  $item the default value is "li"
-* @param  $subnode the default value is "ul"
-* @param  $user the default value is null
-* @param  $ctrl the default value is null
-* @param  $callback the default value is null
+* @param mixed $target
+* @param mixed $tab
+* @param mixed $item the default value is "li"
+* @param mixed $subnode the default value is "ul"
+* @param mixed $user the default value is null
+* @param mixed $ctrl the default value is null
+* @param mixed $callback the default value is null
 */
 function igk_html_load_menu_array($target, $tab, $item="li", $subnode="ul", $user=null, $ctrl=null, $callback=null){
     $mi=null;
@@ -226,20 +246,20 @@ function igk_html_load_menu_array($target, $tab, $item="li", $subnode="ul", $use
 	if ($ctrl == null){
 		$ctrl = igk_app()->getBaseCurrentCtrl();
 	}
-	
+
 	$_binduri = function($s, $ctrl){
-            if($ctrl && !empty($s) && !IGKValidator::IsUri($s)){ 
+            if($ctrl && !empty($s) && !IGKValidator::IsUri($s)){
                 $s=igk_str_rm_start($s, "/");
-                $s=$ctrl->getAppUri($s);  
+                $s=$ctrl->getAppUri($s);
             }
 			return $s;
 	};
- 
-	
+
+
     $sfc=function($tab){
         $o=array();
         $c=0;
-        $levels=array();
+        $level=array();
         $roots=0;
         foreach($tab as $k=>$v){
             $st=igk_io_basenamewithoutext($k);
@@ -339,12 +359,12 @@ function igk_html_load_menu_array($target, $tab, $item="li", $subnode="ul", $use
                 $init($hi);
             }
         }
-        else{ 
+        else{
             if($mi == null){
                 $mi=$target;
             }
             $hi=$mi->add($item);
-			$s = $_binduri($s, $ctrl); 
+			$s = $_binduri($s, $ctrl);
             $hi->addA($s)->Content=R::ngets("menu.".$k);
             $sd[$k]->li=$hi;
         }
@@ -383,7 +403,7 @@ function igk_html_build_select_setting(){
 */
 function igk_html_build_table($tab, $rows, $headers, $callback=null){
     igk_html_db_build_table_header($tab->add("tr"), $headers, null, $callback);
-    foreach($rows as $k=>$v){
+    foreach($rows as  $v){
         igk_html_db_build_table_row($tab->add("tr"), $v, $headers, "td", $callback);
     }
 }
@@ -393,9 +413,9 @@ function igk_html_build_table($tab, $rows, $headers, $callback=null){
 ///<param name="selected" default="null"></param>
 /**
 * Represente igk_html_buildmenu_nav function
-* @param  $tab
-* @param  $nav
-* @param  $selected the default value is null
+* @param mixed $tab
+* @param mixed $nav
+* @param mixed $selected the default value is null
 */
 function igk_html_buildmenu_nav($tab, $nav, $selected=null){
     foreach($tab as $k=>$v){
@@ -411,8 +431,8 @@ function igk_html_buildmenu_nav($tab, $nav, $selected=null){
 ///<param name='ul'>the uri tab list</param>
 /**
 * build menu array for ul
-* @param tab  must be array of {key,'uri'}
-* @param ul the uri tab list
+* @param mixed $tab  must be array of {key,'uri'}
+* @param mixed $ul the uri tab list
 */
 function igk_html_buildmenu_ul($tab, $ul, $selected=null){
     foreach($tab as $k=>$v){
@@ -437,7 +457,7 @@ function igk_html_cookie_warn(){
 ///<param name="ctrl"></param>
 /**
 * Represente igk_html_create_message function
-* @param  $ctrl
+* @param mixed $ctrl
 */
 function igk_html_create_message($ctrl){
     $s=array(
@@ -458,9 +478,9 @@ function igk_html_create_message($ctrl){
 ///<param name="filter" default="null"></param>
 /**
 * Represente igk_html_db_build_table_entry function
-* @param  $tr
-* @param  $tab
-* @param  $filter the default value is null
+* @param mixed $tr
+* @param mixed $tab
+* @param mixed $filter the default value is null
 */
 function igk_html_db_build_table_entry($tr, $tab, $filter=null){
     igk_html_db_build_table_row($tr, $tab, $filter, "td");
@@ -472,10 +492,10 @@ function igk_html_db_build_table_entry($tr, $tab, $filter=null){
 ///<param name="callback" default="null"></param>
 /**
 * Represente igk_html_db_build_table_header function
-* @param  $tr
-* @param  $tab
-* @param  $filter the default value is null
-* @param  $callback the default value is null
+* @param mixed $tr
+* @param mixed $tab
+* @param mixed $filter the default value is null
+* @param mixed $callback the default value is null
 */
 function igk_html_db_build_table_header($tr, $tab, $filter=null, $callback=null){
     igk_html_db_build_table_row($tr, $tab, $filter, "th", $callback);
@@ -488,11 +508,11 @@ function igk_html_db_build_table_header($tr, $tab, $filter=null, $callback=null)
 ///<param name="callback" default="null"></param>
 /**
 * Represente igk_html_db_build_table_row function
-* @param  $tr
-* @param  $tab
-* @param  $filter the default value is null
-* @param  $cell the default value is "td"
-* @param  $callback the default value is null
+* @param mixed $tr
+* @param mixed $tab
+* @param mixed $filter the default value is null
+* @param mixed $cell the default value is "td"
+* @param mixed $callback the default value is null
 */
 function igk_html_db_build_table_row($tr, $tab, $filter=null, $cell="td", $callback=null){
     if($filter){
@@ -545,7 +565,7 @@ function igk_html_db_build_table_row($tr, $tab, $filter=null, $cell="td", $callb
             }
             else{
                 if($cell == "th")
-                    $tr->add($cell)->Content=R::gets($v);
+                    $tr->add($cell)->Content=__($v);
                 else
                     $tr->add($cell)->Content=$v;
             }
@@ -558,9 +578,9 @@ function igk_html_db_build_table_row($tr, $tab, $filter=null, $cell="td", $callb
 ///<param name="useempty"></param>
 /**
 * Represente igk_html_db_select_filter function
-* @param  $dbResult
-* @param  $sortcallback
-* @param  $useempty the default value is 0
+* @param mixed $dbResult
+* @param mixed $sortcallback
+* @param mixed $useempty the default value is 0
 */
 function igk_html_db_select_filter($dbResult, $sortcallback, $useempty=0){
     if($useempty)
@@ -572,16 +592,16 @@ function igk_html_db_select_filter($dbResult, $sortcallback, $useempty=0){
 ///<param name="title"></param>
 /**
 * Represente igk_html_domaintitle function
-* @param  $title
+* @param mixed $title
 */
 function igk_html_domaintitle($title){
-    return R::gets("title.app_2", $title, igk_app()->Configs->website_domain);
+    return __("title.app_2", $title, igk_app()->Configs->website_domain);
 }
 ///<summary>Represente igk_html_dump function</summary>
 ///<param name="obj"></param>
 /**
 * Represente igk_html_dump function
-* @param  $obj
+* @param mixed $obj
 */
 function igk_html_dump($obj){
     $t=igk_createNode("div");
@@ -609,7 +629,7 @@ function igk_html_dump($obj){
 ///<param name="id"></param>
 /**
 * Represente igk_html_extract_id function
-* @param  $id
+* @param mixed $id
 */
 function igk_html_extract_id($id){
     if(is_array($id)){
@@ -620,36 +640,73 @@ function igk_html_extract_id($id){
     }
     return array();
 }
+
+function igk_html_bind($node, $callback){
+    $callback($node);
+    return $node;
+}
+
+function igk_html_select_constants($type){
+    $types = [];
+    foreach(igk_get_class_constants($type) as $k=>$gt)
+    {
+        $types[] = ["i"=>$gt , "t"=>$k ] ;
+    }
+    return $types;
+}
+
+
 ///<summary>Represente igk_html_form_buildformfield function</summary>
 ///<param name="frm"></param>
 ///<param name="data"></param>
 /**
 * Represente igk_html_form_buildformfield function
-* @param  $frm
-* @param  $data
+* @param mixed $frm
+* @param mixed $data
 */
 function igk_html_form_buildformfield($frm, $data){
-    $frm->addObData(function() use ($data){igk_wl(igk_html_utils_buildformfield($data));
+    $frm->addObData(function() use ($data){
+        igk_wl(igk_html_utils_buildformfield($data, 0));
     });
     return $frm;
 }
 ///<summary>build form field on modele view </summary>
 /**
-* build form field on modele view 
+* build form field on modele view
 */
 function igk_html_form_fields($formFields, $render=0){
     $o="";
-    $load_attr=function($v, & $o){
-        if(!isset($v["attrs"])){
-            return;}
-        foreach($v["attrs"] as $k=>$v){
+    $get_attr_key = function($v){
+        $key = null;
+        foreach(["attrs", "attribs","attributes"] as $m){
+            if (isset($v[$m])){
+                $key = $m;
+                break;
+            }
+        }
+        return $key;
+    };
+    $load_attr=function($v, & $o) use( $get_attr_key) {
+        $key = $get_attr_key($v);
+        if($key === null){
+            return;
+        }
+        foreach($v[$key] as $k=>$v){
             $o .= " ".$k."=\"".$v."\"";
         }
     };
     $fieldset=0;
     foreach($formFields as $k=>$v){
+        $attr_key = $get_attr_key($v);
+        $_value= isset($v["value"]) ? $v["value"]: "";
+        if ($attr_key){
+            if (isset($v[$attr_key]["value"])){
+                $_value = $v[$attr_key]["value"];
+                unset( $v[$attr_key]["value"]);
+            }
+        }
         $_type=strtolower(isset($v["type"]) ? $v["type"]: "text");
-        $_value=isset($v["value"]) ? $v["value"]: "";
+
         $_allow_empty=isset($v["allow_empty"]) ? $v["allow_empty"]: "";
         $_empty_value=isset($v["empty_value"]) ? $v["empty_value"]: "0";
         if($_type == "fieldset"){
@@ -665,6 +722,13 @@ function igk_html_form_fields($formFields, $render=0){
             $fieldset=1;
             continue;
         }
+        if ($_type ==="efieldset"){
+            if ($fieldset){
+                $o.="</fieldset>";
+                $fieldsett = 0;
+            }
+            continue;
+        }
         $_id="";
         if(isset($v["id"])){
             $_id=' id="'.$v["id"].'"';
@@ -675,13 +739,14 @@ function igk_html_form_fields($formFields, $render=0){
         }
         $o .= ">";
         if(!preg_match("/(hidden|fieldset|button|submit|reset)/", $_type)){
-            $o .= "<label for='{$k}'>".(isset($v["label_text"]) ? $v["label_text"]: $k)."</label>";
+            $o .= "<label for='{$k}'>".igk_getv($v, "label_text", __($k))."</label>";
         }
         switch($_type){
             case "fieldset":
             break;
             case "textarea":
             $o .= "<textarea name=\"{$k}\" id=\"{$k}\" ";
+            $load_attr($v, $o);
             $o .= ">{$_value}</textarea>";
             break;
             case "radiogroup":
@@ -703,19 +768,21 @@ function igk_html_form_fields($formFields, $render=0){
                     $o .= isset($row["t"]) ? $row["t"]: "";
                     $o .= "</option>";
                 }
-            } 
+            }
             $o .= "</datalist>";
             break;
             case "select":
             $k_data="";
             $bas=isset($v["selected"]) ? $v["selected"]: null;
-            if(isset($v["data"]) && is_string($k_data=$v["data"])){
-                $k_data="data=\"".$k_data."\" selected=\"{$bas}\" ";
+            if(isset($v["data"]) && is_string($m_data=$v["data"])){
+                $k_data="data=\"".$m_data."\" ";
             }
-            else{
-                $k_data=null;
-            }
-            $o .= "<select name=\"{$k}\"".$_id.$k_data.">";
+            // if ($bas){
+            //     $k_data.= "selected=\"{$bas}\" ";
+            // }
+            $o .= "<select name=\"{$k}\"".$_id.$k_data;
+            $load_attr($v, $o);
+            $o.= " >";
             if($_allow_empty){
                 $o .= "<option ";
                 $o .= "value=\"{$_empty_value}\" ></option>";
@@ -737,10 +804,13 @@ function igk_html_form_fields($formFields, $render=0){
             case "text":
             case "hidden":
             case "password":
-			default: 
+			default:
             if(empty($_id))
                 $_id=' id="'.$k.'"';
-            $o .= "<input type=\"{$_type}\" value=\"{$_value}\" name=\"{$k}\"{$_id} ";
+            $_vt ="";
+            if (!empty($_value))
+                $_vt="value=\"{$_value}\"";
+            $o .= "<input type=\"{$_type}\" {$_vt} name=\"{$k}\"{$_id} ";
             if(isset($v["maxlength"])){
                 $o .= "maxlength=\"{$v["maxlength"]}\" ";
             }
@@ -791,8 +861,8 @@ function igk_html_form_initfield($frm){
 ///<param name="e"></param>
 /**
 * Represente igk_html_js_lang function
-* @param  $ns
-* @param  $e
+* @param mixed $ns
+* @param mixed $e
 */
 function igk_html_js_lang($ns, $e){
     $data=json_encode((object)$e);
@@ -814,9 +884,9 @@ $o=$s->Render(null);
 ///<param name="source" default="null"></param>
 /**
 * Represente igk_html_login_form function
-* @param  $ctrl
-* @param  $d
-* @param  $source the default value is null
+* @param mixed $ctrl
+* @param mixed $d
+* @param mixed $source the default value is null
 */
 function igk_html_login_form($ctrl, $d, $source=null){
     igk_app_load_login_form($ctrl, $d, $source);
@@ -828,6 +898,7 @@ function igk_html_login_form($ctrl, $d, $source=null){
 function igk_html_loremipsum(){
     static $ipsum=null;
     if($ipsum == null){
+        $ipsum = array();
         $ipsum[]=<<<EOF
 <div id="lipsum">
 <p>
@@ -885,7 +956,7 @@ EOF;
 ///<param name="setting"></param>
 /**
 * Represente igk_html_match_message function
-* @param  $setting
+* @param mixed $setting
 */
 function igk_html_match_message($setting){
     if(igk_is_ajx_demand()){
@@ -895,7 +966,7 @@ function igk_html_match_message($setting){
         else switch($type){
             case "toast":
             igk_ajx_toast($setting["message"], $setting["ajx"]->{"style"});
-            break;default: 
+            break;default:
             break;
         }
         return;
@@ -912,13 +983,13 @@ function igk_html_match_message($setting){
 ///<param name="selected" default="1"></param>
 /**
 * Represente igk_html_paginate function
-* @param  $target
-* @param  $pagingHost
-* @param  $tab
-* @param  $maxperpage
-* @param  $callback
-* @param  $uri
-* @param  $selected the default value is 1
+* @param mixed $target
+* @param mixed $pagingHost
+* @param mixed $tab
+* @param mixed $maxperpage
+* @param mixed $callback
+* @param mixed $uri
+* @param mixed $selected the default value is 1
 */
 function igk_html_paginate($target, $pagingHost, $tab, $maxperpage, $callback, $uri, $selected=1){
     $max=$maxperpage;
@@ -932,7 +1003,7 @@ function igk_html_paginate($target, $pagingHost, $tab, $maxperpage, $callback, $
         if($max < 0)
             break;
     }
-    if($epagination){
+    if($epagination && $uri){
         $pagingHost->addDiv()->addAJXPaginationView($uri, $count, $maxperpage, $selected);
     }
 }
@@ -942,9 +1013,9 @@ function igk_html_paginate($target, $pagingHost, $tab, $maxperpage, $callback, $
 ///<param name="auto" default="current-password"></param>
 /**
 * Represente igk_html_password function
-* @param  $t
-* @param  $id
-* @param  $auto the default value is "current-password"
+* @param mixed $t
+* @param mixed $id
+* @param mixed $auto the default value is "current-password"
 */
 function igk_html_password($t, $id, $auto="current-password"){
     $i=$t->addInput($id, "password");
@@ -957,9 +1028,9 @@ function igk_html_password($t, $id, $auto="current-password"){
 ///<param name="attr" default=""></param>
 /**
 * Represente igk_html_render function
-* @param  $tag
-* @param  $array
-* @param  $attr the default value is ""
+* @param mixed $tag
+* @param mixed $array
+* @param mixed $attr the default value is ""
 */
 function igk_html_render($tag, $array, $attr=""){
     ob_start();
@@ -974,26 +1045,26 @@ function igk_html_render($tag, $array, $attr=""){
 ///<param name="s"></param>
 /**
 * Represente igk_html_render_message function
-* @param  $s
+* @param mixed $s
 */
 function igk_html_render_message($s){
     if(igk_is_ajx_demand() || igk_getv($s, 'force_ajx')){
-        $type=$setting["ajx"]->{"type"}
+        $type=$s["ajx"]->{"type"}
          ?? "toast";
         if(is_callable($type)){
             $type($s);
         }
         else switch($type){
             case "toast":
-            igk_ajx_toast($setting["message"], $setting["ajx"]->{"style"});
+                igk_ajx_toast($s["message"], $s["ajx"]->{"style"});
             break;
             case "notify":
-            break;default: 
+            break;default:
             break;
         }
         return;
     }
-    igk_notifyctrl($setting["notifyname"])->addMsg($setting["message"], igk_getv($setting, "style", "default"));
+    igk_notifyctrl($s["notifyname"])->addMsg($s["message"], igk_getv($s, "style", "default"));
 }
 ///<summary>repalce uri</summary>
 /**
@@ -1007,8 +1078,8 @@ function igk_html_replace_uri($d, $uri){
 ///<param name="callback" default="null"></param>
 /**
 * Represente igk_html_select_values function
-* @param  $data
-* @param  $callback the default value is null
+* @param mixed $data
+* @param mixed $callback the default value is null
 */
 function igk_html_select_values($data, $callback=null){
     if($callback == null)
@@ -1026,7 +1097,7 @@ function igk_html_select_values($data, $callback=null){
 * Represente igk_html_server_info function
 */
 function igk_html_server_info(){
-    $srv="<div style='font-size:1.6em; padding:10px; background-color:#fefefe; border:1px solid :#ddd; color:#444;' >".igk_s('Server Info')."</div>";
+    $srv="<div style='font-size:1.6em; padding:10px; background-color:#fefefe; border:1px solid :#ddd; color:#444;' >".__('Server Info')."</div>";
     $srv .= "<table>";
     foreach($_SERVER as $k=>$v){
         $srv .= "<tr>";
@@ -1055,7 +1126,7 @@ function igk_html_submit_button($value="submit", $id="submit"){
 ///<param name="title"></param>
 /**
 * Represente igk_html_subtitle function
-* @param  $title
+* @param mixed $title
 */
 function igk_html_subtitle($title){
     return $title." - [".igk_sys_getconfig("website_title")."]";
@@ -1065,8 +1136,8 @@ function igk_html_subtitle($title){
 ///<param name="value" default="null"></param>
 /**
 * Represente igk_html_textarea function
-* @param  $id
-* @param  $value the default value is null
+* @param mixed $id
+* @param mixed $value the default value is null
 */
 function igk_html_textarea($id, $value=null){
     $g=igk_createNode("textarea");
@@ -1080,9 +1151,9 @@ function igk_html_textarea($id, $value=null){
 ///<param name="level" default="2"></param>
 /**
 * Represente igk_html_title function
-* @param  $t
-* @param  $s
-* @param  $level the default value is 2
+* @param mixed $t
+* @param mixed $s
+* @param mixed $level the default value is 2
 */
 function igk_html_title($t, $s, $level=2){
     return $t->add('h'.$level)->setContent($s);
@@ -1093,12 +1164,12 @@ function igk_html_title($t, $s, $level=2){
 ///<param name="type" default="igk-default"></param>
 /**
 * Represente igk_html_toast function
-* @param  $doc
-* @param  $message
-* @param  $type the default value is "igk-default"
+* @param mixed $doc
+* @param mixed $message
+* @param mixed $type the default value is "igk-default"
 */
 function igk_html_toast($doc, $message, $type="igk-default"){
-    $t=igk_createNode("singlenodeviewer", null, array("NoTagNode"));
+    $t=igk_createNode("singlenodeviewer", null, array(IGK_HTML_NOTAG_ELEMENT));
     $n=$t->targetNode->addToast();
     $n["class"]="{$type}";
     $n->Content=$message;
@@ -1109,113 +1180,114 @@ function igk_html_toast($doc, $message, $type="igk-default"){
 ///<param name="formfields"></param>
 /**
 * Represente igk_html_utils_buildformfield function
-* @param  $formfields
+* @param mixed $formfields
 */
-function igk_html_utils_buildformfield($formfields){
-    $o="";
-    $load_attr=function($v, & $o){
-        if(!isset($v["attribs"])){
-            return;}
-        foreach($v["attribs"] as $k=>$v){
-            $o .= " ".$k."=\"".$v."\"";
-        }
-    };
-    $fieldset=0;
-    foreach($formfields as $k=>$v){
-        $_type=strtolower(isset($v["type"]) ? $v["type"]: "text");
-        $_value=isset($v["value"]) ? $v["value"]: "";
-        $_allow_empty=isset($v["allow_empty"]) ? $v["allow_empty"]: "";
-        $_empty_value=isset($v["empty_value"]) ? $v["empty_value"]: "0";
-        if($_type == "fieldset"){
-            if($fieldset){
-                $o .= "</fieldset>";
-            }
-            $o .= "<fieldset";
-            $load_attr($v, $o);
-            $o .= ">";
-            if(isset($v["legend"])){
-                $o .= "<legend>".$v["legend"]."</legend>";
-            }
-            $fieldset=1;
-            continue;
-        }
-        $_id="";
-        if(isset($v["id"])){
-            $_id=' id="'.$v["id"].'"';
-        }
-        $o .= "<div";
-        if((isset($v["required"]) ? $v["required"]: 0)){
-            $o .= " class=\"require\" ";
-        }
-        $o .= ">";
-        if(!preg_match("/(hidden|fieldset)/", $_type)){
-            $o .= "<label for='{$k}'>".(isset($v["label_text"]) ? $v["label_text"]: $k)."</label>";
-        }
-        switch($_type){
-            case "fieldset":
-            break;
-            case "textarea":
-            $o .= "<textarea name=\"{$k}\" id=\"{$k}\" ";
-            $load_attr($v, $o);
-            $o .= ">{$_value}</textarea>";
-            break;
-            case "radiogroup":
-            $o .= '<div style="display:inline-block;">';
-            foreach($v["data"] as $kk=>$vv){
-                $o .= '<span >'.__($kk).'</span><input type="radio" name="'.$k.'"'.$_id.' value="'.$vv.'" />';
-            }
-            $o .= "</div>";
-            break;
-            case "select":
-            $k_data="";
-            $bas=isset($v["selected"]) ? $v["selected"]: null;
-            if(isset($v["data"]) && is_string($k_data=$v["data"])){
-                $k_data="data=\"".$k_data."\" selected=\"{$bas}\" ";
-            }
-            else{
-                $k_data=null;
-            }
-            $o .= "<select name=\"{$k}\"".$_id.$k_data.">";
-            if($_allow_empty){
-                $o .= "<option ";
-                $o .= "value=\"{$_empty_value}\" ></option>";
-            }
-            if(isset($v["data"]) && is_array($_tab=$v["data"])){
-                foreach($_tab as $row){
-                    $o .= "<option ";
-                    $o .= "value=\"{$row['i']}\" ";
-                    if(isset($bas) && ($bas == $row['i'])){
-                        $o .= "selected";
-                    }
-                    $o .= ">";
-                    $o .= $row["t"];
-                    $o .= "</option>";
-                }
-            }
-            else{}
-            $o .= "</select>";
-            break;
-            case "text":
-            case "hidden":
-            case "password":default: 
-            if(empty($_id))
-                $_id=' id="'.$k.'"';
-            $o .= "<input type=\"{$_type}\" value=\"{$_value}\" name=\"{$k}\"{$_id} ";
-            if(isset($v["maxlength"])){
-                $o .= "maxlength=\"{$v["maxlength"]}\" ";
-            }
-            if(isset($v["placeholder"])){
-                $o .= "placeholder=\"{$v["placeholder"]}\" ";
-            }
-            $load_attr($v, $o);
-            $o .= "/>";
-            break;
-        }
-        $o .= "</div>";
-    }
-    if($fieldset){
-        $o .= "</fieldset>";
-    }
+function igk_html_utils_buildformfield($formfields, $render=1){
+    return igk_html_form_fields($formfields, $render);
+    // $o="";
+    // $load_attr=function($v, & $o){
+    //     if(!isset($v["attribs"])){
+    //         return;}
+    //     foreach($v["attribs"] as $k=>$v){
+    //         $o .= " ".$k."=\"".$v."\"";
+    //     }
+    // };
+    // $fieldset=0;
+    // foreach($formfields as $k=>$v){
+    //     $_type=strtolower(isset($v["type"]) ? $v["type"]: "text");
+    //     $_value=isset($v["value"]) ? $v["value"]: "";
+    //     $_allow_empty=isset($v["allow_empty"]) ? $v["allow_empty"]: "";
+    //     $_empty_value=isset($v["empty_value"]) ? $v["empty_value"]: "0";
+    //     if($_type == "fieldset"){
+    //         if($fieldset){
+    //             $o .= "</fieldset>";
+    //         }
+    //         $o .= "<fieldset";
+    //         $load_attr($v, $o);
+    //         $o .= ">";
+    //         if(isset($v["legend"])){
+    //             $o .= "<legend>".$v["legend"]."</legend>";
+    //         }
+    //         $fieldset=1;
+    //         continue;
+    //     }
+    //     $_id="";
+    //     if(isset($v["id"])){
+    //         $_id=' id="'.$v["id"].'"';
+    //     }
+    //     $o .= "<div";
+    //     if((isset($v["required"]) ? $v["required"]: 0)){
+    //         $o .= " class=\"require\" ";
+    //     }
+    //     $o .= ">";
+    //     if(!preg_match("/(hidden|fieldset)/", $_type)){
+    //         $o .= "<label for='{$k}'>".(isset($v["label_text"]) ? $v["label_text"]: $k)."</label>";
+    //     }
+    //     switch($_type){
+    //         case "fieldset":
+    //         break;
+    //         case "textarea":
+    //         $o .= "<textarea name=\"{$k}\" id=\"{$k}\" ";
+    //         $load_attr($v, $o);
+    //         $o .= ">{$_value}</textarea>";
+    //         break;
+    //         case "radiogroup":
+    //         $o .= '<div style="display:inline-block;">';
+    //         foreach($v["data"] as $kk=>$vv){
+    //             $o .= '<span >'.__($kk).'</span><input type="radio" name="'.$k.'"'.$_id.' value="'.$vv.'" />';
+    //         }
+    //         $o .= "</div>";
+    //         break;
+    //         case "select":
+    //         $k_data="";
+    //         $bas=isset($v["selected"]) ? $v["selected"]: null;
+    //         if(isset($v["data"]) && is_string($k_data=$v["data"])){
+    //             $k_data="data=\"".$k_data."\" selected=\"{$bas}\" ";
+    //         }
+    //         else{
+    //             $k_data=null;
+    //         }
+    //         $o .= "<select name=\"{$k}\"".$_id.$k_data.">";
+    //         if($_allow_empty){
+    //             $o .= "<option ";
+    //             $o .= "value=\"{$_empty_value}\" ></option>";
+    //         }
+    //         if(isset($v["data"]) && is_array($_tab=$v["data"])){
+    //             foreach($_tab as $row){
+    //                 $o .= "<option ";
+    //                 $o .= "value=\"{$row['i']}\" ";
+    //                 if(isset($bas) && ($bas == $row['i'])){
+    //                     $o .= "selected";
+    //                 }
+    //                 $o .= ">";
+    //                 $o .= $row["t"];
+    //                 $o .= "</option>";
+    //             }
+    //         }
+    //         else{}
+    //         $o .= "</select>";
+    //         break;
+    //         case "text":
+    //         case "hidden":
+    //         case "password":default:
+    //         if(empty($_id))
+    //             $_id=' id="'.$k.'"';
+    //         $o .= "<input type=\"{$_type}\" value=\"{$_value}\" name=\"{$k}\"{$_id} class=\"clinput cl{$_type}\" ";
+    //         if(isset($v["maxlength"])){
+    //             $o .= "maxlength=\"{$v["maxlength"]}\" ";
+    //         }
+    //         if(isset($v["placeholder"])){
+    //             $o .= "placeholder=\"{$v["placeholder"]}\" ";
+    //         }
+    //         $load_attr($v, $o);
+    //         $o .= "/>";
+    //         break;
+    //     }
+    //     $o .= "</div>";
+    // }
+    // if($fieldset){
+    //     $o .= "</fieldset>";
+    // }
     return $o;
 }
 
@@ -1225,9 +1297,9 @@ function igk_html_utils_buildformfield($formfields){
 ///<param name="type" default="html"></param>
 /**
 * Represente igk_html_view_node function
-* @param  $tag
-* @param  $callback
-* @param  $type the default value is "html"
+* @param mixed $tag
+* @param mixed $callback
+* @param mixed $type the default value is "html"
 */
 function igk_html_view_node($tag, $callback, $type="html"){
     if($t=igk_createNode($tag)){
@@ -1255,19 +1327,19 @@ function igk_html_dump_table($tab){
 		$td->add("tr")
 		->setClass("hd")
 		->add("td")->setAttributes(["colspan"=>2])->Content =  $k;
-		
+
 		if (is_array($v)){
 			foreach($v as $kk=>$vv){
 				$tr = $td->add("tr");
 				$tr->add("td")->Content = $kk;
-				$tr->add("td")->Content = $vv;	
+				$tr->add("td")->Content = $vv;
 			}
 		} else {
 			$tr = $td->add("tr");
 			$tr->add("td")->addEmpty();
 			$tr->add("td")->Content = $v;
 		}
-	}	
+	}
 	echo $td->render();
 }
 
@@ -1278,10 +1350,10 @@ function igk_html_dump_table($tab){
 ///<param name="forcexml"></param>
 /**
 * Represente igk_html_wtag function
-* @param  $tag
-* @param  $content
-* @param  $attribs the default value is null
-* @param  $forcexml the default value is 0
+* @param mixed $tag
+* @param mixed $content
+* @param mixed $attribs the default value is null
+* @param mixed $forcexml the default value is 0
 */
 function igk_html_wtag($tag, $content, $attribs=null, $forcexml=0){
     $o="<".$tag;
@@ -1289,7 +1361,7 @@ function igk_html_wtag($tag, $content, $attribs=null, $forcexml=0){
 		$o.=" ";
 		if (is_string($attribs)){
 			$o .= $attribs;		}
-		else 
+		else
 			$o .= igk_html_render_attribs($attribs);
     }
     if(!$forcexml && empty($content)){

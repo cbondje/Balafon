@@ -2,7 +2,7 @@
 /*
 *file: class.IGKArticleViewerCtrl.php
 *author: C.A.D. Bondje doue
-*script : 
+*script :
 */
 
 igk_js_bind_script_folder(dirname(__FILE__)."/".IGK_SCRIPT_FOLDER);
@@ -17,12 +17,12 @@ abstract class IGKArticleViewerCtrl extends IGKCtrlTypeBase
 		$t = $this->TargetNode;
 		$t->ClearChilds();
 		if ($this->isVisible)
-		{			
+		{
 			$o = $this->getAllArticlesByCurrentLang();
 			$i = 0;
 			foreach($o as $k)
 			{
-				igk_html_article($this, basename($k), $t->addDiv(array("class"=>"igk-article-viewer-box node_".$i)));			
+				igk_html_article($this, basename($k), $t->addDiv(array("class"=>"igk-article-viewer-box node_".$i)));
 				$i++;
 			}
 			$t->addScript()->Content = "window.igk.winui.articleviewer.init();";
@@ -31,12 +31,12 @@ abstract class IGKArticleViewerCtrl extends IGKCtrlTypeBase
 			$t->TargetNode->addDiv()->Content = "No target item";
 		}
 	}
-	
+
 }
 
 //article viewer extension function
 
-function igk_js_av_bind_initarticle($classname, $updatesize=true, $initanimate=true){//article viewer 
+function igk_js_av_bind_initarticle($classname, $updatesize=true, $initanimate=true){//article viewer
 	$s =  IGKHtmlItem::CreateWebNode("script");
 	$r  = igk_parsebool($updatesize);
 	$h = igk_parsebool($initanimate);

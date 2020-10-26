@@ -4,7 +4,7 @@ class IGKHtmlBootStrapGrid extends IGKHtmlItem
 {
 	private $m_row;
 	private $m_cell;
-	
+
 	public function __construct(){
 		parent::__construct("div");
 		$this["class"]="igk-grid";
@@ -16,9 +16,9 @@ class IGKHtmlBootStrapGrid extends IGKHtmlItem
 		return $t;
 	}
 	public function addCell($hoverColor=null){
-	
+
 		$r = $this->m_row == null? $this->addRow() : $this->m_row;
-		$t = new IGKHtmlBootStrapGridCell(); 
+		$t = new IGKHtmlBootStrapGridCell();
 		$t["class"]="igk-grid-cell";
 		$this->m_cell = $t;
 		$t->setHoverColor ($hoverColor);
@@ -29,9 +29,9 @@ class IGKHtmlBootStrapGrid extends IGKHtmlItem
 		$s = parent::innerHTML();
 		$c =  IGKHtmlItem::CreateWebNode("script");
 		$c->Content = <<<EOF
-(function(ps){ \$ns_igk.ready(function(){ 
-var q = ps.select(":igk-cell-hover-color"); 
-q.reg_event("mouseover", function(){ 
+(function(ps){ \$ns_igk.ready(function(){
+var q = ps.select(":igk-cell-hover-color");
+q.reg_event("mouseover", function(){
 var c = this.getAttribute("igk-cell-hover-color");
 q["igk-cell-hover-oldcl"] = \$igk(this).getComputedStyle("backgroundColor");
 \$igk(this).firstChild().setCss({backgroundColor: c});

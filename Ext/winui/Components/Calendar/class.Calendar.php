@@ -19,7 +19,7 @@ final class IGKCalendarHtmlItemCtrl extends IGKNonVisibleControllerBase
         $f =dirname(__FILE__)."/Styles/default.pcss";
         if (file_exists($f))
 		    include_once($f);
-	
+
 	}
 }
 ?>

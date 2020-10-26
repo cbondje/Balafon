@@ -5,14 +5,14 @@ function igk_html_node_uiTrack($type='default'){
 	$CF = igk_ctrl_zone(__FILE__);
 	$dv = igk_createNode("div");
 	$dv["class"]="igk-winui-uitrack ".$type;
-	
+
 	$callback["_trackoption.func"]=<<<EOF
 \$this["igk:uitrack-options"]=igk_getv(\$param,0);
 return \$this;
 EOF;
-	
+
 	$dv->setCallback("setOption", $callback["_trackoption.func"]);
-	
+
 	$dv->addOnRenderCallback(igk_create_expression_callback(
 	igk_io_read_allfile(dirname(__FILE__)."/.style.func"),
 	array(

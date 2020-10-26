@@ -1,7 +1,7 @@
 <?php
 // @file: sqlite3.dataadapter.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -18,7 +18,7 @@ define("IGK_SQL3LITE_NAME_INDEX", 1);
 ///<param name="info" default="null" ref="true"></param>
 /**
 * Represente igk_sql3lite_autoincrement function
-* @param  $r
+* @param mixed $r
 * @param  * $info the default value is null
 */
 function igk_sql3lite_autoincrement($r, & $info=null){
@@ -71,7 +71,7 @@ function igk_sql3lite_error_code(){
 ///<param name="str"></param>
 /**
 * Represente igk_sql3lite_escapestring function
-* @param  $str
+* @param mixed $str
 */
 function igk_sql3lite_escapestring($str){
     $sq=IGKSQLite3DataAdapter::GetCurrent();
@@ -83,8 +83,8 @@ function igk_sql3lite_escapestring($str){
 ///<param name="requiretable" default="1"></param>
 /**
 * Represente igk_sql3lite_fetch_field function
-* @param  $r
-* @param  $requiretable the default value is 1
+* @param mixed $r
+* @param mixed $requiretable the default value is 1
 */
 function igk_sql3lite_fetch_field($r, $requiretable=1){
     $index=0;
@@ -127,7 +127,7 @@ function igk_sql3lite_fetch_field($r, $requiretable=1){
                 "table"=>$tb,
                 "primary_key"=>igk_getv($tab,
                 5),
-                
+
             );
         $index++;
         $r->$v_k=$index;
@@ -142,7 +142,7 @@ function igk_sql3lite_fetch_field($r, $requiretable=1){
 ///<param name="r"></param>
 /**
 * Represente igk_sql3lite_fetch_row function
-* @param  $r
+* @param mixed $r
 */
 function igk_sql3lite_fetch_row($r){
     return $r->fetchArray(SQLITE3_NUM);
@@ -158,7 +158,7 @@ function igk_sql3lite_lastid(){
 ///<param name="r"></param>
 /**
 * Represente igk_sql3lite_num_fields function
-* @param  $r
+* @param mixed $r
 */
 function igk_sql3lite_num_fields($r){
     return $r->numColumns();
@@ -167,7 +167,7 @@ function igk_sql3lite_num_fields($r){
 ///<param name="t"></param>
 /**
 * Represente igk_sql3lite_num_rows function
-* @param  $t
+* @param mixed $t
 */
 function igk_sql3lite_num_rows($t){
     igk_sql3lite_fetch_row($t);
@@ -182,7 +182,7 @@ function igk_sql3lite_num_rows($t){
 ///<param name="d"></param>
 /**
 * Represente igk_sql3lite_tosql_data function
-* @param  $d
+* @param mixed $d
 */
 function igk_sql3lite_tosql_data($d){
     if(!preg_match_all("/(?P<type>([^\(\)])+)(\((?P<number>[0-9]+)\))?/i", $d, $tab))
@@ -194,10 +194,10 @@ function igk_sql3lite_tosql_data($d){
         return MYSQLI_TYPE_SHORT;
         case "text":
         case "string":
-        return MYSQLI_TYPE_STRING;default: 
-        break;
+        return MYSQLI_TYPE_STRING;
+
     }
-    igk_wln_e("error : ". $d);    
+    throw new Exception("error : ".$d);
 }
 ///<summary> represent SQLite3 database adapter</summary>
 /**
@@ -211,6 +211,10 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     private static $sm_connexions;
     private static $sm_list;
     private static $sm_sql;
+
+	public function escape_string($v){
+		    return "from sqlite3: ". $this->sql->escapeString($v);
+	}
     ///<summary>Represente beginTransaction function</summary>
     /**
     * Represente beginTransaction function
@@ -243,7 +247,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<summary>mixed. controller| filename |data value<summary>
     /**
     * mixed. controller| filename |data value
-    * 
+    *
     */
     public function connect($dbname=null){
         if(func_num_args() > 0){
@@ -325,7 +329,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="tb"></param>
     /**
     * Represente countTable function
-    * @param  $tb
+    * @param mixed $tb
     */
     public function countTable($tb){
         return $this->sendQuery("SELECT Count(*) FROM `".$tb."`;", $tb);
@@ -343,9 +347,9 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="info" default="null"></param>
     /**
     * Represente CreateEmptyResult function
-    * @param  $result the default value is null
-    * @param  $query the default value is null
-    * @param  $info the default value is null
+    * @param mixed $result the default value is null
+    * @param mixed $query the default value is null
+    * @param mixed $info the default value is null
     */
     public function CreateEmptyResult($result=null, $query=null, $info=null){
         $r=IGKMySQLQueryResult::CreateResult($result, $query, $info);
@@ -357,9 +361,9 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="obj" default="null"></param>
     /**
     * Represente createResult function
-    * @param  $r
-    * @param  $query the default value is null
-    * @param  $obj the default value is null
+    * @param mixed $r
+    * @param mixed $query the default value is null
+    * @param mixed $obj the default value is null
     */
     public function createResult($r, $query=null, $obj=null){
         $inf=(object)array_merge(array(
@@ -377,14 +381,13 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="desc" default="null"></param>
     /**
     * Represente createTable function
-    * @param  $tbname
-    * @param  $columninfo
-    * @param  $entries the default value is null
-    * @param  $desc the default value is null
+    * @param mixed $tbname
+    * @param mixed $columninfo
+    * @param mixed $entries the default value is null
+    * @param mixed $desc the default value is null
     */
     public function createTable($tbname, $columninfo, $entries=null, $desc=null){
-        $unique=array();
-        $query=self::CreateTableQuery($tbname, $columninfo, $entries, $desc);
+         $query=self::CreateTableQuery($tbname, $columninfo, $entries, $desc);
         $r=$this->sendQuery($query, $tbname);
         if($entries){
             igk_db_inserts($this, $tbname, $entries);
@@ -398,10 +401,10 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="desc" default="null"></param>
     /**
     * Represente CreateTableQuery function
-    * @param  $tbname
-    * @param  $columninfo
-    * @param  $entries the default value is null
-    * @param  $desc the default value is null
+    * @param mixed $tbname
+    * @param mixed $columninfo
+    * @param mixed $entries the default value is null
+    * @param mixed $desc the default value is null
     */
     public static function CreateTableQuery($tbname, $columninfo, $entries=null, $desc=null){
         $query="CREATE TABLE IF NOT EXISTS `".igk_mysql_db_tbname($tbname)."`(";
@@ -414,7 +417,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         $primkey="";
         $tinf=array();
         $foreignkey="";
-        foreach($columninfo as $k=>$v){
+        foreach($columninfo as  $v){
             if(($v == null) || !is_object($v)){
                 igk_die(__CLASS__." ::: Error table column info is not an object error for ".$tbname);
             }
@@ -449,7 +452,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
                 $query .= "NOT NULL ";
             }
             if($v->clAutoIncrement){
-                $query .= IGKSQLManager::GetValue("auto_increment_word", $v, $tinf)." ";
+                $query .= IGKDBQueryDriver::GetValue("auto_increment_word", $v, $tinf)." ";
             }
             $tb=true;
             if($v->clDefault || $v->clDefault === '0'){
@@ -517,7 +520,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
             $query .= ", ".$funique." ";
         }
         if(igk_count($uniques) > 0){
-            foreach($uniques as $k=>$v){
+            foreach($uniques as  $v){
                 $v .= ")";
                 $query .= ", ".$v." ";
             }
@@ -547,7 +550,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         $r=$this->listTables();
         if($r){
             $this->sql->exec('PRAGMA foreign_keys=OFF');
-            foreach($r->Rows as $k=>$v){
+            foreach($r->Rows as  $v){
                 if($v->name == "sqlite_sequence"){
                     $this->deleteAll("sqlite_sequence");
                     continue;
@@ -560,7 +563,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="tbname"></param>
     /**
     * Represente dropTable function
-    * @param  $tbname
+    * @param mixed $tbname
     */
     public function dropTable($tbname){
         return $this->sendQuery("Drop Table IF EXISTS   `{$tbname}`", $tbname);
@@ -569,7 +572,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="b"></param>
     /**
     * Represente enableForeignKey function
-    * @param  $b
+    * @param mixed $b
     */
     public function enableForeignKey($b){
         $s=$b ? 'ON': 'OFF';
@@ -579,7 +582,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="str"></param>
     /**
     * Represente escapeString function
-    * @param  $str
+    * @param mixed $str
     */
     public function escapeString($str){
         return $this->sql->escapeString($str);
@@ -597,7 +600,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="n"></param>
     /**
     * Represente getConnexion function
-    * @param  $n
+    * @param mixed $n
     */
     public function getConnexion($n){
         $r=igk_getv(self::$sm_connexions, $n);
@@ -641,7 +644,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="fmt">format of the request dataschema. default is xml. acceptable is xml|obj</param>
     /**
     * get data schema
-    * @param fmt format of the request dataschema. default is xml. acceptable is xml|obj
+    * @param string $fmt format of the request dataschema. default is xml. acceptable is xml|obj
     */
     public function getDataSchema($entries=0, $fmt='xml'){
         $rep=null;
@@ -757,7 +760,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
                                     $fi->clLinkTypeColumn=$tbrelations[$fi->clName]->targetColumn;
                             }
                             $v=$fi;
-                            $cl=$row->addNode("Column");
+                            $cl= $row->addNode("Column");
                             $cl["clName"]=$fi->clName;
                             $tab=array();
                             preg_match_all("/^((?P<type>([^\(\))]+)))\\s*(\((?P<length>([0-9]+))\)){0,1}$/i", trim($fi->clType), $tab);
@@ -794,7 +797,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="n"></param>
     /**
     * Represente GetSchemaOptions function
-    * @param  $n
+    * @param mixed $n
     */
     public static function GetSchemaOptions($n){
         $ul=$n->addUL();
@@ -840,7 +843,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="tablename"></param>
     /**
     * Represente initSystableRequired function
-    * @param  $tablename
+    * @param mixed $tablename
     */
     public function initSystableRequired($tablename){}
     ///<summary>Represente IsForeignKeyEnable function</summary>
@@ -903,8 +906,8 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="tbname" default="null"></param>
     /**
     * Represente sendQuery function
-    * @param  $query
-    * @param  $tbname the default value is null
+    * @param mixed $query
+    * @param mixed $tbname the default value is null
     */
     public function sendQuery($query, $tbname=null){
         $sql=$this->getSql();
@@ -924,14 +927,14 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         }
         if($this->sql->lastErrorCode() == 0)
             return null;
-        $obj=self::CreateEmptyResult(false, $query, array("error"=>1, "errormsg"=>$this->sql->lastErrorMsg()));
+        $obj= $this->CreateEmptyResult(false, $query, array("error"=>1, "errormsg"=>$this->sql->lastErrorMsg()));
         return $obj;
     }
     ///<summary>Represente setCreatorListener function</summary>
     ///<param name="listener"></param>
     /**
     * Represente setCreatorListener function
-    * @param  $listener
+    * @param mixed $listener
     */
     public function setCreatorListener($listener){
         $this->m_creator=$listener;
@@ -940,7 +943,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="v"></param>
     /**
     * Represente setDatabaseVersion function
-    * @param  $v
+    * @param mixed $v
     */
     public function setDatabaseVersion($v){
         $this->sql->exec('PRAGMA user_version='.$v);
@@ -962,8 +965,8 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="sql"></param>
     /**
     * Represente storeConnexion function
-    * @param  $fname
-    * @param  $sql
+    * @param mixed $fname
+    * @param mixed $sql
     */
     public function storeConnexion($fname, $sql){
         if(self::$sm_connexions == null)
@@ -977,7 +980,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     ///<param name="l"></param>
     /**
     * Represente StoreStack function
-    * @param  $l
+    * @param mixed $l
     */
     public static function StoreStack($l){
         self::GetCurrent();
@@ -1048,11 +1051,12 @@ class sql3literesult{
         return null;
     }
 }
-IGKSQLManager::Init(function(& $conf){
+IGKDBQueryDriver::Init(function(& $conf){
     $n=IGK_SQL3LITE_KN;
     $conf["db"]=IGK_SQL3LITE_KN;
     $conf[$n]["func"]=array();
     $conf[$n]["auto_increment_word"]="igk_sql3lite_autoincrement";
+    $conf[$n]["data_adapter"]="SQL3Lite";
     $t=array();
     $t["connect"]="igk_sql3lite_connect";
     $t["selectdb"]="";

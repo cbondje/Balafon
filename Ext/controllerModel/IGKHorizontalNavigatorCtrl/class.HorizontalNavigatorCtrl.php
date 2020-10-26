@@ -8,28 +8,28 @@ Description: control that will host every article and navigate thru them by conf
 //file is a part of the controller tab list
 abstract class HorizontalNavigatorCtrl extends IGKCtrlTypeBase {
 	public function getName(){return get_class($this);}
-	
+
 	protected function InitComplete(){
-		parent::InitComplete();		
+		parent::InitComplete();
 		//please enter your controller declaration complete here
-		igk_js_load_script($this->App->Doc, dirname(__FILE__)."/".IGK_SCRIPT_FOLDER);	
+		igk_js_load_script($this->App->Doc, dirname(__FILE__)."/".IGK_SCRIPT_FOLDER);
 	}
 	//@@@ init target node
 	protected function initTargetNode(){
 		$node =  parent::initTargetNode();
 		return $node;
-	}	
+	}
 	public function getcanAddChild(){
 		return false;
 	}
 	public static function GetAdditionalDefaultViewContent(){
 		return null;
 	}
-	
+
 	public function storeDBConfigsSetting()
 	{
 		parent::storeDBConfigsSetting();
-		
+
 	}
 	public static function GetAdditionalConfigInfo()
 	{
@@ -39,8 +39,8 @@ abstract class HorizontalNavigatorCtrl extends IGKCtrlTypeBase {
 		"clanim_NAV_ANIMDURATION"=> new IGKAdditionCtrlInfo("text", 1000),
 		"clanim_NAV_AUTOANIMATE"=> new IGKAdditionCtrlInfo("bool", true),
 		"clanim_NAV_AUTOPERIOD"=> new IGKAdditionCtrlInfo("text", 10000),
-		"clanim_NAV_ANIMTYPE"=> new IGKAdditionCtrlInfo("select", 
-		array("translation"=>"translation", "rotation"=>"rotation", "fade"=>"fade"), 
+		"clanim_NAV_ANIMTYPE"=> new IGKAdditionCtrlInfo("select",
+		array("translation"=>"translation", "rotation"=>"rotation", "fade"=>"fade"),
 		"translation")
 		);
 	}
@@ -71,13 +71,13 @@ abstract class HorizontalNavigatorCtrl extends IGKCtrlTypeBase {
 		$this->_incViewfile("default");
 		$this->_onViewComplete();
 	}
-	
-	protected function buildPage($pane){//build page 
+
+	protected function buildPage($pane){//build page
 		$t = $this->getAllArticles();
 		if (is_array($t))
 		{
 			sort($t);
-			foreach($t as $k=>$v)
+			foreach($t as $v)
 			{
 				igk_html_article($this, basename($v), $pane->addPage());
 			}

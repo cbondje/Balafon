@@ -6,7 +6,7 @@
 ///<param name="tg"></param>
 /**
 * Represente igk_html_demo_abtn function
-* @param  $tg
+* @param mixed $tg
 */
 function igk_html_demo_abtn($tg){$tg->addABtn("#")->Content="Demo button";
 }
@@ -14,7 +14,7 @@ function igk_html_demo_abtn($tg){$tg->addABtn("#")->Content="Demo button";
 ///<param name="t"></param>
 /**
 * Represente igk_html_demo_code function
-* @param  $t
+* @param mixed $t
 */
 function igk_html_demo_code($t){
     $t->addCode()->setClass('php')->Content=<<<EOF
@@ -26,7 +26,7 @@ EOF;
 ///<param name="t"></param>
 /**
 * Represente igk_html_demo_combobox function
-* @param  $t
+* @param mixed $t
 */
 function igk_html_demo_combobox($t){
     $t->addObData(function(){
@@ -44,7 +44,7 @@ function igk_html_demo_combobox($t){
 "emptyValue"=>-1,
 "selected"=>2
 ])</code>
-<?php 
+<?php
     });
     $t->addCombobox("p-type", [["value"=>1, "text"=>"News"], ["value"=>2, "text"=>"Orange"], ["value"=>3, "text"=>"Blogs"]], ["valuekey"=>"value", "displaykey"=>"text|lang|uppercase", "allowEmpty"=>1, "emptyValue"=>-1, "selected"=>2]);
 }
@@ -52,7 +52,7 @@ function igk_html_demo_combobox($t){
 ///<param name="t"></param>
 /**
 * Represente igk_html_demo_facebookcomments function
-* @param  $t
+* @param mixed $t
 */
 function igk_html_demo_facebookcomments($t){
     $t->addFacebookComments("https://facebook.com/bondjesonde");
@@ -61,7 +61,7 @@ function igk_html_demo_facebookcomments($t){
 ///<param name="t"></param>
 /**
 * Represente igk_html_demo_huebar function
-* @param  $t
+* @param mixed $t
 */
 function igk_html_demo_huebar($t){
     $t->addDiv()->Content="Hubar -";
@@ -72,13 +72,13 @@ function igk_html_demo_huebar($t){
 ///<param name="t"></param>
 /**
 * Represente igk_html_demo_progressbar function
-* @param  $t
+* @param mixed $t
 */
 function igk_html_demo_progressbar($t){
     $n=igk_createNode();
     $n["class"]="igk-progressbar";
     $n["data-number"]="50.0";
-    $n->m_cur=$n->addDiv()->setClass("igk-progressbar-cur igk-progress-0");
+    $n->m_cur=$n->addDiv()->setClass("igk-progressbar-cur -igk-progress-0 -igk-progress-10");
     $t->add($n);
     return $n;
 }
@@ -86,7 +86,7 @@ function igk_html_demo_progressbar($t){
 ///<param name="tg"></param>
 /**
 * Represente igk_html_demo_symbol function
-* @param  $tg
+* @param mixed $tg
 */
 function igk_html_demo_symbol($tg){$tg->addDiv()->Content="Load a symbol with integer code equal to 1 if registrated";
     $tg->addDiv()->setStyle("width:40px; height:40px")->addSymbol(1);
@@ -99,7 +99,7 @@ EOF;
 ///<param name="t"></param>
 /**
 * Represente igk_html_demo_toast function
-* @param  $t
+* @param mixed $t
 */
 function igk_html_demo_toast($t){
     $g=$t->addDiv();
@@ -109,7 +109,7 @@ function igk_html_demo_toast($t){
 ///<param name="t"></param>
 /**
 * Represente igk_html_demo_xslt function
-* @param  $t
+* @param mixed $t
 */
 function igk_html_demo_xslt($t){
     $s=<<<EOF

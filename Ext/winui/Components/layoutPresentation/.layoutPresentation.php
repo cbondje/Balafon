@@ -8,12 +8,12 @@ $c = igk_createNode("div");
 $c->setClass("igk-winui-layoutp t-".$type);
 
 $t = array("t"=>$c);
-igk_include_file($CF->getViewDir()."/view.".$type.".phtml", $t);
+igk_include_file($CF->getViewDir()."/view.".$type.".".IGK_DEFAULT_VIEW_EXT, $t);
 
 $c->addOnRenderCallback(igk_create_expression_callback(
 	file_get_contents(dirname(__FILE__)."/.style.func")
 	,
-	array("node"=>$c,	
+	array("node"=>$c,
 	"type"=>$type,
 	"CF"=>$CF
 	)
@@ -23,7 +23,7 @@ $c->addOnRenderCallback(igk_create_expression_callback(
 
 
 function igk_html_demo_layoutPresentation($t){
-	
+
 	// $p = $t->addContainer()->addRow()->addCol("igk-col-4-2 igk-col-sm-4-4 igk-col-xsm-4-4 no-padding")->addDiv()->addlayoutPresentation();
 	$p = $t->addlayoutPresentation();
 	$p->mainCell->Content =igk_html_from_string(<<<EOF
@@ -53,7 +53,7 @@ EOF
 );
 
 	$t->addDiv()->Content = "Layout Presentation demos";
-}	
+}
 
 
 igk_reg_widget("layoutPresentation");

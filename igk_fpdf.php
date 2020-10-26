@@ -3,9 +3,10 @@
 // licence: IGKDEV - Balafon @ 2019
 // desc: fpdf utility class
 
+/** @depends FPDF */
+
 if(!class_exists("FPDF", false)){
     die("fpdf library is required.");
-    return;
 }
 
 ///<summary>Represente interface: IIGKPdfPrinter</summary>
@@ -20,10 +21,10 @@ interface IIGKPdfPrinter{
     ///<param name="h"></param>
     /**
     * Represente drawRect function
-    * @param  $x
-    * @param  $y
-    * @param  $w
-    * @param  $h
+    * @param mixed $x
+    * @param mixed $y
+    * @param mixed $w
+    * @param mixed $h
     */
     function drawRect($x, $y, $w, $h);
     ///<summary>Represente drawText function</summary>
@@ -32,9 +33,9 @@ interface IIGKPdfPrinter{
     ///<param name="y"></param>
     /**
     * Represente drawText function
-    * @param  $text
-    * @param  $x
-    * @param  $y
+    * @param mixed $text
+    * @param mixed $x
+    * @param mixed $y
     */
     function drawText($text, $x, $y);
     ///<summary>Represente fillRect function</summary>
@@ -44,17 +45,17 @@ interface IIGKPdfPrinter{
     ///<param name="h"></param>
     /**
     * Represente fillRect function
-    * @param  $x
-    * @param  $y
-    * @param  $w
-    * @param  $h
+    * @param mixed $x
+    * @param mixed $y
+    * @param mixed $w
+    * @param mixed $h
     */
     function fillRect($x, $y, $w, $h);
     ///<summary>Represente measureText function</summary>
     ///<param name="text"></param>
     /**
     * Represente measureText function
-    * @param  $text
+    * @param mixed $text
     */
     function measureText($text);
 }
@@ -67,7 +68,7 @@ class IGKFPDF extends FPDF {
     ///<param name="s"></param>
     /**
     * Represente _out function
-    * @param  $s
+    * @param mixed $s
     */
     public function _out($s){
         parent::_out($s);
@@ -99,19 +100,19 @@ class IGKFPDF extends FPDF {
     ///<param name="cy2"></param>
     /**
     * Represente Curve function
-    * @param  $x1
-    * @param  $y1
-    * @param  $cx1
-    * @param  $cy1
-    * @param  $cx2
-    * @param  $cy2
+    * @param mixed $x1
+    * @param mixed $y1
+    * @param mixed $cx1
+    * @param mixed $cy1
+    * @param mixed $cx2
+    * @param mixed $cy2
     */
     public function Curve($x1, $y1, $cx1, $cy1, $cx2, $cy2){}
     ///<summary>Represente MirrorH function</summary>
     ///<param name="x" default="''"></param>
     /**
     * Represente MirrorH function
-    * @param  $x the default value is ''
+    * @param mixed $x the default value is ''
     */
     function MirrorH($x=''){
         $this->Scale(-100, 100, $x);
@@ -122,9 +123,9 @@ class IGKFPDF extends FPDF {
     ///<param name="y" default="''"></param>
     /**
     * Represente MirrorL function
-    * @param  $angle the default value is 0
-    * @param  $x the default value is ''
-    * @param  $y the default value is ''
+    * @param mixed $angle the default value is 0
+    * @param mixed $x the default value is ''
+    * @param mixed $y the default value is ''
     */
     function MirrorL($angle=0, $x='', $y=''){
         $this->Scale(-100, 100, $x, $y);
@@ -135,8 +136,8 @@ class IGKFPDF extends FPDF {
     ///<param name="y" default="''"></param>
     /**
     * Represente MirrorP function
-    * @param  $x the default value is ''
-    * @param  $y the default value is ''
+    * @param mixed $x the default value is ''
+    * @param mixed $y the default value is ''
     */
     function MirrorP($x='', $y=''){
         $this->Scale(-100, -100, $x, $y);
@@ -145,7 +146,7 @@ class IGKFPDF extends FPDF {
     ///<param name="y" default="''"></param>
     /**
     * Represente MirrorV function
-    * @param  $y the default value is ''
+    * @param mixed $y the default value is ''
     */
     function MirrorV($y=''){
         $this->Scale(100, -100, '', $y);
@@ -171,9 +172,9 @@ class IGKFPDF extends FPDF {
     ///<param name="y" default="''"></param>
     /**
     * Represente Rotate function
-    * @param  $angle
-    * @param  $x the default value is ''
-    * @param  $y the default value is ''
+    * @param mixed $angle
+    * @param mixed $x the default value is ''
+    * @param mixed $y the default value is ''
     */
     public function Rotate($angle, $x='', $y=''){
         if($x === '')
@@ -204,10 +205,10 @@ class IGKFPDF extends FPDF {
     ///<param name="y" default="''"></param>
     /**
     * Represente Scale function
-    * @param  $s_x
-    * @param  $s_y
-    * @param  $x the default value is ''
-    * @param  $y the default value is ''
+    * @param mixed $s_x
+    * @param mixed $s_y
+    * @param mixed $x the default value is ''
+    * @param mixed $y the default value is ''
     */
     function Scale($s_x, $s_y, $x='', $y=''){
         if($x === '')
@@ -234,9 +235,9 @@ class IGKFPDF extends FPDF {
     ///<param name="y" default="''"></param>
     /**
     * Represente ScaleX function
-    * @param  $s_x
-    * @param  $x the default value is ''
-    * @param  $y the default value is ''
+    * @param mixed $s_x
+    * @param mixed $x the default value is ''
+    * @param mixed $y the default value is ''
     */
     public function ScaleX($s_x, $x='', $y=''){
         $this->Scale($s_x, 100, $x, $y);
@@ -247,9 +248,9 @@ class IGKFPDF extends FPDF {
     ///<param name="y" default="''"></param>
     /**
     * Represente ScaleXY function
-    * @param  $s
-    * @param  $x the default value is ''
-    * @param  $y the default value is ''
+    * @param mixed $s
+    * @param mixed $x the default value is ''
+    * @param mixed $y the default value is ''
     */
     public function ScaleXY($s, $x='', $y=''){
         $this->Scale($s, $s, $x, $y);
@@ -260,9 +261,9 @@ class IGKFPDF extends FPDF {
     ///<param name="y" default="''"></param>
     /**
     * Represente ScaleY function
-    * @param  $s_y
-    * @param  $x the default value is ''
-    * @param  $y the default value is ''
+    * @param mixed $s_y
+    * @param mixed $x the default value is ''
+    * @param mixed $y the default value is ''
     */
     public function ScaleY($s_y, $x='', $y=''){
         $this->Scale(100, $s_y, $x, $y);
@@ -271,7 +272,7 @@ class IGKFPDF extends FPDF {
     ///<param name="tm"></param>
     /**
     * Represente setTransform function
-    * @param  $tm
+    * @param mixed $tm
     */
     public function setTransform($tm){
         $s=sprintf('%.3F %.3F %.3F %.3F %.3F %.3F cm', $tm[0], $tm[1], $tm[2], $tm[3], $tm[4],  - $tm[5]);
@@ -284,10 +285,10 @@ class IGKFPDF extends FPDF {
     ///<param name="y" default="''"></param>
     /**
     * Represente Skew function
-    * @param  $angle_x
-    * @param  $angle_y
-    * @param  $x the default value is ''
-    * @param  $y the default value is ''
+    * @param mixed $angle_x
+    * @param mixed $angle_y
+    * @param mixed $x the default value is ''
+    * @param mixed $y the default value is ''
     */
     function Skew($angle_x, $angle_y, $x='', $y=''){
         if($x === '')
@@ -312,9 +313,9 @@ class IGKFPDF extends FPDF {
     ///<param name="y" default="''"></param>
     /**
     * Represente SkewX function
-    * @param  $angle_x
-    * @param  $x the default value is ''
-    * @param  $y the default value is ''
+    * @param mixed $angle_x
+    * @param mixed $x the default value is ''
+    * @param mixed $y the default value is ''
     */
     function SkewX($angle_x, $x='', $y=''){
         $this->Skew($angle_x, 0, $x, $y);
@@ -325,9 +326,9 @@ class IGKFPDF extends FPDF {
     ///<param name="y" default="''"></param>
     /**
     * Represente SkewY function
-    * @param  $angle_y
-    * @param  $x the default value is ''
-    * @param  $y the default value is ''
+    * @param mixed $angle_y
+    * @param mixed $x the default value is ''
+    * @param mixed $y the default value is ''
     */
     function SkewY($angle_y, $x='', $y=''){
         $this->Skew(0, $angle_y, $x, $y);
@@ -337,8 +338,8 @@ class IGKFPDF extends FPDF {
     ///<param name="t_y"></param>
     /**
     * Represente Translate function
-    * @param  $t_x
-    * @param  $t_y
+    * @param mixed $t_x
+    * @param mixed $t_y
     */
     function Translate($t_x, $t_y){
         $tm[0]=1;
@@ -353,18 +354,18 @@ class IGKFPDF extends FPDF {
     ///<param name="t_x"></param>
     /**
     * Represente TranslateX function
-    * @param  $t_x
+    * @param mixed $t_x
     */
-    function TranslateX($t_x){
+    function TranslateX($t_x, $x=0, $y=0){
         $this->Translate($t_x, 0, $x, $y);
     }
     ///<summary>Represente TranslateY function</summary>
     ///<param name="t_y"></param>
     /**
     * Represente TranslateY function
-    * @param  $t_y
+    * @param mixed $t_y
     */
-    function TranslateY($t_y){
+    function TranslateY($t_y, $x=0, $y=0){
         $this->Translate(0, $t_y, $x, $y);
     }
 }
@@ -384,9 +385,9 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="format" default="A4"></param>
     /**
     * Represente __construct function
-    * @param  $type the default value is "P"
-    * @param  $unit the default value is "mm"
-    * @param  $format the default value is "A4"
+    * @param mixed $type the default value is "P"
+    * @param mixed $unit the default value is "mm"
+    * @param mixed $format the default value is "A4"
     */
     public function __construct($type="P", $unit="mm", $format="A4"){
         $this->init($type, $unit, $format);
@@ -395,7 +396,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="h" default="null"></param>
     /**
     * Represente addBr function
-    * @param  $h the default value is null
+    * @param mixed $h the default value is null
     */
     public function addBr($h=null){
         $this->m_fpdf->Ln($h);
@@ -405,8 +406,8 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="format" default="A4"></param>
     /**
     * Represente addCPage function
-    * @param  $type the default value is "P"
-    * @param  $format the default value is "A4"
+    * @param mixed $type the default value is "P"
+    * @param mixed $format the default value is "A4"
     */
     public function addCPage($type="P", $format="A4"){
         $this->m_fpdf->AddPage($type, $format);
@@ -417,9 +418,9 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="file" default="null"></param>
     /**
     * Represente addFont function
-    * @param  $fn
-    * @param  $style the default value is IGK_STR_EMPTY
-    * @param  $file the default value is null
+    * @param mixed $fn
+    * @param mixed $style the default value is IGK_STR_EMPTY
+    * @param mixed $file the default value is null
     */
     public function addFont($fn, $style=IGK_STR_EMPTY, $file=null){
         $this->m_fpdf->AddFont($fn, $style, $file);
@@ -447,14 +448,14 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="y2" default="null"></param>
     /**
     * Represente bezierCurveTo function
-    * @param  $x1
-    * @param  $y1
-    * @param  $cx1
-    * @param  $cy1
-    * @param  $cx2
-    * @param  $cy2
-    * @param  $x2 the default value is null
-    * @param  $y2 the default value is null
+    * @param mixed $x1
+    * @param mixed $y1
+    * @param mixed $cx1
+    * @param mixed $cy1
+    * @param mixed $cx2
+    * @param mixed $cy2
+    * @param mixed $x2 the default value is null
+    * @param mixed $y2 the default value is null
     */
     public function bezierCurveTo($x1, $y1, $cx1, $cy1, $cx2, $cy2, $x2=null, $y2=null){
         $this->m_fpdf->Curve($x1, $y1, $cx1, $cy1, $cx2, $cy2, $x2 ?? $x1, $y2 ?? $y1);
@@ -484,9 +485,9 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="y"></param>
     /**
     * Represente drawImage function
-    * @param  $imgfileObject
-    * @param  $x
-    * @param  $y
+    * @param mixed $imgfileObject
+    * @param mixed $x
+    * @param mixed $y
     */
     public function drawImage($imgfileObject, $x, $y){
         if(file_exists($imgfileObject)){
@@ -503,13 +504,13 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="link" default="null"></param>
     /**
     * Represente drawImg function
-    * @param  $file
-    * @param  $x the default value is null
-    * @param  $y the default value is null
-    * @param  $w the default value is 0
-    * @param  $h the default value is 0
-    * @param  $type the default value is null
-    * @param  $link the default value is null
+    * @param mixed $file
+    * @param mixed $x the default value is null
+    * @param mixed $y the default value is null
+    * @param mixed $w the default value is 0
+    * @param mixed $h the default value is 0
+    * @param mixed $type the default value is null
+    * @param mixed $link the default value is null
     */
     public function drawImg($file, $x=null, $y=null, $w=0, $h=0, $type=null, $link=null){
         $this->FPDF->Image($file, $x, $y, $w, $h, $type, $link);
@@ -521,10 +522,10 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="y2"></param>
     /**
     * Represente drawLine function
-    * @param  $x1
-    * @param  $y1
-    * @param  $x2
-    * @param  $y2
+    * @param mixed $x1
+    * @param mixed $y1
+    * @param mixed $x2
+    * @param mixed $y2
     */
     public function drawLine($x1, $y1, $x2, $y2){
         $this->m_fpdf->Line($x1, $y1, $x2, $y2);
@@ -533,7 +534,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="webcolor"></param>
     /**
     * Represente drawLineSeparatorw function
-    * @param  $webcolor
+    * @param mixed $webcolor
     */
     public function drawLineSeparatorw($webcolor){
         $this->setdColorw($webcolor);
@@ -547,11 +548,11 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="link"></param>
     /**
     * Represente drawLink function
-    * @param  $x
-    * @param  $y
-    * @param  $w
-    * @param  $h
-    * @param  $link
+    * @param mixed $x
+    * @param mixed $y
+    * @param mixed $w
+    * @param mixed $h
+    * @param mixed $link
     */
     public function drawLink($x, $y, $w, $h, $link){
         $this->FPDF->Rect($x, $y, $w, $h, $link);
@@ -565,12 +566,12 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="fillcolor" default="false"></param>
     /**
     * Represente drawMultiTextCell function
-    * @param  $w
-    * @param  $h
-    * @param  $text
-    * @param  $border the default value is 0
-    * @param  $align the default value is "L"
-    * @param  $fillcolor the default value is false
+    * @param mixed $w
+    * @param mixed $h
+    * @param mixed $text
+    * @param mixed $border the default value is 0
+    * @param mixed $align the default value is "L"
+    * @param mixed $fillcolor the default value is false
     */
     public function drawMultiTextCell($w, $h, $text, $border=0, $align="L", $fillcolor=false){
         $this->m_fpdf->MultiCell($w, $h, $text, $border, $align, $fillcolor);
@@ -582,10 +583,10 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="h"></param>
     /**
     * Represente drawRect function
-    * @param  $x
-    * @param  $y
-    * @param  $w
-    * @param  $h
+    * @param mixed $x
+    * @param mixed $y
+    * @param mixed $w
+    * @param mixed $h
     */
     public function drawRect($x, $y, $w, $h){
         $this->FPDF->Rect($x, $y, $w, $h);
@@ -603,9 +604,9 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="link" default="null"></param>
     /**
     * Represente drawWText function
-    * @param  $h
-    * @param  $text
-    * @param  $link the default value is null
+    * @param mixed $h
+    * @param mixed $text
+    * @param mixed $link the default value is null
     */
     public function drawWText($h, $text, $link=null){
         $this->m_fpdf->Write($h, $text, $link);
@@ -622,10 +623,10 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="h"></param>
     /**
     * Represente fillRect function
-    * @param  $x
-    * @param  $y
-    * @param  $w
-    * @param  $h
+    * @param mixed $x
+    * @param mixed $y
+    * @param mixed $w
+    * @param mixed $h
     */
     public function fillRect($x, $y, $w, $h){
         $this->FPDF->Rect($x, $y, $w, $h, 'F');
@@ -676,7 +677,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="s"></param>
     /**
     * Represente getStringWidth function
-    * @param  $s
+    * @param mixed $s
     */
     public function getStringWidth($s){
         return $this->FPDF->GetStringWidth($s);
@@ -716,10 +717,10 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="firstpage" default="true"></param>
     /**
     * Represente init function
-    * @param  $type the default value is "P"
-    * @param  $unit the default value is "mm"
-    * @param  $format the default value is "A4"
-    * @param  $firstpage the default value is true
+    * @param mixed $type the default value is "P"
+    * @param mixed $unit the default value is "mm"
+    * @param mixed $format the default value is "A4"
+    * @param mixed $firstpage the default value is true
     */
     public function init($type="P", $unit="mm", $format="A4", $firstpage=true){
         $this->m_fpdf=new IGKFPDF($type, $unit, $format);
@@ -732,7 +733,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="text"></param>
     /**
     * Represente measureText function
-    * @param  $text
+    * @param mixed $text
     */
     public function measureText($text){
         return $this->m_fpdf->GetStringWidth($text);
@@ -747,8 +748,8 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="dest" default="I"></param>
     /**
     * Represente Render function
-    * @param  $name the default value is "pdfdocument.pdf"
-    * @param  $dest the default value is "I"
+    * @param mixed $name the default value is "pdfdocument.pdf"
+    * @param mixed $dest the default value is "I"
     */
     public function Render($name="pdfdocument.pdf", $dest="I"){
         $this->m_fpdf->title=$this->Title;
@@ -775,7 +776,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="angle"></param>
     /**
     * Represente rotate function
-    * @param  $angle
+    * @param mixed $angle
     */
     public function rotate($angle){
         $this->m_fpdf->Rotate($angle);
@@ -791,7 +792,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="value"></param>
     /**
     * Represente setAuthor function
-    * @param  $value
+    * @param mixed $value
     */
     public function setAuthor($value){
         $this->m_author=$value;
@@ -802,9 +803,9 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="b" default="null"></param>
     /**
     * Represente setdColorf function
-    * @param  $r
-    * @param  $g the default value is null
-    * @param  $b the default value is null
+    * @param mixed $r
+    * @param mixed $g the default value is null
+    * @param mixed $b the default value is null
     */
     public function setdColorf($r, $g=null, $b=null){
         $this->FPDF->SetDrawColor($r * 255, $g ? $g * 255: $g, $b ? $b * 255: $b);
@@ -813,7 +814,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="webcolor"></param>
     /**
     * Represente setdColorw function
-    * @param  $webcolor
+    * @param mixed $webcolor
     */
     public function setdColorw($webcolor){
         $cl=IGKColorf::FromString($webcolor);
@@ -825,9 +826,9 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="b" default="null"></param>
     /**
     * Represente setfColorf function
-    * @param  $r
-    * @param  $g the default value is null
-    * @param  $b the default value is null
+    * @param mixed $r
+    * @param mixed $g the default value is null
+    * @param mixed $b the default value is null
     */
     public function setfColorf($r, $g=null, $b=null){
         $this->FPDF->SetFillColor($r * 255, $g ? $g * 255: $g, $b ? $b * 255: $b);
@@ -836,7 +837,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="webcolor"></param>
     /**
     * Represente setfColorw function
-    * @param  $webcolor
+    * @param mixed $webcolor
     */
     public function setfColorw($webcolor){
         $cl=IGKColorf::FromString($webcolor);
@@ -848,9 +849,9 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="size"></param>
     /**
     * Represente setFont function
-    * @param  $name
-    * @param  $type
-    * @param  $size
+    * @param mixed $name
+    * @param mixed $type
+    * @param mixed $size
     */
     public function setFont($name, $type, $size){
         $this->FPDF->SetFont($name, $type, $size);
@@ -859,7 +860,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="w"></param>
     /**
     * Represente setFontSize function
-    * @param  $w
+    * @param mixed $w
     */
     public function setFontSize($w){
         $this->FPDF->SetFontSize($w);
@@ -868,7 +869,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="value"></param>
     /**
     * Represente setKeywords function
-    * @param  $value
+    * @param mixed $value
     */
     public function setKeywords($value){
         $this->m_keywords=$value;
@@ -879,12 +880,12 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="p" default="-1"></param>
     /**
     * Represente setLink function
-    * @param  $id
-    * @param  $y the default value is 0
-    * @param  $p the default value is -1
+    * @param mixed $id
+    * @param mixed $y the default value is 0
+    * @param mixed $p the default value is -1
     */
     public function setLink($id, $y=0, $p=-1){
-        return $this->FPDF->SetLink($id, $y, $page);
+        return $this->FPDF->SetLink($id, $y, $p);
     }
     ///<summary>Represente setMargin function</summary>
     ///<param name="left"></param>
@@ -892,9 +893,9 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="right"></param>
     /**
     * Represente setMargin function
-    * @param  $left
-    * @param  $top
-    * @param  $right
+    * @param mixed $left
+    * @param mixed $top
+    * @param mixed $right
     */
     public function setMargin($left, $top, $right){
         $this->FPDF->SetMargins($left, $top, $right);
@@ -903,7 +904,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="value"></param>
     /**
     * Represente setSubject function
-    * @param  $value
+    * @param mixed $value
     */
     public function setSubject($value){
         $this->m_subject=$value;
@@ -914,9 +915,9 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="b" default="null"></param>
     /**
     * Represente settColorf function
-    * @param  $r
-    * @param  $g the default value is null
-    * @param  $b the default value is null
+    * @param mixed $r
+    * @param mixed $g the default value is null
+    * @param mixed $b the default value is null
     */
     public function settColorf($r, $g=null, $b=null){
         $this->FPDF->SetTextColor($r * 255, $g ? $g * 255: $g, $b ? $b * 255: $b);
@@ -925,7 +926,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="webcolor"></param>
     /**
     * Represente settColorw function
-    * @param  $webcolor
+    * @param mixed $webcolor
     */
     public function settColorw($webcolor){
         $cl=IGKColorf::FromString($webcolor);
@@ -935,7 +936,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="value"></param>
     /**
     * Represente setTitle function
-    * @param  $value
+    * @param mixed $value
     */
     public function setTitle($value){
         $this->m_title=$value;
@@ -949,12 +950,12 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="offsety"></param>
     /**
     * Represente setTransform function
-    * @param  $m11
-    * @param  $m12
-    * @param  $m21
-    * @param  $m22
-    * @param  $offsetx
-    * @param  $offsety
+    * @param mixed $m11
+    * @param mixed $m12
+    * @param mixed $m21
+    * @param mixed $m22
+    * @param mixed $offsetx
+    * @param mixed $offsety
     */
     public function setTransform($m11, $m12, $m21, $m22, $offsetx, $offsety){
         $this->m_fpdf->setTransform(array($m11, $m12, $m21, $m22, $offsetx, $offsety));
@@ -963,7 +964,7 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="w"></param>
     /**
     * Represente setWidth function
-    * @param  $w
+    * @param mixed $w
     */
     public function setWidth($w){
         $this->FPDF->SetLineWidth($w);
@@ -973,8 +974,8 @@ final class IGKPDF extends IGKObject implements IIGKPdfPrinter {
     ///<param name="y"></param>
     /**
     * Represente setXY function
-    * @param  $x
-    * @param  $y
+    * @param mixed $x
+    * @param mixed $y
     */
     public function setXY($x, $y){
         $this->FPDF->SetXY($x, $y);
@@ -995,7 +996,7 @@ final class IGKPDFDbWriter extends IGKObject {
     ///<param name="pdf"></param>
     /**
     * Represente __construct function
-    * @param  $pdf
+    * @param mixed $pdf
     */
     public function __construct($pdf){
         $this->m_pdf=$pdf;
@@ -1006,13 +1007,13 @@ final class IGKPDFDbWriter extends IGKObject {
     ///<param name="measure" default="null"></param>
     /**
     * Represente addRow function
-    * @param  $r
-    * @param  $height the default value is 20
-    * @param  $measure the default value is null
+    * @param mixed $r
+    * @param mixed $height the default value is 20
+    * @param mixed $measure the default value is null
     */
     public function addRow($r, $height=20, $measure=null){
         $i=0;
-        foreach($r as $k=>$v){
+        foreach($r as  $v){
             $w=igk_getv($measure, $i, 12);
             $this->m_pdf->drawCText($w, $height, utf8_decode($v), 0, 0);
             $i++;
@@ -1040,8 +1041,8 @@ final class IGKPDFDbWriter extends IGKObject {
     ///<param name="dest" default="I"></param>
     /**
     * Represente Render function
-    * @param  $name the default value is "pdfdocument.pdf"
-    * @param  $dest the default value is "I"
+    * @param mixed $name the default value is "pdfdocument.pdf"
+    * @param mixed $dest the default value is "I"
     */
     public function Render($name="pdfdocument.pdf", $dest="I"){
         $this->m_pdf->Render($name, $dest);

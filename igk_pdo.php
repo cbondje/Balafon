@@ -13,7 +13,7 @@ class IGKPDODataAdpater extends IGKDataAdapter {
     ///<param name="pdo"></param>
     /**
     * Represente __construct function
-    * @param  $pdo
+    * @param mixed $pdo
     */
     private function __construct($pdo){
         $this->m_pdo=$pdo;
@@ -27,7 +27,7 @@ class IGKPDODataAdpater extends IGKDataAdapter {
     ///<param name="ctrl" default="null"></param>
     /**
     * Represente connect function
-    * @param  $ctrl the default value is null
+    * @param mixed $ctrl the default value is null
     */
     public function connect($ctrl=null){}
     ///<summary>Represente Create function</summary>
@@ -37,10 +37,10 @@ class IGKPDODataAdpater extends IGKDataAdapter {
     ///<param name="pwd"></param>
     /**
     * Represente Create function
-    * @param  $server
-    * @param  $dbname
-    * @param  $login
-    * @param  $pwd
+    * @param mixed $server
+    * @param mixed $dbname
+    * @param mixed $login
+    * @param mixed $pwd
     */
     public static function Create($server, $dbname, $login, $pwd){
         return null;
@@ -57,17 +57,21 @@ class IGKPDODataAdpater extends IGKDataAdapter {
     ///<param name="callback"></param>
     /**
     * Represente initSystablePushInitItem function
-    * @param  $tablename
-    * @param  $callback
+    * @param mixed $tablename
+    * @param mixed $callback
     */
     public function initSystablePushInitItem($tablename, $callback){}
     ///<summary>Represente initSystableRequired function</summary>
     ///<param name="tablename"></param>
     /**
     * Represente initSystableRequired function
-    * @param  $tablename
+    * @param mixed $tablename
     */
     public function initSystableRequired($tablename){}
+
+    public function escape_string($s){
+
+	}
 }
 if(!defined("IGK_MSQL_DB_Adapter")){
     include_once(dirname(__FILE__)."/igk_mysql_db.pthml");

@@ -9,16 +9,16 @@ abstract class IGKTwitterFollowUsButtonCtrl extends IGKCtrlTypeBase
 {
 	private $m_script;
 	const sn = "twitter://followbutton";//script name
-	
+
 	public static function GetAdditionalConfigInfo()
 	{
 	 return array(
 		"clUri"=> new IGKAdditionCtrlInfo("text", "https://twitter.com/"),
-		"clShowDataCount"=> new IGKAdditionCtrlInfo("select", 
-		array("true"=>"true", "false"=>"false"), 
+		"clShowDataCount"=> new IGKAdditionCtrlInfo("select",
+		array("true"=>"true", "false"=>"false"),
 		"false"),
-		"clButtonSize"=>new IGKAdditionCtrlInfo("select", 		
-		array("medium"=>"medium", "large"=>"large"), 
+		"clButtonSize"=>new IGKAdditionCtrlInfo("select",
+		array("medium"=>"medium", "large"=>"large"),
 		"medium"),
 		);
 		//return array("clShowDataCount");
@@ -28,18 +28,18 @@ abstract class IGKTwitterFollowUsButtonCtrl extends IGKCtrlTypeBase
 	}
 	protected function InitComplete(){
 		parent::InitComplete();
-		
+
 		$s = $this->App->Doc->getScriptManager()->getScript(self::sn);
 		if ($s==null){
 		$this->m_script = $this->App->Doc->getScriptManager()->addScript(self::sn);
-		
+
 		$this->m_script->setContent(
 <<<EOF
 !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
 EOF
 		);
 		}
-		
+
 	}
 	public function View(){
 		if ($this->getIsVisible())
@@ -47,7 +47,7 @@ EOF
 			extract($this->getSystemVars());
 			$t->ClearChilds();
 			$show_count = igk_parsebool(igk_getv($this->Configs,"clShowDataCount", false));
-			
+
 			$t->add("a", array(
 			"href"=>igk_getv($this->Configs,"clUri", "https://twitter.com/twitterapi"),
 			"class"=>"twitter-follow-button",
@@ -56,7 +56,7 @@ EOF
 			"data-lang"=>$this->getlang()
 			));
 		}
-		else 
+		else
 			igk_html_rm($this->getTargetNode());
 	}
 	public function getlang()
@@ -67,7 +67,7 @@ EOF
 			return strtolower($l);
 		}
 		return null;
-		
+
 	}
 }
 ?>

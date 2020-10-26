@@ -1,7 +1,7 @@
 <?php
 // @file: tab.articles.list.phtml
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -11,13 +11,13 @@
 use function igk_resources_gets as __;
 ($s_ctrl == null) && igk_die("selected controller not found");
 $div=$t;
-$div->add(new IGKHtmlSearchItem($this->getUri("search_article"), null, "m_search_article"));
+$div->add(new IGKHtmlSearchItem($ctrl->getUri("search_article"), null, "m_search_article"));
 $dir=$s_ctrl->getArticlesDir();
 $t=igk_io_getfiles($dir);
 $lang_search=null;
 $frm=$div->addForm();
-if(!(($this->m_selectedLang == null) || ($this->m_selectedLang == IGK_ALL_LANG)))
-    $lang_search=$this->m_selectedLang;
+if(!(($ctrl->m_selectedLang == null) || ($ctrl->m_selectedLang == IGK_ALL_LANG)))
+    $lang_search=$ctrl->m_selectedLang;
 if($t && count($t) > 0){
     sort($t);
     $ul=$frm->addTable();
@@ -33,16 +33,16 @@ if($t && count($t) > 0){
         $n=basename($k);
         if($lang_search && !IGKString::EndWith(strtolower($n), igk_get_article_ext($lang_search)))
             continue;
-        if($this->m_search_article && !strstr(strtolower($n), strtolower($this->m_search_article)))
+        if($ctrl->m_search_article && !strstr(strtolower($n), strtolower($ctrl->m_search_article)))
             continue;
         $tr=$ul->addTr();
         $tr->setClass("article");
-        $tr->addTd()->add("a", array("href"=>$this->getUri("download_article&n=".$n)))->Content=$n;
-        IGKHtmlUtils::AddImgLnk($tr->addTd(), igk_js_post_frame($this->getUri("ca_edit_article_ajx&navigate=1&ctrlid=".$s_ctrl->Name."&m=1&fc=1&fn=".base64_encode($k))), "edit_16x16");
-        $tr->addTd()->addAJXA($this->getUri("ca_drop_article_ajx&n=".base64_encode($n)))->addImg()->setSrc(R::GetImgUri("drop_16x16"))->setAttributes(["title"=>__("Drop article")]);
+        $tr->addTd()->add("a", array("href"=>$ctrl->getUri("download_article&n=".$n)))->Content=$n;
+        IGKHtmlUtils::AddImgLnk($tr->addTd(), igk_js_post_frame($ctrl->getUri("ca_edit_article_ajx&navigate=1&ctrlid=".$s_ctrl->Name."&m=1&fc=1&fn=".base64_encode($k))), "edit_16x16");
+        $tr->addTd()->addAJXA($ctrl->getUri("ca_drop_article_ajx&n=".base64_encode($n)))->addImg()->setSrc(R::GetImgUri("drop_16x16"))->setAttributes(["title"=>__("Drop article")]);
     }
 }
-$frm["action"]=$this->getUri("ca_add_article_frame");
+$frm["action"]=$ctrl->getUri("ca_add_article_frame");
 $frm->addBtn("btn_addarticle", R::ngets("btn.AddArticle"));
 $frm->addInput("ctrl", "hidden", $s_ctrl->Name);
 $frm["igk-ajx-form"]=1;

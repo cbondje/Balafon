@@ -20,22 +20,22 @@ class IGKProcessDocument extends IGKNonVisibleControllerBase
 		{
 			//
 			$str = IGKIO::ReadAllText($file);
-			
+
 			$out = preg_replace("/^\s*\/\/\/@@@(?P<value>(.)+)$/i", '///<summary>${1}</summary>', $str);
-			
+
 			igk_io_save_file_as_utf8(dirname(__FILE__)."/out.php_t", $out, true);
-			
+
 			$doc  = $this->ProcessDoc($str);
-			$doc->RenderAJX();			
+			$doc->RenderAJX();
 		}
 		exit;
 	}
 	public function processDoc($text){
-		
+
 		$v_tab = array();
 		//$v_c = preg_match_all("/\s*\/\/\/\<summary\>(?P<value>(.)+)\<\/summary\>/im", $text, $v_tab);
 		$v_c = preg_match_all("/^\s*\/\/\/(?P<value>(.)+)$/im", $text, $v_tab);
-		
+
 		$v_d =  IGKHtmlItem::CreateWebNode("div");
 		$v_n =  IGKHtmlItem::CreateWebNode("div");
 		if ($v_c > 0){
@@ -52,6 +52,6 @@ class IGKProcessDocument extends IGKNonVisibleControllerBase
 		}
 		return $v_n;
 	}
-	
+
 }
 ?>

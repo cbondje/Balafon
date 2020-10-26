@@ -3,8 +3,6 @@
 $t->clearChilds();
 $doc->Title = "WEB SERVICES - [".igk_web_get_config("website_title")."]";
 $services = $params["services"];
-
-
 $doc->setHeaderColor("#af104f");
 igk_google_addfont($doc,"Roboto", 400);
 
@@ -21,14 +19,9 @@ $t->addDiv()->addQuote()->Content= R::gets("List of services");
 $dv = $t->addDiv()->setClass("content");
 $row = $dv->addContainer()->addRow();
 if (igk_count($services) <=0){
-	$row->addCol()->addColViewBox()->Content = R::ngets("msg.noservices_found");
+	$row->addCol()->addColViewBox()->Content = R::ngets("No services found");
 }
 else{
-	$row->addCol("igk-col-3-3")->addBindArticle($this, $this->getParentArticle("services.list.template"), $ctrl->getServices());
+	$row->addCol("igk-col-3-3")->addArticle($ctrl, $ctrl->getParentArticle("services.list.template"), $ctrl->getServices());
 }
-
-
-
 $t->addDiv()->setClass("footer")->addContainer()->addSingleRowCol()->addDiv()->addIGKCopyRight();
-
-?>

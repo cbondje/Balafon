@@ -9,14 +9,14 @@ margin:0;
 }
 .igk-mail-logo{
 	[res:logo_96x48]
-	background-repeat:no-repeat;	
+	background-repeat:no-repeat;
 	{sys:fith, dispib}
 	vertical-align:middle;
 	width:96px;
 	height:48px;
 	line-height:96px;
 	text-indent:-9999px;
-	
+
 }
 .igk-mail-lnk-confirm{
 	{sys:dispb,fitw,nodecoration}

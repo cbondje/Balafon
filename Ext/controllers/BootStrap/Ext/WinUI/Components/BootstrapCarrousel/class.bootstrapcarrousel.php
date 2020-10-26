@@ -15,14 +15,14 @@ final class IGKHtmlBootstrapCarouselItem extends IGKHtmlItem
 		$this->addItem($ol,"#car" , 1, false);
 		$this->addItem($ol,"#car" , 2, false);
 		$this->addItem($ol,"#car" , 3, false);
-		
+
 		$b = $this->addDiv()->setClass("carousel-inner");
 		$b->setStyle("height:200px; width: 400px;");
 		$this->addSlide($b, "page1", true);
 		$this->addSlide($b, "page2");
 		$this->addSlide($b,"page3");
 		$this->addSlide($b,"page4");
-		
+
 		$this->addButton("#car");
 	}
 	public function addSlide($d, $content, $active=false)
@@ -33,7 +33,7 @@ final class IGKHtmlBootstrapCarouselItem extends IGKHtmlItem
 		{
 			$h->setClass("active");
 		}
-		
+
 		return $h;
 	}
 	public function addItem($ol, $target, $slide, $active=false){
@@ -62,13 +62,13 @@ final class IGKCarrouselHtmlItemCtrl extends IGKNonVisibleControllerBase
 {
 	public function getcanModify(){return false;}
 	public function getcanDelete(){return false;}
-	
+
 	public function InitComplete(){
 		parent::InitComplete();
 		$f =dirname(__FILE__)."/Styles/default.pcss";
         if (file_exists($f))
 		    include_once($f);
-	
+
 	}
 }
 ?>

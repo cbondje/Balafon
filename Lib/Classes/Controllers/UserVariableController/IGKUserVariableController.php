@@ -1,7 +1,7 @@
 <?php
 // @file: IGKUserVariableController.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -31,7 +31,7 @@ final class IGKUserVarsCtrl extends IGKConfigCtrlBase {
         $this->m_vars=array();
         $e=IGKCSVDataAdapter::LoadData($this->dataFileName);
         if($e){
-            foreach($e as $k=>$v){
+            foreach($e as  $v){
                 $this->m_vars[$v[0]]=array("value"=>igk_getv($v, 1), "comment"=>igk_getv($v, 2));
             }
         }
@@ -150,7 +150,7 @@ final class IGKUserVarsCtrl extends IGKConfigCtrlBase {
     ///<param name="store" default="true"></param>
     /**
     * Represente vc_Clearvars function
-    * @param  $store the default value is true
+    * @param mixed $store the default value is true
     */
     public function vc_Clearvars($store=true){
         $this->m_vars=array();
@@ -177,7 +177,7 @@ final class IGKUserVarsCtrl extends IGKConfigCtrlBase {
     public function vc_rm_selection(){
         $n=igk_getr(IGK_FD_NAME);
         if(is_array($n)){
-            foreach($n as $k=>$v){
+            foreach($n as  $v){
                 unset($this->m_vars[$v]);
             }
             $this->__storeVars();

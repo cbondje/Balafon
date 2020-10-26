@@ -9,9 +9,9 @@
 ///<param name="error_msg"></param>
 /**
 * Represente igk_utest function
-* @param  $callback
-* @param  $title
-* @param  $error_msg
+* @param mixed $callback
+* @param mixed $title
+* @param mixed $error_msg
 */
 function igk_utest($callback, $title, $error_msg){
     $msg=$error_msg;
@@ -32,9 +32,9 @@ function igk_utest($callback, $title, $error_msg){
 ///<param name="message"></param>
 /**
 * Represente igk_utest_append function
-* @param  $status
-* @param  $name
-* @param  $message
+* @param mixed $status
+* @param mixed $name
+* @param mixed $message
 */
 function igk_utest_append($status, $name, $message){
     $o=(object)array_combine(array('status', 'name', 'message'), func_get_args());
@@ -46,9 +46,9 @@ function igk_utest_append($status, $name, $message){
 ///<param name="name" default="null"></param>
 /**
 * Represente igk_utest_assert function
-* @param  $cond
-* @param  $message
-* @param  $name the default value is null
+* @param mixed $cond
+* @param mixed $message
+* @param mixed $name the default value is null
 */
 function igk_utest_assert($cond, $message, $name=null){
     if($cond){
@@ -63,8 +63,8 @@ function igk_utest_assert($cond, $message, $name=null){
 ///<param name="t" default="'default'"></param>
 /**
 * Represente igk_utest_render function
-* @param  $msg
-* @param  $t the default value is 'default'
+* @param mixed $msg
+* @param mixed $t the default value is 'default'
 */
 function igk_utest_render($msg, $t='default'){
     static $styles=array(
@@ -82,7 +82,7 @@ function igk_utest_render($msg, $t='default'){
 ///<param name="t"></param>
 /**
 * Represente igk_utest_report function
-* @param  $t
+* @param mixed $t
 */
 function igk_utest_report($t){
     $at=igk_get_env("igk://utest/");
@@ -112,7 +112,7 @@ function igk_utest_run($testname=null){
     if($tab == null)
         return;
     $i=0;
-    foreach($tab as $k=>$expression){
+    foreach($tab as  $expression){
         ob_flush();
         if($c=igk_getv($expression, "callback")){
             if(($o=$c()) != igk_getv($expression, "expected")){
@@ -130,7 +130,7 @@ function igk_utest_run($testname=null){
 ///<param name="expression"></param>
 /**
 * Represente igk_utest_test function
-* @param  $expression
+* @param mixed $expression
 */
 function igk_utest_test($expression){
     $tab=igk_get_env("balafon://unit/test", function(){
@@ -144,8 +144,8 @@ function igk_utest_test($expression){
 ///<param name="style" default=""></param>
 /**
 * Represente igk_utest_wln function
-* @param  $m
-* @param  $style the default value is ""
+* @param mixed $m
+* @param mixed $style the default value is ""
 */
 function igk_utest_wln($m, $style=""){
     igk_wln("<span style=\"".$style."\">{$m}</span>");
@@ -169,18 +169,18 @@ final class IGKTestRunner extends IGKObject{
     ///<param name="i"></param>
     /**
     * Represente RunTest function
-    * @param  $i
+    * @param mixed $i
     */
     public function RunTest($i){
         $classname=get_class($i);
-        $rfclass=new ReflectionClass($classname);
+        //$rfclass=new ReflectionClass($classname);
         $rep=new IGKXmlNode("response");
-        foreach(get_class_methods($classname) as $k=>$v){
+        foreach(get_class_methods($classname) as  $v){
             $refmethod=new ReflectionMethod($classname, $v);
             $n=$refmethod->getName();
             switch($n){
                 case "__construct":
-                continue;default: 
+                continue;default:
                 $t=$rep->add($n);
                 if(!$i->$n($t)){
                     $t["error"]=1;

@@ -21,9 +21,9 @@ function igk_html_json($n){
         $r=$q->getTagName();
         $view=array();
 		//igk_wln("tag : ", $r , get_class($q));
-		
-		if ( get_class($q) != IGKHtmlText::class){	
-		
+
+		if ( get_class($q) != IGKHtmlText::class){
+
 			if($ctrib=$q->getAttributes()){
 				$attribs=array();
 				foreach($ctrib->ToArray() as $k=>$attrv){
@@ -53,7 +53,7 @@ function igk_html_json($n){
 ///<param name="n"></param>
 /**
 * Represente igk_html_json_decode function
-* @param n 
+* @param string $n string to decode
 */
 function igk_html_json_decode($n){
     $tab=json_decode($n);

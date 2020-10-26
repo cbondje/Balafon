@@ -125,7 +125,7 @@
 		<menuindex>390</menuindex>
 		<imagekey />
 		<group>administration</group>
-	</groupauth>	
+	</groupauth>
 	<security>
 		<menuname>security</menuname>
 		<pagename>security</pagename>

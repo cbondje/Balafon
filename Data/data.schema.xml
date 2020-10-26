@@ -11,7 +11,7 @@
 			<Row clName="googleplus" clValueType="uri" />
 		</Rows>
 		<Rows For="tbigk_partners">
-			<Row clName="igkdev"  clCategory="framework" clWebSite="//igkdev.com" clDescription="web site creator" />  
+			<Row clName="igkdev"  clCategory="framework" clWebSite="//igkdev.com" clDescription="web site creator" />
 		</Rows>
 	</Entries>
 
@@ -20,11 +20,11 @@
         <Column clName="clName" clType="VARCHAR" clTypeLength="50" clNotNull="True" clIsUnique="True" />
         <Column clName="clDownloadTime" clType="VARCHAR" clTypeLength="10" />
         <Column clName="clLast" clType="DateTime" clDescription="Last download time" clInsertFunction="NOW()" clUpdateFunction="NOW()" />
-   
+
     </DataDefinition>
     <DataDefinition TableName="tbigk_authorizations" >
         <Column clName="clId" clType="Int" clTypeLength="10" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
-        <Column clName="clName" clType="VARCHAR" clTypeLength="255" clNotNull="True" clIsUnique="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="140" clNotNull="True" clIsUnique="True" />
     </DataDefinition>
 	 <DataDefinition TableName="tbigk_colors">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
@@ -51,7 +51,7 @@
     </DataDefinition>
     <DataDefinition TableName="tbigk_data_types" >
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
-        <Column clName="clName" clType="VARCHAR" clTypeLength="255" clNotNull="True" clIsUnique="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="170" clNotNull="True" clIsUnique="True" />
         <Column clName="clDescription" clType="TEXT" clDescription="data description" />
         <Column clName="clRegex" clType="TEXT" clDescription="Regex used to validate data" />
     </DataDefinition>
@@ -64,7 +64,7 @@
     </DataDefinition>
     <DataDefinition TableName="tbigk_groups" >
         <Column clName="clId" clType="Int" clTypeLength="10" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
-        <Column clName="clName" clType="VARCHAR" clTypeLength="255" clNotNull="True" clIsUnique="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="170" clNotNull="True" clIsUnique="True" />
         <Column clName="clDescription" clType="VARCHAR" clTypeLength="150" />
     </DataDefinition>
     <DataDefinition TableName="tbigk_humans">
@@ -104,24 +104,24 @@
     </DataDefinition>
     <DataDefinition TableName="tbigk_reference_models">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
-        <Column clName="clModel" clType="VARCHAR" clTypeLength="255" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clModel" clType="VARCHAR" clTypeLength="170" clNotNull="True" clIsPrimary="True" />
         <Column clName="clNextValue" clType="Int" clTypeLength="11" clNotNull="True" />
-    </DataDefinition> 
+    </DataDefinition>
     <DataDefinition TableName="tbigk_subdomains">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
-        <Column clName="clName" clType="VARCHAR" clTypeLength="100" 
+        <Column clName="clName" clType="VARCHAR" clTypeLength="100"
 			clDescription="Subdomain name. exemple. 'mail'  in the .domain.com will be mail.domain.dom"
-            clNotNull="True" clIsPrimary="True" 
+            clNotNull="True" clIsPrimary="True"
 			clIsUnique="True"/>
         <Column clName="clCtrl" clType="VARCHAR" clTypeLength="33" clDescription="Controller name" clNotNull="True" />
         <Column clName="clView" clType="TEXT" clDescription="Entry" />
     </DataDefinition>
     <DataDefinition TableName="tbigk_systemuri">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
-        <Column clName="clName" clType="VARCHAR" clTypeLength="255" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="170" clNotNull="True" clIsPrimary="True" />
         <Column clName="clUri" clType="VARCHAR" clTypeLength="255" />
     </DataDefinition>
-  
+
     <DataDefinition TableName="tbigk_user_info_types">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clName" clType="VARCHAR" clTypeLength="33" clNotNull="True" clIsUnique="True" />
@@ -165,7 +165,7 @@
     <DataDefinition TableName="tbigk_users_reference_models" >
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clUser_Id" clType="Int" clTypeLength="11" clNotNull="True" clLinkType="tbigk_users" />
-        <Column clName="clModel" clType="VARCHAR" clTypeLength="255" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clModel" clType="VARCHAR" clTypeLength="170" clNotNull="True" clIsPrimary="True" />
         <Column clName="clNextValue" clType="Int" clTypeLength="11" clNotNull="True" />
     </DataDefinition>
     <DataDefinition TableName="tbigk_who_uses">
@@ -175,11 +175,24 @@
         <Column clName="clDateTime" clType="DATETIME" clNotNull="True" />
         <Column clName="clIP" clType="VARCHAR" clTypeLength="15" />
     </DataDefinition>
-	
+
 	 <DataDefinition TableName="tbigk_connexions">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clUser_Id" clType="Int" clNotNull="true" clLinkType="tbigk_users" />
         <Column clName="clDateTime" clType="DATETIME" clNotNull="True" />
         <Column clName="clFrom" clType="VARCHAR" clTypeLength="15" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_sessions">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clSessId" clType="VARCHAR" clTypeLength="50" />
+        <Column clName="clSessIp" clType="VARCHAR" clTypeLength="50" />
+        <Column clName="clSessStartAt" clType="DATETIME" clNotNull="True" clInsertFunction="NOW()" clDefault="NOW()"/>
+        <Column clName="clSessLatitude" clType="Float" />
+        <Column clName="clSessLongitude" clType="Float" />
+        <Column clName="clSessCountryName" clType="VARCHAR" clTypeLength="60" />
+        <Column clName="clSessCountryCode" clType="VARCHAR" clTypeLength="3" />
+        <Column clName="clSessCityName" clType="VARCHAR" clTypeLength="60" />
+        <Column clName="clSessRegionName" clType="VARCHAR" clTypeLength="30" />
+        <Column clName="clSessAgent" clType="Text" />
     </DataDefinition>
 </data-schemas>

@@ -12,7 +12,7 @@ function igk_html_node_videoControls($model='default', $options=null){
 	$f = igk_io_dir(dirname(__FILE__)."/.style.func");
 	if(!file_exists($f))
 		igk_die("style file not exists " , __FUNCTION__);
-	
+
 	$n["class"]="igk-video-controls";
 	$n->addOnRenderCallback(igk_create_expression_callback(
 	file_get_contents($f),

@@ -1,7 +1,7 @@
 <?php
 // @file: exceptions.page.pinc
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -14,24 +14,28 @@
 <head>
 <title>{$r('title.fatalError')}</title>
 {$scripts}
+<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet" />
 <style>
 html, body{
-padding:0px;
-margin:0px;
-height:100%;
-width:100%;
+    padding:0px;
+    margin:0px;
+    height:100%;
+    width:100%;
 }
 body{
-background-color:#fefefe;
-overflow-y:auto;
+    background-color:#fefefe;
+    overflow-y:auto;
 }
 table{
-background-color:#fefefe;
+    background-color:#fefefe;
 }
 {$trace_css}
 </style>
 </head>
-<body onload="javascript:window.igk_init(); return false;">
+<body onload="javascript:window.igk_init(); return false;" class="google-Roboto exception" >
 {$content}
 </body>
 </html>

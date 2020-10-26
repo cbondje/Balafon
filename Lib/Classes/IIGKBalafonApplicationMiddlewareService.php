@@ -21,14 +21,14 @@ interface IIGKBalafonApplicationMiddlewareService extends ArrayAccess{
     ///<param name="callback"></param>
     /**
     * Represente Run function
-    * @param callback 
+    * @param closure callback
     */
     function Run($callback);
     ///<summary>Represente UseMiddleware function</summary>
     ///<param name="instance"></param>
     /**
     * Represente UseMiddleware function
-    * @param instance 
+    * @param mixed instance
     */
     function UseMiddleware($instance);
 }

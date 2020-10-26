@@ -1,5 +1,7 @@
-<?php 
-//Balafon Generated language file 
+<?php
+//Balafon Generated language file
+$l["Welcome"] = "Bienvenue";
+$l["No result"] = "Aucun résultat";
 $l["msg.bootstrap.nofilefound"] = "La librairie bootstrap n'est pas installée.";
 $l["get.bootstrap"] = "Ajouter bootstrap";
 $l["ac.addnewoperator"]="Ajouter un Opérateur";
@@ -76,6 +78,11 @@ $l["btn.comments"]="Commenté";
 $l["btn.confirm"]="Confirmer";
 $l["btn.connect"]="Connexion";
 $l["btn.convert"]="Convertir";
+$l["Check connection"] = "Tester";
+$l["available"] = "Disponible";
+$l["DataBase"] = "Base de données";
+$l["Tools"] = "Outils";
+$l["query"] = "Requête";
 $l["btn.create"]="Créer";
 $l["btn.createdir"]="Créer un Repertoire";
 $l["btn.createnewaccount_1"]="Créer votre compte {0}";
@@ -916,6 +923,7 @@ $l["menu.sold"]="Vente";
 $l["menu.stats"]="Statistique";
 $l["menu.stock"]="Stock";
 $l["menu.systemuri"]="Uri System";
+$l["menu.installsite"]="Install Site";
 $l["menu.template"]="Templates";
 $l["menu.templates"]="Templates";
 $l["menu.termofuse"]="Conditions";
@@ -1035,7 +1043,7 @@ $l["msg.nopageaddedtopane"]="Ajouter une page ici.";
 $l["msg.noparent"]="Aucun parent.";
 $l["msg.noproducttomanage"]="Aucun produit à  administrer";
 $l["msg.noresult"]="Aucun résultat.";
- 
+
 $l["msg.page.5404_1"]="<div> L'administrateur n'autorise pas l'accès au sous domaine <b> {0} </b><br /></div>";
 $l["msg.pageunderconstruction_1"]="Site &quot;{0}&quot; en construction.";
 $l["msg.pageundermaintenance_1"]="Site &quot;{0}&quot; en maitenance.";
@@ -1532,7 +1540,9 @@ $l["tooltip.controller.registername"]="Nom d'enregistrement du contrôleur dans 
 $l["tooltip.pleaseenteryourmessage"]="Votre message";
 $l["tuesday"]="Mardi";
 $l["txt.totalamount_2"]="{0} {1}";
-$l["update"]="Mis a jour";
+$l["update"]="Mis à jour";
+$l["btn.update"]="Envoyer";
+$l["check.connexion"]="Envoyer";
 $l["v.false"]="Non";
 $l["v.true"]="Oui";
 $l["value"]="Valeurs";
@@ -1559,7 +1569,7 @@ $l["Parameters"] = "Paramètres";
 $l["news"] = "nouvelles";
 
 $l["Php Web development plateform"] = "Plateforme PHP de development WEB";
-$l["Learn more"] = "en savoir plus..."; 
+$l["Learn more"] = "en savoir plus...";
 $l["warn.question.dbwillbedestroyed"] = "Attention! toutes les données seront supprimées. Voulez-vous continuez?";
 
 $l["clAuthType"] = "Type";
@@ -1571,7 +1581,13 @@ $l["firstname"]=  "Prenom";
 $l["lastname"]=  "Nom";
 $l["email"]=  "Email";
 $l["message"]=  "Message";
+$l["Send"]=  "Envoyer";
+$l["Contact Us"]=  "Nous contacter";
+$l["your mail"]=  "E-mail";
 
 
 $l["menu.sqlite3database"] = "SQLite3";
 $l["Clear"]="Vider";
+$l["Name"] = "Nom";
+$l["Description"] = "Description";
+$l["title.newsletters"] = "Journals";

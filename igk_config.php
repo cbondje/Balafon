@@ -11,17 +11,17 @@ if (defined('IGK_SYS_CONFIG_FILE'))
 
 //+Configuration data
 define('IGK_ENV_DB_INIT_CTRL', 1);
-define('IGK_LOCAL_DEBUGGING', 1); 
+define('IGK_LOCAL_DEBUGGING', 1);
 define('IGK_NODESTROY_ON_FATAL', 1);
-define('IGK_NO_TRACELOG', 1); 
+define('IGK_NO_TRACELOG', 1);
 define('IGK_SYS_CONFIG_FILE', 1);
-//+ define("IGK_TRACE", 1);
-define('IGK_TRACE_LOG', 1); 
+// define("IGK_TRACE", 1); //+
+define('IGK_TRACE_LOG', 1);
 
 
 
 
-//+ ENVIRONMENT SETTING KEYS - DO NOT REPLACE THAT VALUES 
+//+ ENVIRONMENT SETTING KEYS - DO NOT REPLACE THAT VALUES
 define('IGK_AJX_BINDSTYLES', 1);
 define('IGK_ATTACHCHILD_FLAG', 2);
 define('IGK_ATTACHDISPOSE_FLAG', 3);
@@ -153,8 +153,23 @@ define('IGK_FORM_CREF', 128);
 define('IGK_CFG_USER', 129);
 define('IGK_TOOLS', 130);
 define('IGK_SESS_ROUTES', 131);
+define('IGK_ENV_CSS_GLOBAL_CONF_FILES', 132);
+define('IGK_CLIENT_IP', 133);
+define('IGK_CLIENT_AGENT', 134);
+define('IGK_CONNEXION_FRAME', 193);
 
+
+
+define("IGK_ENV_SESS_DOM_LIST", 0x201);
 define("IGK_CUSTOM_CTRL_PARAM", 0x400);
+
+define("IGK_ENV_REQUIREMENT_KEY", 194);
+define('IGK_DOCUMENT_CLASS', 195);
+define('IGK_ENV_TRACE_LEVEL', 196);
+define('IGK_ENV_QUERY_LIST', 197);
+
+define("IGK_HTML_NOTAG_ELEMENT", "NoTagNode");
+
 
 //+ -----------------------------------------------------------------------
 //+ flags value
@@ -169,7 +184,7 @@ define("IGK_CUSTOM_CTRL_PARAM", 0x400);
 //+ define('IGK_CONFIG_PAGE', '1');
 //+ define('IGK_CONF_CONNECT', '1');
 //+ define('IGK_COOKIE_DOMAIN', '1');
-//+ define('IGK_CREF', '1'); 
+//+ define('IGK_CREF', '1');
 //+ define('IGK_CURRENT_PAGEFOLDER', '1');
 //+ define('IGK_DB_GRANT_CAN_INIT', '1');
 //+ define('IGK_DESIGN_MAINPAGE', '1');
@@ -241,16 +256,16 @@ define("IGK_CUSTOM_CTRL_PARAM", 0x400);
 
 
 
-date_default_timezone_set('Europe/Brussels');    	
+date_default_timezone_set('Europe/Brussels');
 define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
-	
+
 	// define("IGK_AJX_BINDSTYLES", 0x001C);
 	// define("IGK_COMPONENT_ID_KEY", 0x001D);
 	// define("IGK_COMPONENT_REG_FUNC_KEY", 0x0023);
 	// define("IGK_COMP_NOT_FOUND_EVENT", 0x0027);
 	// define("IGK_CONF_PAGEFOLDER_CHANGED_EVENT", 0x002A);
 	// define("IGK_CONF_USER_CHANGE_EVENT", 0x0028);
-	define("IGK_CSS_DEFAULT_STYLE_FUNC_KEY", 'sys://css/function/defaultStyle');	
+	define("IGK_CSS_DEFAULT_STYLE_FUNC_KEY", 'sys://css/function/defaultStyle');
 	// define("IGK_CTRL_TABLE_INFO_KEY", 0x001A);
 	// define("IGK_CTRL_VIEW_CONTEXT_PARAM_KEY", 0x002E);
 	// define("IGK_CURRENT_DOC_PARAM_KEY", 0x0024);
@@ -261,7 +276,7 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
 	// define("IGK_ENV_COMPONENT_DISPLAY_NAMES_KEY", 0x0014);
 	// define("IGK_ENV_COMPONENT_REFDIRS_KEY", 0x0015);
 	// define("IGK_ENV_CTRL_VIEW", 0x0012);
-	// define("IGK_ENV_CURRENT_RENDERING_DOC", 0x0038);	
+	// define("IGK_ENV_CURRENT_RENDERING_DOC", 0x0038);
 	// define("IGK_ENV_GLOBAL_SETTING", 0x0011);
 	// define("IGK_ENV_HTML_COMPONENTS", 0x000B);
 	// define("IGK_ENV_HTML_NS_PREFIX", 0x000C);
@@ -277,8 +292,7 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
 	// define("IGK_DROP_CTRL_EVENT", 0x0026);
 	// define("IGK_KEY_CSS_NOCLEAR", 0x0008);
 	// define("IGK_KEY_DOC_NO_STORE_RENDERING", 0x0009);
-	// define("IGK_KEY_FORCEVIEW", 0x0004); 
-	// define("IGK_KEY_PARAM_SESSION_START_AT", 0x0007);
+	// define("IGK_KEY_FORCEVIEW", 0x0004);
 	// define("IGK_KEY_TOOLS", 0x0006);
 	// define("IGK_KEY_VIEW_FORCED", 0x0005);
 	// define("IGK_LAST_EVAL_KEY", 0x0017);
@@ -297,38 +311,37 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
 	// define("IGK_SVG_REGNODE_KEY", 0x000E);
 	// define("IGK_XML_CREATOR_PARENT_KEY", 0x002F);
 	// define("IGK_XML_HTML_TEMPLATE_PARENT_KEY", 0x0025);
-	
-	
+
+
 //    // define('IGK_ENV_DB_INIT_CTRL', "sys://db_init_table/ctrl");
     define("IGK_TODAY", date("Y-m-d"));
 //    // define("IGK_LF_KEY", "sys://LF");
-    
+
     define("IGK_DEFAULT_LANG_FOLDER", dirname(__FILE__)."/Default/Lang/");
     define("IGK_SESSION_FILE_PREFIX", "blf_sess_");
     define("IGK_APP_SESSION_KEY", "igk");
     define("IGK_LOG_SYS", "BLF");
     define("IGK_COMPONENT_NAMESFILE", IGK_LIB_DIR."/Data/References/Components/Inc/names.pinc");
     define("IGK_DEFAULT_THEME_ID", "theme://document");
- 
+
     define("IGK_DIE_DEFAULT_MSG", "die call");
     // define("IGK_LOG_VERBOSITY_NONE", 0);
     // define("IGK_LOG_VERBOSITY_SOURCE_FILE", 1);
     // define("IGK_LOG_VERBOSITY_SOURCE_LOCATION", 2);
     // define("IGK_LOG_VERBOSITY", 3);
-	
+
     define("IGK_DB", "Db");
     define("IGK_INIT_COMPLETE_METHOD", "InitComplete");
     define("IGK_PROTECT_ACCESS", "defined('IGK_FRAMEWORK') || die('direct access not allowed');\n");
     define("IGK_KEY_APP", "igk");
-	
+
 	define("IGK_LOAD_EXPRESSION_CONTEXT", "LoadExpression");
- 
-	
+
+
 //    define("IGK_KEY_GLOBALVARS", "sys://igk/globalvars");
 //    define("IGK_KEY_FORCEVIEW", "sys://igk/forceview");
 //    define("IGK_KEY_VIEW_FORCED", "sys://igk/viewforced");
 //    define("IGK_KEY_TOOLS", "sys://igk/tools");
-//    define("IGK_KEY_PARAM_SESSION_START_AT", "sys://igk/create-at");
 //    define("IGK_KEY_CSS_NOCLEAR", "sys://css/noclear");
     define("IGK_KEY_APP_SELECTED_USER_PROFILE", "app://selectedUserProfile");
 //    define("IGK_KEY_DOC_NO_STORE_RENDERING", "sys://document/NOSTORERENDERING");
@@ -366,8 +379,8 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
     define("IGK_GLOBAL_EVENT", "@global");
     define("IGK_FUNC_KEY", "func");
     define("IGK_LANG_FILE_EXTENSION", ".presx");
-	
-	//+ flags 
+
+	//+ flags
     // define("IGK_VIEW_MODE_FLAG", 0x01);
     // define("IGK_FIRSTUSE_FLAG", IGK_VIEW_MODE_FLAG + 2);
     // define("IGK_ISINIT_FLAG", IGK_VIEW_MODE_FLAG +3 );
@@ -385,7 +398,7 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
     // define("IGK_INVOKE_URI_CTRL", IGK_CONFIG_FLAG + 5);
     // define("IGK_SERVER_INFO", IGK_CONFIG_FLAG + 6);
     // define("IGK_TOOLS_CTRL", IGK_CONFIG_FLAG + 7);
-	
+
 	//+node flag
     // define("IGK_NODE_FLAG", 0x10);
     // define("IGK_ISVISIBLE_FLAG", IGK_NODE_FLAG + 1);
@@ -411,15 +424,15 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
     // define("IGK_PARENT_FLAG", IGK_NODE_FLAG + 21);
     // define("IGK_CHILDS_FLAG", IGK_NODE_FLAG + 22);
     // define("IGK_ATTRS_FLAG", IGK_NODE_FLAG + 23);
-    // define("IGK_DEFINEDNS_FLAG", IGK_NODE_FLAG + 24);	
+    // define("IGK_DEFINEDNS_FLAG", IGK_NODE_FLAG + 24);
     // define("IGK_NODE_CREATE_ARGS_FLAG", IGK_NODE_FLAG + 25);
     // define("IGK_DOC_ID_PARAM", IGK_NODE_FLAG + 26);
     // define("IGK_COMPONENT_ID_PARAM", IGK_NODE_FLAG + 27);
-    // define("IGK_KEY_LASTDOC", IGK_NODE_FLAG + 41); 
+    // define("IGK_KEY_LASTDOC", IGK_NODE_FLAG + 41);
     // define("IGK_KEY_SYSDB_CTRL", IGK_NODE_FLAG + 42);
-	
-  
-	
+
+
+
     define("IGK_OBJ_TYPE_FD", "T");
     // define("IGK_OBJ_TYPE_CLASS", 1);
     // define("IGK_OBJ_TYPE_CALLBACK", 2);
@@ -427,15 +440,15 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
     // define("IGK_OBJ_TYPE_EXPRESSION", 3);
     // define("IGK_OBJ_TYPE_NODE", 6);
     // define("IGK_OBJ_TYPE_FILE", 7);
-	
-	
+
+
     define("IGK_LANG_FILE_PREFIX", "lang.");
-	
+
 	//+ controller session parameter
 	//+ controller environment parameter
     // define("IGK_CTRL_LANG", 3);
     // define("IGK_CTRL_TG_NODE", 240);
-	
+
     define("IGK_COMPONENT_TYPE_FUNCTION", "f");
     define("IGK_COMPONENT_TYPE_CLASS", "c");
     define("IGK_GET_VALUE_METHOD", "getValue");
@@ -447,7 +460,7 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
     define("IGK_CSS_XXLG_SCREEN", 1600);
     define("IGK_CSS_CTN_LG_SIZE", 844);
     define("IGK_CSS_CTN_XLG_SIZE", 1280);
-    define("IGK_CSS_CTN_XXLG_SIZE", 1580); 
+    define("IGK_CSS_CTN_XXLG_SIZE", 1580);
 //    define("IGK_AJX_BINDSTYLES", "sys://css/ajx/temp/files");
 //    define("IGK_COMPONENT_ID_KEY", "sys://component/id");
     define("IGK_ENCODINGTYPE", "text/html; charset=utf-8");
@@ -488,7 +501,8 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
     define("IGK_DOMAIN_REGEX", "/^((http(s)?:\/\/)|(\.))?(?P<domain>([^ \/]+)\.([^\. \/]+))(\/(.)+)?$/i");
     !defined("IGK_EXPRESSION_START_MARKER") && define("IGK_EXPRESSION_START_MARKER", '\{\{');
     !defined("IGK_EXPRESSION_END_MARKER") && define("IGK_EXPRESSION_END_MARKER", '\}\}');
-    define("IGK_TEMPLATE_EXPRESSION_REGEX", '/((?P<scope>@*)\{\{(?P<expression>([^\}\{])+)\}\})/');
+    !defined("IGK_EXPRESSION_ESCAPE_MARKER") && define("IGK_EXPRESSION_ESCAPE_MARKER", "'");
+    define("IGK_TEMPLATE_EXPRESSION_REGEX", '/((?P<scope>@*)(?P<escape>['.IGK_EXPRESSION_ESCAPE_MARKER.'])?'.IGK_EXPRESSION_START_MARKER.'(?P<expression>([^\}\{])+)'.IGK_EXPRESSION_END_MARKER.')/');
     define("IGK_TEMPLATE_GLOBAL_EXPRESSION_REGEX", '/(\[{0,1})(?P<exp>\[\s*(?P<name>\w+)\s*:(?P<value>([^\]])+)\])(\]{0,1})/i');
     define("IGK_HOME", "home");
 //    define("IGK_ENV_PARAM_KEY", "sys://EnvParam");
@@ -531,14 +545,15 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
     define("IGK_HOME_PAGE", "home");
     define("IGK_FIELD_PREFIX", "cl");
     define("IGK_TABLE_PREFIX", "tb");
-	//+ engine 
+	//+ engine
 	define("IGK_ENGINE_EXPRESSION_NODE", "igk:expression-node");
 	define("IGK_ENGINE_ATTR_EXPRESSION_NODE", "igk:attr-expression");
 //	define("IGK_XML_HTML_TEMPLATE_PARENT_KEY", "sys://html/engine/parent");
-	
+
     define("IGK_APP_FORM_CONTENT", "Application/x-www-form-urlencoded");
     define("IGK_JS_VOID", "javascript:void();");
-    !defined("IGK_DOC_TYPE") && define("IGK_DOC_TYPE", "html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"");
+    //+ !defined("IGK_DOC_TYPE") && define("IGK_DOC_TYPE", "html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"");
+    !defined("IGK_DOC_TYPE") && define("IGK_DOC_TYPE", "html");
     define("IGK_EVENT_DOC_BEFORE_RENDER", "sys://document/beforerender");
 	define("IGK_EVENT_DROP_CTRL", "sys://event/dropctrl");
 	//    define("IGK_DROP_CTRL_EVENT", "sys://ctrl/ondrop");
@@ -674,6 +689,8 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
     define("IGK_FILEMAN_CTRL", "c_fman");
     define("IGK_SUBDOMAINNAME_CTRL", "c_subdom");
     define("IGK_PAGEMAN_CTRL", "c_pgman");
+    define("IGK_LANGUAGE_CTRL", "c_lang");
+
     // define("IGK_OTHER_MENU_CTRL", SYS_CTRL_BASE + 1);
     // define("IGK_MSBOX_CTRL", SYS_CTRL_BASE + 2);
     // define("IGK_DATA_ADAPTER_CTRL", SYS_CTRL_BASE + 3);
@@ -725,10 +742,10 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
     define("IGK_VIEW_FILE_EXT_REGEX", "phtml|bvhtml");
     define("IGK_VIEW_FILE_END_REGEX", "/(.)+(\.(".IGK_VIEW_FILE_EXT_REGEX."))?$/i");
     define("IGK_APP_LOGO", "/".IGK_RES_FOLDER."/Img/app_logo.png");
-	
-	
+
+
 	// define("IGK_PAGE_CONF_CTRL", 10);
-	
+
     // if(!function_exists("igk_define_error")){
         // function igk_define_error($msg, $code, $msg_key=null){
             // igk_error_def_error($msg, $code, $msg_key);
@@ -746,6 +763,7 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
     // igk_define_error("IGK_ERR_SCRIPT_ERROR", 110100);
 	define('IGK_ERR_CTRL_', 65536);
 	define('IGK_ERR_NO_PAGEVIEW', 65546);
+	define('IGK_ERR_FUNCNOTAVAILABLE', 65547);
     // igk_set_env("sys://notification/msgs", array(
             // "en"=>array(
                 // IGK_HOOK_DB_CHANGED=>"Database changed",
@@ -756,15 +774,17 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
         // ));
 	// igk_set_error_msg(array("en"=>array(IGK_ERR_CTRL_=>"Controller error")));
     // igk_set_error_msg(array("en"=>array(IGK_ERR_NO_PAGEVIEW=>"No pageview defined for {0}. your class probably doesn't call the base construct")));
-	
-	
+
+
 //    define("IGK_DOC_ERROR_ID", "sys://document/ids/error");
-//    define("IGK_DOC_CONF_ID", "sys://document/ids/config"); 
-	
-	
+//    define("IGK_DOC_CONF_ID", "sys://document/ids/config");
+
+
 	//+ system user login
 	!defined("IGK_SYS_USER_LOGIN") &&  define("IGK_SYS_USER_LOGIN","igk.system@igkdev.com");
 
+    //
+    define("IGK_ENV_GLOBAL_SCRIPT_KEY", "sys://globalscript");
 
 // $tab = get_defined_constants();
 // ksort($tab);
@@ -785,10 +805,10 @@ define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
 // foreach($tab as $k=>$v){
 	// if (in_array($k, $excludes))
 		// continue;
-	
+
 	// if (is_numeric($v) && (strpos( $k, "IGK_")===0) && (strpos( $k, "IGK_ERR") === false) && (strpos( $k, "IGK_CSS") === false)){
-		
+
 		// $c++;
 		// echo "define('".$k."', ".$c.");<br />\n";
 	// }
-// } 
+// }

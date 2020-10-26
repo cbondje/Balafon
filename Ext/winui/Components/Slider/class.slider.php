@@ -8,14 +8,15 @@ final class IGKHtmlSliderZone extends IGKHtmlItem{
 }
 class IGKHtmlSliderItem extends IGKHtmlComponentNodeItem{
 
+	/** @var IGKHtmlItem */
 	private $m_content;
 	private $m_script;
 	private $m_orientation;
-	
-	
+
+
 	public function getOrientation(){return $this->m_orientation; }
 	public function setOrientation($v){ $this->m_orientation = $v; return $this; }
-	
+
 	public function __construct(){
 		parent::__construct("div");
 		$this["class"]="igk-slider";
@@ -37,12 +38,10 @@ class IGKHtmlSliderItem extends IGKHtmlComponentNodeItem{
 		$this->ClearChilds();
 		$this->addPage(igk_createNode("div")->setContent("page1"));
 		$this->addPage(igk_createNode("div")->setContent("page2"));
-		$this->addPage(igk_createNode("div")->setContent("page3"));		
+		$this->addPage(igk_createNode("div")->setContent("page3"));
 	}
-	public function AcceptRender($o=null){
-		$this->m_script->Content = "igk.winui.slider.init({orientation:'{$this->m_orientation}'})";		
+	public function AcceptRender($options=null){
+		$this->m_script->Content = "igk.winui.slider.init({orientation:'{$this->m_orientation}'})";
 		return true;
 	}
 }
-
-?>

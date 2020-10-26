@@ -1,7 +1,7 @@
 <?php
 // @file: igk_template_init_listener.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -18,7 +18,7 @@ class igk_template_init_listener implements IIGKControllerInitListener{
     ///<param name="zip"></param>
     /**
     * Represente __construct function
-    * @param  $zip
+    * @param mixed $zip
     */
     public function __construct($zip){
         $this->m_zip=$zip;
@@ -27,7 +27,7 @@ class igk_template_init_listener implements IIGKControllerInitListener{
     ///<param name="dir"></param>
     /**
     * Represente addDir function
-    * @param  $dir
+    * @param mixed $dir
     */
     public function addDir($dir){
         $this->m_zip->addEmptyDir("src/".$dir);
@@ -37,8 +37,8 @@ class igk_template_init_listener implements IIGKControllerInitListener{
     ///<param name="content"></param>
     /**
     * Represente addSource function
-    * @param  $name
-    * @param  $content
+    * @param mixed $name
+    * @param mixed $content
     */
     public function addSource($name, $content){
         $this->m_zip->addFromString("src/".$name, $content);

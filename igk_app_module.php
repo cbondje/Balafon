@@ -5,7 +5,7 @@
 
 ///<summary>represent application module class </summary>
 /**
-* represent application module class 
+* represent application module class
 */
 final class IGKAppModule extends IGKControllerBase{
     private $m_dir;
@@ -18,8 +18,8 @@ final class IGKAppModule extends IGKControllerBase{
     ///<param name="args"></param>
     /**
     * Represente __call function
-    * @param  $n
-    * @param  $args
+    * @param mixed $n
+    * @param mixed $args
     */
     function __call($n, $args){
         $fc=igk_getv($this->m_fclist, $n);
@@ -30,32 +30,52 @@ final class IGKAppModule extends IGKControllerBase{
             return $o;
         }
         igk_die("/!\\ function {$n} not define");
+        return null;
     }
     ///<summary>Represente __construct function</summary>
     ///<param name="dir"></param>
     /**
     * Represente __construct function
-    * @param  $dir
+    * @param mixed $dir
     */
     public function __construct($dir){
         parent::__construct();
         $this->m_dir=IGKIO::GetDir($dir);
         $this->mm_fclist=array();
-        $c=realpath($dir."/.config");
+        $tf = $dir."/.config";
+        $c=realpath($tf);
         if(!file_exists($c)){
             $configs=array();
             $this->_initconfig($configs);
             $o="<?php\n";
             if(count($configs) > 0){
-                foreach($configs as $c=>$m){
-                    $o .= "\$config[\"{$c}\"] = \"{$m}\";\n";
+                foreach($configs as $k=>$m){
+                    $o .= "\$config[\"{$k}\"] = \"{$m}\";\n";
                 }
-                igk_io_w2file($c, $o);
+                igk_io_w2file($tf, $o);
             }
         }
         $c=realpath($dir."/.module.pinc");
         if(file_exists($c))
             $this->_init($c);
+
+        $classLib = $this->getDeclaredDir()."/Lib/Classes";
+        if (is_dir($classLib)){
+            $entry_ns = str_replace("/","\\", igk_get_module_name(readlink($this->getDeclaredDir())));
+            $libdir=$classLib;
+            spl_autoload_register(function($n)use($entry_ns, $libdir){
+                if (strpos($n, $entry_ns)===0){
+                    $cl = substr($n, strlen($entry_ns));
+                    if (file_exists($fc = $libdir."/".$cl.".php")){
+                        include($fc);
+                        if (!class_exists($n, false)){
+                            igk_die("file loaded but class $cl does not exists");
+                        }
+                        return 1;
+                    }
+                }
+            });
+        }
     }
     ///<summary>Represente __sleep function</summary>
     /**
@@ -77,7 +97,7 @@ final class IGKAppModule extends IGKControllerBase{
     ///<param name="c" default="null"></param>
     /**
     * Represente _init function
-    * @param  $c the default value is null
+    * @param mixed $c the default value is null
     */
     private function _init($c=null){
         $s=igk_io_read_allfile($c ?? $this->m_dir."/.module.pinc");
@@ -86,6 +106,7 @@ final class IGKAppModule extends IGKControllerBase{
         };
         eval("?>".$s);
         $this->m_src=$s;
+
     }
     ///<summary>Represente _initconfig function</summary>
     ///<param name="configs" ref="true"></param>
@@ -95,12 +116,13 @@ final class IGKAppModule extends IGKControllerBase{
     */
     protected function _initconfig(& $configs){
         $configs["libdir"]=IGK_LIB_DIR;
+
     }
     ///<summary>Represente bindError function</summary>
     ///<param name="msg"></param>
     /**
     * Represente bindError function
-    * @param  $msg
+    * @param mixed $msg
     */
     private function bindError($msg){
         $this->setParam(__METHOD__, $msg);
@@ -116,7 +138,7 @@ final class IGKAppModule extends IGKControllerBase{
     ///<param name="c" default="null"></param>
     /**
     * Represente getAppUri function
-    * @param  $c the default value is null
+    * @param mixed $c the default value is null
     */
     public function getAppUri($c=null){
         $q="";
@@ -173,6 +195,7 @@ final class IGKAppModule extends IGKControllerBase{
     * get module environment configuration
     */
     public function getEnvironmentConfigs(){
+        /** @var string $c */
         static $_configs=null;
         if($_configs === null){
             $_configs=array();
@@ -181,7 +204,7 @@ final class IGKAppModule extends IGKControllerBase{
         if(isset($_configs[$_hash])){
             return $_configs[$_hash];
         }
-        $configs=realpath($dir."/.config");
+        $configs=realpath($this->m_dir."/.config");
         if(file_exists($c)){
             $config=array();
             include($c);
@@ -210,9 +233,9 @@ final class IGKAppModule extends IGKControllerBase{
     ///<return refout="true"></return>
     /**
     * Represente getParam function
-    * @param  $n
-    * @param  $def the default value is null
-    * @param  $register the default value is false
+    * @param mixed $n
+    * @param mixed $def the default value is null
+    * @param mixed $register the default value is false
     * @return *
     */
     public function & getParam($n, $def=null, $register=false){
@@ -227,7 +250,7 @@ final class IGKAppModule extends IGKControllerBase{
     ///<param name="c" default="null"></param>
     /**
     * Represente getUri function
-    * @param  $c the default value is null
+    * @param mixed $c the default value is null
     */
     public function getUri($c=null){
         return $this->getAppUri($c);
@@ -236,7 +259,7 @@ final class IGKAppModule extends IGKControllerBase{
     ///<param name="n"></param>
     /**
     * Represente methodExists function
-    * @param  $n
+    * @param mixed $n
     */
     public function methodExists($n){
         return isset($this->m_fclist[$n]);
@@ -246,8 +269,8 @@ final class IGKAppModule extends IGKControllerBase{
     ///<param name="fc"></param>
     /**
     * Represente reg_function function
-    * @param  $n
-    * @param  $fc
+    * @param mixed $n
+    * @param mixed $fc
     */
     protected function reg_function($n, $fc){
         $this->m_fclist[$n]=$fc;
@@ -256,7 +279,7 @@ final class IGKAppModule extends IGKControllerBase{
     ///<param name="doc"></param>
     /**
     * Represente setCurrentDoc function
-    * @param  $doc
+    * @param mixed $doc
     */
     private function setCurrentDoc($doc){
         $this->m_doc=$doc;
@@ -265,7 +288,7 @@ final class IGKAppModule extends IGKControllerBase{
     ///<param name="v"></param>
     /**
     * Represente setListener function
-    * @param  $v
+    * @param mixed $v
     */
     public function setListener($v){
         $this->m_listener=$v;
@@ -275,13 +298,19 @@ final class IGKAppModule extends IGKControllerBase{
     ///<param name="v"></param>
     /**
     * Represente setParam function
-    * @param  $n
-    * @param  $v
+    * @param mixed $n
+    * @param mixed $v
     */
     public function setParam($n, $v){
         $l=$this->Listener;
         if($l){
             $l->setParam($this->Name."/{$n}", $v);
         }
+    }
+    public function set($name, $value){
+        return $this->setEnvParam($name, $default);
+    }
+    public function get($name, $default=null){
+        return $this->getEnvParam($name, $default);
     }
 }

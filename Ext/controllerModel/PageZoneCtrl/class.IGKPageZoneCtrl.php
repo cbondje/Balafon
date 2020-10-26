@@ -1,7 +1,7 @@
 <?php
 // @file: class.IGKPageZoneCtrl.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -18,13 +18,13 @@ abstract class IGKPageZoneCtrl extends IGKCtrlTypeBase {
     ///<param name="targetnode" default="null"></param>
     /**
     * Represente _showChild function
-    * @param  $targetnode the default value is null
+    * @param mixed $targetnode the default value is null
     */
     protected function _showChild($targetnode=null){
         $t=$targetnode ? $targetnode: $this->TargetNode;
         igk_html_add($this->m_viewZone, $t, 1000);
         if($this->hasChild){
-            foreach($this->getChilds() as $k=>$v){
+            foreach($this->getChilds() as  $v){
                 if($v->isVisible){
                     igk_html_add($v->TargetNode, $this->m_viewZone);
                     $v->View();

@@ -1,7 +1,7 @@
 <?php
 // @file: sql3lite.config.phtml
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -15,6 +15,9 @@ $t->addHR()->setStyle("padding-bottom: 2em; border:none; border-top:1px solid #e
 $frm=$t->addDiv()->addForm();
 $frm->addNotifyHost();
 igk_html_form_initfield($frm);
-igk_html_form_buildformfield($frm, ["base_datafilename"=>["value"=>igk_sys_getconfig("sqlite3.database")]]);
+igk_html_form_buildformfield($frm, ["base_datafilename"=>[
+    "value"=>igk_sys_getconfig("sqlite3.database"),
+    "label_text"=>__("Filename")
+]]);
 $bar=$frm->addActionBar();
-$bar->addButton("btn.confirm", "submit")->Content=__("Update");
+$bar->addButton("btn.confirm", "submit")->setClass("+igk-btn-default")->Content=__("Update");

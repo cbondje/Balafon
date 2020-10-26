@@ -1,7 +1,7 @@
 <?php
 // @file: bck.igk_api.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -36,7 +36,6 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
             igk_show_prev(getallheaders());
         }
         else{
-            igk_debug("connection failed ");
             $node->add("status")->Content="NOK";
             $node->add("message")->Content=$this->message[0];
         }
@@ -47,7 +46,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
     ///<param name="cmd" default="null"></param>
     /**
     * Represente datadb function
-    * @param  $cmd the default value is null
+    * @param mixed $cmd the default value is null
     */
     public function datadb($cmd=null){
         $args=array_slice(func_get_args(), 1);
@@ -97,7 +96,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                         if($apt->connect()){
                             $tables=(object)array("list"=>array());
                             $entries=$sync->addNode("Entries");
-                            foreach($tb as $k=>$v_tablen){
+                            foreach($tb as  $v_tablen){
                                 if(!isset($tables->list[$v_tablen])){
                                     $rep=$sync->addNode("DataDefinition")->setAttributes(array("TableName"=>$v_tablen));
                                     $_api->datadb("get_sync_definition", $rep, $v_tablen, $u, $apt, $ctrl->Db, $entries);
@@ -126,7 +125,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                         $apt=igk_get_data_adapter($ctrl->getDataAdapterName());
                         if($apt->connect()){
                             $entries=$schema->addNode("Entries");
-                            foreach($tb as $k=>$v){
+                            foreach($tb as  $v){
                                 $rep=$schema->addNode("DataDefinition")->setAttributes(array("TableName"=>$v));
                                 igk_getctrl(IGK_API_CTRL)->mysql("get_table_definition", $rep, $v, $apt, null, $entries);
                             }
@@ -135,9 +134,8 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                         $schema->RenderXML();
                         return $schema;
                     }
-                    else{
-                        igk_wln("No Ctrl {$n} found ");
-                    }
+                    igk_wln("No Ctrl {$n} found ");
+                    return null;
                 },
             "loadsyncdata"=>function($cmd, $args) use ($_api){
                     igk_debuggerview()->ClearChilds();
@@ -152,7 +150,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                         $rep->RenderXML();
                         return;
                     }
-                    $error=false;
+					//$error=false;
                     $c=preg_replace_callback("#\+@id:/{$u->clLogin}#", function($m) use ($u){
                         return $u->clId;
                     }
@@ -162,9 +160,9 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                     }
                     , $c);
                     $n=IGKHtmlReader::LoadXML($c);
-                    $p=igk_db_load_data_and_entries_schemas_node($n);                    
+                    $p=igk_db_load_data_and_entries_schemas_node($n);
                     igk_wln_e($p->Entries);
-                    
+
                     // $refs=array();
                     // foreach($p->Entries as $k=>$v){
                     //     if(isset($p->Relations[$k])){
@@ -187,7 +185,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                     //         $p->Entries[$k]=$v;
                     //     }
                     //     foreach($v as $rr=>$row){
-                    //         $ctrl->Db->insert_if_not_exists($k, $row);
+                    //         $ctrl->Db->insertIfNotExists($k, $row);
                     //     }
                     // }
                     // if(!$error){
@@ -222,9 +220,9 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
             }
             $f="igk_api_mysql_".str_replace("-", "_", $cmd);
             if(!function_exists($f)){
-                igk_log_write_i(__FUNCTION__."::", "function $c not exists");
+                igk_log_write_i(__FUNCTION__."::", "function {$f} not exists");
                 igk_wln("function not exists ".$file. " ".$f);
-                
+
             }
             else{
                 $tab=array();
@@ -233,7 +231,8 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                 return call_user_func_array($f, $tab);
             }
         }
-        igk_exit();
+        return igk_exit();
+
     }
     ///<summary>Represente endRequest function</summary>
     /**
@@ -287,7 +286,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
     ///<param name="function"></param>
     /**
     * Represente IsFunctionExposed function
-    * @param  $function
+    * @param mixed $function
     */
     public function IsFunctionExposed($function){
         return true;
@@ -299,6 +298,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
     public function request(){
         $u=igk_getr("u");
         $pwd=igk_getr("pwd");
+        $node = igk_createnode("response");
         $this->ConfigCtrl->logout(false, true);
         if(!$this->ConfigCtrl->IsConnected){
             $this->ConfigCtrl->connect($u, $pwd, false);
@@ -311,9 +311,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
             $node->add("ExecutionResponse")->Content=$this->App->ControllerManager->InvokeFunctionUri($q);
             $this->ConfigCtrl->logout(false, true);
         }
-        else{
-            igk_debug("connection failed ");
-        }
+
         igk_exit();
     }
     ///<summary>Represente sendRequest function</summary>
@@ -337,7 +335,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
     ///<param name="cmd" default="null"></param>
     /**
     * Represente setup function
-    * @param  $cmd the default value is null
+    * @param mixed $cmd the default value is null
     */
     public function setup($cmd=null){
         igk_wln(__FUNCTION__." command");

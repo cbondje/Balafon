@@ -1,7 +1,7 @@
 <?php
 // @file: IGKInstallSiteTool.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -40,12 +40,14 @@ class IGKInstallSiteTool extends IGKToolCtrlBase{
     }
     ///<summary>install site </summary>
     /**
-    * install site 
+    * install site
     */
     public function install(){
         $g=igk_getr("dir");
+        $result = igk_createxmlnode("response");
+
         if(empty($g) || !IGKIO::CreateDir($g)){
-            $result->error=1;
+
             $result->msg="failed to create {$g} directory";
             igk_json(json_encode($result));
             igk_exit();

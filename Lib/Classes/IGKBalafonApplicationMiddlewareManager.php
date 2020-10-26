@@ -19,14 +19,15 @@ class IGKBalafonApplicationMiddlewareManager implements IIGKBalafonApplicationMi
     ///<param name="args"></param>
     /**
     * Represente __call function
-    * @param n 
-    * @param args 
+    * @param mixed $n
+    * @param mixed $args
     */
     public function __call($n, $args){
         if(strpos(strtolower($n), "use") === 0){
             ($middle=IGKBalafonMiddleware::CreateMiddleware($t=substr($n, 3), $args, $this)) || igk_die("failed to get middleware $t");
             return $this;
         }
+        return null;
     }
     ///<summary>Represente __construct function</summary>
     /**
@@ -40,7 +41,7 @@ class IGKBalafonApplicationMiddlewareManager implements IIGKBalafonApplicationMi
     ///<param name="middleware"></param>
     /**
     * Represente Attach function
-    * @param middleware 
+    * @param mixed $middleware
     */
     public function Attach($middleware){
         $w=& $this->_whereList;
@@ -61,7 +62,7 @@ class IGKBalafonApplicationMiddlewareManager implements IIGKBalafonApplicationMi
     ///<param name="i"></param>
     /**
     * Represente offsetExists function
-    * @param i 
+    * @param mixed $i
     */
     public function offsetExists($i){
         return isset($this->_properties[$i]);
@@ -70,7 +71,7 @@ class IGKBalafonApplicationMiddlewareManager implements IIGKBalafonApplicationMi
     ///<param name="i"></param>
     /**
     * Represente offsetGet function
-    * @param i 
+    * @param mixed $i
     */
     public function offsetGet($i){
         return isset($this->_properties[$i]) ? $this->_properties[$i]: null;
@@ -80,8 +81,8 @@ class IGKBalafonApplicationMiddlewareManager implements IIGKBalafonApplicationMi
     ///<param name="v"></param>
     /**
     * Represente offsetSet function
-    * @param i 
-    * @param v 
+    * @param mixed $i
+    * @param mixed $v
     */
     public function offsetSet($i, $v){
         if($v == null)
@@ -93,7 +94,7 @@ class IGKBalafonApplicationMiddlewareManager implements IIGKBalafonApplicationMi
     ///<param name="i"></param>
     /**
     * Represente offsetUnset function
-    * @param i 
+    * @param mixed $i
     */
     public function offsetUnset($i){
         unset($this->_properties[$i]);
@@ -109,7 +110,7 @@ class IGKBalafonApplicationMiddlewareManager implements IIGKBalafonApplicationMi
     ///<param name="callback"></param>
     /**
     * Represente Run function
-    * @param callback 
+    * @param mixed $closurecallback
     */
     public function Run($callback){
         IGKBalafonMiddleware::Attach(new IGKRunCallbackMiddleware($callback), $this);
@@ -119,7 +120,7 @@ class IGKBalafonApplicationMiddlewareManager implements IIGKBalafonApplicationMi
     ///<param name="middle"></param>
     /**
     * Represente UseMiddleWare function
-    * @param middle 
+    * @param mixed $middle
     */
     public function UseMiddleWare($middle){
         if(is_object($middle) && is_subclass_of(get_class($middle), IGKBalafonMiddleware::class))

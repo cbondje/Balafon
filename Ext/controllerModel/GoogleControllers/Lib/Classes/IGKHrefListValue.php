@@ -1,7 +1,7 @@
 <?php
 // @file: IGKHrefListValue.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -37,7 +37,7 @@ final class IGKHrefListValue{
     ///<param name="options" default="null"></param>
     /**
     * Represente getValue function
-    * @param  $options the default value is null
+    * @param mixed $options the default value is null
     */
     public function getValue($options=null){
         $o=0;

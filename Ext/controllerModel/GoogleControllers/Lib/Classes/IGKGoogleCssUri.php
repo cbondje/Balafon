@@ -1,7 +1,7 @@
 <?php
 // @file: IGKGoogleCssUri.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -28,8 +28,8 @@ class IGKGoogleCssUri{
     ///<param name="uri"></param>
     /**
     * Represente __construct function
-    * @param  $f
-    * @param  $uri
+    * @param mixed $f
+    * @param mixed $uri
     */
     public function __construct($f, $uri){
         $this->m_file=$f;
@@ -53,6 +53,6 @@ class IGKGoogleCssUri{
                 $this->file=$f;
             }
         }
-        return (new \IGKHtmlRelativeUriValueAttribute($f))->getValue();
+        return (new IGKHtmlRelativeUriValueAttribute($f))->getValue();
     }
 }

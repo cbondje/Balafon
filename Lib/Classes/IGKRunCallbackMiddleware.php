@@ -17,7 +17,7 @@ class IGKRunCallbackMiddleware extends IGKBalafonMiddleware{
     ///<param name="callback"></param>
     /**
     * Represente __construct function
-    * @param callback 
+    * @param closure callback
     */
     public function __construct($callback){
         $this->callback=$callback;

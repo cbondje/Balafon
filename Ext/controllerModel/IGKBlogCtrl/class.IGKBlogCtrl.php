@@ -10,11 +10,11 @@ abstract class IGKBlogCtrl extends IGKCtrlTypeBase
 	}
 	protected function InitComplete(){
 		parent::InitComplete();
-		$k = "blog(/:function(/:params+)?)?";		
+		$k = "blog(/:function(/:params+)?)?";
 		igk_sys_ac_register($k, $this->getUri("evaluateUri"));
 	}
 	public function evaluateUri(){
-		$inf = igk_sys_ac_getpatterninfo();		
+		$inf = igk_sys_ac_getpatterninfo();
 		$p = $inf->getParams();
 		$c = igk_getv($p, "function");
 		$p = igk_getv($p, "params");
@@ -26,11 +26,11 @@ abstract class IGKBlogCtrl extends IGKCtrlTypeBase
 			if (method_exists($this, $c))
 			{
 				if (is_array($p) == false)
-					$p = array($p);			
-				call_user_func_array(array($this, $c), $p);		
+					$p = array($p);
+				call_user_func_array(array($this, $c), $p);
 			}
 			else{
-				$this->renderError($c);			
+				$this->renderError($c);
 			}
 		}
 		exit;

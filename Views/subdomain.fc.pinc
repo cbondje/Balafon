@@ -1,7 +1,7 @@
 <?php
 // @file: subdomain.fc.pinc
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -15,10 +15,10 @@
 ///<param name="mode" default="1"></param>
 /**
 * Represente igk_subdomain_fc_inflate function
-* @param  $tab
-* @param  $t
-* @param  $data the default value is null
-* @param  $mode the default value is 1
+* @param mixed $tab
+* @param mixed $t
+* @param mixed $data the default value is null
+* @param mixed $mode the default value is 1
 */
 function igk_subdomain_fc_inflate($tab, $t, $data=null, $mode=1){
     $dv=$t->addDiv();
@@ -30,7 +30,7 @@ function igk_subdomain_fc_inflate($tab, $t, $data=null, $mode=1){
     $sl->setId("clCtrl");
     $sl->setClass("igk-form-control")->setStyle("margin-bottom:1em");
     $ctrl=$data ? $data->clCtrl: null;
-    foreach($tab["@base"] as $k=>$v){
+    foreach($tab["@base"] as  $v){
         $opt=$sl->add("option");
         $opt->Content=$v->Name;
         $opt["value"]=$v->Name;
@@ -43,7 +43,7 @@ function igk_subdomain_fc_inflate($tab, $t, $data=null, $mode=1){
     if(igk_count($g) > 0){
         $sl->addDiv()->setContent(R::ngets("s.Templates"));
         $rv=$sl->addDiv();
-        foreach($g as $k=>$v){
+        foreach($g as  $v){
             $opt=$rv->add("option");
             $opt->Content=$v;
             $opt["value"]=$v;

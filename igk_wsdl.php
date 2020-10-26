@@ -24,9 +24,9 @@ class IGKWsdlFile extends IGKObject {
     ///<param name="attributes" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $name
-    * @param  $uri
-    * @param  $attributes the default value is null
+    * @param mixed $name
+    * @param mixed $uri
+    * @param mixed $attributes the default value is null
     */
     public function __construct($name, $uri, $attributes=null){
         $this->m_uri=$uri;
@@ -50,15 +50,15 @@ class IGKWsdlFile extends IGKObject {
     ///<param name="enctype" default="'encoded'"></param>
     /**
     * Represente addBindingService function
-    * @param  $name
-    * @param  $style the default value is "rpc"
-    * @param  $porttype the default value is null
-    * @param  $enctype the default value is 'encoded'
+    * @param mixed $name
+    * @param mixed $style the default value is "rpc"
+    * @param mixed $porttype the default value is null
+    * @param mixed $enctype the default value is 'encoded'
     */
     public function addBindingService($name, $style="rpc", $porttype=null, $enctype='encoded'){
         $c=$this->m_binding->AddChild();
         $c["name"]=$name;
-        $c["type"]=is_object($porttype) ? "igkns:".$porttype["name"]: (is_string($porttype) ? $porttype: null);
+        $c["type"]=is_object($porttype) ? "igkns:".igk_getv($porttype, "name"): (is_string($porttype) ? $porttype: null);
         $c->addNode("soap:binding")->setAttribute("style", $style)->setAttribute("transport", "http://schemas.xmlsoap.org/soap/http");
         if($porttype){
             $this->addServiceOperation($c, "m1", $enctype, $porttype);
@@ -72,10 +72,10 @@ class IGKWsdlFile extends IGKObject {
     ///<param name="porttype" default="null"></param>
     /**
     * Represente addMethod function
-    * @param  $n
-    * @param  $input
-    * @param  $output the default value is null
-    * @param  $porttype the default value is null
+    * @param mixed $n
+    * @param mixed $input
+    * @param mixed $output the default value is null
+    * @param mixed $porttype the default value is null
     */
     public function addMethod($n, $input, $output=null, $porttype=null){
         $m=$this->m_message->AddChild();
@@ -110,10 +110,10 @@ class IGKWsdlFile extends IGKObject {
     ///<param name="loc"></param>
     /**
     * Represente addService function
-    * @param  $srvname
-    * @param  $doc
-    * @param  $srv
-    * @param  $loc
+    * @param mixed $srvname
+    * @param mixed $doc
+    * @param mixed $srv
+    * @param mixed $loc
     */
     public function addService($srvname, $doc, $srv, $loc){
         $d=$this->m_service->AddChild();
@@ -121,7 +121,7 @@ class IGKWsdlFile extends IGKObject {
         $d->addNode("documentation")->Content=$doc;
         $p=$d->addNode("port");
         $p["name"]="port";
-        $p["binding"]=is_object($srv) ? "igkns:".$srv["name"]: $srv;
+        $p["binding"]=is_object($srv) ? "igkns:".igk_getv($srv, "name"): $srv;
         $p->addNode("soap:address")->setAttribute("location", $loc);
         $this->m_cservice=$d;
         return $d;
@@ -133,10 +133,10 @@ class IGKWsdlFile extends IGKObject {
     ///<param name="urn" default="sample:demo"></param>
     /**
     * Represente addServiceOperation function
-    * @param  $srv
-    * @param  $name
-    * @param  $type the default value is "encoded"
-    * @param  $urn the default value is "sample:demo"
+    * @param mixed $srv
+    * @param mixed $name
+    * @param mixed $type the default value is "encoded"
+    * @param mixed $urn the default value is "sample:demo"
     */
     protected function addServiceOperation($srv, $name, $type="encoded", $urn="sample:demo"){
         $op=$srv->addNode("operation");
@@ -190,7 +190,7 @@ EOF;
     ///<param name="t"></param>
     /**
     * Represente getXSDType function
-    * @param  $t
+    * @param mixed $t
     */
     protected final function getXSDType($t){
         $v_rt="xsd:string";
@@ -214,8 +214,8 @@ EOF;
     ///<param name="attrs" default="null"></param>
     /**
     * Represente initService function
-    * @param  $n
-    * @param  $attrs the default value is null
+    * @param mixed $n
+    * @param mixed $attrs the default value is null
     */
     public function initService($n, $attrs=null){
         $this->m_srv=$this->addBindingService($n."_bindingService");
@@ -227,9 +227,9 @@ EOF;
     ///<param name="attrs" default="null"></param>
     /**
     * Represente registerClass function
-    * @param  $className
-    * @param  $srvName
-    * @param  $attrs the default value is null
+    * @param mixed $className
+    * @param mixed $srvName
+    * @param mixed $attrs the default value is null
     */
     public function registerClass($className, $srvName, $attrs=null){
         $cl=is_object($className) ? get_class($className): (class_exists($className) ? $className: null);
@@ -245,7 +245,7 @@ EOF;
             $this->addService($srvName, igk_getv($attrs, "doc"), $this->m_srv, $this->m_uri);
         }
         $this->m_srv["type"]=$this->getNSPrefix().":".$port["name"];
-        foreach(get_class_methods($cl) as $k=>$n){
+        foreach(get_class_methods($cl) as  $n){
             $m=new ReflectionMethod($cl, $n);
             if($m->isPublic() && !$m->isStatic() && !$m->isConstructor()){
                 $i=array();
@@ -265,10 +265,10 @@ EOF;
     ///<param name="srvName" >service name </param>
     ///<param name="funclist" >array list of available functions</param>
     /**
-    * register methods 
-    * @param classname class name
-    * @param srvName service name 
-    * @param funclist array list of available functions
+    * register methods
+    * @param mixed $classname class name
+    * @param mixed $srvName service name
+    * @param mixed $funclist array list of available functions
     */
     public function registerMethod($className, $srvName, $funclist){
         $cl=is_object($className) ? get_class($className): (class_exists($className) ? $className: null);
@@ -279,6 +279,7 @@ EOF;
             return;
         $port=$this->m_porttype->AddChild();
         $port["name"]=$cl."_porttype";
+        $attrs = [];
         if($this->m_srv == null){
             $this->m_srv=$this->addBindingService($cl."_binding_service");
             $this->addService($srvName, igk_getv($attrs, "doc"), $this->m_srv, $this->m_uri);
@@ -309,7 +310,7 @@ EOF;
     ///<param name="f"></param>
     /**
     * Represente Save function
-    * @param  $f
+    * @param mixed $f
     */
     public function Save($f){
         igk_set_env(IGK_ENV_NO_TRACE_KEY, 1);

@@ -355,8 +355,7 @@
 	});	
 	igk.winui.initClassControl("igk-google-line-waiter", __line_waiter_init, {
 		desc:"google line waiter"
-	});
-	
+	}); 
 	
 })();
 

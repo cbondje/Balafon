@@ -1,7 +1,7 @@
 <?php
 // @file: class.IGKGoogleFontConfiguration.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -71,13 +71,13 @@ final class IGKGoogleFontConfiguration extends IGKConfigCtrlBase{
         session_write_close();
         extract(igk_getrs("family", "size"));
 		$k = 0;
-		
+
 		if(!empty($family))
         $k = igk_google_installfont($family, $size);
-		
+
 		if (igk_is_ajx_demand()){
 			if ($k)
-				igk_ajx_toast(__("font installed"), "success"); 
+				igk_ajx_toast(__("font installed"), "success");
 			else{
 				igk_ajx_toast(__("font not installed"), "danger");
 			}

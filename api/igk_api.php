@@ -1,7 +1,7 @@
 <?php
 // @file: igk_api.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -13,6 +13,75 @@ define("IGK_API_CTRL", "API");
 define("IGK_API_VERSION", "2.1.1.0921");
 define("IGK_API_URI", "^/api/v2");
 define("IGK_API_LIB", dirname(__FILE__));
+require_once(IGK_API_LIB."/.igk.api.func.pinc");
+
+///<summary>Represente igk_api_free_session function</summary>
+/**
+* Represente igk_api_free_session function
+*/
+function igk_api_free_session(){
+    if(!igk_server_request_onlocal_server()){
+        if(igk_getr("clClearS")){
+            igk_app_destroy();
+            session_destroy();
+        }
+    }
+}
+
+///<summary> evaluate entries</summary>
+/**
+ *  evaluate entries
+ */
+function igk_api_sync_def_evaluate_entries($entries, $table_n, $mysql, $db, $tables){
+    $n=$entries->addNode("Rows")->setAttribute("For", $table_n);
+    $list=$tables->list[$table_n];
+    $links=$list["Links"];
+    $auto=$list["auto"];
+    $fc_update=function($tn) use (& $auto, $table_n, $db){
+        if($auto){
+            $tn[$auto]=null;
+        }
+        $v=$tn->getParam("dbRow");
+        $tn->setAttr("igk:id", $db->getSyncIdentificationId($table_n, $v));
+    };
+    if(igk_count($links) > 0){
+        $rows=$mysql->select($table_n)->Rows;
+        foreach($rows as $v){
+            $tn=$n->addNode("Row")->setAttributes($v);
+            $tn->setParam("dbRow", $v);
+            $continu=false;
+            foreach($links as $vlnk){
+                foreach($vlnk as $g){
+                    $cn=$g["Column"];
+                    $ftn=$g["Table"];
+                    $clvalue=$tn[$cn];
+                    $bck=igk_getv($tables->list, $ftn);
+                    $v_mk=$ftn."/".$clvalue;
+                    if($bck && (igk_count($bck["Links"]) > 0)){
+                        $v_data=($v_data=igk_getv($tables->values, $v_mk)) ? $v_data: $db->getSyncDataValueDisplay($ftn, $clvalue, $tables);
+                        $tn[$cn]=$v_data;
+                        $tables->values[$v_mk]=$v_data;
+                    }
+                    else{
+                        $v_data=($v_data=igk_getv($tables->values, $v_mk)) ? $v_data: $db->getSyncDataValueDisplay($ftn, $clvalue);
+                        $tn[$cn]=$v_data;
+                        $tables->values[$v_mk]=$v_data;
+                    }
+                }
+                if($continu)
+                    break;
+            }
+            $fc_update($tn);
+        }
+    }
+    else{
+        foreach($mysql->select($table_n)->Rows as $v){
+            $tn=$n->addNode("Row")->setAttributes($v);
+            $tn->setParam("dbRow", $v);
+            $fc_update($tn);
+        }
+    }
+}
 ///<summary>Represente class: IGKApiFunctionCtrl</summary>
 /**
 * Represente IGKApiFunctionCtrl class
@@ -45,7 +114,6 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
             igk_show_prev(getallheaders());
         }
         else{
-            igk_debug("connection failed ");
             $node->add("status")->Content="NOK";
             $node->add("message")->Content=$this->message[0];
         }
@@ -56,7 +124,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
     ///<param name="cmd" default="null"></param>
     /**
     * Represente ctrl function
-    * @param  $cmd the default value is null
+    * @param mixed $cmd the default value is null
     */
     public function ctrl($cmd=null){
         $args=array_slice(func_get_args(), 1);
@@ -66,7 +134,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
         $_data["geninstall"]=function($ctrl) use ($n, $_api){
             $v=igk_getctrl($ctrl);
             if(!$v){
-                $n->addDiv()->Content="/!\\ Controller ".$ctr." not found";
+                $n->addDiv()->Content="/!\\ Controller [".$ctrl."] not found";
                 return false;
             }
             $folder=$v->getDeclaredDir();
@@ -75,7 +143,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
             IGKIO::CreateDir($tempdir);
             $ftempdir=IGKIO::GetDir($tempdir."/".igk_new_id().".iczip");
             if($zip->open($ftempdir, ZIPARCHIVE::CREATE)){
-                $h=igk_zip_dir($folder, $zip);
+                igk_zip_dir($folder, $zip);
                 $inf=igk_createNode("ctrl");
                 igk_api_build_ctrl_manifest($ctrl, $inf);
                 $opt=igk_xml_create_render_option();
@@ -87,9 +155,9 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                 unlink($ftempdir);
                 igk_exit();
             }
-            else{
+
                 $n->Content="not created";
-            }
+				return false;
         };
         $_data["initDb"]=function($ctrl) use ($n, $_api){
             $ctrl=igk_getctrl($ctrl);
@@ -123,6 +191,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
         $doc->body->addBodyBox()->ClearChilds()->add($n);
         $doc->RenderAJX();
         igk_exit();
+        return 1;
     }
     ///<summary>represent a function database function list</summary>
     /**
@@ -154,6 +223,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                     $error=false;
                     $ctrl=igk_getctrl(igk_getv($args, 1));
                     $u=igk_get_user_bylogin(igk_getv($args, 2));
+                    $g = "";
                     $srv=($srv=igk_getv($args, 0)) ? $srv: igk_getr("clServer");
                     if(!$ctrl || !$u || empty($srv)){
                         $error=true;
@@ -250,7 +320,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                         if($apt->connect()){
                             $tables=(object)array("list"=>array(), "values"=>array());
                             $entries=$sync->addNode("Entries");
-                            foreach($tb as $k=>$v_tablen){
+                            foreach($tb as $v_tablen){
                                 if(!isset($tables->list[$v_tablen]) && $ctrl->Db->getCanSyncDataTable($v_tablen)){
                                     $rep=$sync->addNode("DataDefinition")->setAttributes(array("TableName"=>$v_tablen));
                                     $_api->datadb("get_sync_definition", $rep, $v_tablen, $u, $apt, $ctrl->Db, null, $tables);
@@ -383,10 +453,10 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                                 $p->Entries[$k]=$v;
                             }
                             $ajx=0;
-                            foreach($v as $rr=>$row){
+                            foreach($v as  $row){
                                 if($ajx)
                                     igk_flush_write_data("insert in $k");
-                                $ctrl->Db->insert_if_not_exists($k, $row);
+                                $ctrl->Db->insertIfNotExists($k, $row);
                             }
                             if($ajx)
                                 igk_flush_data();
@@ -412,8 +482,8 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                     else{
                         $d=igk_createNode("div");
                         $d->addObData(function(){
-                            ?> Usage : update controller db
-<?php 
+?> Usage : update controller db
+<?php
                         });
                         $d->RenderAJX();
                     }
@@ -465,7 +535,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                 $f="igk_api_mysql_".str_replace("-", "_", $cmd);
                 if(!function_exists($f)){
                     // igk_ilog(__FUNCTION__."::", "function {$f} not exists");
-                    igk_wln_e("function [$f] not exists in ".$file);                    
+                    igk_wln_e("function [$f] not exists in ".$file);
                 }
                 else{
                     $tab=array();
@@ -480,6 +550,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
             }
         }
         igk_exit();
+        return 1;
     }
     ///<summary>Represente endRequest function</summary>
     /**
@@ -547,7 +618,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
     ///<param name="function"></param>
     /**
     * Represente IsFunctionExposed function
-    * @param  $function
+    * @param mixed $function
     */
     public function IsFunctionExposed($function){
         return true;
@@ -559,6 +630,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
     public function request(){
         $u=igk_getr("u");
         $pwd=igk_getr("pwd");
+        $node = igk_createxmlnode("response");
         $this->ConfigCtrl->logout(false, true);
         if(!$this->ConfigCtrl->IsConnected){
             $this->ConfigCtrl->connect($u, $pwd, false);
@@ -571,9 +643,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
             $node->add("ExecutionResponse")->Content=$this->App->ControllerManager->InvokeFunctionUri($q);
             $this->ConfigCtrl->logout(false, true);
         }
-        else{
-            igk_debug("connection failed ");
-        }
+
         igk_exit();
     }
     ///<summary>Represente sendRequest function</summary>
@@ -597,7 +667,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
     ///<param name="cmd" default="null"></param>
     /**
     * Represente setup function
-    * @param  $cmd the default value is null
+    * @param mixed $cmd the default value is null
     */
     public function setup($cmd=null){
         igk_wln(__FUNCTION__." command");
@@ -613,5 +683,5 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
         igk_exit();
     }
 }
-require_once(IGK_API_LIB."/.igk.api.func.pinc");
+
 define("IGK_API_MYSQLPINC", realpath(IGK_API_LIB."/.mysql.pinc"));

@@ -1,5 +1,5 @@
 <?php
-// IGKHtmlUtils::AddBtnLnk($frm, "btn.addcontroller",  igk_js_post_frame($this->getUri("ca_add_ctrl_frame_ajx")) );
+// IGKHtmlUtils::AddBtnLnk($frm, "btn.addcontroller",  igk_js_post_frame($ctrl->getUri("ca_add_ctrl_frame_ajx")) );
 
 $v_dv=$t;
 $dv=$v_dv->addDiv();
@@ -8,5 +8,5 @@ include("tab.ctrlinfo.phtml");
 $frm=$t->addForm();
 $frm->addBtn("btn_remove", R::ngets("btn.removeCtrl"), "submit", array(
         "onclick"=>"javascript: return window.igk.ctrl.confirm_frame(this,'".R::ngets(IGK_MSG_DELETEFILE_QUESTION,
-        $this->SelectedController)->getValue()."', '".$this->getUri("drop_controller"). "');"
+        $ctrl->SelectedController)->getValue()."', '".$ctrl->getUri("drop_controller"). "');"
     ));

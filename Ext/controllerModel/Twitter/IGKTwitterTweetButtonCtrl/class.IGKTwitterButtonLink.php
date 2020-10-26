@@ -3,7 +3,7 @@
 description: use to share a link to twitter
 */
 abstract class IGKTwitterButtonLinkCtrl  extends IGKCtrlTypeBase
-{	
+{
 	public function getcanAddChild(){
 		return false;
 	}
@@ -17,8 +17,8 @@ abstract class IGKTwitterButtonLinkCtrl  extends IGKCtrlTypeBase
 	}
 	protected function getConfigFile()
 	{
-		$s = dirname(__FILE__)."/".IGK_DATA_FOLDER."/".IGK_CTRL_CONF_FILE;	
-		return igk_io_dir($s);		
+		$s = dirname(__FILE__)."/".IGK_DATA_FOLDER."/".IGK_CTRL_CONF_FILE;
+		return igk_io_dir($s);
 	}
 	public static function GetCtrlCategory(){
 		return "COMMUNITY";
@@ -26,11 +26,11 @@ abstract class IGKTwitterButtonLinkCtrl  extends IGKCtrlTypeBase
 	protected function getDBConfigFile()
 	{
 		return igk_io_dir(dirname(__FILE__)."/".IGK_DATA_FOLDER."/".IGK_CTRL_DBCONF_FILE);
-	}	
-	
+	}
+
 	public function View()
 	{
-	
+
 		extract($this->getSystemVars());
 		$t->ClearChilds();
 		$c = $t->Add("div");

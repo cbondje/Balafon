@@ -2,7 +2,7 @@
 //
 // author: C.A.D. BONDJE DOUE
 // licence: IGKDEV - Balafon @ 2019
-// desc: mysql data adapter 
+// desc: mysql data adapter
 // file: igk_mysql_db.php
 
 
@@ -22,20 +22,23 @@ if(!function_exists("mysqli_connect")){
 ///<param name="pwd"></param>
 /**
 * Represente igk_db_connect function
-* @param  $srv
-* @param  $dbu
-* @param  $pwd
+* @param mixed $srv
+* @param mixed $dbu
+* @param mixed $pwd
 */
 function igk_db_connect($srv, $dbu, $pwd, $options=null){
     if(empty($srv))
         return false;
-    $g=IGKSQLManager::GetFunc("connect") ?? igk_die("not connect found for !!!! ".IGKSQLManager::$Configs["system"]);
-    if(IGKSQLManager::IsMySQLi()){
+    $g=IGKDBQueryDriver::GetFunc("connect") ?? igk_die("not connect found for !!!! ".IGKDBQueryDriver::$Config["system"]);
+    if(IGKDBQueryDriver::Is("MySQLI")){
         $b = @$g($srv, $dbu, $pwd);
-		if ($options && isset($options["charset"])){
-			mysqli_set_charset($b, $options["charset"]);
-		}else 
-			mysqli_set_charset($b, "utf8");
+        if (is_resource($b)){
+            if ( $options && isset($options["charset"])){
+                mysqli_set_charset($b, $options["charset"]);
+            }else {
+                mysqli_set_charset($b, "utf8");
+            }
+        }
 		return $b;
     }
     return @$g($srv, $dbu, $pwd);
@@ -45,13 +48,13 @@ function igk_db_connect($srv, $dbu, $pwd, $options=null){
 ///<param name="r" default="null"></param>
 /**
 * Represente igk_db_escape_string function
-* @param  $v
-* @param  $r the default value is null
+* @param mixed $v
+* @param mixed $r the default value is null
 */
 function igk_db_escape_string($v, $r=null){
-    $g=IGKSQLManager::GetFunc("escapestring");
-    if(IGKSQLManager::IsMySQLi()){
-        $b=IGKSQLManager::GetResId();
+    $g=IGKDBQueryDriver::GetFunc("escapestring");
+    if(IGKDBQueryDriver::Is("MySQLI")){
+        $b=IGKDBQueryDriver::GetResId();
         if($b){
 			if (is_array($v)){
                 if (!igk_environment()->is("production")){
@@ -70,35 +73,36 @@ function igk_db_escape_string($v, $r=null){
     }
     if(!empty($g))
         return $g($v);
+    return null;
 }
 ///<summary>Represente igk_db_fetch_field function</summary>
 ///<param name="r"></param>
 /**
 * Represente igk_db_fetch_field function
-* @param  $r
+* @param mixed $r
 */
 function igk_db_fetch_field($r){
-    $g=IGKSQLManager::GetFunc("fetch_field");
+    $g=IGKDBQueryDriver::GetFunc("fetch_field");
     return $g($r);
 }
 ///<summary>Represente igk_db_fetch_row function</summary>
 ///<param name="r"></param>
 /**
 * Represente igk_db_fetch_row function
-* @param  $r
+* @param mixed $r
 */
 function igk_db_fetch_row($r){
-    $g=IGKSQLManager::GetFunc("fetch_row");
+    $g=IGKDBQueryDriver::GetFunc("fetch_row");
     return $g($r);
 }
 ///<summary>Represente igk_db_is_resource function</summary>
 ///<param name="r"></param>
 /**
 * Represente igk_db_is_resource function
-* @param  $r
+* @param mixed $r
 */
 function igk_db_is_resource($r){
-    if(IGKSQLManager::IsMySQLi()){
+    if(IGKDBQueryDriver::Is("MySQLI")){
         return is_object($r);
     }
     return is_resource($r);
@@ -107,32 +111,32 @@ function igk_db_is_resource($r){
 ///<param name="r"></param>
 /**
 * Represente igk_db_num_fields function
-* @param  $r
+* @param mixed $r
 */
 function igk_db_num_fields($r){
-    $g=IGKSQLManager::GetFunc("num_fields");
+    $g=IGKDBQueryDriver::GetFunc("num_fields");
     return $g($r);
 }
 ///<summary>Represente igk_db_num_rows function</summary>
 ///<param name="r"></param>
 /**
 * Represente igk_db_num_rows function
-* @param  $r
+* @param mixed $r
 */
 function igk_db_num_rows($r){
-    $g=IGKSQLManager::GetFunc("num_rows");
+    $g=IGKDBQueryDriver::GetFunc("num_rows");
     return $g($r);
 }
 ///<summary>Represente igk_db_query function</summary>
 ///<param name="query"></param>
 /**
 * Represente igk_db_query function
-* @param  $query
+* @param mixed $query
 */
 function igk_db_query($query, $res=null){
-    $g=IGKSQLManager::GetFunc("query");
-    if(IGKSQLManager::IsMySQLi()){
-        $d=IGKSQLManager::GetResId();
+    $g=IGKDBQueryDriver::GetFunc("query");
+    if(IGKDBQueryDriver::Is("MySQLI")){
+        $d=IGKDBQueryDriver::GetResId();
         if($d)
             return $g($d, $query);
         else{
@@ -143,10 +147,10 @@ function igk_db_query($query, $res=null){
     return $g($query);
 }
 function igk_db_multi_query($query, $res=null){
-	$g=IGKSQLManager::GetFunc("multi_query");
-    if(IGKSQLManager::IsMySQLi()){
-        $d= $res ? $res : IGKSQLManager::GetResId();
-        if($d){ 
+	$g=IGKDBQueryDriver::GetFunc("multi_query");
+    if(IGKDBQueryDriver::Is("MySQLI")){
+        $d= $res ? $res : IGKDBQueryDriver::GetResId();
+        if($d){
             return $g($d, $query);
 		}
         else{
@@ -158,7 +162,7 @@ function igk_db_multi_query($query, $res=null){
 }
 ///<summary>retreive the current server date </summary>
 /**
-* retreive the current server date 
+* retreive the current server date
 */
 function igk_mysql_datetime_now(){
     return date(IGK_MYSQL_DATETIME_FORMAT);
@@ -167,22 +171,22 @@ function igk_mysql_datetime_now(){
 ///<param name="r"></param>
 /**
 * Represente igk_mysql_db_close function
-* @param  $r
+* @param mixed $r
 */
 function igk_mysql_db_close($r){
-    $g=IGKSQLManager::GetFunc("close");
+    $g=IGKDBQueryDriver::GetFunc("close");
     return @$g($r);
 }
 ///<summary>Represente igk_mysql_db_error function</summary>
 ///<param name="r" default="null"></param>
 /**
 * Represente igk_mysql_db_error function
-* @param  $r the default value is null
+* @param mixed $r the default value is null
 */
 function igk_mysql_db_error($r=null){
-    $g=IGKSQLManager::GetFunc("error");
-    if(IGKSQLManager::IsMySQLi()){
-        $d=IGKSQLManager::GetResId();
+    $g=IGKDBQueryDriver::GetFunc("error");
+    if(IGKDBQueryDriver::Is("MySQLI")){
+        $d=IGKDBQueryDriver::GetResId();
         if($d)
             return $g($d);
         return "";
@@ -194,9 +198,9 @@ function igk_mysql_db_error($r=null){
 * Represente igk_mysql_db_errorc function
 */
 function igk_mysql_db_errorc(){
-    $g=IGKSQLManager::GetFunc("errorc");
-    if(IGKSQLManager::IsMySQLi()){
-        $d=IGKSQLManager::GetResId();
+    $g=IGKDBQueryDriver::GetFunc("errorc");
+    $r =$d=IGKDBQueryDriver::GetResId();
+    if(IGKDBQueryDriver::Is("MySQLI")){
         if($d)
             return $g($d);
         return "";
@@ -207,7 +211,7 @@ function igk_mysql_db_errorc(){
 ///<param name="t"></param>
 /**
 * Represente igk_mysql_db_gettypename function
-* @param  $t
+* @param mixed $t
 */
 function igk_mysql_db_gettypename($t){
     $m_mysqli_data=array(
@@ -239,7 +243,7 @@ function igk_mysql_db_has_error(){
 ///<param name="flags"></param>
 /**
 * Represente igk_mysql_db_is_primary_key function
-* @param  $flags
+* @param mixed $flags
 */
 function igk_mysql_db_is_primary_key($flags){
     return ($flags& 2) == 2;
@@ -248,12 +252,12 @@ function igk_mysql_db_is_primary_key($flags){
 ///<param name="r" default="null"></param>
 /**
 * Represente igk_mysql_db_last_id function
-* @param  $r the default value is null
+* @param mixed $r the default value is null
 */
 function igk_mysql_db_last_id($r=null){
-    $g=IGKSQLManager::GetFunc("lastid");
-    if(IGKSQLManager::IsMySQLi()){
-        $d=IGKSQLManager::GetResId();
+    $g=IGKDBQueryDriver::GetFunc("lastid");
+    if(IGKDBQueryDriver::Is("MySQLI")){
+        $d=IGKDBQueryDriver::GetResId();
         if($d){
             return $g($d);
         }
@@ -267,7 +271,7 @@ function igk_mysql_db_last_id($r=null){
 ///<param name="mysql"></param>
 /**
 * Represente igk_mysql_db_selected_db function
-* @param  $mysql
+* @param mixed $mysql
 */
 function igk_mysql_db_selected_db($mysql){
     $r=$mysql->sendQuery("SELECT DATABASE();")->getRowAtIndex(0);
@@ -278,7 +282,7 @@ function igk_mysql_db_selected_db($mysql){
 ///<param name="tbname"></param>
 /**
 * Represente igk_mysql_db_tbname function
-* @param  $tbname
+* @param mixed $tbname
 */
 function igk_mysql_db_tbname($tbname){
     return igk_db_escape_string(igk_db_get_table_name($tbname));
@@ -287,7 +291,7 @@ function igk_mysql_db_tbname($tbname){
 ///<param name="resource"></param>
 /**
 * Represente igk_mysql_result_table function
-* @param  $resource
+* @param mixed $resource
 */
 function igk_mysql_result_table($resource){
     $tab=igk_createNode("table");
@@ -295,9 +299,9 @@ function igk_mysql_result_table($resource){
     $tr=$tab->Add("tr");
     $c=igk_db_num_fields($resource);
     for($i=0; $i < igk_db_num_fields($resource); $i++){
-        $tr->Add("th")->Content=mysql_field_name($t, $i);
+        $tr->Add("th")->Content= mysqli_field_seek($resource, $i);
     }
-    foreach(mysql_fetch_assoc($resource) as $k){
+    foreach(mysqli_fetch_assoc($resource) as $k){
         $tr=$tab->Add("tr");
         if(is_array($k)){
             foreach($k as $v){
@@ -314,7 +318,7 @@ function igk_mysql_result_table($resource){
 ///<param name="date"></param>
 /**
 * Represente igk_mysql_time_span function
-* @param  $date
+* @param mixed $date
 */
 function igk_mysql_time_span($date){
     return igk_time_span(IGK_MYSQL_DATETIME_FORMAT, $date);
@@ -335,7 +339,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="ctrl" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $ctrl the default value is null
+    * @param mixed $ctrl the default value is null
     */
     public function __construct($ctrl=null){
         $this->m_controller=$ctrl;
@@ -354,6 +358,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
             $this->m_dbManager->setOpenCallback(array($this, 'openCallback'));
         }
     }
+
     ///<summary>Represente __createManager function</summary>
     /**
     * Represente __createManager function
@@ -370,7 +375,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="leaveOpen" default="false"></param>
     /**
     * Represente close function
-    * @param  $leaveOpen the default value is false
+    * @param mixed $leaveOpen the default value is false
     */
     public function close($leaveOpen=false){
         if($this->m_dbManager != null){
@@ -408,7 +413,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="array"></param>
     /**
     * Represente configure function
-    * @param  $array
+    * @param mixed $array
     */
     public function configure($array){
         $this->m_dbManager->configure($array);
@@ -418,8 +423,8 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="selectdb" default="true"></param>
     /**
     * Represente connect function
-    * @param  $dbnamemix the default value is null
-    * @param  $selectdb the default value is true
+    * @param mixed $dbnamemix the default value is null
+    * @param mixed $selectdb the default value is true
     */
     public function connect($dbnamemix=null, $selectdb=true){
         $this->makeCurrent();
@@ -448,10 +453,10 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="dbpwd"></param>
     /**
     * Represente connectTo function
-    * @param  $dbserver
-    * @param  $dbname
-    * @param  $dbuser
-    * @param  $dbpwd
+    * @param mixed $dbserver
+    * @param mixed $dbname
+    * @param mixed $dbuser
+    * @param mixed $dbpwd
     */
     public function connectTo($dbserver, $dbname, $dbuser, $dbpwd){
         return $this->m_dbManager->connectTo($dbserver, $dbname, $dbuser, $dbpwd);
@@ -461,8 +466,8 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="whereTab" default="null"></param>
     /**
     * Represente countAndWhere function
-    * @param  $tbname
-    * @param  $whereTab the default value is null
+    * @param mixed $tbname
+    * @param mixed $whereTab the default value is null
     */
     public function countAndWhere($tbname, $whereTab=null){
         $o="";
@@ -488,7 +493,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="result" default="false"></param>
     /**
     * Represente CreateEmptyResult function
-    * @param  $result the default value is false
+    * @param mixed $result the default value is false
     */
     public function CreateEmptyResult($result=false){
         return IGKMySQLQueryResult::CreateResult($result);
@@ -498,23 +503,29 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="entry"></param>
     /**
     * Represente delete function
-    * @param  $tablename
-    * @param  $entry
+    * @param mixed $tablename
+    * @param mixed $entry
+    * @return mixed
     */
     public function delete($tablename, $entry){
+        $r = null;
         if($this->m_dbManager != null){
-            return $this->m_dbManager->delete($tablename, $entry);
+            $r = $this->m_dbManager->delete($tablename, $entry);
         }
+        return $r;
     }
     ///<summary>Represente deleteAll function</summary>
     ///<param name="tablename"></param>
     /**
     * Represente deleteAll function
-    * @param  $tablename
+    * @param mixed $tablename
+    * @return mixed
     */
-    public function deleteAll($tablename){
+    public function deleteAll($tablename, $condition=null){
+        $r = null;
         if($this->m_dbManager != null)
-            return $this->m_dbManager->deleteAll($tablename);
+            $r= $this->m_dbManager->deleteAll($tablename);
+        return $r;
     }
     ///<summary>Represente dropAllRelations function</summary>
     /**
@@ -527,7 +538,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="tbname"></param>
     /**
     * Represente dropTable function
-    * @param  $tbname
+    * @param mixed $tbname
     */
     public function dropTable($tbname){
         if($this->m_dbManager != null)
@@ -553,7 +564,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="s"></param>
     /**
     * Represente getConstraint_Index function
-    * @param  $s
+    * @param mixed $s
     */
     public function getConstraint_Index($s){
         if($this->m_dbManager != null)
@@ -578,7 +589,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="type"></param>
     /**
     * Represente getFormat function
-    * @param  $type
+    * @param mixed $type
     */
     public function getFormat($type){
         switch(strtolower($type)){
@@ -617,7 +628,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     * Represente getResId function
     */
     public function getResId(){
-        return IGKSQLManager::GetResId();
+        return IGKDBQueryDriver::GetResId();
     }
     ///<summary>Represente getStored function</summary>
     /**
@@ -654,9 +665,9 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="where" default="null"></param>
     /**
     * Represente getUpateQuery function
-    * @param  $tablename
-    * @param  $entry
-    * @param  $where the default value is null
+    * @param mixed $tablename
+    * @param mixed $entry
+    * @param mixed $where the default value is null
     */
     public function getUpateQuery($tablename, $entry, $where=null){
         return IGKSQLQueryUtils::GetUdpateQuery($tablename, $entry, $where);
@@ -668,10 +679,10 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="tableInfo" default="null"></param>
     /**
     * Represente GetUpdateQuery function
-    * @param  $tbname
-    * @param  $values
-    * @param  $condition the default value is null
-    * @param  $tableInfo the default value is null
+    * @param mixed $tbname
+    * @param mixed $values
+    * @param mixed $condition the default value is null
+    * @param mixed $tableInfo the default value is null
     */
     public function GetUpdateQuery($tbname, $values, $condition=null, $tableInfo=null){
         return IGKSQLQueryUtils::GetUpdateQuery($tbname, $values, $condition, $tableInfo);
@@ -689,8 +700,8 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="callback"></param>
     /**
     * Represente initSystablePushInitItem function
-    * @param  $tablename
-    * @param  $callback
+    * @param mixed $tablename
+    * @param mixed $callback
     */
     public function initSystablePushInitItem($tablename, $callback){
         return $this->m_dbManager && $this->m_dbManager->initSystablePushInitItem($tablename, $callback);
@@ -699,7 +710,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="tablename"></param>
     /**
     * Represente initSystableRequired function
-    * @param  $tablename
+    * @param mixed $tablename
     */
     public function initSystableRequired($tablename){
         return $this->m_dbManager && $this->m_dbManager->initSystableRequired($tablename);
@@ -708,7 +719,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="tbN"></param>
     /**
     * Represente IsStoredTable function
-    * @param  $tbN
+    * @param mixed $tbN
     */
     public function IsStoredTable($tbN){
         $g=$this->getStored();
@@ -764,7 +775,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="dbname"></param>
     /**
     * Represente selectdb function
-    * @param  $dbname
+    * @param mixed $dbname
     */
     public function selectdb($dbname){
         if(($this->m_dbManager != null) && !empty($dbname)){
@@ -784,16 +795,19 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<summary>Represente selectLastId function</summary>
     /**
     * Represente selectLastId function
+    * @return mixed
     */
     public function selectLastId(){
+        $r = null;
         if($this->m_dbManager != null)
-            return $this->m_dbManager->selectLastId();
+            $r= $this->m_dbManager->selectLastId();
+        return $r;
     }
     ///<summary>Represente setForeignKeyCheck function</summary>
     ///<param name="d"></param>
     /**
     * Represente setForeignKeyCheck function
-    * @param  $d
+    * @param mixed $d
     */
     public function setForeignKeyCheck($d){
         if(is_integer($d))
@@ -803,7 +817,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="v"></param>
     /**
     * Represente setLastQuery function
-    * @param  $v
+    * @param mixed $v
     */
     protected function setLastQuery($v){
         throw new IGKNotImplementException(__FUNCTION__);
@@ -815,12 +829,12 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     ///<param name="querytabinfo" default="null"></param>
     /**
     * Represente update function
-    * @param  $tbname
-    * @param  $entries the default value is null
-    * @param  $where the default value is null
-    * @param  $querytabinfo the default value is null
+    * @param mixed $tbname
+    * @param mixed $entries the default value is null
+    * @param mixed $where the default value is null
+    * @param mixed $querytabinfo the default value is null
     */
-    public function update($tbname, $entries=null, $where=null, $querytabinfo=null){
+    public function update($tbname, $entries, $where=null, $querytabinfo=null){
         if(($entries == null) || ($this->m_dbManager == null)){
             return false;
         }
@@ -837,7 +851,7 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     ///<param name="ctrl" default="null"></param>
     /**
     * Represente __construct function
-    * @param  $ctrl the default value is null
+    * @param mixed $ctrl the default value is null
     */
     public function __construct($ctrl=null){
         parent::__construct($ctrl);
@@ -847,10 +861,10 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     * Represente __createManager function
     */
     protected function __createManager(){
-        if(class_exists(IGKSQLManager::class)){
+        if(class_exists(IGKDBQueryDriver::class)){
             $this->makeCurrent();
             $cnf=$this->app->Configs;
-            $s=IGKSQLManager::Create($cnf->db_server, $cnf->db_user, $cnf->db_pwd);
+            $s=IGKDBQueryDriver::Create($cnf->db_server, $cnf->db_user, $cnf->db_pwd);
             if($s == null){
                 ob_start();
                 igk_wln("CreateManager Error");
@@ -864,12 +878,19 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
                 $s=new IGKNoDbConnection();
             }
             else{
-                $s->setAdapter($this);  
+                $s->setAdapter($this);
             }
             return $s;
         }
         return null;
     }
+	public function escape_string($v){
+		 $b=IGKDBQueryDriver::GetResId();
+		 if ($b){
+			 return mysqli_real_escape_string($b, $v);
+		 }
+		 return addslashes($v);
+	}
     ///<summary>Represente __toString function</summary>
     /**
     * Represente __toString function
@@ -877,19 +898,18 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     public function __toString(){
         return __CLASS__;
     }
-	
+
 	public function get_charset(){
-		 $b=IGKSQLManager::GetResId();
+		 $b=IGKDBQueryDriver::GetResId();
 		 if ($b){
 			 return mysqli_character_set_name($b);
 		 }
 		return "";
 	}
-	public function set_charset($u){
-		 $b=IGKSQLManager::GetResId();
+	public function set_charset($charset="utf-8"){
+		 $b=IGKDBQueryDriver::GetResId();
 		 if ($b){
-			 igk_wln("bin");
-			 return mysqli_set_charset($b);
+			 return mysqli_set_charset($b, $charset);
 		 }
 		return "";
 	}
@@ -898,8 +918,8 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     ///<param name="name">the table name</param>
     /**
     *  add column
-    * @param tbname the table name
-    * @param name the table name
+    * @param string $tbname the table name
+    * @param string $name column name
     */
     public function addColumn($tbname, $name){
         if(empty($tbname))
@@ -925,13 +945,13 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
 			return $this->sendQuery("ALTER `{$table}` AUTO_INCREMENT {$value}");
 		}
 		return false;
-		
+
 	}
     ///<summary>Represente clearTable function</summary>
     ///<param name="tbname"></param>
     /**
     * Represente clearTable function
-    * @param  $tbname
+    * @param mixed $tbname
     */
     public function clearTable($tbname){
         $tbname=igk_mysql_db_tbname($tbname);
@@ -941,7 +961,7 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     ///<param name="dbname"></param>
     /**
     * Represente createdb function
-    * @param  $dbname
+    * @param mixed $dbname
     */
     public function createdb($dbname){
         if($this->m_dbManager != null)
@@ -955,10 +975,10 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     ///<param name="desc" default="null"></param>
     /**
     * Represente createTable function
-    * @param  $tablename
-    * @param  $columninfoArray
-    * @param  $entries the default value is null
-    * @param  $desc the default value is null
+    * @param mixed $tablename
+    * @param mixed $columninfoArray
+    * @param mixed $entries the default value is null
+    * @param mixed $desc the default value is null
     */
     public function createTable($tablename, $columninfoArray, $entries=null, $desc=null){
         if($this->m_dbManager != null){
@@ -1013,8 +1033,8 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     ///<param name="entry"></param>
     /**
     * Represente getInsertQuery function
-    * @param  $tablename
-    * @param  $entry
+    * @param mixed $tablename
+    * @param mixed $entry
     */
     public function getInsertQuery($tablename, $entry){
         return IGKSQLQueryUtils::GetInsertQuery($tablename, $entry);
@@ -1022,7 +1042,7 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     ///<summary>create table links definition </summary>
     ///return true if this table still have link an register ctrl data
     /**
-    * create table links definition 
+    * create table links definition
     */
     public function haveNoLinks($tablename, $ctrl=null){
         return $this->m_dbManager->haveNoLinks($tablename, $ctrl);
@@ -1033,9 +1053,9 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     ///<param name="tableinfo" default="null"></param>
     /**
     * Represente insert function
-    * @param  $tablename
-    * @param  $entry
-    * @param  $tableinfo the default value is null
+    * @param mixed $tablename
+    * @param mixed $entry
+    * @param mixed $tableinfo the default value is null
     */
     public function insert($tablename, $entry, $tableinfo=null){
         if($this->m_dbManager != null){
@@ -1046,13 +1066,13 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     }
 	///<summary>insert array in items by building as semi-column separated query</summary>
 	public function insert_array($tbname, $values, $throwex=1){
-		
+
 		$query = "";
 		$ch = "";
-		foreach($values as $k=>$v){
-			 $query .= $ch.IGKSQLQueryUtils::GetInsertQuery($tbname, $v, null); 
+		foreach($values as  $v){
+			 $query .= $ch.IGKSQLQueryUtils::GetInsertQuery($tbname, $v, null);
 			 $ch = " ";
-		}  
+		}
 		return $this->sendMultiQuery($query, $throwex);
 	}
     ///<summary>Represente restoreRelationChecking function</summary>
@@ -1067,8 +1087,8 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     ///<param name="name"></param>
     /**
     * Represente rmColumn function
-    * @param  $tbname
-    * @param  $name
+    * @param mixed $tbname
+    * @param mixed $name
     */
     public function rmColumn($tbname, $name){
         $tbname=igk_db_escape_string($tbname);
@@ -1080,7 +1100,7 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     ///<param name="tbname"></param>
     /**
     * Represente selectAll function
-    * @param  $tbname
+    * @param mixed $tbname
     */
     public function selectAll($tbname){
         $q="SELECT * FROM `".igk_mysql_db_tbname($tbname)."` ";
@@ -1092,16 +1112,16 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     ///<param name="options" default="null"></param>
     /**
     * Represente sendQuery function
-    * @param  $query
-    * @param  $throwex the default value is true
-    * @param  $options the default value is null
+    * @param mixed $query
+    * @param mixed $throwex the default value is true
+    * @param mixed $options the default value is null
     */
     public function sendQuery($query, $throwex=true, $options=null){
         $sendquery=$this->queryListener ?? $this->m_dbManager;
         if($sendquery){
-			
+
             $options=$options ?? (object)[];
-            $r=$sendquery->sendQuery($query, $throwex); 
+            $r=$sendquery->sendQuery($query, $throwex);
             if($r !== null)
                 return IGKMySQLQueryResult::CreateResult($r, $query, $options);
         }
@@ -1110,9 +1130,9 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
 	public function sendMultiQuery($query, $throwex=true){
         $sendquery=$this->queryListener ?? $this->m_dbManager;
         if($sendquery){
-            $r = $sendquery->sendMultiQuery($query, $throwex); 
+            $r = $sendquery->sendMultiQuery($query, $throwex);
             if($r !== null){
-                return 1; 
+                return 1;
 			}
         }
         return null;
@@ -1121,7 +1141,7 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     ///<param name="listener"></param>
     /**
     * Represente setSendDbQueryListener function
-    * @param  $listener
+    * @param mixed $listener
     */
     public function setSendDbQueryListener($listener){
         $this->queryListener=$listener;
@@ -1137,7 +1157,7 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     ///<param name="tablename"></param>
     /**
     * Represente tableExists function
-    * @param  $tablename
+    * @param mixed $tablename
     */
     public function tableExists($tablename){
         return $this->m_dbManager->tableExists($tablename);
@@ -1161,6 +1181,7 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
     */
     public function drop_all_tables(){
         $d=igk_get_data_adapter($this);
+        $node=null;
         if($d->connect()){
             $node=igk_createNode("div");
             $r=$d->sendQuery("SHOW TABLES");
@@ -1184,16 +1205,16 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
             }
             $d->selectdb($dbname);
             $d->close();
-            return $node;
         }
+        return $node;
     }
     ///<summary>Represente DropAllRelations function</summary>
     ///<param name="adapt"></param>
     ///<param name="dbname"></param>
     /**
     * Represente DropAllRelations function
-    * @param  $adapt
-    * @param  $dbname
+    * @param mixed $adapt
+    * @param mixed $dbname
     */
     public static function DropAllRelations($adapt, $dbname){
         $bck=$dbname;
@@ -1208,9 +1229,9 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
     ///<param name="qregex"></param>
     /**
     * Represente DropConstraints function
-    * @param  $adapt
-    * @param  $dbname
-    * @param  $qregex
+    * @param mixed $adapt
+    * @param mixed $dbname
+    * @param mixed $qregex
     */
     public static function DropConstraints($adapt, $dbname, $qregex){
         $r=0;
@@ -1222,7 +1243,7 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
         if($e && ($e->RowCount > 0)){
             $adapt->begintransaction();
             $r=1;
-            foreach($e->Rows as $k=>$v){
+            foreach($e->Rows as  $v){
                 $q="ALTER TABLE `".$v->TABLE_NAME."` DROP ".$v->CONSTRAINT_TYPE. " `".$v->CONSTRAINT_NAME."` ";
                 $r=$r && $adapt->sendQuery($q);
             }
@@ -1244,7 +1265,7 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
     */
     public static function DropTable($adapter, $tbname, $dbname, $node=null){
         if(is_array($tbname)){
-			 
+
             $tablelist=array();
             $deleted=array();
             foreach($tbname as $k=>$v){
@@ -1261,9 +1282,9 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
                         $node->addNotifyBox("danger")->Content="Table ".$ktbname. " not deleted ".igk_mysql_db_error();
                     $r=false;
                 }
-            } 
+            }
             igk_hook(IGK_NOTIFICATION_DB_TABLEDROPPED, [$adapter, $tbname]);
-            return true;
+
         }
         else{
             $delete=null;
@@ -1272,9 +1293,8 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
                 igk_notifyctrl()->addErrorr("Table ".$tbname. " not deleted ".igk_mysql_db_error());
                 return false;
             }
-            return true;
         }
-        return false;
+        return true;
     }
     ///<summary>Represente DropTableRelation function</summary>
     ///<param name="adapter"></param>
@@ -1285,12 +1305,12 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
     ///<param name="node" default="null"></param>
     /**
     * Represente DropTableRelation function
-    * @param  $adapter
-    * @param  $tbname
-    * @param  $dbname
-    * @param  $tablelist the default value is null
+    * @param mixed $adapter
+    * @param mixed $tbname
+    * @param mixed $dbname
+    * @param mixed $tablelist the default value is null
     * @param  * $deleted the default value is null
-    * @param  $node the default value is null
+    * @param mixed $node the default value is null
     */
     public static function DropTableRelation($adapter, $tbname, $dbname, $tablelist=null, & $deleted=null, $node=null){
         $d=$adapter;
@@ -1335,8 +1355,8 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
     ///<param name="dbname"></param>
     /**
     * Represente GetAllRelations function
-    * @param  $adapt
-    * @param  $dbname
+    * @param mixed $adapt
+    * @param mixed $dbname
     */
     public static function GetAllRelations($adapt, $dbname){
         $bck=$dbname;
@@ -1351,9 +1371,9 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
     ///<param name="tbase"></param>
     /**
     * Represente GetConstraint_Index function
-    * @param  $a
-    * @param  $b
-    * @param  $tbase
+    * @param mixed $a
+    * @param mixed $b
+    * @param mixed $tbase
     */
     public static function GetConstraint_Index($a, $b, $tbase){
         $bck=$tbase;
@@ -1362,7 +1382,7 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
         $i=1;
         $max=0;
         $ln=strlen($b);
-        foreach($h->Rows as $k=>$v){
+        foreach($h->Rows as  $v){
             if(preg_match("/^".$b."/i", $v->CONSTRAINT_NAME)){
                 $i++;
                 $max=max($max, intval(substr($v->CONSTRAINT_NAME, $ln)));
@@ -1396,7 +1416,7 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
     ///<param name="tbname"></param>
     /**
     * Represente getEntries function
-    * @param  $tbname
+    * @param mixed $tbname
     */
     public function getEntries($tbname){
         $v=$this->getInfo($tbname);
@@ -1406,7 +1426,7 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
     ///<param name="tbname"></param>
     /**
     * Represente getInfo function
-    * @param  $tbname
+    * @param mixed $tbname
     */
     public function getInfo($tbname){
         return igk_getv($this->m_dictionary, $tbname);
@@ -1433,8 +1453,8 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
     ///<param name="tbname" default="null"></param>
     /**
     * Represente initDataEntry function
-    * @param  $dbman
-    * @param  $tbname the default value is null
+    * @param mixed $dbman
+    * @param mixed $tbname the default value is null
     */
     public function initDataEntry($dbman, $tbname=null){}
     ///<summary>Represente RestoreRelations function</summary>
@@ -1443,9 +1463,9 @@ class IGKMySQLDataCtrl extends IGKControllerBase{
     ///<param name="e"></param>
     /**
     * Represente RestoreRelations function
-    * @param  $adapt
-    * @param  $dbname
-    * @param  $e
+    * @param mixed $adapt
+    * @param mixed $dbname
+    * @param mixed $e
     */
     public static function RestoreRelations($adapt, $dbname, $e){
         throw new IGKNotImplementException(__METHOD__);
@@ -1506,7 +1526,7 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
         if(($this->m_type == "igk_db_query_result") && ($this->m_query == ":igk_build_in_query_result")){
             if(is_object($row)){
                 $tab=array();
-                foreach($this->m_columns as $k=>$v){
+                foreach($this->m_columns as  $v){
                     $tab[$v->name]=igk_getv($row, $v->name);
                 }
                 $this->m_rows[]=(object)$tab;
@@ -1538,22 +1558,26 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
     ///<param name="options">callback or igk_db_create_opt_obj()</param>
     /**
     * create a result data
-    * @param options callback or igk_db_create_opt_obj()
+    * @param mixed options callback or igk_db_create_opt_obj()
     */
     public static function CreateResult($dbresult, $query=null, $options=null){
         $_handle=$options && igk_getv($options, 'handle');
         if(!$_handle){
             if(is_bool($dbresult) || is_numeric($dbresult) || ($dbresult === null)){
-                $out=new IGKMySQLQueryResult();
-                $out->m_fieldcount=1;
-                $out->m_columns[]="clResult";
-                $t=array("clResult"=>$dbresult);
-                $out->m_irows[]=$t;
-                $out->m_type=is_numeric($dbresult) ? "numeric": "boolean";
-                $out->m_value=$dbresult;
-                $out->m_query=$query;
-                $out->setError(igk_getv($options, "error"));
-                $out->setErrorMsg(igk_getv($options, "errormsg"));
+                // $out=new IGKMySQLQueryResult();
+                // $out->m_fieldcount=1;
+                // $out->m_columns[]="clResult";
+                // $t=array("clResult"=>$dbresult);
+                // $out->m_irows[]=$t;
+                // $out->m_type=is_numeric($dbresult) ? "numeric": "boolean";
+                // $out->m_value=$dbresult;
+                // $out->m_query=$query;
+                // $out->setError(igk_getv($options, "error"));
+                // $out->setErrorMsg(igk_getv($options, "errormsg"));
+                $out = new IGKDBSingleValueResult();
+                $out->type = is_numeric($dbresult) ? "numeric": "boolean";
+                $out->value = $dbresult;
+                $out->query = $query;
                 return $out;
             }
             if(!$dbresult){
@@ -1646,7 +1670,7 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
     ///<param name="columnname"></param>
     /**
     * Represente getColumnIndex function
-    * @param  $columnname
+    * @param mixed $columnname
     */
     public function getColumnIndex($columnname){
         if(isset($this->m_columns[$columnname])){
@@ -1696,7 +1720,7 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
     ///<param name="index"></param>
     /**
     * Represente getRowArray function
-    * @param  $index
+    * @param mixed $index
     */
     public function getRowArray($index){
         if(($index < 0) && ($index>=$this->RowCount)){
@@ -1717,7 +1741,7 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
     ///<param name="index"></param>
     /**
     * Represente getRowAtIndex function
-    * @param  $index
+    * @param mixed $index
     */
     public function getRowAtIndex($index){
         if(strtolower($this->m_type) == 'igk_db_query_result'){
@@ -1762,13 +1786,13 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
     }
     ///<param name="equalsTab">array for searching </param>
     /**
-    * @param equalsTab array for searching 
+    * @param mixed $equalsTab array for searching
     */
     public function searchEqual($equalsTab){
         if(!is_array($equalsTab))
             return null;
         $t=array();
-        foreach($this->Rows as $k=>$v){
+        foreach($this->Rows as  $v){
             $found=true;
             foreach($equalsTab as $m=>$n){
                 if($v->$m != $n){
@@ -1789,14 +1813,14 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
     ///<param name="callback"></param>
     /**
     * Represente select function
-    * @param  $callback
+    * @param mixed $callback
     */
     public function select($callback){
         $result=new IGKMySQLQueryResult();
         $result->m_columns=$this->m_columns;
         $result->m_type="igk_db_query_filter_result";
         $result->m_fieldcount=$this->m_fieldcount;
-        foreach($this->m_rows as $k=>$v){
+        foreach($this->m_rows as  $v){
             if($callback($v)){
                 $result->m_rows[]=$v;
             }
@@ -1809,9 +1833,9 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
     ///<param name="preserveid" default="true"></param>
     /**
     * Represente SortBy function
-    * @param  $key
-    * @param  $asc the default value is true
-    * @param  $preserveid the default value is true
+    * @param mixed $key
+    * @param mixed $asc the default value is true
+    * @param mixed $preserveid the default value is true
     */
     public function SortBy($key, $asc=true, $preserveid=true){
         return $this->SortValueBy($key, $asc, null, $preserveid);
@@ -1819,7 +1843,7 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
     ///<summary>sort result </summary>
     ///<param name="key">mixed. callback | key to sor </param>
     /**
-    * sort result 
+    * sort result
     */
     public function SortValueBy($key, $asc=true, $param=null, $preserveid=false){
         if(is_callable($key))
@@ -1860,7 +1884,7 @@ final class IGKMySQLTimeManager extends IGKObject{
     ///<param name="ad"></param>
     /**
     * Represente __construct function
-    * @param  $ad
+    * @param mixed $ad
     */
     public function __construct($ad){
         $this->ad=$ad;
@@ -1918,7 +1942,7 @@ class IGKNoDbConnection{
     ///<param name="query"></param>
     /**
     * Represente sendQuery function
-    * @param  $query
+    * @param mixed $query
     */
     function sendQuery($query){
         return null;
@@ -1939,9 +1963,9 @@ class IGKNoDbConnection{
 function igk_mysqli_multi_query($con, $query){
 	 $cr =  mysqli_multi_query($con, $query);
 	 if ($cr){
-		 while (mysqli_more_results($con) && mysqli_next_result($con)){		
+		 while (mysqli_more_results($con) && mysqli_next_result($con)){
 		 }
-		 $cr = ($error = mysqli_errno($con)) == 0;		
+		 $cr = ($error = mysqli_errno($con)) == 0;
 	 }
 	 return $cr;
 }
@@ -1956,17 +1980,18 @@ else
 define("IGK_MYSQL_DATETIME_FORMAT", "Y-m-d H:i:s");
 define("IGK_MYSQL_TIME_FORMAT", IGK_MYSQL_DATETIME_FORMAT);
 define("IGK_MYSQL_DATE_FORMAT", "Y-m-d");
-IGKSQLManager::Init(function(& $conf){
+IGKDBQueryDriver::Init(function(& $conf){
     $n="mysqli";
     $conf["system"]="mysqli";
     $conf[$n]["func"]=array();
     $conf[$n]["auto_increment_word"]="AUTO_INCREMENT";
+    $conf[$n]["data_adapter"]="MYSQL";
     $t=array();
     $t["connect"]="mysqli_connect";
     $t["selectdb"]="mysqli_select_db";
     $t["check_connect"]="mysqli_ping";
     $t["query"]="mysqli_query";
-    $t["multi_query"]="igk_mysqli_multi_query"; 
+    $t["multi_query"]="igk_mysqli_multi_query";
     $t["escapestring"]="mysqli_real_escape_string";
     $t["num_rows"]="mysqli_num_rows";
     $t["num_fields"]="mysqli_num_fields";

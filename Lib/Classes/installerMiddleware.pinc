@@ -1,7 +1,7 @@
 <?php
 // @file: installerMiddleware.pinc
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -27,7 +27,7 @@ class InstallerActionMiddleWare{
     ///<param name="list"></param>
     /**
     * Represente AbortAction function
-    * @param  $list
+    * @param mixed $list
     */
     public static function AbortAction($list){
         $c=$list[0];
@@ -66,9 +66,9 @@ class InstallerActionMiddleWare{
     ///<param name="service" default="null"></param>
     /**
     * Represente Run function
-    * @param  $list
-    * @param  $index
-    * @param  $service the default value is null
+    * @param mixed $list
+    * @param mixed $index
+    * @param mixed $service the default value is null
     */
     public static function Run($list, $index, $service=null){
         $c=$list[$index];
@@ -246,7 +246,7 @@ class InstallerEventMessageMiddleWare extends InstallerActionMiddleWare{
     ///<param name="host"></param>
     /**
     * Represente __construct function
-    * @param  $host
+    * @param mixed $host
     */
     public function __construct($host){
         $this->host=$host;
@@ -445,7 +445,7 @@ class InstallerMiddleWareActions{
     ///<param name="middle"></param>
     /**
     * Represente add function
-    * @param  $middle
+    * @param mixed $middle
     */
     public function add($middle){
         if(!is_object($middle)){
@@ -467,10 +467,11 @@ class InstallerMiddleWareActions{
     ///<summary>Represente process function</summary>
     /**
     * Represente process function
+    * @return mixed
     */
     public function process(){
         if(($tc=count($this->_list))<=0)
-            return;
+            return false;
         if($this->Success=InstallerActionMiddleWare::Run($this->_list, 0, $this)){
             $this->write(__("Process Complete"));
         }
@@ -480,7 +481,7 @@ class InstallerMiddleWareActions{
     ///<param name="msg"></param>
     /**
     * Represente write function
-    * @param  $msg
+    * @param mixed $msg
     */
     public function write($msg){
         if($this->isEventStream()){

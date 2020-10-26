@@ -1,7 +1,7 @@
 <?php
 // @file: igk_sitemap.pinc
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -11,6 +11,6 @@
 if(!isset($c))
     igk_die("variable c not define");
 if(preg_match("/^".IGK_SITEMAP_FUNC."(\.xml)?$/", $c)){
-    igk_sys_gen_sitemap($this, igk_getv($p, 0, $this->getAppUri()));
+    igk_sys_gen_sitemap($ctrl, igk_getv($p, 0, $ctrl->getAppUri()));
     igk_exit();
 }

@@ -1,7 +1,7 @@
 <?php
 // @file: IGKApplicationBase.class.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -43,7 +43,7 @@ abstract class IGKApplicationBase extends IGKApplicationController{
     }
     ///<summary></summary>
     /**
-    * 
+    *
     */
     public final function getManifest(){
         if($this->m_manifest == null){
@@ -107,7 +107,7 @@ abstract class IGKApplicationBase extends IGKApplicationController{
     ///<param name="context" default="null"></param>
     /**
     * Represente onInstall function
-    * @param  $context the default value is null
+    * @param mixed $context the default value is null
     */
     protected function onInstall($context=null){
         igk_die(__METHOD__." not implement");
@@ -116,7 +116,7 @@ abstract class IGKApplicationBase extends IGKApplicationController{
     ///<param name="context"></param>
     /**
     * Represente onUninstal function
-    * @param  $context
+    * @param mixed $context
     */
     protected function onUninstal($context){
         igk_die(__METHOD__." not implement");
