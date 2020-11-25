@@ -13,13 +13,18 @@ $div["class"] = "+igk-win10-toggle";
 
 $i = $div->addInput($name, "checkbox")->setClass("igk-state-btn");
 $i["value"]= igk_getv($i_value, "v");
-$i["checked"]=igk_getv($i_value, "c");
+$c = igk_getv($i_value, "c");
+if ($c)
+$i["checked"]=1; //igk_getv($i_value, "c");
 
-$div->addDiv()->setAttributes(
-array(
-"data-off"=>R::ngets("Off"),
-"data-on"=>R::ngets("On"), 
-"checked"=>igk_getv($i_value, "c"),
+$attrs = array(
+// "data-off"=>R::ngets("Off"),
+// "data-on"=>R::ngets("On"), 
+// "checked"=>igk_getv($i_value, "c"),
 'igk-balafonjs'=>'igk.winui.stateBtn.init(this);'
-));
-?>
+);
+if ($c){
+    $attrs["checked"] = 1;
+}
+
+$div->addDiv()->setAttributes($attrs);

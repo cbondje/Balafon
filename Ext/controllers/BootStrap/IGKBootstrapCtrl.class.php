@@ -1,4 +1,6 @@
 <?php
+
+use function igk_resources_gets as __;
 /*
 boot strap structure controller
 */
@@ -144,7 +146,7 @@ final class IGKBootstrapCtrl extends IGKConfigCtrlBase
 	igk.system.createNS("igk.lib.bootstrap", {
 		update:function(xhr){
 			if (this.isReady()){
-				this.replaceBody(xhr.responseText);
+				// this.replaceBody(xhr.responseText);
 			}
 		}
 	});
@@ -185,21 +187,23 @@ EOF;
 		$box->addInput("update", "submit", R::ngets("btn.update"))->setClass("igk-btn igk-default")->setStyle("font-size:1em; width:auto; line-height:1em;");
 
 
-		$s = $d->addDiv()->addPanelBox();
-		$s->addSectionTitle(4)->Content = "Files";
 		$f = igk_io_getfiles(igk_io_currentRelativePath("Lib/bootstrap"), "/\.(css|js)$/i");
-		$ul = $s->add("ul");
 		if (igk_count($f)>0 ){
-		foreach($f as  $v){
-			$ul->add("li")->Content = IGKIO::GetDir($v);
-		}
+			$s = $d->addDiv()->addPanelBox();
+			$ul = $s->add("ul");
+			$s->addSectionTitle(4)->Content = "Files";
+			foreach($f as  $v){
+				$ul->add("li")->Content = IGKIO::GetDir($v);
+			}
 		}
 		else{
 			$p = $d->addPanel();
 			$p->Content = R::ngets("msg.bootstrap.nofilefound");
 			$frm = $p->addForm();
-			$frm["action"] = "http://www.bootstrap.com/download";
-			$frm->addInput("clGetBootStrap", "submit", R::ngets("btn.getbootstrap"));
+			$a = $frm->add("a");
+			$a["href"] = "https://getbootstrap.com";
+			$a["target"] = "__blank";
+			$a->Content = __("Get Bootstrap");
 		}
 	}
 	public function update_bootstrap_setting()

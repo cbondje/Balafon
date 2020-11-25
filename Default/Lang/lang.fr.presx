@@ -1,5 +1,8 @@
 <?php
 //Balafon Generated language file
+$l["failed to connect or select {0}'s databases"]="Impossible de selectionner ou de se connecter à la base de données {0}";
+$l["menu.clearsession"]="Supprimer la session";
+$l["menu.clearcache"]="Supprimer la cache";
 $l["Welcome"] = "Bienvenue";
 $l["No result"] = "Aucun résultat";
 $l["msg.bootstrap.nofilefound"] = "La librairie bootstrap n'est pas installée.";
@@ -1098,7 +1101,9 @@ $l["msg.yourversionishighter"]="Votre version est la plus recente";
 $l["msmg.mailbox.boxisempty_1"]="Boite {0} vide";
 $l["my chart"]="Mon Panier";
 $l["myprofile"]="Mon Profiles";
-$l["mysql query tool"]="Mysql Query Tool";
+$l["mysql query tool"]="Requêtes";
+$l["query"]="Requêtes";
+$l["backup"]="Sauvegardes";
 $l["newbill"]="Nouvelle Facture";
 $l["news updated"]="Actualité mis à jour";
 $l["next page"]="Next Page";

@@ -24828,7 +24828,7 @@ igk.system.createNS("igk.system", {
 			igk.winui.reg_event(q, "transitionend", __transition_end);
 			q.setCss({ opacity: 0.0 });
 			_fo = 1;
-		}, 3000);
+		}, 2000);
 	};
 	igk.system.createNS("igk.winui.controls", {
 		toast: function () {
@@ -24842,8 +24842,7 @@ igk.system.createNS("igk.system", {
 			d.addClass(type);
 		};
 		d.setHtml(m);
-		igk.dom.body().add(d);
-		
+		igk.dom.body().add(d);		
 		d.init();
 	};
 

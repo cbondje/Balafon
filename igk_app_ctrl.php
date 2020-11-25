@@ -9,6 +9,9 @@
 // @url: https://www.igkdev.com
 
 define("IGK_INC_APP_INITDB", IGK_LIB_DIR."/".IGK_INC_FOLDER."/igk_initapp_db.pinc");
+
+use function igk_resources_gets as __; 
+
 ///<summary>Represente igk_app_ctrl_dropped_callback function</summary>
 ///<param name="ctrl"></param>
 ///<param name="n"></param>
@@ -497,7 +500,7 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
             $b->addA($this->getAppUri($k))->setContent($k);
         }
         $bodybox->setStyle("position:relative; color: #eee; margin-bottom:300px;padding-bottom:0px; overflow-y:auto; color:indigo;");
-        $bodybox->addDiv()->setClass("posfix loc_b loc_r loc_l dispb footer-box igk-fixfitw")->setId("fbar")->setAttribute("igk-js-fix-loc-scroll-width", "1")->setStyle("min-height:80px;background-color:#ddd; z-index: 10; width: auto;");
+        $bodybox->addDiv()->setClass("posfix loc_b loc_r loc_l dispb footer-box igk-fixfitw")->setId("fbar")->setAttribute("igk-js-fix-loc-scroll-width", "1")->setStyle("min-height:80px; z-index: 10; width: auto;");
         $bodybox->addDiv()->setClass("no-visibity dispb")->setAttribute("igk-js-fix-height", "#fbar");
         $b=$bodybox->addActionBar();
         $u=$this->getAppUri("functions/1");
@@ -949,12 +952,12 @@ EOF;
         $c=self::GetApps();
         if(empty($n)){
             $n=str_replace("\\", ".", $this->Name);
-        }
+        }  
         if(preg_match(IGK_IS_FQN_NS_REGEX, $n) && !isset($c->_[$n])){
             $c->_[$n]=$this->getName();
         }
         else{
-            igk_assert_die(!igk_get_env("sys://reloadingCtrl"), "Error : Application or identifier is not valid :: ".igk_getv(self::$sm_apps, $n). " :: n = ".$n. " :: ".get_class($this));
+            igk_assert_die(!igk_get_env("sys://reloadingCtrl"), "Error : Application identifier is not valid or already register.".get_class($this));
         }
         $this->register_action();
         if(!isset(self::$INIT)){
@@ -1281,9 +1284,8 @@ EOF;
     * Represente setDefaultFavicon function
     * @param mixed $doc
     */
-    protected function setDefaultFavicon($doc){
-		igk_trace();
-		throw new Exception("Not implement : use igk_doc_set_favicon function ");
+    protected function setDefaultFavicon($doc){		
+		throw new Exception(__("Not implement : use igk_doc_set_favicon function "));
         // $d=$this->getResourcesDir()."/Img/favicon.ico";
         // igk_doc_set_favicon($doc, $d);
     }
@@ -1295,9 +1297,9 @@ EOF;
     */
     public function SetupCtrl($param){
         parent::SetUpCtrl($param);
-        $t=strtolower(str_replace(' ', '_', $this->AppName));
+        $t=strtolower(str_replace(' ', '_', $this->Name));
         if(empty($t))
-            throw new Exception("Can't setup controller");
+            throw new Exception(__("Can't setup controller: {0}", get_class($this) ));
         $c=array($t, $t."_administrator");
         foreach($c as $k){
             $e=igk_db_table_select_where(IGK_TB_GROUPS, array(IGK_FD_NAME=>$k), $this);

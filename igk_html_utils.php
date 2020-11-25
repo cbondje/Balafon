@@ -5,6 +5,51 @@
 use function igk_resources_gets as __;
 
 
+function igk_html_reg_class($name, $class){
+    $B = igk_get_env("html://class");
+    if (!$B){
+        $B = [];
+    }
+    $B[$name] = $class;
+    igk_set_env("html://class", $B);
+    return $B;
+}
+function igk_html_reg_method($name, $funcName, $callable){
+    $key = "html://methods";
+    $B = igk_get_env($key);
+    if (!$B){
+        $B = [];
+    }
+    $B[$name][$funcName] = $callable;
+    igk_set_env($key, $B);
+    return $B;
+}
+function igk_html_get_method($name, $method){
+    $c = igk_get_env("html://methods");//IGKEnvironment::HTML_METHOD);
+    if (isset($c[$name])){
+        return igk_getv($c[$name], $method);
+    }
+    return null;
+}
+function igk_html_get_class_callable($name, $method){
+ 
+    $c = igk_get_env("html://class");//IGKEnvironment::HTML_METHOD);
+    if (isset($c[$name])){
+
+        $c = igk_getv($c, $name);//, $method);
+        if (!isset($instance[$c])){
+        
+        }
+        $g = igk_environment()->GetClassInstance($c);
+        
+        if ($g && method_exists($g, $method)){
+            return array($g, $method);
+        }
+    }
+    return null;
+}
+
+
 function igk_html_validate(){
     //TODO: implement validation error
     throw new Exception("Not Implement");
@@ -1184,111 +1229,6 @@ function igk_html_toast($doc, $message, $type="igk-default"){
 */
 function igk_html_utils_buildformfield($formfields, $render=1){
     return igk_html_form_fields($formfields, $render);
-    // $o="";
-    // $load_attr=function($v, & $o){
-    //     if(!isset($v["attribs"])){
-    //         return;}
-    //     foreach($v["attribs"] as $k=>$v){
-    //         $o .= " ".$k."=\"".$v."\"";
-    //     }
-    // };
-    // $fieldset=0;
-    // foreach($formfields as $k=>$v){
-    //     $_type=strtolower(isset($v["type"]) ? $v["type"]: "text");
-    //     $_value=isset($v["value"]) ? $v["value"]: "";
-    //     $_allow_empty=isset($v["allow_empty"]) ? $v["allow_empty"]: "";
-    //     $_empty_value=isset($v["empty_value"]) ? $v["empty_value"]: "0";
-    //     if($_type == "fieldset"){
-    //         if($fieldset){
-    //             $o .= "</fieldset>";
-    //         }
-    //         $o .= "<fieldset";
-    //         $load_attr($v, $o);
-    //         $o .= ">";
-    //         if(isset($v["legend"])){
-    //             $o .= "<legend>".$v["legend"]."</legend>";
-    //         }
-    //         $fieldset=1;
-    //         continue;
-    //     }
-    //     $_id="";
-    //     if(isset($v["id"])){
-    //         $_id=' id="'.$v["id"].'"';
-    //     }
-    //     $o .= "<div";
-    //     if((isset($v["required"]) ? $v["required"]: 0)){
-    //         $o .= " class=\"require\" ";
-    //     }
-    //     $o .= ">";
-    //     if(!preg_match("/(hidden|fieldset)/", $_type)){
-    //         $o .= "<label for='{$k}'>".(isset($v["label_text"]) ? $v["label_text"]: $k)."</label>";
-    //     }
-    //     switch($_type){
-    //         case "fieldset":
-    //         break;
-    //         case "textarea":
-    //         $o .= "<textarea name=\"{$k}\" id=\"{$k}\" ";
-    //         $load_attr($v, $o);
-    //         $o .= ">{$_value}</textarea>";
-    //         break;
-    //         case "radiogroup":
-    //         $o .= '<div style="display:inline-block;">';
-    //         foreach($v["data"] as $kk=>$vv){
-    //             $o .= '<span >'.__($kk).'</span><input type="radio" name="'.$k.'"'.$_id.' value="'.$vv.'" />';
-    //         }
-    //         $o .= "</div>";
-    //         break;
-    //         case "select":
-    //         $k_data="";
-    //         $bas=isset($v["selected"]) ? $v["selected"]: null;
-    //         if(isset($v["data"]) && is_string($k_data=$v["data"])){
-    //             $k_data="data=\"".$k_data."\" selected=\"{$bas}\" ";
-    //         }
-    //         else{
-    //             $k_data=null;
-    //         }
-    //         $o .= "<select name=\"{$k}\"".$_id.$k_data.">";
-    //         if($_allow_empty){
-    //             $o .= "<option ";
-    //             $o .= "value=\"{$_empty_value}\" ></option>";
-    //         }
-    //         if(isset($v["data"]) && is_array($_tab=$v["data"])){
-    //             foreach($_tab as $row){
-    //                 $o .= "<option ";
-    //                 $o .= "value=\"{$row['i']}\" ";
-    //                 if(isset($bas) && ($bas == $row['i'])){
-    //                     $o .= "selected";
-    //                 }
-    //                 $o .= ">";
-    //                 $o .= $row["t"];
-    //                 $o .= "</option>";
-    //             }
-    //         }
-    //         else{}
-    //         $o .= "</select>";
-    //         break;
-    //         case "text":
-    //         case "hidden":
-    //         case "password":default:
-    //         if(empty($_id))
-    //             $_id=' id="'.$k.'"';
-    //         $o .= "<input type=\"{$_type}\" value=\"{$_value}\" name=\"{$k}\"{$_id} class=\"clinput cl{$_type}\" ";
-    //         if(isset($v["maxlength"])){
-    //             $o .= "maxlength=\"{$v["maxlength"]}\" ";
-    //         }
-    //         if(isset($v["placeholder"])){
-    //             $o .= "placeholder=\"{$v["placeholder"]}\" ";
-    //         }
-    //         $load_attr($v, $o);
-    //         $o .= "/>";
-    //         break;
-    //     }
-    //     $o .= "</div>";
-    // }
-    // if($fieldset){
-    //     $o .= "</fieldset>";
-    // }
-    return $o;
 }
 
 ///<summary>Represente igk_html_view_node function</summary>

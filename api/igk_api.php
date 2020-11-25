@@ -600,6 +600,9 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
     public function getName(){
         return IGK_API_CTRL;
     }
+    public function getAppName(){
+        return IGK_API_CTRL;
+    }
     ///<summary>Represente getRegUriAction function</summary>
     /**
     * Represente getRegUriAction function

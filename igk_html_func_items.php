@@ -2422,10 +2422,12 @@ function igk_html_node_repeatcontent($number){
 /**
 * Represente igk_html_node_replaceuri function
 */
-function igk_html_node_replaceuri(){
+function igk_html_node_replaceuri($uri=null){
     $c=igk_createnotagnode();
-    if($rp=igk_get_env("replace_uri")){
-        $c->addObData(function() use ($rp){igk_ajx_replace_uri($rp);
+    $rp = $uri;
+    if($rp || ($rp=igk_get_env("replace_uri"))){
+        $c->addObData(function() use ($rp){
+            igk_ajx_replace_uri($rp);
         });
     }
     return $c;
@@ -2437,6 +2439,12 @@ function igk_html_node_replaceuri(){
 function igk_html_node_responsenode(){
     $n=igk_createnode('div');
     $n["class"]="igk-response";
+    return $n;
+}
+
+function igk_html_node_tablehost(){
+    $n = igk_createnode("div");
+    $n["class"] = "igk-table-host";
     return $n;
 }
 ///<summary>function igk_html_node_rollin</summary>
