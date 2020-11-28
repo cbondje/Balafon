@@ -1,0 +1,15 @@
+26-11-2020 08:34:06:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught Error: Function name must be a string in /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:10
+Stack trace:
+#0 {main}
+  thrown
+file:/Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi
+line:10
+]
+26-11-2020 08:34:06:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:4) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+26-11-2020 08:34:06:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:4) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+26-11-2020 08:34:06:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:4) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349

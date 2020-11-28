@@ -36090,9 +36090,10 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
             }
             if(!isset($_SESSION) && !igk_is_cmd()){
                 $ctx=igk_current_context();
-                if(!igk_sys_env_production()){
-                    igk_trace();
-                    igk_wln_e("can't create session instance : session not started", 'context : '.$ctx, 'baseuri : '.igk_io_baseuri());
+                if(!igk_sys_env_production()){ 
+                    igk_die(json_encode(["message"=>__("can't create session instance : session not started"), 
+                        'context'=>$ctx, 
+                        'baseuri'=>igk_io_baseuri()]));
                 }
                 else{
                     if($ctx == IGKAppContext::initializing){
@@ -40960,28 +40961,27 @@ EOF;
 <script type="text/javascript">if (window.ns_igk) window.ns_igk.winui.fn.close_all_frames();</script>
 <div id="connectionTag" class="igk-cnf-connexion-div google-Roboto">
 <div  style="max-width:300px;  position:relative; color:white;  display:inline-block;" >
-
 <div id="id_layer" style="width:300px; z-index:0;">
 <div id="id_board"  style="width:301px; padding-top: 48px; background-repeat:no-repeat; left:0px; top:0px;">
 	<div id="notify-z"></div>
-	<ul style="padding-bottom:3em" >
-	<li><label class="cllabel alignl" for="clAdmLogin" >{$lang('Login')}</label>
-	<input type="text" name="clAdmLogin" id="clAdmLogin" class="cltext" autocomplete="off" placeholder="{$lang('Admin login')}" /><br /></li>
-	<li><label class="cllabel alignl" for="clAdmPwd" >{$lang('Password')}</label>
-	<input type="password" name="clAdmPwd" id="clAdmPwd" class="clpassword" autocomplete="current-password" placeholder="{$lang('Admin password')}" /><br /></li>
+	<ul style="padding-bottom:1.5em" >
+        <li><label class="cllabel alignl" for="clAdmLogin" >{$lang('Login')}</label>
+        <input type="text" name="clAdmLogin" id="clAdmLogin" class="cltext" autocomplete="off" placeholder="{$lang('Admin login')}" /><br /></li>
+        <li><label class="cllabel alignl" for="clAdmPwd" >{$lang('Password')}</label>
+        <input type="password" name="clAdmPwd" id="clAdmPwd" class="clpassword " autocomplete="current-password" placeholder="{$lang('Admin password')}" /><br /></li>
 	</ul>
-	<div class="igk-row" style="margin:0px;" >
-    <input type="submit" class="clsubmit alignr floatr" name="connect" value="{$lang('Connexion')}" />
-    <a href="{$baseuri}" class="igk-btn dispib alignr floatr clsubmit" >{$lang('Go home')}</a>
+    <div class="igk-row" >
+        <div class="igk-col fitw alignc">
+            <input type="submit" class="igk-btn clsubmit dispib" name="connect" value="{$lang('Connexion')}" />
+            <a href="{$baseuri}" class="dispb alignc" style="font-size: 10pt; padding-top:2em" >{$lang('home page')}</a>
+        </div>
 	</div>
-
 </div>
-<div id="id_content" style="width:301px; height:131px; position:absolute;background-repeat:no-repeat; left:0px; top:270px;">
+<div id="id_content" class="config-desc">
 ${igk_framename} - ${igk_version}<br />
-Configuration Manager
+{$lang('dashboard')}
 </div>
 <div id="id_foot" style="width:301px; height:31px; position:absolute;background-repeat:no-repeat; left:0px; top:0px;">
-
 </div>
 </div>
 </div>
@@ -55469,10 +55469,10 @@ abstract class IGKCtrlTypeBase extends IGKControllerBase {
     public static function GetAdditionalDefaultViewContent(){
         static $viewcomment=null;
         if($viewcomment === null)
-            $viewcomment="/**\n* ". implode("\n* ", explode("\n", trim(igk_ob_get_func(function() use (& $viewcomment){
-            include(dirname(__FILE__)."/Inc/default.view.comment.inc");
+            $viewcomment=implode("\n* ", explode("\n", trim(igk_ob_get_func(function() use (& $viewcomment){
+            include(IGK_LIB_DIR."/Inc/default.view.comment.inc");
         }))))."\n*/"; 
-        $r = "<?php\n".igk_html_eval_article("{$viewcomment}\n\$t->clearChilds();\nigk_html_article(\$this , \"default\", \$t);\n", ["author"=>igk_sys_getconfig("developer", IGK_AUTHOR), "date"=>date("Y-m-d H:i:s"), "version"=>1.0 ]);
+        $r = "<?php\n/**\n* ".igk_html_eval_article("{$viewcomment}\n\$t->clearChilds();\nigk_html_article(\$this , \"default\", \$t);\n", ["author"=>igk_sys_getconfig("developer", IGK_AUTHOR), "date"=>date("Y-m-d H:i:s"), "version"=>1.0 ]);
         return $r;
     }
     ///<summary>Represente GetCtrlCategory function</summary>
@@ -81045,15 +81045,7 @@ class IGKResourceUriResolver{
                             }
                         }
                         if(!file_exists($file=$dir."/.htaccess")){
-                            igk_io_w2file($file, <<<EOF
-Options +ExecCGI
-AddHandler cgi-script .cgi .pl
-
-<Files *.cgi>
-allow from all
-</Files>
-EOF
-                            );
+                            igk_io_w2file($file, igk_io_read_allfile(IGK_LIB_DIR."/Inc/default.cgi.htaccess")); 
                         }
                         return $chain;
                     }

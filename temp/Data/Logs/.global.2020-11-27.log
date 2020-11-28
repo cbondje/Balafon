@@ -1,0 +1,190 @@
+27-11-2020 08:45:13:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught Exception: {"message":"can't create session instance : session not started","context":"initializing","baseuri":null} in /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:7304
+Stack trace:
+#0 /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php(36096): igk_die('{"message":"can...')
+#1 /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php(36403): IGKApp::getInstance()
+#2 /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php(9283): IGKApp::IsInit()
+#3 /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi(24): igk_get_document('cgi')
+#4 {main}
+  thrown
+file:/Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php
+line:7304
+]
+27-11-2020 08:45:13:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+27-11-2020 08:45:13:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+27-11-2020 08:45:13:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349
+27-11-2020 08:45:14:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught Exception: {"message":"can't create session instance : session not started","context":"initializing","baseuri":null} in /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:7304
+Stack trace:
+#0 /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php(36096): igk_die('{"message":"can...')
+#1 /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php(36403): IGKApp::getInstance()
+#2 /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php(9283): IGKApp::IsInit()
+#3 /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi(24): igk_get_document('cgi')
+#4 {main}
+  thrown
+file:/Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php
+line:7304
+]
+27-11-2020 08:45:14:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+27-11-2020 08:45:14:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+27-11-2020 08:45:14:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349
+27-11-2020 08:47:24:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught Error: Call to undefined function igk_init() in /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:23
+Stack trace:
+#0 {main}
+  thrown
+file:/Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi
+line:23
+]
+27-11-2020 08:47:24:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+27-11-2020 08:47:24:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+27-11-2020 08:47:24:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349
+27-11-2020 08:47:24:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught Error: Call to undefined function igk_init() in /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:23
+Stack trace:
+#0 {main}
+  thrown
+file:/Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi
+line:23
+]
+27-11-2020 08:47:24:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+27-11-2020 08:47:24:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+27-11-2020 08:47:24:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349
+27-11-2020 08:49:02:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught Error: Class 'IGKHtmlDocument' not found in /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:24
+Stack trace:
+#0 {main}
+  thrown
+file:/Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi
+line:24
+]
+27-11-2020 08:49:02:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+27-11-2020 08:49:02:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+27-11-2020 08:49:02:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349
+27-11-2020 08:49:02:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught Error: Class 'IGKHtmlDocument' not found in /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:24
+Stack trace:
+#0 {main}
+  thrown
+file:/Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi
+line:24
+]
+27-11-2020 08:49:02:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+27-11-2020 08:49:02:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+27-11-2020 08:49:02:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349
+27-11-2020 08:49:51:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught Error: Call to a member function addBodyBox() on null in /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:26
+Stack trace:
+#0 {main}
+  thrown
+file:/Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi
+line:26
+]
+27-11-2020 08:49:51:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+27-11-2020 08:49:51:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+27-11-2020 08:49:51:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349
+27-11-2020 08:49:51:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught Error: Call to a member function addBodyBox() on null in /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:26
+Stack trace:
+#0 {main}
+  thrown
+file:/Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi
+line:26
+]
+27-11-2020 08:49:51:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+27-11-2020 08:49:51:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+27-11-2020 08:49:51:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349
+27-11-2020 09:02:08:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught Error: Class 'IGKA' not found in /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:25
+Stack trace:
+#0 {main}
+  thrown
+file:/Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi
+line:25
+]
+27-11-2020 09:02:08:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+27-11-2020 09:02:08:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+27-11-2020 09:02:08:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349
+27-11-2020 09:02:09:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught Error: Class 'IGKA' not found in /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:25
+Stack trace:
+#0 {main}
+  thrown
+file:/Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi
+line:25
+]
+27-11-2020 09:02:09:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+27-11-2020 09:02:09:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+27-11-2020 09:02:09:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349
+27-11-2020 09:02:19:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught ArgumentCountError: Too few arguments to function IGKApp::Init(), 0 passed in /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi on line 25 and at least 1 expected in /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:36239
+Stack trace:
+#0 /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi(25): IGKApp::Init()
+#1 {main}
+  thrown
+file:/Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php
+line:36239
+]
+27-11-2020 09:02:19:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+27-11-2020 09:02:19:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+27-11-2020 09:02:19:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349
+27-11-2020 09:02:20:[igk_sys_shutdown_function] - Array(4):[
+type:1
+message:Uncaught ArgumentCountError: Too few arguments to function IGKApp::Init(), 0 passed in /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi on line 25 and at least 1 expected in /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:36239
+Stack trace:
+#0 /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi(25): IGKApp::Init()
+#1 {main}
+  thrown
+file:/Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php
+line:36239
+]
+27-11-2020 09:02:20:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:25878
+27-11-2020 09:02:20:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21348
+27-11-2020 09:02:20:[igk_sys_g_handle_error] - /cgi-bin/runlink.cgi:
+severity: 2 Cannot modify header information - headers already sent by (output started at /Volumes/Data/wwwroot/sites/9612/src/application/Projects/cgi_testing/cgi-bin/runlink.cgi:16) /Volumes/Data/wwwroot/core/Lib/igk/igk_framework.php:21349

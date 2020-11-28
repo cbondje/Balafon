@@ -88,6 +88,7 @@ $root = $src."/public";
 igk_io_w2file($src."/vhost.conf", <<<EOF
 {$listen}<VirtualHost *:$tport>
 SetEnv ENVIRONMENT {$environment}
+SetEnv IGK_LIB_DIR {$src}/application/Lib/igk
 DocumentRoot {$root}
 <Directory {$root}>
 Options +FollowSymLinks -MultiViews -Indexes
