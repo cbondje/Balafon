@@ -14858,7 +14858,7 @@ function igk_io_baseuri($dir=null, $secured=null, & $path=null){
         $out .= ':'.$c;
     }
     $srv=igk_server();
-    if($path=$srv->PATH_INFO){}
+    // if($path=$srv->PATH_INFO){}
     if(!empty($t))
         $out .= '/'.$t;
     $out=str_replace('\\', '/', $out);
@@ -15312,13 +15312,16 @@ function igk_io_entry_relative_path_uri($file){
 /**
 *  expand system path
 */
-function igk_io_expand_path($str){
+function igk_io_expand_path($str, $callback=null){
     if(preg_match("/^(\"|')/", $str)){
         $str=substr($str, 1, -1);
     }
     $str=str_replace("%lib%", IGK_LIB_DIR, $str);
     $app=igk_io_applicationdir();
     $str=str_replace("%app%", $app, $str);
+    if ($callback){
+        $str = $callback($str);
+    }
     return $str;
 }
 ///<summary>Represente igk_io_fileispicture function</summary>
@@ -16087,7 +16090,10 @@ function igk_io_query_info(){
         $obj->ctrl=null;
         $obj->entryuri=igk_io_request_uri_path();
         $obj->root_uri=igk_io_root_entryuri();
-		$obj->fullentry = igk_io_baseuri().$obj->entryuri;
+        $obj->fullentry = igk_io_baseuri().$obj->entryuri;
+        if ($path_info = igk_server()->PATH_INFO){
+            $obj->params = $g=array_slice(explode("/", ($path_info)), 1);
+        }
         return $obj;
     });
     return $v;
@@ -22666,6 +22672,15 @@ function igk_str_read_callback_list(){
             }
     ];
     return $callbacklist;
+}
+function igk_str_uncollapseString($v){
+    if (is_string($v)){
+        if (preg_match("/^(\"|')/", $v)){ 
+            $p = 1;
+            $v = substr(igk_str_read_brank($v, $p, $v[0], $v[0], null, 1, 0),0, -1); 
+        }
+    }
+    return $v;
 }
 ///<summary>call this for cleaning code source</summary>
 ///<param name="lines">mixed. array of string </param>
@@ -36111,10 +36126,17 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
             //     return $iapp;
             // }
         }
-        if (isset(self::$sm_instance->Doc)){
-            igk_ilog("doc bound ");
+        if (isset(self::$sm_instance->Doc)){ 
             igk_exit();
         }
+        return self::$sm_instance;
+    }
+    ///<summary>call this function in order to initiale application for non session handling</summary>
+    public static function InitSingle(){
+        if (self::$sm_instance === null){
+            $obj = (object)[];
+            self::$sm_instance = new IGKApp($obj);
+        }  
         return self::$sm_instance;
     }
     ///<summary>Represente getInvokedUriController function</summary>
@@ -73548,7 +73570,9 @@ final class IGKHtmlReader extends IGKObject {
     ///<param name="context">name of the function that call the read model</param>
     /**
     * read the model
-    * @param mixed $context name of the function that call the read model
+    * @param mixed|IGKHtmlReader reader to used
+    * @param mixed document
+    * @param mixed context to used
     */
     private static function _ReadModel($reader, $tab_doc, $context=null){
         $cnode=null;
@@ -73571,18 +73595,8 @@ final class IGKHtmlReader extends IGKObject {
                     array_unshift($v_tags, $s);
             }
         };
-		// igk_debug_wln("binding ".igk_env_count(__FUNCTION__));
-
-        while($reader->Read()){ 
-			// if (igk_is_debug()){
-
-				// $reader->getValue(),
-				// $cnode->TagName,
-				// "Parent Node ".get_class($cnode->parentNode));
-			// }
-			// if ($bbbb && ($cnode ===null)){
-
-			// }
+	 
+        while($reader->Read()){  
 
             switch($reader->NodeType){
                 case IGKXMLNodeType::ELEMENT:
@@ -74090,6 +74104,27 @@ final class IGKHtmlReader extends IGKObject {
     public function Name(){
         return $this->m_name;
     }
+    public static function GetAttributeRegex(){
+        $machv="(?P<value>";
+        $machv .= "([\"](([^\"]*(')?(\"\")?)+)[\"])";
+        $machv .= "|([\'](([^']*(\")?('')?)+)[\'])";
+        $machv .= "|(([^\s]*)+)";
+        $machv .= ")";
+        $tagRegexLoad="(?P<name>("."([\(])".IGK_TAGNAME_CHAR_REGEX."+([\)])"."|([\\[])".IGK_TAGNAME_CHAR_REGEX."+([\\]])".'|(@|\*(\*)?)?'.IGK_TAGNAME_CHAR_REGEX.'+'."))";
+        return "/".$tagRegexLoad."[\s]*=[\s]*(".$machv.")/i";
+    }
+    public static function ReadAttributes($value){
+        $regex = self::GetAttributeRegex();
+        $out = [];
+        if ( ($c = preg_match_all($regex, $value, $tab)) > 0)
+        { 
+            for($i =0 ; $i < $c; $i++){
+                $out[$tab["name"][$i]] =  igk_str_uncollapseString($tab["value"][$i]);
+            }
+        }
+        return $out;
+    }
+
     ///<summary>Represente Read function</summary>
     /**
     * Represente Read function
@@ -74120,13 +74155,7 @@ final class IGKHtmlReader extends IGKObject {
             $this->m_attribs[$k]=$v;
         };
         if($_tagRegexValueRgx === null){
-            $machv="(?P<value>";
-            $machv .= "([\"](([^\"]*(')?(\"\")?)+)[\"])";
-            $machv .= "|([\'](([^']*(\")?('')?)+)[\'])";
-            $machv .= "|(([^\s]*)+)";
-            $machv .= ")";
-            $tagRegexLoad="(?P<name>("."([\(])".IGK_TAGNAME_CHAR_REGEX."+([\)])"."|([\\[])".IGK_TAGNAME_CHAR_REGEX."+([\\]])".'|(@|\*(\*)?)?'.IGK_TAGNAME_CHAR_REGEX.'+'."))";
-            $_tagRegexValueRgx="/".$tagRegexLoad."[\s]*=[\s]*(".$machv.")/i";
+            $_tagRegexValueRgx = self::GetAttributeRegex();           
         }
         while($this->CanRead()){
             $c=$this->m_text[$this->m_offset];
@@ -74355,8 +74384,7 @@ final class IGKHtmlReader extends IGKObject {
                             $k=$m["name"][$cc];
                             $_v=$m["value"][$cc];
                             if(preg_match("/^@igk:expression/", $k)){
-                                $this->m_attribs[$k]=$v_expressions[IGKHtmlUtils::GetAttributeValue($m["value"][$cc], $this->context)];
-								//igk_debug_wln("bind attr : {$k} = ".$this->m_attribs[$k]);
+                                $this->m_attribs[$k]=$v_expressions[IGKHtmlUtils::GetAttributeValue($m["value"][$cc], $this->context)];								
                             }
                             else{
                                 if(!igk_temp_bind_attribute($binfo, $k, $_v, $this->context, $fc_attrib)){
