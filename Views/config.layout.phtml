@@ -9,19 +9,18 @@
 // @url: https://www.igkdev.com
 
 use function igk_resources_gets as __;
-
+// die("config layout");
 $gdoc=igk_app()->Doc;
 igk_google_addfont($doc, "Roboto");
-$f=
-$gdoc->Theme->addTempFile($ctrl->getStylesDir()."/config.pcss");
+igk_google_addfont($gdoc, "Roboto"); 
 
 $confframe=$ctrl->getConfigFrame();
 
-// igk_html_rm($confframe);
+//igk_wln_e("check document : ", $gdoc === $doc);
 
 
 ($cl=$t["class"]) && $cl->clear();
-$t["class"]="igk-cnf-page";
+$t["class"]="igk-cnf-page google-Roboto";
 $h=$t->addDiv()->setClass("header");
 $navbtn=$h->addToggleButton();
 $navbtn->Target="#android-menu";

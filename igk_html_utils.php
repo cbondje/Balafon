@@ -4,6 +4,12 @@
 
 use function igk_resources_gets as __;
 
+///<summary>pre render argument</summary>
+function igk_html_pre(){
+    echo "<pre>";
+    print_r(func_get_args());
+    echo "</pre>";
+}
 
 function igk_html_reg_class($name, $class){
     $B = igk_get_env("html://class");

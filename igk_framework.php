@@ -2448,7 +2448,9 @@ function igk_css_bind_file($ctrl, $f, $theme=null){
         if($theme == null){
             $theme=$doc->Theme;
         }
-    }
+    } 
+    $context = \IGK\Css\IGKCssContext::Init($ctrl, $theme);
+
     $xsm_screen=$theme->get_media(IGKHtmlDocThemeMediaType::XSM_MEDIA);
     $sm_screen=$theme->get_media(IGKHtmlDocThemeMediaType::SM_MEDIA);
     $lg_screen=$theme->get_media(IGKHtmlDocThemeMediaType::LG_MEDIA);
@@ -2892,7 +2894,7 @@ function igk_css_get_style($classname){
         return;
     $b=$igk->Doc->Theme[$classname];
     if($b == null){
-        igk_debug_wln("/!\\ not found found in theme definition ".$classname);
+        igk_ilog("/!\\ style not found : ".$classname);
         $b=$igk->Doc->SysTheme[$classname];
         if($b){
             $o=igk_css_treat($igk->Doc->SysTheme, $b);
@@ -3627,7 +3629,7 @@ function igk_css_treat($theme, $v, $themeexport=false, $doc=null){
     $reg3=IGK_CSS_CHILD_EXPRESSION_REGEX;
     $match=array();
     $systheme=$doc->getSysTheme();
-    $gtheme=$doc->Theme;
+    $gtheme= $theme==null? $doc->Theme : $theme;
     $d=& $systheme->def->getCl();
     $gcl=($d) ? $d: array();
     $c=0;
@@ -3636,14 +3638,28 @@ function igk_css_treat($theme, $v, $themeexport=false, $doc=null){
         for($i=0; $i < $c; $i++){
             $n=$match[0][$i];
             $name=$match["name"][$i];
-            $type=$match[1][$i];
+            $type=$match["type"][$i];
+            $deftheme = $match["def"][$i];
             $rv=IGK_STR_EMPTY;
+            $def = null;
+            if (empty($deftheme)){
+                $deftheme = "def";
+            }
             if(empty($type)){
-                $rv=$gtheme->def[$name];
+                $rv= $gtheme->$deftheme[$name];
             }
             else{
-                $rv=$systheme->def[$name];
+                if ($type=="sys"){
+                    $rv=$systheme->$deftheme[$name];
+                }else {
+                    igk_ilog("css type not define: ".$name. " on ".$type. " ".$deftheme);
+                }
             }
+            igk_ilog("css resol => ".$type. " : ".$name .  " = ".$rv . " ".$deftheme);
+            igk_ilog("document? ". (igk_app()->Doc === $doc));
+            // igk_ilog("google: t:". $theme[".google-Roboto"]);
+            // igk_ilog("google: g:". $gtheme[".google-Roboto"]);
+            // igk_ilog("google: s:". $systheme[".google-Roboto"]);
             $v=str_replace($n, $rv, $v);
         }
     }
@@ -7276,7 +7292,7 @@ function igk_detect_closure($obj, & $closures){
 * @param mixed $throwex bool throw exception
 * @throws Exception
 */
-function igk_die($msg=IGK_DIE_DEFAULT_MSG, $throwex=1){
+function igk_die($msg=IGK_DIE_DEFAULT_MSG, $throwex=1, $code=400){
     if($throwex){
         if(is_array($msg)){
             $t=$msg;
@@ -7295,17 +7311,10 @@ function igk_die($msg=IGK_DIE_DEFAULT_MSG, $throwex=1){
                     $msg .= "<div>Message: {$m} </div>";
                 }
             }
-        }
-		// igk_trace();
-		// igk_exit();
-        header("Content-Type:text/html");
-		// try{
-			//igk_ilog($msg);
-			throw new Exception($msg);
-		// }
-		// catch(Exception $ex){
-			// igk_wln("bad thing append");
-		// }
+        } 
+        header("Content-Type:text/html"); 
+		throw new Exception($msg, $code);
+		 
     }
     else{
         ob_clean();
@@ -20380,7 +20389,11 @@ function igk_register_autoload_class($func, $priority=10){
                 if(call_user_func_array($fc, func_get_args()))
                     return 1;
             }
-            if(file_exists($f=igk_html_uri(IGK_LIB_DIR."/Lib/Classes/".$n.".php"))){
+            $f = igk_html_uri($n);
+            if (strpos($f, "IGK/")===0){
+                $f = substr($f, 4); 
+            }
+            if(file_exists($f=igk_html_uri(IGK_LIB_DIR."/Lib/Classes/".$f.".php"))){
                 include_once($f);
                 if(!class_exists($n, false) && !interface_exists($n, false)){
                     igk_die("file loaded but not content class {$n} definition");
@@ -20713,6 +20726,7 @@ function igk_require_module($modulename, $loadall=1, $die=1){
         return $g[$modulename];
     }
     $dir=igk_io_dir(igk_get_module_dir()."/{$modulename}");
+ 
     if(file_exists($dir)){
         igk_push_env("sys://module", $modulename);
         $f=0;
@@ -23614,9 +23628,9 @@ function igk_svg_bind_callable_list($n, $m){
     }
     return 1;
 }
-///<summary>bind svg files to document</summary>
+///<summary>bind all svg document from the folder. All of them will be send to client. use igk_svg_register_icons if only send required is mandatory.</summary>
 /**
-* bind svg files to document
+* bind all svg document from the folder. All of them will be send to client. use igk_svg_register_icons if only send required is mandatory.
 */
 function igk_svg_bind_svgs($doc, $dir=IGK_LIB_DIR."/Data/R/svg/icons"){
     $files=$doc->getTempFlag(__FUNCTION__, array());
@@ -23761,9 +23775,9 @@ function igk_svg_register($doc, $name, $file){
     igk_svg_bindfile($name, $file);
     return $n;
 }
-///<summary>register svg list document in directory</summary>
+///<summary>register svg list document in directory. only required svg from the folder will be send to client</summary>
 /**
-* register svg list document in directory
+* register svg list document in directory. only required svg from the folder will be send to client
 */
 function igk_svg_register_icons($doc, $dir=IGK_LIB_DIR."/Data/R/svg/icons"){
     foreach(IGKIO::GetFiles($dir, "/\.svg$/i") as  $v){
@@ -40919,7 +40933,8 @@ EOF;
             return $bfrm;
         }
         else if(!igk_environment()->is("production")){
-            $d=$bfrm->addObData(function(){echo "<div >/!\\bmc not found</div>";
+            $d=$bfrm->addObData(function(){
+                echo "<div >/!\\bmc not found</div>";
             });
             $d["class"]="posab";
         }
@@ -41557,8 +41572,9 @@ EOF;
             if(!$this->getIsConnected()){
                 igk_io_protect_request(igk_io_baseuri()."/Configs");
 
-                $f=igk_realpath($this->getStylesDir()."/config.pcss");
-                $app->Doc->Theme->addTempFile($f);
+                if ($f=igk_realpath($this->getStylesDir()."/config.pcss")){
+                    $app->Doc->Theme->addTempFile($f);
+                }
                 $cnode=$this->initConnexionNode();
                 $t->addNotifyHost();
                 $t["class"] = "+con-start";
@@ -62828,8 +62844,7 @@ class IGKDbUtility extends IGKObject implements IIGKDbUtility {
                 return $s;
             }
         }
-        $this->close();
-		igk_trace();
+        $this->close(); 
         $msg="/!\\ DBUtility[".get_class($this)."] Action {$name} not implements";
         igk_ilog($msg, __CLASS__);
         igk_notifyctrl()->addError($msg);
@@ -68654,7 +68669,7 @@ final class IGKDefaultMainPage extends IGKHtmlItem{
         igk_set_env("sys://nopowered", 1);
         $this->clearChilds();
         $n=$this->addContainer()->addCol('fitw')->addRow();
-        $n->addObData(function(){
+        $n->setClass("default-home-page")->addObData(function(){
             $r=R::GetCurrentLang();
             $f=IGK_LIB_DIR."/Articles/startapp/default.homepage.{$r}.phtml";
             if(file_exists($f))
@@ -68667,6 +68682,7 @@ final class IGKDefaultMainPage extends IGKHtmlItem{
             igk_google_addfont($doc, "Roboto");
             $doc->Title=igk_sys_getconfig("website_title");
             $doc->Theme->addTempFile(IGK_LIB_DIR."/".IGK_STYLE_FOLDER."/default.homepage.pcss");
+            $doc->body["class"] = "google-Roboto";
             $doc->body->AppendContent->addSingleNodeViewer(IGK_HTML_NOTAG_ELEMENT)->targetNode->addIGKCopyRight()->setStyle("position:absolute; bottom:0px;padding:10px; z-index:10;");
         }
         return 1;
@@ -80336,6 +80352,26 @@ final class IGKHtmlDocTheme extends IGKObjectGetProperties implements ArrayAcces
     public function & getCl(){
         return $this->m_def->getCl();
     }
+    ///<summary>return theme extra smalll media type</summary>
+    public function getxsm_screen(){
+        return $this->get_media( IGKHtmlDocThemeMediaType::XSM_MEDIA);
+    }
+    ///<summary>return theme smal media type</summary>
+    public function getsm_screen(){
+        return $this->get_media( IGKHtmlDocThemeMediaType::SM_MEDIA);
+    }
+    ///<summary>return theme large media type</summary>
+    public function getlg_screen(){
+        return $this->get_media( IGKHtmlDocThemeMediaType::LG_MEDIA);
+    }
+    ///<summary>return theme extra large media type</summary>
+    public function getxlg_screen(){
+        return $this->get_media( IGKHtmlDocThemeMediaType::XLG_MEDIA);
+    }
+    ///<summary>return theme extra extra large media type</summary>
+    public function getxxlg_screen(){
+        return $this->get_media( IGKHtmlDocThemeMediaType::XXLG_MEDIA);
+    }
     ///<summary>Represente getDeclaration function</summary>
     ///<param name="key" default="null"></param>
     /**
@@ -83060,17 +83096,17 @@ if(file_exists(($file=dirname(__FILE__)."/.igk.version.php"))){
     include($file);
 }
 unset($file);
-define("IGK_BALAFON_JS_VERSION", "4.5.0.0507");
+define("IGK_BALAFON_JS_VERSION", "4.5.0.0508");
 define("IGK_FRAMEWORK", "IGKDEV-WFM");
 !defined("IGK_WEBFRAMEWORK") && define("IGK_WEBFRAMEWORK", "11.0");
-!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".5.1103");
+!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".5.1207");
 define("IGK_AUTHOR", "C.A.D. BONDJE DOUE");
 define("IGK_AUTHOR_CONTACT", "bondje.doue@igkdev.com");
 define("IGK_AUTHOR_2", "R. TCHATCHO");
 define("IGK_AUTHOR_CONTACT_2", "gerald.romeo@tbnsolaris.com");
 define("IGK_AUTHORS", "C.A.D. BONDJE DOUE & R. TCHATCHO");
 define("IGK_PLATEFORM_NAME", "BALAFON");
-define("IGK_RELEASE_DATE", "25/10/2020");
+define("IGK_RELEASE_DATE", "07/12/2020");
 define("IGK_START_DATE", "01/01/2013");
 define("IGK_COPYRIGHT", "IGKDEV &copy; 2011-".date('Y')." all rights reserved");
 define("IGK_WEB_SITE", "https://www.igkdev.com");
@@ -83476,8 +83512,7 @@ if(!igk_sys_env_production()){
         $doc=igk_get_last_rendered_document();
         if($doc){
             $doc->clear();
+
         }
     });
 }
-
- 

@@ -13,6 +13,14 @@ final class IGKAppModule extends IGKControllerBase{
     private $m_fclist;
     private $m_listener;
     private $m_src;
+    private $m_initializer; // used to extend modul class properties
+
+
+    public function initClass($classname){
+        if (class_exists($classname)){
+            $this->m_initializer = new $classname();
+        }
+    }
     ///<summary>Represente __call function</summary>
     ///<param name="n"></param>
     ///<param name="args"></param>

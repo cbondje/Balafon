@@ -39,6 +39,7 @@ class IGKCGIServer
         }
         return null;
     }
+    // prepare cgi server
     public static function Prepare(){
         
         parse_str(igk_server()->QUERY_STRING, $_GET);

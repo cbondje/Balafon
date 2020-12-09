@@ -1112,8 +1112,7 @@ function igk_html_node_csslink($href, $temp=0, $defer=0){
         $m=$g->getLink($key_ref);
         if($m)
             return $m;
-    }
-    igk_wln("link ....".$defer);
+    } 
 
     $m=new IGKHtmlItem("link");
     $m->setAttribute("href", new IGKHtmlRelativeUriValueAttribute($key_ref));

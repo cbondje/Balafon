@@ -79,6 +79,10 @@ $def[$page. " a.igk-btn-default"] = "[bgcl:configLinkButtonDefaultBackgroundColo
 //---------------------------------------------------------
 //CONFIG PAGE STYLE CONFIGURATION
 //---------------------------------------------------------
+
+$def["body.igk-cnf-body"] = "background-color:red; (sys:.google-Roboto)";
+$def["body.igk-cnf-body .framebox-dialog .cltext, body.igk-cnf-body .framebox-dialog .clpassword"] = "padding:4px; margin-bottom:4px;";
+
 //config page
 $def[$page.""] = "overflow: hidden; text-align:left; [res:light-op20] [bgcl:configBackgroundColor] [fcl:configColor] (:.google-Roboto)".<<<EOF
 [varp:--igk-config-logo__background: [cl:configLoginLogoBackgroundColor]]
@@ -149,8 +153,9 @@ $sm_screen[$page." .header"] = "line-height: 48px";
 $def[".igk-cnf-body .igk-js-notify.domain-conf-z .content-z"] = "{sys:margin-a-lr} max-width:400px;";
 
 
+igk_ilog("docment----------------------- ");
 
-$def[".igk-body.igk-cnf-body"] = "background-color: [cl:configBackgroundColor]";
+$def[".igk-body.igk-cnf-body"] = "[bgcl:configBackgroundColor](:.google-Roboto)";
 
 
 $def[".igk-body.igk-android.igk-cnf-body"] = "height:100% !important;";

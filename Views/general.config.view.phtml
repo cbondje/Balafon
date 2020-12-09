@@ -2,8 +2,8 @@
 
 use function igk_resources_gets as __;
 
-
-$doc->Title=__("global configurations");
+die("kj");
+$doc->Title=__("Admin page");
 $doc->Theme->addTempFile($ctrl->getStylesDir()."/conf.setting.pcss");
 if(file_exists($ftfile=IGK_LIB_DIR."/Default/R/Fonts/global.ttf")){
     $doc->Theme->addFont("global", $ftfile);
