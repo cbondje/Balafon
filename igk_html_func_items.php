@@ -2131,7 +2131,7 @@ function igk_html_node_notification($nodeType="div", $notifyName=null){
 /**
 * used to bind notify global ctrl message
 */
-function igk_html_node_notifyhost($name=null, $autohide=1){
+function igk_html_node_notifyhost($name="::global", $autohide=1){
     $n=igk_createnode("div");
     $n["class"]="igk-notify-host";
     $n["title"]=$name;
@@ -2140,6 +2140,7 @@ function igk_html_node_notifyhost($name=null, $autohide=1){
     if($g){
         $g->setAutohide($autohide);
     }
+   
     return $n;
 }
 ///<summary>function igk_html_node_notifyhostbind</summary>

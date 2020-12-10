@@ -9,18 +9,16 @@
 // @url: https://www.igkdev.com
 
 use function igk_resources_gets as __;
-// die("config layout");
-$gdoc=igk_app()->Doc;
-igk_google_addfont($doc, "Roboto");
-igk_google_addfont($gdoc, "Roboto"); 
+ 
+igk_google_addfont($doc, "Roboto"); 
+ 
 
-$confframe=$ctrl->getConfigFrame();
 
-//igk_wln_e("check document : ", $gdoc === $doc);
+$confframe=$ctrl->getConfigFrame(); 
 
 
 ($cl=$t["class"]) && $cl->clear();
-$t["class"]="igk-cnf-page google-Roboto";
+$t["class"]="igk-cnf-page";
 $h=$t->addDiv()->setClass("header");
 $navbtn=$h->addToggleButton();
 $navbtn->Target="#android-menu";
@@ -34,7 +32,7 @@ $android_menu["class"]="igk-mob-opts igk-sm-only";
 $android_menu["igk-data-menu"]=1;
 $android_menu["igk-data-menu-binding"]="#igk-cnf-menu";
 
-$h->addDiv()->setClass("floatr alignb")->Content= __("Welcome, Admin");
+$h->addDiv()->setClass("floatr alignb")->Content= __("Welcome, {0}", igk_app()->Configs->admin_login);
 $h->addClearBoth();
 
 $t->addDiv()->add($confframe);

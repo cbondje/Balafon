@@ -8,6 +8,9 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
+defined("IGK_FRAMEWORK") || die("REQUIRE FRAMEWORK - No direct access allowed");
+define(basename(__FILE__), 1);
+
 
 function igk_io_get_script($f, $args=null){
     if (file_exists($f)){
@@ -541,6 +544,9 @@ final class IGKServer{
         else
             $this->data[$n]=$v;
     }
+    public function get($name, $default=null){
+        return igk_getv($this->data, $name, $default);
+    }
     ///<summary>Represente getInstance function</summary>
     /**
     * Represente getInstance function
@@ -633,5 +639,3 @@ final class IGKServer{
         return $this->data;
     }
 }
-defined("IGK_FRAMEWORK") || die("REQUIRE FRAMEWORK - No direct access allowed");
-define(basename(__FILE__), 1);

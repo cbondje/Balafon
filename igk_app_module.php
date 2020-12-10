@@ -72,7 +72,7 @@ final class IGKAppModule extends IGKControllerBase{
             $entry_ns = str_replace("/","\\", igk_get_module_name(readlink($this->getDeclaredDir())));
             $libdir=$classLib;
             spl_autoload_register(function($n)use($entry_ns, $libdir){
-                if (strpos($n, $entry_ns)===0){
+                if (!empty($entry_ns) && (strpos( $n, $entry_ns)===0)){
                     $cl = substr($n, strlen($entry_ns));
                     if (file_exists($fc = $libdir."/".$cl.".php")){
                         include($fc);

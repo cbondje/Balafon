@@ -2421,10 +2421,13 @@ function igk_css_bind_color_request($callback){
 */
 function igk_css_bind_file($ctrl, $f, $theme=null){
     if(!file_exists($f)){
-        igk_ilog('bind file failed '.$f);
+        igk_ilog('Bind file failed '.$f);
         return;
     }
-	$doc = igk_get_last_rendered_document() ?? igk_app()->Doc;;
+    $doc = igk_get_last_rendered_document() ?? igk_app()->Doc;
+    
+ 
+
     if(defined("IGK_FORCSS")){
         if($theme == null){
             $key="sys://css/IncludedFiled";
@@ -2472,8 +2475,8 @@ function igk_css_bind_file($ctrl, $f, $theme=null){
     $def=$theme->def;
     $cl=& $theme->getCl();
 	$prop= & $theme->getProperties();
-    $referer=igk_getv($_SERVER, "HTTP_REFERER", "igk://system");
-
+    $referer= igk_app()->server->get("HTTP_REFERER", "igk://system");
+ 
     include($f);
 
     $cl=& $theme->getCl();
@@ -3612,7 +3615,7 @@ function igk_css_str2class_name($s){
 ///<arg name="themeexport">in theme export</arg>
 ///<arg name="themeexport">in theme export</arg>
 /**
-* treate a css theme. evaluate the expression
+* treate a css theme. evaluate the expression. 
 */
 function igk_css_treat($theme, $v, $themeexport=false, $doc=null){
     $_app=igk_app();
@@ -3625,11 +3628,14 @@ function igk_css_treat($theme, $v, $themeexport=false, $doc=null){
     if(!$doc){
         return null;
     }
+    
     $reg=IGK_CSS_TREAT_REGEX;
     $reg3=IGK_CSS_CHILD_EXPRESSION_REGEX;
     $match=array();
     $systheme=$doc->getSysTheme();
-    $gtheme= $theme==null? $doc->Theme : $theme;
+    // $gtheme= $doc->Theme; // 
+    $gtheme = $theme==null? $doc->Theme : $theme;
+
     $d=& $systheme->def->getCl();
     $gcl=($d) ? $d: array();
     $c=0;
@@ -3649,17 +3655,19 @@ function igk_css_treat($theme, $v, $themeexport=false, $doc=null){
                 $rv= $gtheme->$deftheme[$name];
             }
             else{
-                if ($type=="sys"){
+               switch($type)
+               {
+                    case "sys":
                     $rv=$systheme->$deftheme[$name];
-                }else {
-                    igk_ilog("css type not define: ".$name. " on ".$type. " ".$deftheme);
+                    break;
+                    case "th":
+                        $rv = $doc->Theme->$deftheme[$name];
+                    break;
+                    default:                
+                        igk_ilog("css type not define: ".$name. " on ".$type. " ".$deftheme);
+                    break;
                 }
-            }
-            igk_ilog("css resol => ".$type. " : ".$name .  " = ".$rv . " ".$deftheme);
-            igk_ilog("document? ". (igk_app()->Doc === $doc));
-            // igk_ilog("google: t:". $theme[".google-Roboto"]);
-            // igk_ilog("google: g:". $gtheme[".google-Roboto"]);
-            // igk_ilog("google: s:". $systheme[".google-Roboto"]);
+            } 
             $v=str_replace($n, $rv, $v);
         }
     }
@@ -18895,7 +18903,7 @@ function igk_notify_reponse($msg, $type='default', $name=null){
 /**
 * shortcut to set notify host
 */
-function igk_notify_sethost($node, $notificationName=null){
+function igk_notify_sethost($node, $notificationName="::global"){
     igk_notifyctrl()->setNotifyHost($node, $notificationName);
 }
 ///<summary>Represente igk_notify_success function</summary>
@@ -18930,9 +18938,9 @@ function igk_notifybox_ajx($msg){
 function igk_notifyctrl($name=null){
     $ctrl=igk_getctrl(IGK_NOTIFICATION_CTRL, true);
     if($name == null){
-        return $ctrl;//->getNotification("::global", true);
+        return $ctrl; 
     }
-    $c=$ctrl->getNotification($name, true);
+    $c = $ctrl->getNotification($name, true);
     return $c;
 }
 ///<summary>clean ob</summary>
@@ -19951,10 +19959,8 @@ function igk_reg_cmd_command($name, $args){
 function igk_reg_component($id, $s){
     $ctrl=igk_getctrl(IGK_COMPONENT_MANAGER_CTRL);
     $ctrl->setParam("sys://globalcomponent/{$id}", $s);
-}
-///uses ?????
-/**
-*/
+} 
+ 
 function igk_reg_component_ajx($n, $attr, $callback){
     $n->setCallback($attr, $callback);
     $n["onclick"]="javascript:ns_igk.stop_event(event); ns_igk.ajx.post('".igk_get_component_uri($n, "$attr")."');  return false;";
@@ -30936,8 +30942,6 @@ final class IGKCssDefaultStyle implements ArrayAccess, Serializable {
     */
     public function & getParams(){
 		$g=& $this->prepareStorage(self::PARAMS_RULE);
-
-
         return $g;
     }
     ///<summary>Represente getRules function</summary>
@@ -31078,8 +31082,6 @@ final class IGKCssDefaultStyle implements ArrayAccess, Serializable {
     * Represente resetParams function
     */
     public function resetParams(){
-		igk_ilog("--reset param rull: ".igk_ob_get_func("igk_trace"));
-		igk_exit();
         unset($this->_[self::PARAMS_RULE]);
     }
     ///<summary>Represente rmRule function</summary>
@@ -35687,7 +35689,6 @@ class IGKAppSetting{
 final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
     private $_f;
     private $m_settings;
-    /** @var IGKApp */
     private static $sm_instance;
     public static $DEBUG;
     public static $INITENV;
@@ -36201,18 +36202,19 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
     */
     public function getSession(){
         static $sm_session=null;
-        if($sm_session == null){
+        if($sm_session === null){
 			$tab = null;
 			$appinfo = igk_app()->settings->appInfo;
             if(isset($appinfo->session)){
                 $tab= & $appinfo->session;
             }
             else{
+                //+ get array reference
                 $tab=array();
-				$appinfo->session = $tab;
+				$appinfo->session = & $tab;
             }
 			$sm_session=new IGKSession($this, $tab);
-            $this->_f[IGK_SESS_FLAG]=& $sm_session->getData();
+            $this->_f[IGK_SESS_FLAG] = & $sm_session->getData();
         }
         return $sm_session;
     }
@@ -40559,21 +40561,20 @@ EOF;
     * @param mixed $redirect the default value is true
     */
     public function connectToConfig($u=null, $pwd=null, $redirect=true){
-        // igk_wln_e(__FILE__.":".__LINE__);
+      
+
+
         if(igk_server()->method("POST") && igk_valid_cref(1)){
             if(!igk_sys_env_production()){
                 $u=$u == null ? "admin": "";
             }
             $app=igk_app();
             if(!$this->getIsConnected()){
-                $not=igk_notifyctrl("connexion:frame");
-
-                // igk_wln_e(__FILE__.':'.__LINE__, "the notify : ",  $not);
-
+                $not= igk_notifyctrl("connexion:frame");  
                 $u=($u == null) ? strtolower(igk_getr("clAdmLogin", $u)): $u;
-                $pwd=($pwd == null) ? strtolower(md5(igk_getr("clAdmPwd", $pwd))): md5($pwd);
+                $pwd=($pwd == null) ? strtolower(md5(igk_getr("clAdmPwd", $pwd))): md5($pwd);        
                 if(empty($u) || empty($pwd)){
-                    array_push($not, __("err.login.failed"));
+                    $not->addError( __("err.login.failed"));                 
                 }
                 else{
                     $adm=strtolower($app->Configs->admin_login);
@@ -40589,7 +40590,8 @@ EOF;
                         $this->_send_notification_mail();
                     }
                     else{
-                        array_push($not, __("err.login.failed"));
+                        $not->addError(__("err.login.failed"));  
+                        igk_ilog("failed connection");
                     }
                 }
             }
@@ -40695,15 +40697,13 @@ EOF;
     * @return *
     */
     public function & getConfigSettings(){
-        if(!($s=$this->getParam("configsettings"))){
-			// igk_trace();
-			// igk_wln_e("why create a configsettings on session");
+        if(!($s=$this->getParam($key = "configsettings"))){ 
             $s=(object)array(
                 "SelectedController"=>null,
                 "configEntries"=>null,
 				"ConfigView"=>null
             );
-            $this->setParam("configsettings", $s);
+            $this->setParam($key, $s);
         }
         return $s;
     }
@@ -40890,7 +40890,8 @@ EOF;
     /**
     * Represente initConnexionNode function
     */
-    private function initConnexionNode(){
+    private function initConnexionNode(){   
+ 
         $bfrm=igk_createnotagnode();
         $igk_framename=IGK_FRAMEWORK;
         $igk_version=IGK_VERSION;
@@ -40977,11 +40978,7 @@ EOF;
             $cdiv->addA(igk_io_baseuri())->Content="goto index";
             $frm->addDiv()->setClass("dispb posfix fitw no-overflow loc_l loc_b")->setAttribute("style", "font-size:0.8em; position:fixed; height:48px;")->addDiv()->Content="{$igk_framename} - ( ".IGK_PLATEFORM_NAME." ) - {$igk_version}<br />Configuration";
         }
-        else{
-            // $g = igk_notifyctrl("connexion:frame");
-            // $g->addMsg("ok notification");
-
-            // $frm->addNotifyHost("connexion:frame");
+        else{ 
             $lang=function($n){
                 return __($n);
             };
@@ -41000,7 +40997,7 @@ EOF;
 <div  style="max-width:300px;  position:relative; color:white;  display:inline-block;" >
 <div id="id_layer" style="width:300px; z-index:0;">
 <div id="id_board"  style="width:301px; padding-top: 48px; background-repeat:no-repeat; left:0px; top:0px;">
-	<div id="notify-z"></div>
+	<div id="notify-z" class="notify-z" ></div>
 	<ul style="padding-bottom:1.5em" >
         <li><label class="cllabel alignl" for="clAdmLogin" >{$lang('Login')}</label>
         <input type="text" name="clAdmLogin" id="clAdmLogin" class="cltext" autocomplete="off" placeholder="{$lang('Admin login')}" /><br /></li>
@@ -41032,12 +41029,10 @@ EOF;
             $c=$g->getElementById("igk_cpv");
             $notz=$g->getElementById("notify-z");
             if($notz){
-                $notz->addNotifyHost("connexion:frame");
+                $not = igk_notifyctrl("connexion:frame");  
+                $notz->addNotifyHost("connexion:frame"); 
             }
-            if(is_object($i)){
-              //  $i->add($a);
-            }
-            else{
+            if(!is_object($i)){
                 igk_die("/!\ not an object \$i. getElementById failed to retrieve id_board.");
             }
         }
@@ -41049,6 +41044,7 @@ EOF;
         }
         if($c)
             $c->Content=IGK_COPYRIGHT;
+ 
         return $bfrm;
     }
     ///<summary>Represente initDb function</summary>
@@ -58992,8 +58988,15 @@ final class IGKWhoUseCtrl extends IGKNonVisibleControllerBase {
 }
 
 class IGKNotifyStorage{
-    var $tab;
+    private $tab;
     var $autohide;
+    private $m_name;
+
+    public function & __get($n){
+        if ($n=="tab"){  
+            return $this->tab;
+        }
+    }
     private function __construct(){
     }
 
@@ -59006,13 +59009,14 @@ class IGKNotifyStorage{
     public function addSuccess($msg){
         $this->tab[] = ["type"=>"success","msg"=>$msg];
     }
-    public static function Create(& $tab){
+    public static function Create(& $tab, $name){
         if ($tab === null){
             return null;
         }
         $cl = __CLASS__;
         $o = new $cl();
-        $o->tab = $tab;
+        $o->tab = & $tab; 
+        $o->m_name = $name; 
         return $o;
     }
     public function addMsg($msg){
@@ -59028,10 +59032,10 @@ class IGKNotifyStorage{
         $this->addError(__($msg));
     }
     public function clear(){
-       // array_splice($this->tab, 0);
+       array_splice($this->tab, 0);  
     }
     public function renderAJX(){
-        return __("Empty");
+        igk_die( __METHOD__ . " Not implement"); 
     }
 }
 
@@ -59051,7 +59055,7 @@ final class IGKNotificationCtrl extends IGKControllerBase implements IIGKNotifyM
     public function getGlobalStorage(){
         static $storage=null ;
         if ($storage === null){
-            $storage = $this->getNotification("::global", true);
+            $storage = $this->getNotification("::global");
         }
         return $storage;
     }
@@ -59203,30 +59207,38 @@ final class IGKNotificationCtrl extends IGKControllerBase implements IIGKNotifyM
     /**
     * get notification item
     */
-    public function getNotification($name, $reg=false){
+    public function getNotification($name="::global"){
         static $storage;
 
-        if ($storage ===null){
+        if (empty($name)){  
+            igk_die("notification name is empty"); 
+        } 
+        if ($storage === null){
             $storage = [];
         }
         if (isset($storage[$name])){
             return $storage[$name];
-        }
-        $notify=igk_app()->Session->notifications;
+        } 
+        $notify= & igk_app()->session->getReference("notifications"); 
         $c=null;
-        if(!$notify){
-            $g = array($name=>[]);
-            $notify = $g;
+        if($notify == null){ 
+            $notify = array($name=>[]);
         }
         else {
             if (!isset($notify[$name])){
                 $notify[$name] = [];
             }
         }
-        igk_app()->Session->notifications = $notify;
-        $c = IGKNotifyStorage::Create($notify[$name]);
-        $storage[$name]=$c;
-        return $c;
+
+        $tab = & igk_app()->Session->getData();
+        $tab["notifications"] = & $notify;
+        $tab =  & $notify[$name];
+        if ($c = IGKNotifyStorage::Create($tab, $name)){
+
+            $storage[$name]=$c;
+            return $c;
+        }
+        return;
     }
     ///<summary>Represente getNotificationEvent function</summary>
     ///<param name="name"></param>
@@ -59242,8 +59254,8 @@ final class IGKNotificationCtrl extends IGKControllerBase implements IIGKNotifyM
     * Represente getNotifyHost function
     */
     public function getNotifyHost(){
-        if($this->m_notifyhost == null)
-            $this->m_notifyhost=$this->app->Doc->body;
+        if($this->m_notifyhost === null)
+            $this->m_notifyhost = $this->app->Doc->body;
         return $this->m_notifyhost;
     }
     ///<summary>Represente initTargetNode function</summary>
@@ -59276,29 +59288,23 @@ final class IGKNotificationCtrl extends IGKControllerBase implements IIGKNotifyM
     public function NotificationIsVisible($target, $host, $name){
         $c = null;
         if (empty($name)){
-            $c = $this->getNotification("::global");
+            $c = $this->getNotification("::global", true);
         }
         else
             $c = igk_notifyctrl($name);
 
-        if ($c && is_array($c->tab) && (count($c->tab)>0)){
+        if ($c){
+            $tab = $c->tab;
+            if (is_array($tab) && (count($tab)>0)){
             foreach($c->tab as $inf){
-                $host->add("div")->setClass("igk-panel igk-".$inf["type"])->Content = $inf["msg"];
+                if (isset($inf["type"]) && isset($inf["msg"]))
+                 $host->add("div")->setClass("igk-panel igk-".$inf["type"])->Content = $inf["msg"];
             }
             $c->clear();
             return true;
-        }
-        // igk_wln_e(__FILE__.':'.__LINE__, "NotIs Visible", $name,  count($c->tab));
-        return false;
-        // if(empty($name)){
-        //     $g=igk_notifyctrl()->TargetNode->ChildCount > 0;
-        //     if($g){
-        //         $s=new IGKHtmlSingleNodeViewer($this->TargetNode);
-        //         igk_html_add($s, $n);
-        //     }
-        //     return $g;
-        // }
-        // return ($n != null) && $n->getHasChilds();
+            }
+        } 
+        return false; 
     }
     ///<summary>Represente notify_ajx function</summary>
     /**
@@ -59425,7 +59431,7 @@ EOF;
     * @param mixed $name the default value is null
     * @param mixed $options the default value is null
     */
-    public function setNotifyHost($notifyhost, $name=null, $options=null){
+    public function setNotifyHost($notifyhost, $name="::global", $options=null){
 
         if($notifyhost){
             $n=$this->getNotification($name);
@@ -59601,9 +59607,11 @@ final class IGKSessionController extends IGKControllerBase {
     *  clear session and navigate
     */
     public function ClearS($navigate=true){ 
-        igk_session_destroy();
-        session_write_close();
-        $_SESSION=array();
+        $id = session_id();
+        if ($id){
+            @igk_session_destroy();  
+            $_SESSION=array();
+        }
         $_rcu=explode("?", igk_io_request_uri())[0];
         if($navigate){
             $buri=0;
@@ -59617,7 +59625,6 @@ final class IGKSessionController extends IGKControllerBase {
             if($m){
                 $m=base64_decode($m);
                 igk_navto($m);
-                igk_exit();
             }
             $u=igk_sys_srv_referer();
             if(!empty($u)){
@@ -77929,6 +77936,13 @@ final class IGKSession extends IGKObject implements IIGKParamHostService {
         }
         return $g;
     }
+    public function & getReference($name){
+        $tab = null;
+        if (isset($this->m_sessionParams[$name])){
+            $tab = & $this->m_sessionParams[$name];
+        }
+        return $tab;
+    }
     ///<summary>Represente __set function</summary>
     ///<param name="key"></param>
     ///<param name="value"></param>
@@ -78033,8 +78047,6 @@ final class IGKSession extends IGKObject implements IIGKParamHostService {
     public function generateCref(){
         $cref=igk_create_cref();
 		igk_app()->settings->{IGK_FORM_CREF} = $cref;
-		// $this->getForm()->cref = $cref;
-        // $this->setParam(self::SESS_CREF_KEY, $cref);
         return $cref;
     }
     ///<summary>Represente getApp function</summary>
@@ -79892,6 +79904,7 @@ final class IGKHtmlDocTheme extends IGKObjectGetProperties implements ArrayAcces
     private $m_id;
     private $m_medias;
     private $m_type;
+    private $m_istemp;
     private static $MEDIA;
     private static $SM_MEDIAKEY;
     ///<summary>Represente __construct function</summary>
@@ -79908,12 +79921,17 @@ final class IGKHtmlDocTheme extends IGKObjectGetProperties implements ArrayAcces
         $this->m_id=$id;
         $this->m_document=$document;
         $this->m_type=$type;
+        $this->m_istemp = false;
         $this->_initialize();
     }
 	public static function CreateTemporaryTheme($id){
-		$c = new IGKHtmlDocTheme(null, $id);
+        $c = new IGKHtmlDocTheme(null, $id);
+        $c->m_istemp = true;
 		return $c;
-	}
+    }
+    public function getIsTemp(){
+        return $this->m_istemp;
+    }
     ///<summary>Represente __toString function</summary>
     /**
     * Represente __toString function

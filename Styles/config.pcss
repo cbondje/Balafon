@@ -1,12 +1,10 @@
 <?php
-
 // ^/Configs
 // css configuration page
 $page = ".igk-cnf-page";
-$def->clear();
-$cl = & $def->getCl();
-///because of clear on theme make errors
-//reg file type color
+// $def->clear(); 
+// because of clear on theme make errors
+// reg file type color
 
 
 
@@ -30,7 +28,8 @@ $cl["configToastSuccessFgColor"] = "#e8ffbf";
 $cl["configPanelBoxBackgroundColor"] = "#cca";
 $cl["configtableHeaderHoverColor"] = "#cca";
 $cl["configFocusAreaSelected"]="transparent";
-
+$cl["configPanelDangerBackgroundColor"] = "#c0392b";
+$cl["configPanelDangerForeColor"] = "#fefefe";
 
 $cl["igk-notify-g-fcl"]="white";
 $cl["igk-notify-i-fcl"]="white";
@@ -118,6 +117,9 @@ $def[$page." .fmenu-h .ico"] = "{sys:floatl} margin-right:10px; padding-right:10
 $def[$page." .fmenu-h .ico:after"] = "content:' '; display:block; width: 32px; height:32px";
 // $def[".fmenu-h .ico.web:after"] = "content:\"&lt;\"; [res:edit] {sys:no-repeat}";
 
+$def["#id_board .igk-panel"]= "border-radius: 4px;";
+$def["#id_board .igk-panel.igk-error"] = "[bgcl:configPanelDangerBackgroundColor]; [fcl:configPanelDangerForeColor]";
+
 // ------------------------------------------------------------------------------
 // accordeon menu setting
 // ------------------------------------------------------------------------------
@@ -148,58 +150,48 @@ $def[$page." .header .igk-toggle-button"] = "margin:0px;  margin-bottom: 14px;";
 
 $xsm_screen[$page." .header"] = "line-height: 48px";
 $sm_screen[$page." .header"] = "line-height: 48px";
-
-
 $def[".igk-cnf-body .igk-js-notify.domain-conf-z .content-z"] = "{sys:margin-a-lr} max-width:400px;";
-
-
-igk_ilog("docment----------------------- ");
-
-$def[".igk-body.igk-cnf-body"] = "[bgcl:configBackgroundColor](:.google-Roboto)";
-
-
+$def[".igk-body.igk-cnf-body"] = "[bgcl:configBackgroundColor](th:.google-Roboto)";
 $def[".igk-body.igk-android.igk-cnf-body"] = "height:100% !important;";
-
 // $def[$page." .igk-cnf-menu"] = "display:none !important;";
-
 // notify page
 $def[$page." .notify-host div.igk-default"]="color: #444; background-color: #eee; padding: 10px;";
 $def[$page." .notify-host div.igk-danger"]="color: #fff; background-color: rbg(255,122,122); padding: 10px;";
 $def[$page." .igk-cnf-connexion-div label"]="visibility:hidden";
-
 // default styling form
 $def[$page." .igk-form label"] = "{sys:dispib} width: 170px;";
-
 $def[$page." .igk-cnf-content .igk-row"] = "margin:0px !important;";
-
-
-
 $def[".sm .mobilescreen"] =
-$def[".xsm .mobilescreen"] =
-"display:initial !important";
+$def[".xsm .mobilescreen"] = "display:initial !important";
 
 //hidde default connection frame
 $def[".sm .igk-cnf-page .connexion_frame"] =
-$def[".xsm .igk-cnf-page .connexion_frame"] =
-"{sys:dispn}";
+$def[".xsm .igk-cnf-page .connexion_frame"] = "{sys:dispn}";
 
 $def[$page." .igk-cnf-header-node .igk-cnf-logo"] = "{sys:dispn}";
 $def[$page." .igk-cnf-header-node .igk-cnf-title"] = "font-size:2em;";
 $def[".igk-android  .igk-cnf-page input[type=text],.igk-android  .igk-cnf-page input[type=password]"] = "{sys:dispb,fitw}";
 $def[$page." .igk-cnf-frame"] = "{sys:fitw} overflow:hidden;";
-$def[$page." .igk-cnf-frame .cltext"]= "[fcl:configColor]";
+$def[$page." .igk-cnf-frame input[type='text']"]= 
+$def[$page." .igk-cnf-frame input[type='email']"]= 
+$def[$page." .igk-cnf-frame input[type='password']"]= 
+"[fcl:configColor] background-color: #444; border:none; padding:10px;";
 $def[$page." .igk-cnf-frame .cltext, .igk-cnf-page .igk-cnf-frame select"] =
 $def[$page." .igk-cnf-frame .clpassword"]=
 $def[$page." .igk-cnf-frame .igk-btn-lnk"]=
 $def[$page." .igk-cnf-frame .clsubmit"]=
 $def[$page." .igk-cnf-frame .clbutton"]=
 $def[$page." .igk-cnf-frame .clreset"]=
-$def[$page." .igk-cnf-frame .clemail"]=
-"min-width:auto; max-width:none;";
+$def[$page." .igk-cnf-frame .clemail"] = "min-width:auto; max-width:none;";
 
+ 
+$def[$page." .igk-cnf-frame form .content > div"] = "margin-bottom: 10px;";
+
+ 
 
 $def[$page." .clsearch"] = "padding:0px; border:1px solid #aaa !important;[trans:0.4s border-color]";
 $def[$page." .clsearch:hover"] = "border-color: [syscl:configFocusAreaSelected];";
+$def[$page." .notify-z"] = "[fcl:configColor]";
 
 
 
@@ -394,11 +386,11 @@ $def[$page." .igk-language-list li a img"]="{sys:fit}";
 $def[$page." .cnf-edit-view-result.igk-row"]="margin:0px -10px !important";
 
 
-$sm_screen->def[$page." .igk-cnf-content #c_ac"]	= "padding:4px;";
-$sm_screen->def[$page." .igk-cnf-content #c_ac .gc-v"]	= "width:100%;";
-$sm_screen->def[$page." .igk-cnf-content #c_ac .igk-tabcontrol "]	= "width:100%;";
+$sm_screen[$page." .igk-cnf-content #c_ac"]	= "padding:4px;";
+$sm_screen[$page." .igk-cnf-content #c_ac .gc-v"]	= "width:100%;";
+$sm_screen[$page." .igk-cnf-content #c_ac .igk-tabcontrol "]	= "width:100%;";
 
-$sm_screen->def[".cnf-edit-view-result"] = "margin-left:-20px; margin-right:-20px;";
+$sm_screen[".cnf-edit-view-result"] = "margin-left:-20px; margin-right:-20px;";
 
 
 $xsm_screen[$page." .igk-cnf-menu"] = $sm_screen[$page." .igk-cnf-menu"] =
@@ -547,7 +539,7 @@ $def[$page." .igk-cnf-menu .igk-config-menu-font"] =
  $def[".igk-table.config-file_listview"] = "line-height:1; min-width: 320px;";
  $def[".gc-v .igk-action-bar svg"] = "width:32px; height:32px;";
 
- $def[".igk-cnf-body .igk-winui-toast"]="border-radius:0.4em; (:.google-Roboto)";
+ $def[".igk-cnf-body .igk-winui-toast"]="border-radius:0.4em;";
  $def[".igk-cnf-body .igk-winui-toast.igk-success"] = "background-color:[cl: configToastSuccessBgColor];color: [cl:configToastSuccessFgColor];";
 
 
