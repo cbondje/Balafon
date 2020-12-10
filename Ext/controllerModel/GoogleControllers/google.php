@@ -9,6 +9,13 @@
 use IGK\Core\Ext\Google\IGKGoogleCssUri as GoogleCssUri;
 use IGK\Core\Ext\Google\IGKGooglePackage as IGKGooglePackage;
 use IGK\Core\Ext\Google\IGKHrefListValue as IGKHrefListValue;
+
+
+define("GOOGLE_URI_REGEX", "/url\s*\((?P<link>[^)]+)\)/");
+define("GOOGLE_SETTINGS_FILE", dirname(__FILE__)."/Data/configs.json");
+define("IGK_GOOGLE_DEFAULT_PROFILE_PIC", "//lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s120");
+
+
 ///<summary>add google font to theme</summary>
 ///<param name="document"> document to attach the google font  </param>
 ///<param name="family"> Font's Name</param>
@@ -400,13 +407,13 @@ EOF
 * add google maps javascript api node
 */
 function igk_html_node_googlejsmaps($data=null, $apikey=null){
-    $apikey=$apikey ?? igk_google_apikey() ?? GOOGLE_GEO_APPKEY;
+    $apikey=$apikey ?? igk_google_apikey(); 
     $n=igk_createNode("div");
     $n["class"]="igk-gmaps";
     $srv=igk_getv(igk_get_services("google"), "googlemap");
     $mapuri=$srv("apiuri", null, (object)["Google"=>(object)["ApiKey"=>$apikey ]]);
     $n->setCallback("AcceptRender", "igk_google_jsmap_acceptrender_callback");
-    $mapjs=igk_io_baseUri('Lib/igk/Ext/ControllerModel/GoogleControllers/Scripts/igk.google.maps.js');
+    $mapjs=  IGKResourceUriResolver::getInstance()->resolve(dirname(__FILE__).'/Scripts/igk.google.maps.js');
     $n->addScript()->Content=<<<EOF
 (function(q){
 var b = ['{$mapuri}'];
@@ -434,12 +441,12 @@ function igk_html_node_googlelinewaiter(){
 * Represente igk_html_node_googlemapgeo function
 * @param mixed $loc
 */
-function igk_html_node_googlemapgeo($loc){
+function igk_html_node_googlemapgeo($loc, $apikey=null){
     $n=igk_createNode("div");
     $n["class"]="igk-winui-google-map";
     $q=$loc;
-    $key=igk_google_apikey() ?? GOOGLE_GEO_APPKEY;
-    $t="place";
+    $key= $apikey ?? igk_google_apikey();
+    $t= "place";
     $lnk="https://www.google.com/maps/embed/v1/{$t}?key={$key}&q={$q}";
     $iframe=$n->addHtmlNode("iframe");
     $iframe->setClass("fitw");
@@ -449,10 +456,9 @@ function igk_html_node_googlemapgeo($loc){
     return $n;
 }
 igk_sys_reg_autoloadLib(dirname(__FILE__)."/Lib/Classes", "IGK\Core\Ext\Google");
-define("GOOGLE_URI_REGEX", "/url\s*\((?P<link>[^)]+)\)/");
-define("GOOGLE_GEO_APPKEY", "AIzaSyAhIEla-i89QTvwdQTQSqwljvf6XsE4akk");
-define("GOOGLE_SETTINGS_FILE", dirname(__FILE__)."/Data/configs.json");
-define("IGK_GOOGLE_DEFAULT_PROFILE_PIC", "//lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s120");
+//+ define("GOOGLE_GEO_APPKEY", "");
+
+
 igk_reg_component_package("google", new IGKGooglePackage());
 igk_reg_hook("google_init_component", function(){
     if(!igk_get_env("init_globalfont")){
