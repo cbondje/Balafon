@@ -9,6 +9,9 @@
 // @url: https://www.igkdev.com
 
 define("IGK_INC_APP_INITDB", IGK_LIB_DIR."/".IGK_INC_FOLDER."/igk_initapp_db.pinc");
+
+use function igk_resources_gets as __; 
+
 ///<summary>Represente igk_app_ctrl_dropped_callback function</summary>
 ///<param name="ctrl"></param>
 ///<param name="n"></param>
@@ -21,22 +24,7 @@ function igk_app_ctrl_dropped_callback($ctrl, $n){
     $c=IGKApplicationController::GetApps();
     $c=array();
 }
-///<summary>Represente igk_app_is_appuser function</summary>
-///<param name="ctrl"></param>
-/**
-* Represente igk_app_is_appuser function
-* @param mixed $ctrl
-*/
-function igk_app_is_appuser($ctrl){
-    return ($u=$ctrl->User) && $u->clLogin == $ctrl->Configs->{'app.DefaultUser'};
-}
-///<summary>get if application is on uri demand</summary>
-/**
-* get if application is on uri demand
-*/
-function igk_app_is_uri_demand($app, $function){
-    return (igk_io_currentUri() == $app->getAppUri($function));
-}
+
 ///<summary>Represente igk_app_load_login_form function</summary>
 ///<param name="app"></param>
 ///<param name="node"></param>
@@ -307,13 +295,12 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
     */
     protected function checkUser($nav=true, $uri=null){
         $r=true;
-        $u=$this->App->Session->User;
-        $ku=$this->User;
-		// igk_wln("ku, ", $ku, " --- ", $u, " -------");
+        $u= igk_app()->Session->User;
+        $ku=$this->getUser();   
 
         if($ku === null){
             if($u !== null){
-                $this->User=$this->initUserFromSysUser($u);
+                $this->setUser($this->initUserFromSysUser($u));
             }
             else
                 $r=false;
@@ -392,9 +379,8 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
         $s=igk_is_conf_connected() || $this->IsUserAllowedTo(igk_ctrl_auth_key($this, __FUNCTION__));
         if(!$s){
             igk_notifyctrl()->addErrorr("err.operation.notallowed");
-            igk_navto($this->getAppUri());
-            igk_exit();
-        }
+            igk_navto($this->getAppUri()); 
+        } 
         if($this->getUseDataSchema()){
             $r=$this->loadDataAndNewEntriesFromSchemas();
             $tb=$r->Data;
@@ -409,7 +395,7 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
                         if(igk_count($data) == 0)
                             continue;
                         if($db->tableExists($n)){
-                            foreach($data as $kk=>$vv){
+                            foreach($data as $vv){
                                 igk_db_insert_if_not_exists($db, $n, $vv);
                                 if($db->getHasError()){
                                     $dv=$ee->addDiv();
@@ -432,9 +418,8 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
         else{
             igk_notification_push_event(igk_get_event_key($this, "dbchanged"), $this);
             $this->logout();
-        }
-        igk_navto($this->getAppUri());
-        igk_exit();
+        } 
+        igk_navto($this->getAppUri()); 
     }
     ///<summary>drop application table from system config</summary>
     /**
@@ -497,7 +482,7 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
             $b->addA($this->getAppUri($k))->setContent($k);
         }
         $bodybox->setStyle("position:relative; color: #eee; margin-bottom:300px;padding-bottom:0px; overflow-y:auto; color:indigo;");
-        $bodybox->addDiv()->setClass("posfix loc_b loc_r loc_l dispb footer-box igk-fixfitw")->setId("fbar")->setAttribute("igk-js-fix-loc-scroll-width", "1")->setStyle("min-height:80px;background-color:#ddd; z-index: 10; width: auto;");
+        $bodybox->addDiv()->setClass("posfix loc_b loc_r loc_l dispb footer-box igk-fixfitw")->setId("fbar")->setAttribute("igk-js-fix-loc-scroll-width", "1")->setStyle("min-height:80px; z-index: 10; width: auto;");
         $bodybox->addDiv()->setClass("no-visibity dispb")->setAttribute("igk-js-fix-height", "#fbar");
         $b=$bodybox->addActionBar();
         $u=$this->getAppUri("functions/1");
@@ -736,6 +721,10 @@ EOF;
         $c=$v || (!$this->getAppNotActive() && $this->IsActive());
         return $c;
     }
+    ///<summary> application by default not allowed global action</summary>
+    public function getNoGlobalAction(){
+        return true;
+    }
     ///<summary>Represente getRegInvokeUri function</summary>
     /**
     * Represente getRegInvokeUri function
@@ -813,13 +802,13 @@ EOF;
             "query_options"=>0
         ));
         $lang=null;
-
+        
         if(is_string($u)){
             $page=explode("?", $u);
             $k=$this->getDomainUriAction();
             $pattern=igk_pattern_matcher_get_pattern($k);
             $p=igk_pattern_get_matches($pattern, $page[0], array_merge(["lang"], igk_str_get_pattern_keys($k)));
-            extract(igk_pattern_view_extract($this, $p, 1));
+            extract(igk_pattern_view_extract($this, $p, 1)); 
             igk_ctrl_change_lang($this, $p);
         }
         else{
@@ -828,10 +817,7 @@ EOF;
             $pattern=$u->pattern;
             $p=$u->getQueryParams();
             $viewdefault=1;
-            // igk_wln( __FILE__.":".__LINE__, "c = ". $c);
-            extract(igk_pattern_view_extract($this, $p, 1));
-           //igk_wln_e(__FILE__.":".__LINE__, $param);
-            // igk_wln(":=".$c);// , $u, $p);
+            extract(igk_pattern_view_extract($this, $p, 1)); 
             igk_ctrl_change_lang($this, $p);
         }
         include(IGK_LIB_DIR."/Inc/igk_sitemap.pinc");
@@ -850,8 +836,8 @@ EOF;
         $doc=$this->AppDocument;
         $this->setEnvParam(IGK_CURRENT_DOC_PARAM_KEY, $doc);
         $fnc="";
-        $handle=0;
-        // igk_dev_wln_e(__FILE__.':'.__LINE__, $c, $this->getViewfile($c));
+        $handle=0; 
+   
         if(!($handle=$this->handle_func($c, $param, $doc, 0, null)) && (file_exists($fnc=$this->getViewfile($c)) && preg_match(IGK_VIEW_FILE_END_REGEX, $fnc))){
             $actionctrl=igk_getctrl(IGK_SYSACTION_CTRL, true);
             $m=$actionctrl->matche($page[0]);
@@ -869,9 +855,8 @@ EOF;
                     $actionctrl->invokeUriPattern($m);
                     igk_exit();
                 }
-            }
+            } 
             igk_view_dispatch_args($this, $c, $fnc, $param);
-
             $this->setCurrentView($c, true, null, $param, $query_options);
             $ctx=$this->getEnvParam(IGK_CTRL_VIEW_CONTEXT_PARAM_KEY);
             if(igk_is_ajx_demand()){
@@ -949,12 +934,12 @@ EOF;
         $c=self::GetApps();
         if(empty($n)){
             $n=str_replace("\\", ".", $this->Name);
-        }
+        }  
         if(preg_match(IGK_IS_FQN_NS_REGEX, $n) && !isset($c->_[$n])){
             $c->_[$n]=$this->getName();
         }
         else{
-            igk_assert_die(!igk_get_env("sys://reloadingCtrl"), "Error : Application or identifier is not valid :: ".igk_getv(self::$sm_apps, $n). " :: n = ".$n. " :: ".get_class($this));
+            igk_assert_die(!igk_get_env("sys://reloadingCtrl"), "Application identifier is not valid or already register. #".$n);
         }
         $this->register_action();
         if(!isset(self::$INIT)){
@@ -970,12 +955,13 @@ EOF;
     * @param mixed $s the default value is null
     */
     public function initDb($s=null){
+    
         parent::initDb();
         if($s){
             igk_navto($this->getAppUri());
         }
         if(igk_uri_is_match(igk_io_currentUri(), $this->getAppUri(__FUNCTION__))){
-            igk_ilog("notify message :  ".IGK_HOOK_DB_CHANGED);
+            igk_is_debug() && igk_ilog("notify message :  ".IGK_HOOK_DB_CHANGED);
             igk_notification_push_event(IGK_HOOK_DB_CHANGED, $this, null);
             igk_navto($this->getAppUri());
         }
@@ -1042,7 +1028,12 @@ EOF
     /**
     * get if function is available
     */
-    function IsFuncUriAvailable(& $func){
+    protected function IsFuncUriAvailable(& $func){
+        
+        $c = new ReflectionMethod($this, $func);
+        if (!$c->isPublic()){
+            return false;
+        }
         if(igk_is_conf_connected() || isset($this->Exposed[$func]))
             return true;
         $lst=$this->_getfunclist(false, $func);
@@ -1194,6 +1185,8 @@ EOF;
         igk_set_env("sys://db_init_table/ctrl", $this);
         $this->initDb();
         $ad->flushForInitDb();
+        igk_hook(IGKEvents::HOOK_DB_INIT_ENTRIES, array($this));
+        igk_hook(IGKEvents::HOOK_DB_INIT_COMPLETE); 
         $this->logout(0);
         if(igk_uri_is_match(igk_io_currentUri(), $this->getAppUri(__FUNCTION__))){
             igk_notification_push_event(IGK_HOOK_DB_CHANGED, $this, null);
@@ -1202,10 +1195,9 @@ EOF;
             }
         }
         else{
-            igk_wln("no matching.... uri ");
-            igk_wln("appuri : ".$this->getAppUri(__FUNCTION__));
-            igk_wln("currenturi: ".igk_io_currentUri());
-            igk_exit();
+            igk_wln_e("no matching.... uri "
+            , "appuri : ".$this->getAppUri(__FUNCTION__)
+            , "currenturi: ".igk_io_currentUri()); 
         }
     }
     ///<summary> save data schema</summary>
@@ -1281,9 +1273,8 @@ EOF;
     * Represente setDefaultFavicon function
     * @param mixed $doc
     */
-    protected function setDefaultFavicon($doc){
-		igk_trace();
-		throw new Exception("Not implement : use igk_doc_set_favicon function ");
+    protected function setDefaultFavicon($doc){		
+		throw new Exception(__("Not implement : use igk_doc_set_favicon function "));
         // $d=$this->getResourcesDir()."/Img/favicon.ico";
         // igk_doc_set_favicon($doc, $d);
     }
@@ -1295,9 +1286,9 @@ EOF;
     */
     public function SetupCtrl($param){
         parent::SetUpCtrl($param);
-        $t=strtolower(str_replace(' ', '_', $this->AppName));
+        $t=strtolower(str_replace(' ', '_', $this->Name));
         if(empty($t))
-            throw new Exception("Can't setup controller");
+            throw new Exception(__("Can't setup controller: {0}", get_class($this) ));
         $c=array($t, $t."_administrator");
         foreach($c as $k){
             $e=igk_db_table_select_where(IGK_TB_GROUPS, array(IGK_FD_NAME=>$k), $this);
@@ -1311,8 +1302,10 @@ EOF;
     * Represente storeConfigSettings function
     */
     public function storeConfigSettings(){
-        parent::storeConfigSettings();
-        $this->register_action();
+        if ($ret = parent::storeConfigSettings()){
+            $this->register_action();
+        }
+        return $ret;
     }
     ///<summary>Represente sync_from_user_data function</summary>
     /**
@@ -1380,3 +1373,5 @@ EOF;
         $this->setEnvParam(IGK_CTRL_VIEW_CONTEXT_PARAM_KEY, null);
     }
 }
+
+

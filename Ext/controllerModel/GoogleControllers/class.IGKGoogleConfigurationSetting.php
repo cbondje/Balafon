@@ -1,4 +1,5 @@
 <?php
+use function igk_resources_gets as __;
 
 final class IGKGoogleConfigurationSetting extends IGKConfigCtrlBase{
 	const API_KEY = "google.ApiKey";
@@ -19,26 +20,21 @@ final class IGKGoogleConfigurationSetting extends IGKConfigCtrlBase{
 		parent::showConfig();
 		$cnf = $this->ConfigNode;
 		$box = $cnf->addPanelBox();
-		$box->addDiv()->setClass("igk-title-4")->setStyle("line-height:1; margin-bottom:1em")->Content = R::gets("Google Settings");
+		$box->addDiv()->setClass("igk-title-4")->setStyle("line-height:1; margin-bottom:1em")->Content = __("Google Settings");
 
 		$frm = $box->addDiv()->addForm();
 		$frm["action"] = $this->getUri("storeApiKey");
-		$frm->add("label")->Content = "DEV API KEY";
-		$frm->addInput("clApiKey", "text", igk_google_apikey()
-		// igk_ctrl_get_setting($this, self::API_KEY)
-		)->setAttribute("placeholder", "google api key");
+		$frm->add("label")->Content = __("API KEY");
+		$frm->addInput("clApiKey", "text", igk_google_apikey())->setAttribute("placeholder", __("google api key"));
+
+		$frm->addActionBar()->addInput("btn.valid", "submit", __("Update"));
 	}
 	public function storeApiKey(){
 		if (!igk_is_conf_connected()){
 			return;
 		}
-		$key = igk_getr("clApiKey");
-		$k = self::API_KEY;
-		$this->Configs->$k = $key;
-		$this->storeConfigSettings();
-	}
-
-	function initComplete(){
-		parent::initComplete();
-	}
+		$key = igk_getr("clApiKey");		
+		igk_app()->Configs->{self::API_KEY} = $key;
+		igk_app()->Configs->saveData();
+	} 
 }

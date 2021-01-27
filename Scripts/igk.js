@@ -309,9 +309,7 @@ Name:balafon.js
 
 		_data_first = igk.navigator.isChrome() || igk.navigator.isFirefox() || /Google Inc\./.test(navigator.vendor);
 
-		// mimetype = "application/json";
-		// uri = "https://local.com/canvaseditor/request";
-
+		 
 		if (igk.navigator.isIEEdge()) {
 			ob.o.type = "text/xml";
 		}
@@ -319,15 +317,10 @@ Name:balafon.js
 			ob.o.type =  mimetype || "text/xml";
 
 		// ob.o.type = "text/plain";
+		// ob.o.type = "application/json";
 		ob.addClass("bdr-1");
 		ob.reg_event("load", function (evt) {
-	
-			
-			
-			// igk.show_prop(ob.o);
-			
-			// // if (!ob.o.contentDocument || ob.o.contentDocument.readyState!="complete")
-			// // return;
+	 
 			var _o = {
 				uri:uri,
 				source: ob.o, 
@@ -980,8 +973,6 @@ Name:balafon.js
 			// throw new Error("script is not in script tag or dynamically call code. " + a+ " is win ?"+_iswin);
 			// }
 			// catch(e){
-			
-			
 			// }
 			// return null;
 		}
@@ -993,7 +984,6 @@ Name:balafon.js
 						getFullName: function () {
 							return n;
 						},
-
 						toString: function () { return "class:igk:systemType"; }
 					});
 				};
@@ -1712,24 +1702,32 @@ Name:balafon.js
 			};
 			
 			
-			var i = 0;
+			var i = 0, v_host = null;
 			for (; i < v_tab.length; i++) {
 				// new Image();// 
 				var src = v_tab[i].getAttribute("src");
 				
 				if (src) {
+					v_host = document.createElement("span");
+					$igk(v_host).addClass("igk-img-host");
 					v_cimg = document.createElement("img");
 					v_cimg.source = v_tab[i];
 					v_cimg.src = src;
-					if (v_cimg.complete && ((v_cimg.width + v_cimg.height) > 0)) {
-						// cached			
+					v_host.appendChild(v_cimg);
+					if (/^data:/.test(src)){
 						v_preload.copyAttribute(v_tab[i], v_cimg);
-						v_preload.replace(v_cimg, v_tab[i]);
-					}
-					else {
-						v_img = v_cimg;
-						v_preload.init(v_img, v_tab[i]);
-						v_preload.copyAttribute(v_tab[i], v_img);
+						v_preload.replace(v_host, v_tab[i]);
+					}else {
+						if (v_cimg.complete && ((v_cimg.width + v_cimg.height) > 0)) {
+							// cached			
+							v_preload.copyAttribute(v_tab[i], v_cimg);
+							v_preload.replace(v_host, v_tab[i]);
+						}
+						else {
+							v_img = v_cimg;
+							v_preload.init(v_img, v_tab[i]);
+							v_preload.copyAttribute(v_tab[i], v_img);
+						}
 					}
 				}
 			}
@@ -2273,18 +2271,7 @@ Name:balafon.js
 	createNS("igk.winui.notify", {}, { desc: "winui.notify global igk js namespace" });
 	createNS("igk.html", {}, { desc: "igk.html namespace. to manage dom element" });
 	createNS("igk.html5", {}, { desc: "igk.html5 namespace" });
-
-
-	// var _R = createNS("igk.R", {
-		// format: function(n){
-			// if (typeof(_R[n]) == "undefined")
-				// return n;
-			
-			// format string
-			// var txt_ = _R[n];
-			// return txt_;
-		// }
-	// }, { desc: "resource namespace" }); // resource management
+ 
 	
 	igk.log = function(msg, tag, t){
 		var fc = null;
@@ -2558,6 +2545,9 @@ Name:balafon.js
 	
 	createNS("igk.resources", {
 		getlang: function(_loc, t){
+			if (!_loc){
+				return null;
+			}
 			if (!t)
 				t = igk.dom.html().getAttribute("lang") || igk.navigator.getLang();
 			
@@ -2578,9 +2568,7 @@ Name:balafon.js
 			var _e=[];
 			this._t = _t;
 			this._e = _e;
-		};
-		//createNS("igk.system.Promise",{});
-
+		}; 
 	igk_appendProp(igk.system.Promise.prototype,{
 		resolve:function(args){
 			for(var j = 0 ; j < this._t.length; j++){
@@ -3351,139 +3339,23 @@ function __igk_nodeProperty(element)
 		});
 		this.addEvent("igk-eventcreated", { name: null });
 
-	}
-		
-
-	// this.getElementsByTagName = function (tag) { if (this.o.getElementsByTagName) return this.o.getElementsByTagName(tag); };
-	// // return the client width
-	// this.getWidth = function () { return this.o.clientWidth; };
-	// this.getglobalWidth = function () { return this.o.clientWidth + this.o.scrollWidth; };
-	// this.getglobalHeight = function () { return this.o.cliclientHeight + this.o.scrollHeight; };
-	// // return the client height
-	// this.getHeight = function () { return this.o.clientHeight; };
-	// this.getTop = function () { return this.getLocation().y; };
-	// this.getLeft = function () { return this.getLocation().x; };
-	// this.getSize = function () { return { w: this.getWidth(), h: this.getHeight(), toString: function () { return "w:" + this.w + " h:" + this.h; } }; };
-	// // return the location of the host in global display
-	// this.getLocation = function () { return igk.winui.GetScreenPosition(this.o); };
-	// // return the location of the host in client screen display
-	// this.getScreenLocation = function () { return igk.winui.GetRealScreenPosition(this.o); };
-	// // get the bounding visibility in client screen display
-	// this.getBoundingClientRect = function () {
-		// // shortcut function
-		// var g = this.o.getBoundingClientRect ? this.o.getBoundingClientRect() : {
-			// x: 0, y: 0, width: 0, height: 0, left: 0, top: 0, right: 0, bottom: 0, toString: function () {
-				// "igk.boundingClientRect[]"
-			// }
-		// };
-		// // some browser don't implement x and y properties
-		// if (!g.x) g.x = g.left;
-		// if (!g.y) g.y = g.top;
-
-
-		// return g;
-	// };
-	// // get the screen bounding item
-	// this.getScreenBounds = function () {
-		// var l = igk.winui.GetRealScreenPosition(this.o);
-		// var s = this.getSize();
-		// return {
-			// x: l.x, y: l.y, w: s.w, h: s.h,
-			// contains: function (x, y) {
-				// return (l.x <= x) && ((l.x + s.w) >= x) &&
-					// (l.y <= y) && ((l.x + s.h) >= y);
-			// },
-			// toString: function () { return "getScreenBounds[" + igk.system.stringProperties(this) + "]"; }
-		// };
-	// };
-	// // return true is item is visible in screen display
-	// this.getisVisible = function () {
-		// var j = this;
-		// var loc = j.getBoundingClientRect(); 
-		// // j.o.getBoundingClientRect ? j.o.getBoundingClientRect(): 
-		// // {x:0,y:0};
-		// // {x:j.getscrollLeft(), y:j.getscrollTop()};
-		// // getLocation();
-		// var size = igk.winui.screenSize();
-		// // get screen visibility
-		// var vsb = ((loc.x >= 0) && (loc.x <= size.width) && (loc.y >= 0) && (loc.y <= size.height));
-		// return vsb;
-
-	// };
 	
-	// this.getpresentOnDocument = function (doc) {
-		// // > get if this is present on document
-		// var j = this.o;
-		// var _doc = doc || document;
-		// while (j && (j != _doc)) {
-			// j = j.parentNode;
-		// }
-		// return (j != null);
-	// };
-	// this.getscrollLeft = function () { if (this.o.pageXOffset) { return this.o.pageXOffset; } else if (this.o.scrollLeft) return this.o.scrollLeft; return 0; };
-	// this.getscrollTop = function () { if (this.o.pageYOffset) { return this.o.pageYOffset; } else if (this.o.scrollTop) return this.o.scrollTop; return 0; };
-	// this.getscrollLocation = function (targetParent) { return igk.winui.GetScrollPosition(this.o, targetParent); };
-	// this.getscrollMaxTop = function () { if (this.o.scrollTopMax) return this.o.scrollTopMax; else return this.o.offsetHeight; };
-	// this.getscrollMaxLeft = function () { if (this.o.scrollLeftMax) return this.o.scrollLeftMax; else return this.o.offsetWidth; };
-	// // -------------- WINDOW function
-	// this.createElement = function (tagname) {
-		// return igk.createNode(tagname, this.o.namespaceURI || igk.namespaces.xml);
-	// };
-	// this.isChildOf = function (target) {
-		// var q = this.o.parentNode;
-		// while (q) {
-			// if (q == target)
-				// return !0;
-			// q = q.parentNode;
-		// }
-		// return !1;
-	// };
-	// // -------------- ADDITIONAL FUNCTION	
-	// this.collapse = function (property, callback) {
-		// if (m_anim && m_anim.collapsing) {
-			// // stop scrolling of this item
-			// m_anim.collapsing.stop();
-		// }
-		// // create animation context
-		// var anim1 = igk.animation.init(this, property.interval, property.duration,
-			// function () { },
-			// function () { },
-			// function () {
-				// if (m_anim && m_anim.__anim && m_anim.__anim.collapsing)
-					// delete m_anim.__anim.collapsing;// =null;
-				// if (callback)
-					// callback();
-				// // delete m_anim;						
-			// });
-		// m_anim = createPNS(this, "__anim", { "collapsing": anim1 });
-		// m_anim.type = "scrolling";
-		// anim1.start();
-		// return !0;
-	// };
-	// this.expand = function (property, callback) {
-		// if (m_anim && m_anim.expanding) {
-			// // stop scrolling of this item
-			// m_anim.expanding.stop();
-		// }
-		// var anim1 = igk.animation.init(this, property.interval, property.duration,
-			// function () { },
-			// function () { },
-			// function () {
-				// if (m_anim && m_anim.__anim && m_anim.__anim.expanding)
-					// delete m_anim.__anim.expanding;// =null;
-				// if (callback)
-					// callback();
-				// // delete m_anim;						
-			// });
-		// m_anim = createPNS(this, "__anim", { "expanding": anim1 });
-		// m_anim.type = "scrolling";
-		// anim1.start();
-		// return !0;
-	// };
-
+		// good way to register function extension according to tag name
+		var tag = element.tagName;
+		if (tag){
+			var b = igk.system.createExtensionProperty(tag, "igk.dom.extension", this);
+		}
+	}
 };
+function __extensionPrototype(tag){
+	this.ctag = tag;
+	igk_defineProperty(this, "tagName", {get: function(){return this.ctag}});	
+	igk_defineProperty(this, "IsExtension", {get: function(){return true;}}); 
+	this.__proto__ = __igk_nodeProperty.prototype;
+}
 
-igk_appendProp(__igk_nodeProperty.prototype, {
+var __prop = __igk_nodeProperty.prototype;
+igk_appendProp(__prop, {
 		setConfig: function (k, v) {
 			this.getConf()[k] = v;
 		},
@@ -4902,7 +4774,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 					this.o.innerHTML = v;
 					if (evalScript) { 
 						igk.system.evalScript(this.o);
-					}
+					}					
 				}
 				catch (ex) {
 					console.debug("set:InnerHtml failed : " + v + "\n"+ex);
@@ -5185,21 +5057,21 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 	});
 
 	
-	__igk_nodeProperty.prototype.getElementsByTagName = function (tag) { if (this.o.getElementsByTagName) return this.o.getElementsByTagName(tag); };
+	__prop.getElementsByTagName = function (tag) { if (this.o.getElementsByTagName) return this.o.getElementsByTagName(tag); };
 	// return the client width
-	__igk_nodeProperty.prototype.getWidth = function () { return this.o.clientWidth; };
-	__igk_nodeProperty.prototype.getglobalWidth = function () { return this.o.clientWidth + this.o.scrollWidth; };
-	__igk_nodeProperty.prototype.getglobalHeight = function () { return this.o.cliclientHeight + this.o.scrollHeight; };
+	__prop.getWidth = function () { return this.o.clientWidth; };
+	__prop.getglobalWidth = function () { return this.o.clientWidth + this.o.scrollWidth; };
+	__prop.getglobalHeight = function () { return this.o.cliclientHeight + this.o.scrollHeight; };
 	// return the client height
-	__igk_nodeProperty.prototype.getHeight = function () { return this.o.clientHeight; };
-	__igk_nodeProperty.prototype.getTop = function () { return this.getLocation().y; };
-	__igk_nodeProperty.prototype.getLeft = function () { return this.getLocation().x; };
-	__igk_nodeProperty.prototype.getSize = function () { return { w: this.getWidth(), h: this.getHeight(), toString: function () { return "w:" + this.w + " h:" + this.h; } }; };
+	__prop.getHeight = function () { return this.o.clientHeight; };
+	__prop.getTop = function () { return this.getLocation().y; };
+	__prop.getLeft = function () { return this.getLocation().x; };
+	__prop.getSize = function () { return { w: this.getWidth(), h: this.getHeight(), toString: function () { return "w:" + this.w + " h:" + this.h; } }; };
 	// return the location of the host in global display
-	__igk_nodeProperty.prototype.getLocation = function () { return igk.winui.GetScreenPosition(this.o); };
+	__prop.getLocation = function () { return igk.winui.GetScreenPosition(this.o); };
 	// return the location of the host in client screen display
-	__igk_nodeProperty.prototype.getScreenLocation = function () { return igk.winui.GetRealScreenPosition(this.o); };
-	__igk_nodeProperty.prototype.getOffsetBounds = function(){
+	__prop.getScreenLocation = function () { return igk.winui.GetRealScreenPosition(this.o); };
+	__prop.getOffsetBounds = function(){
 			var p = this;
 			var real_size = {x:0, y:0, h:0, w:0};
 			for(var n = 0; n < p.o.childNodes.length; n++){
@@ -5219,7 +5091,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 			return real_size;
 	};
 	// get the bounding visibility in client screen display
-	__igk_nodeProperty.prototype.getBoundingClientRect = function () {
+	__prop.getBoundingClientRect = function () {
 		// shortcut function
 		var g = this.o.getBoundingClientRect ? this.o.getBoundingClientRect() : {
 			x: 0, y: 0, width: 0, height: 0, left: 0, top: 0, right: 0, bottom: 0, toString: function () {
@@ -5234,7 +5106,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 		return g;
 	};
 	// get the screen bounding item
-	__igk_nodeProperty.prototype.getScreenBounds = function () {
+	__prop.getScreenBounds = function () {
 		var l = igk.winui.GetRealScreenPosition(this.o);
 		var s = this.getSize();
 		return {
@@ -5247,7 +5119,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 		};
 	};
 	// return true is item is visible in screen display
-	__igk_nodeProperty.prototype.getisVisible = function () {
+	__prop.getisVisible = function () {
 		var j = this;
 		var loc = j.getBoundingClientRect(); 
 		// j.o.getBoundingClientRect ? j.o.getBoundingClientRect(): 
@@ -5261,7 +5133,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 
 	};
 	
-	__igk_nodeProperty.prototype.getpresentOnDocument = function (doc) {
+	__prop.getpresentOnDocument = function (doc) {
 		// > get if this is present on document
 		var j = this.o;
 		var _doc = doc || document;
@@ -5270,16 +5142,16 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 		}
 		return (j != null);
 	};
-	__igk_nodeProperty.prototype.getscrollLeft = function () { if (this.o.pageXOffset) { return this.o.pageXOffset; } else if (this.o.scrollLeft) return this.o.scrollLeft; return 0; };
-	__igk_nodeProperty.prototype.getscrollTop = function () { if (this.o.pageYOffset) { return this.o.pageYOffset; } else if (this.o.scrollTop) return this.o.scrollTop; return 0; };
-	__igk_nodeProperty.prototype.getscrollLocation = function (targetParent) { return igk.winui.GetScrollPosition(this.o, targetParent); };
-	__igk_nodeProperty.prototype.getscrollMaxTop = function () { if (this.o.scrollTopMax) return this.o.scrollTopMax; else return this.o.offsetHeight; };
-	__igk_nodeProperty.prototype.getscrollMaxLeft = function () { if (this.o.scrollLeftMax) return this.o.scrollLeftMax; else return this.o.offsetWidth; };
+	__prop.getscrollLeft = function () { if (this.o.pageXOffset) { return this.o.pageXOffset; } else if (this.o.scrollLeft) return this.o.scrollLeft; return 0; };
+	__prop.getscrollTop = function () { if (this.o.pageYOffset) { return this.o.pageYOffset; } else if (this.o.scrollTop) return this.o.scrollTop; return 0; };
+	__prop.getscrollLocation = function (targetParent) { return igk.winui.GetScrollPosition(this.o, targetParent); };
+	__prop.getscrollMaxTop = function () { if (this.o.scrollTopMax) return this.o.scrollTopMax; else return this.o.offsetHeight; };
+	__prop.getscrollMaxLeft = function () { if (this.o.scrollLeftMax) return this.o.scrollLeftMax; else return this.o.offsetWidth; };
 
 
 
 	// -------------- WINDOW function
-	__igk_nodeProperty.prototype.createElement = function (tagname) {
+	__prop.createElement = function (tagname) {
 		
 		if (this.o.namespaceURI==null){
 			var c = document.createElementNS(null, tagname);
@@ -5287,7 +5159,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 		}
 		return igk.createNode(tagname, this.o.namespaceURI || igk.namespaces.xml);
 	};
-	__igk_nodeProperty.prototype.isChildOf = function (target) {
+	__prop.isChildOf = function (target) {
 		var q = this.o.parentNode;
 		while (q) {
 			if (q == target)
@@ -5297,7 +5169,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 		return !1;
 	};
 	// -------------- ADDITIONAL FUNCTION	
-	__igk_nodeProperty.prototype.collapse = function (property, callback) {
+	__prop.collapse = function (property, callback) {
 		if (m_anim && m_anim.collapsing) {
 			// stop scrolling of this item
 			m_anim.collapsing.stop();
@@ -5318,7 +5190,7 @@ igk_appendProp(__igk_nodeProperty.prototype, {
 		anim1.start();
 		return !0;
 	};
- __igk_nodeProperty.prototype.expand = function (property, callback) {
+ __prop.expand = function (property, callback) {
 		if (m_anim && m_anim.expanding) {
 			// stop scrolling of this item
 			m_anim.expanding.stop();
@@ -5620,8 +5492,7 @@ function __igk_event(q,p,n){
 
 		},
 		eval_all_script: igk_eval_all_script,
-		init_document: function (s) { //initialize document 
-			
+		init_document: function (s) { //initialize document 		 
 			igk.ctrl.init_controller();
 			igk_preload_image(document);
 			igk_preload_anim_image(document);
@@ -8228,6 +8099,23 @@ function createObject (T, t, args){
 };
 
 	createNS("igk.system", {// system global management namespace
+		createExtensionProperty:function(p,ns, obj){
+			
+			var prop = ns;
+			var _n = igk_get_namespace(prop);
+			if (typeof(_n) == "undefined"){
+				_n = createNS(prop, {});
+			}
+			if (typeof(_n[p])=="undefined"){
+				var ob = new __extensionPrototype(p);		 
+				igk_defineProperty(_n, p, {get:function(){
+					return ob;
+				}});  
+			}
+			if (obj)
+				Object.setPrototypeOf(obj, _n[p]); 
+			return _n[p];
+		},
 		stringProperties: function (o) {
 			// stringify properties
 			var m = "";
@@ -16418,8 +16306,7 @@ function createObject (T, t, args){
 		}
 		});
 
-	}; 
-	//igk.R
+	};  
 	igk.defineProperty(igk, 'R', {
 		get: function () {
 			return _res;
@@ -16434,8 +16321,7 @@ function createObject (T, t, args){
 			var _getRes = 0;
 			var _src = ["_getRes = async function (){",
 					"try{",
-					"var o  = await igk.ajx.asyncget(loc,null, mime);",
-					"console.debug ('result o0000000000000000000000000');",
+					"var o  = await igk.ajx.asyncget(loc,null, mime);", 
 					"o  = o ? opts.then(o) : null;",
 					"return  o;",
 					"}catch(ex){",
@@ -16449,8 +16335,7 @@ function createObject (T, t, args){
 				eval(_src);
 
 			}
-			catch (ex) { // do not support async data
-// alert("loading from : "+ex+"\n"+_src);
+			catch (ex) { // do not support async data 
 				_getRes = function () {
 					var _ext = igk.navigator.isIE() ? ".ejson" : ".json";// because of mime type        
 					var e = {
@@ -21038,8 +20923,7 @@ function igk_getFilterProp(o){
 			s.o.value = null;
 			if (p.accept){
 				s.o.setAttribute("accept",  p.accept);
-			} 
-			
+			}  
 			// pick file. 
 			// >uri: uri to send the picked file
 			// >p: property to manage picking file
@@ -23614,13 +23498,13 @@ igk.system.createNS("igk.system", {
 			return;
 		}
 
-		var s = this.getAttribute("igk:param");
+		var s = this.getAttribute("igk:data");
+		 
 
 		var p = igk.JSON.parse(s, this);
 		if (typeof(p) !='object'){
 			p = {};
-		}
-		
+		} 
 		if (q.o.tagName.toLowerCase() == "input") {
 			var n = igk.dom.replaceTagWith(q, "div");
 			var v = q.getAttribute("value");
@@ -23628,8 +23512,7 @@ igk.system.createNS("igk.system", {
 			n.o.removeAttribute("value");
 			n.o.removeAttribute("type");
 			n.o.removeAttribute("igk:uri");
-			n.o.removeAttribute("igk:param");
-			
+			n.o.removeAttribute("igk:data"); 
 			q = n;
 		}
 		q.reg_event('click', function (evt) {
@@ -24828,7 +24711,7 @@ igk.system.createNS("igk.system", {
 			igk.winui.reg_event(q, "transitionend", __transition_end);
 			q.setCss({ opacity: 0.0 });
 			_fo = 1;
-		}, 3000);
+		}, 2000);
 	};
 	igk.system.createNS("igk.winui.controls", {
 		toast: function () {
@@ -24842,8 +24725,7 @@ igk.system.createNS("igk.system", {
 			d.addClass(type);
 		};
 		d.setHtml(m);
-		igk.dom.body().add(d);
-		
+		igk.dom.body().add(d);		
 		d.init();
 	};
 
@@ -24997,6 +24879,9 @@ igk.system.createNS("igk.system", {
 			
 			$igk(p).addClass("igk-svg-host");
 			p.replaceChild(g.o, this.o);
+			if (p.getAttribute("title"))
+				$igk(p).qselect("svg > title").remove();
+
 		} else {
 			console.debug("item not found :" + n);
 		}

@@ -57,7 +57,6 @@ abstract class IGKCanvaZoneCtrl extends IGKCtrlTypeBase
 		//exit for rectangle
 		//default canvas width : 300, height:150 . to change used canva.width and canva.height properties. value is an integer.
 		igk_wl(IGKIO::ReadAllText(dirname(__FILE__)."/".IGK_DATA_FOLDER."/context.iwcjs"));
-		exit;
+		igk_exit();
 	}
-}
-?>
+} 

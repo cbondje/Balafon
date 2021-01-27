@@ -96,6 +96,8 @@ $l["lb.cldefaultpage"] = "Default Home Page";
 $l["lb.line"]="Line";
 $l["lb.file"]="File";
 $l["lb.function"]="Function";
+$l["lb.cldisplay"]="Display";
+$l["lb.cllocale"]="Locale";
 
 
 

@@ -66,7 +66,7 @@ final class IGKCommunityLink extends IGKConfigCtrlBase
 		// igk_wl ($cc);
 		// igk_wl ($k);
 		// igk_db_delete($this, "tbigk_community");
-		// exit;
+		
 		//model part
 		if ($e==0){
 			if (igk_db_select($this, $tb, array("clCommunity_Id"=>$comid))->RowCount>0){
@@ -106,7 +106,7 @@ final class IGKCommunityLink extends IGKConfigCtrlBase
 		// // igk_wl ($cc);
 		// // igk_wl ($k);
 		// // igk_db_delete($this, "tbigk_community");
-		// // exit;
+		// 
 
 		// if (igk_db_select($this, $tb, array("clCommunity_Id"=>$comid))->RowCount>0){
 			// unset($cc->clId);

@@ -154,13 +154,13 @@ class IGKHtmlMailboxNodeItem extends IGKHtmlComponentNodeItem{
 
 		if (!$q || !$u)
 		{
-			exit;
+			igk_die("attribute not defined");
 		}
 
 		//igk_wln($u);
 		$msg = $this->getMessage($u, $q);
 		//igk_wln("done ");
-		// exit;
+		
 		$d = igk_createNode("div");
 		$d->setClass("msg-z");
 		if (igk_count($msg)==0)
@@ -203,7 +203,6 @@ class IGKHtmlMailboxNodeItem extends IGKHtmlComponentNodeItem{
 			}
 		}
 		igk_ajx_replace_node($d, ".msg-z" , "#!\mailbox=".$q);
-		exit;
+		igk_exit();
 	}
-}
-?>
+} 

@@ -1,5 +1,5 @@
 <?php
-//represent a client user manager controller
+///<summary>represent a client user manager controller</summary>
 abstract class IGKUserManagerCtrl extends IGKCtrlTypeBase
 {
 	/** @var StdClass $m_user */
@@ -117,4 +117,3 @@ abstract class IGKUserManagerCtrl extends IGKCtrlTypeBase
 		$this->setCurrentView("register", true);
 	}
 }
-?>

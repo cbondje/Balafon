@@ -14,8 +14,7 @@ final class IGKSitemapGeneratorTools extends IGKToolCtrlBase
 
 		igk_notifyctrl()->addMsgr("msg.sitemapgenerated");
 		$this->refreshToolView();
-		igk_navtocurrent();
-		exit;
+		igk_navtocurrent(); 
 	}
 }
 
@@ -43,7 +42,7 @@ function igk_sys_gen_global_sitemap($store=0){
 			// igk_wln($k . " | ".$s);
 			// break;
 		}
-		// exit;
+		
 		$options = igk_xml_create_render_option();
 		$options->Indent=1;
 		$uri = igk_io_baseUri()."/Lib/igk/Styles/sitemap.xsl";
@@ -75,11 +74,4 @@ igk_tool_reg("sitemap", array("ImageUri"=>"", "Action"=>function(){
 			igk_sys_gen_global_sitemap();
 		return true;
 
-}));
-// igk_sys_reg_tools("size_view", array("ImageUri"=>"", "Action"=>function(){
-
-
-// }));
-
-
-?>
+})); 

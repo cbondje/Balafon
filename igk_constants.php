@@ -2,6 +2,7 @@
 // author: C.A.D. BONDJE DOUE
 // licence: IGKDEV - Balafon @ 2019
 // description : balafon global constants
+ 
 
 ///<summary>Represente class: IGKConstants</summary>
 /**
@@ -13,15 +14,15 @@ final class IGKConstants{
 }
 ///<summary>represent environment constant</summary>
 /**
-* represent environment constant
-*/
+ * represent environment constant
+ */
 class IGKEnvConst{
     const NotifyLogin="notify/app/login";
 }
 ///<summary>represent environment key constant</summary>
 /**
-* represent environment key constant
-*/
+ * represent environment key constant
+ */
 final class IGKEnvKeys{
     const CTRL_CONTEXT_SOURCE_VIEW_ARGS=self::CURRENT_CTRL + 2;
     const CTRL_CONTEXT_VIEW_ARGS=self::CURRENT_CTRL + 1;
@@ -32,11 +33,16 @@ final class IGKEnvKeys{
 }
 ///<summary>Represente class: IGKFieldConstants</summary>
 /**
-* Represente IGKFieldConstants class
-*/
+ * Represente IGKFieldConstants class
+ */
 final class IGKFieldConstants{
     const FirstName=self::Prefix."FirstName";
     const LastName=self::Prefix."LastName";
     const Login=self::Prefix."Login";
     const Prefix="cl";
+}
+
+final class IGKViewActionsContants{
+    
+    const HANDLE_ERROR = "(@error)";
 }

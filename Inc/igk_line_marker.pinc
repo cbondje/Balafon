@@ -8,5 +8,4 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
-echo __FILE__." : ".__LINE__. " <br />";
-?>
+echo __FILE__." : ".__LINE__. " <br />"; 

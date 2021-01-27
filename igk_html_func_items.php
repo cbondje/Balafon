@@ -164,6 +164,13 @@ function igk_html_create_container_section($t){
     return $r;
 }
 
+
+function igk_html_node_usesvg($name){
+    $s = igk_createnode("span");
+    $s->Content = igk_svg_use($name);
+    return $s;
+}
+
 function igk_html_node_menukey($menus, $ctrl=null, $root="ul", $item="li", $callback=null){
 	$n = igk_createnode("ul");
 	igk_html_load_menu_array($n, $menus, $item, $root, $ctrl, $callback);
@@ -535,7 +542,7 @@ function igk_html_node_arraylist($list, $tag="li", $callback=null){
 /**
 * bind article
 */
-function & igk_html_node_article($ctrl, $name, $raw=null, $showAdminOption=1){
+function & igk_html_node_article($ctrl, $name, $raw=null, $showAdminOption=1){ 
     $n=igk_html_node_NoTagNode();
     igk_html_article($ctrl, trim($name), $n, $raw, null, true, true, $showAdminOption);
     return $n;
@@ -1112,8 +1119,7 @@ function igk_html_node_csslink($href, $temp=0, $defer=0){
         $m=$g->getLink($key_ref);
         if($m)
             return $m;
-    }
-    igk_wln("link ....".$defer);
+    } 
 
     $m=new IGKHtmlItem("link");
     $m->setAttribute("href", new IGKHtmlRelativeUriValueAttribute($key_ref));
@@ -1293,9 +1299,28 @@ function igk_html_node_ViewCallback($callback){
     $c = ob_get_contents();
     ob_end_clean();
     if (!empty($c)){
-        $c->addText($c);
+        $n->addText($c);
     }
     return $n;
+}
+
+function igk_html_node_actions($actionlist){
+    $p = igk_html_parent_node() ?? igk_createnode("NoTagNode");
+    $actionBar = $p->addActionBar();
+    foreach($actionlist as $k=>$v){
+        $i = $actionBar->add("input");
+        $i->setId($k);
+        $t = igk_getv($v,"type", "button");
+        $m = igk_getv($v, "value", $k);
+        switch($t){
+            default:
+                $i["type"] = igk_getv($v,"type", "button");
+                $i["class"] = "igk-btn";
+                $i["value"] = $m;
+                break;
+        }
+    } 
+    return $p;
 }
 
 
@@ -1868,7 +1893,7 @@ function igk_html_node_labelinput($id, $text, $type="text", $value=null, $attrib
     $o=igk_createnotagnode();//igk:label-input");
     $o->setCallback("getIsRenderTagName", "return false;");
     $o->setCallback("getinput", "return \$this->input;");
-
+ 
     $i=$o->add("label");
     $i["for"]=$id;
     $i->Content=$text;
@@ -2132,7 +2157,7 @@ function igk_html_node_notification($nodeType="div", $notifyName=null){
 /**
 * used to bind notify global ctrl message
 */
-function igk_html_node_notifyhost($name=null, $autohide=1){
+function igk_html_node_notifyhost($name="::global", $autohide=1){
     $n=igk_createnode("div");
     $n["class"]="igk-notify-host";
     $n["title"]=$name;
@@ -2140,7 +2165,7 @@ function igk_html_node_notifyhost($name=null, $autohide=1){
     $g=$c->setNotifyHost($n, $name);
     if($g){
         $g->setAutohide($autohide);
-    }
+    }   
     return $n;
 }
 ///<summary>function igk_html_node_notifyhostbind</summary>
@@ -2422,10 +2447,12 @@ function igk_html_node_repeatcontent($number){
 /**
 * Represente igk_html_node_replaceuri function
 */
-function igk_html_node_replaceuri(){
+function igk_html_node_replaceuri($uri=null){
     $c=igk_createnotagnode();
-    if($rp=igk_get_env("replace_uri")){
-        $c->addObData(function() use ($rp){igk_ajx_replace_uri($rp);
+    $rp = $uri;
+    if($rp || ($rp=igk_get_env("replace_uri"))){
+        $c->addObData(function() use ($rp){
+            igk_ajx_replace_uri($rp);
         });
     }
     return $c;
@@ -2437,6 +2464,12 @@ function igk_html_node_replaceuri(){
 function igk_html_node_responsenode(){
     $n=igk_createnode('div');
     $n["class"]="igk-response";
+    return $n;
+}
+
+function igk_html_node_tablehost(){
+    $n = igk_createnode("div");
+    $n["class"] = "igk-table-host";
     return $n;
 }
 ///<summary>function igk_html_node_rollin</summary>

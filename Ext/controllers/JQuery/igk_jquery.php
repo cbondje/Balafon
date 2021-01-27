@@ -1,4 +1,6 @@
 <?php
+use function igk_resources_gets as __;
+
 /*
 boot strap structure controller
 */
@@ -119,9 +121,16 @@ final class IGKJQueryCtrl extends IGKConfigCtrlBase
 		$d->addHSep();
 		$dv = $frm->addDiv();
 
-		igk_html_build_form($dv->add("ul"), array(
-			"clCDNUri"=>array("attribs"=>array('value'=>$this->getCDNUri()))
+		$dv->addFields(
+		// igk_html_build_form($dv->add("ul"), 
+		array(
+			"clCDNUri"=>array("label_text"=>"CDN", "attribs"=>array(
+				"placeholder"=>__("cdn uri access"),
+				'value'=>$this->getCDNUri()
+				))
 		));
+
+		$frm->addInput("update", "submit", R::ngets("btn.update"))->setClass("igk-btn igk-btn-default")->setStyle("font-size:1em; width:auto; line-height:1em;");
 
 		$frm->addToken();
 		$s = $d->addDiv();

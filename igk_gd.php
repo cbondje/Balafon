@@ -172,6 +172,11 @@ class IGKGD {
         }
         return null;
     }
+    public function renderURL(){
+        return "data:image/png;base64,".base64_encode(igk_ob_get_func(function (){ 
+            $this->render();
+        }));
+    }
     public function CreateBuffer(){
        $c = self::Create($this->getWidth(), $this->getHeight());
        $c->Clear((object)["R"=>255, "G"=>255, "B"=>255]);

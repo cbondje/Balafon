@@ -28,7 +28,7 @@ class IGKProcessDocument extends IGKNonVisibleControllerBase
 			$doc  = $this->ProcessDoc($str);
 			$doc->RenderAJX();
 		}
-		exit;
+		igk_exit();
 	}
 	public function processDoc($text){
 

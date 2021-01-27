@@ -12,7 +12,8 @@
 use function igk_resources_gets as __;
 ($s_ctrl == null) && igk_die("selected controller not found");
 $div=$t;
-igk_html_add_title($div, __("Views for {0}", $s_ctrl->getName()));
+if (!igk_is_ajx_demand())
+$div->add("h3")->Content = __("Views for {0}", $s_ctrl->getName());
 $div->add(new IGKHtmlSearchItem($ctrl->getUri("search_view#frm_ctrl_view"), null, "m_search_view"));
 $frm=$div->addForm();
 $frm->setId("frm_ctrl_view");

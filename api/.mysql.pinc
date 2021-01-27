@@ -54,6 +54,12 @@ function igk_api_get_columninfo($row, $v, $table_n, $mysql){
             $cl["clLinkType"]=$rel->REFERENCED_TABLE_NAME;
         }
     }
+    if (!empty($v->Extra) && (($cpos = strpos($v->Extra, "on update "))!==false)){
+        $c = trim(substr($v->Extra, $cpos+10));
+        if (in_array($c, ["CURRENT_TIMESTAMP"]))
+            $cl["clUpdateFunction"] = "Now()";
+    }
+    //+ insert and update function ignored
     return $cl;
 }
 ///<summary>Represente igk_api_get_mysql_doc function</summary>
@@ -175,9 +181,9 @@ function igk_api_mysql_about($api){
 ///<param name="name"></param>
 /**
 * Represente igk_api_mysql_addcolumn function
-* @param mixed $api
-* @param mixed $tbname
-* @param mixed $name
+* @param object $api controller
+* @param mixed $tbname table name
+* @param mixed $name name
 */
 function igk_api_mysql_addcolumn($api, $tbname, $name){
     $doc=igk_api_get_mysql_doc();
@@ -577,8 +583,9 @@ function igk_api_mysql_resetctrldb($api, $ctrlname=null){
 /**
 * Represente igk_api_mysql_resetsysdb function
 */
-function igk_api_mysql_resetsysdb(){
-    igk_getctrl(IGK_SYSDB_CTRL)->resetDb();
+function igk_api_mysql_resetsysdb(){ 
+    igk_getctrl(IGK_SYSDB_CTRL)->resetDb(); 
+    igk_navto_referer();
 }
 ///<summary>Represente igk_api_mysql_rmcolumn function</summary>
 ///<param name="api"></param>
@@ -668,9 +675,44 @@ function igk_mysql_rename_table($api, $tbname, $ntbname){
         $mysql->close();
     }
 }
+///<summary>retrieve table definition</summary>
+/**
+ * @param array $tinfo table information 
+ */
+function igk_api_mysql_get_table_definition($api, $row, $table_n, $mysql, $tinfo=null, $entries=null){
+	$tt = $mysql->sendQuery("SELECT Count(*) FROM `".$table_n."`;");
+	$b = $tt->Columns[0]->name;
+	$count = $tt->Rows[0]->$b;
+    $row["Entries"] = $count;        
+	$row["clDescription"] = $mysql->sendQuery("SHOW TABLE STATUS WHERE NAME='".$table_n."';")->Rows[0]->Comment;
+	
+	//$tt = $mysql->sendQuery("DESCRIBE `".$t->$n."`;");
+	$tt = $mysql->sendQuery("SHOW FULL COLUMNS FROM `".$table_n."`;");
+	$unset_fields = [];
+	foreach($tt->Rows as $m=>$v){
+        $cl = igk_api_get_columninfo($row, $v, $table_n, $mysql);
+        
+        
+		if ($tinfo && $cl){
+            $tinfo[$v->Field] =new IGKDbColumnInfo( $cl->Attributes->ToArray());
+        }
 
-function igk_api_mysql_get_table_definition($api){
-	return null;
+        if (!empty($v->Extra)){
+            if (($v->Extra=="auto_increment") || (strpos($v->Extra, "on update ")!==false)){
+                $unset_fields[] = $v->Field;
+            }
+        }
+	}
+
+	if($entries && $count>0){
+		$n = $entries->addNode("Rows")->setAttribute("For", $table_n);
+		foreach($mysql->select($table_n)->Rows as $v){
+            foreach($unset_fields as $m){
+                unset($v->$m);
+            } 
+			$n->addNode("Row")->setAttributes($v);
+		}
+	}
 }
 ///<summary>Represente class: IGKMySQLUtilityConstant</summary>
 /**

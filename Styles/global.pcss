@@ -67,7 +67,9 @@ $def[".fts-i"] = "font-style:italic;";
 $def[".cur-pointer"] = "cursor:pointer;";
 $def[".cur-default"] = "cursor:default;";
 
-$def[".margin-a-lr"] = "margin-left:auto; margin-right:auto;";
+$def[".margin-a-lr"] 
+= $def[".margin-a-w"] 
+= "margin-left:auto; margin-right:auto;";
 
 
 $def[".igk-web-pageinfo"] = "{sys:dispn}";
@@ -107,6 +109,10 @@ $def[".pad4"] = "padding: 4px;";
 $def[".marg4"] = "margin: 4px;";
 $def[".marg-a"]="margin:auto;";
 $def[".padd-a"]="padding:0.5em;";
+
+$def[".center-box"] = "position:relative; margin: 0px auto; top: 50%; left:0%;[transform: translate(0%, -50%)]";
+$def[".fitvh"] = "height: 100vh;";
+$def[".fitvw"] = "width: 100vh;";
 
 $def[".no-wrap"] = "white-space: nowrap !important; ";
 $def[".no-border"] = $def[".no-bdr"]  = "border:none !important;";
@@ -249,6 +255,9 @@ $def[".thin"] = "font-weight: 100";
 $def[".regular"] = "font-weight: 200";
 $def[".bold"] = "font-weight: 400";
 
+$lg_screen[".igk-container"] = "padding: 0px 10px;";
+$def[".igk-container > .igk-container"] = "width:auto;";
+
 
 
 
@@ -275,7 +284,7 @@ $def[".igk-btn-lnk"] = "(sys:.igk-btn)";
 $def[".igk-cnf-framebox .clbutton, .igk-cnf-framebox .clsubmit, .igk-cnf-framebox .clreset, .igk-cnf-framebox clbutton"] = $btnstyle;
 
 
-$def["body.igk-cnf-body .framebox-dialog .cltext, body.igk-cnf-body .framebox-dialog .clpassword"] = "padding:4px; margin-bottom:4px;";
+
 
 $def[".igk-horizontal-separator"]="{sys:dispb} height:1px;  [bgcl:igk-hsep-bg] border-bottom: 1px solid [cl:igk-hsep-light, #eee]; margin-bottom:10px";
 $def[".igk-powered"] = "display:block; position:fixed; background-color: [cl:poweredBgColor,#222]; color:[cl:poweredColor, white]; bottom:0px; z-index: 10000; font-size:12px; right:0px; border-radius:4px 0px 0px 0px; padding:4px 0px 0px 16px; ";
@@ -305,3 +314,5 @@ $cl["tableLightLinkHoverForeColor"] = "red";
 $cl["tableDarkLinkHoverForeColor"] = "red";
 $cl["pickfileHoverBackground"] = "red";
 $cl["frameboxDialogBgColor"] = "#eee";
+
+

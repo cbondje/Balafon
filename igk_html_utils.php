@@ -4,6 +4,57 @@
 
 use function igk_resources_gets as __;
 
+///<summary>pre render argument</summary>
+function igk_html_pre(){
+    echo "<pre>";
+    print_r(func_get_args());
+    echo "</pre>";
+}
+
+function igk_html_reg_class($name, $class){
+    $B = igk_get_env("html://class");
+    if (!$B){
+        $B = [];
+    }
+    $B[$name] = $class;
+    igk_set_env("html://class", $B);
+    return $B;
+}
+function igk_html_reg_method($name, $funcName, $callable){
+    $key = "html://methods";
+    $B = igk_get_env($key);
+    if (!$B){
+        $B = [];
+    }
+    $B[$name][$funcName] = $callable;
+    igk_set_env($key, $B);
+    return $B;
+}
+function igk_html_get_method($name, $method){
+    $c = igk_get_env("html://methods");//IGKEnvironment::HTML_METHOD);
+    if (isset($c[$name])){
+        return igk_getv($c[$name], $method);
+    }
+    return null;
+}
+function igk_html_get_class_callable($name, $method){
+ 
+    $c = igk_get_env("html://class");//IGKEnvironment::HTML_METHOD);
+    if (isset($c[$name])){
+
+        $c = igk_getv($c, $name);//, $method);
+        if (!isset($instance[$c])){
+        
+        }
+        $g = igk_environment()->GetClassInstance($c);
+        
+        if ($g && method_exists($g, $method)){
+            return array($g, $method);
+        }
+    }
+    return null;
+}
+
 
 function igk_html_validate(){
     //TODO: implement validation error
@@ -169,7 +220,8 @@ function igk_html_build_form($t, $data, $defaultTarget="li"){
             break;
             case "hidden":
             case "text":
-            case "password":default:
+            case "password":                
+            default:
             $a=$li->addInput($id, $type);
             $a["type"]=strtolower($type);
             if($args){
@@ -189,18 +241,20 @@ function igk_html_build_form($t, $data, $defaultTarget="li"){
 /**
 * build entry
 */
-function igk_html_build_form_array_entry($name, $type, $n, $value=null){
-    $pwd=$name == IGK_FD_PASSWORD;
+function igk_html_build_form_array_entry($name, $type, $n, $value=null){    
+    $pwd = $name == IGK_FD_PASSWORD;
     switch(strtolower($type)){
         case "text":
         case "string":
         case "varchar":
-        $n->addSLabelInput($name, $pwd ? "password": "text", $pwd ? "": $value);
+            $n->addSLabelInput($name, $pwd ? "password": "text", $pwd ? "": $value);
         break;
         case "blob":
-        $t=$n->addSLabelTextarea($name, "lb.".$name, array("class"=>"-cltextarea"));
-        $t->textarea->Content=$pwd ? "": $value;
-        break;default: $n->addSLabelInput($name, "text", $value);
+            $t=$n->addSLabelTextarea($name, "lb.".$name, array("class"=>"-cltextarea"));
+            $t->textarea->Content=$pwd ? "": $value;
+        break;
+        default: 
+            $n->addSLabelInput($name, "text", $value);
         break;
     }
 }
@@ -670,6 +724,22 @@ function igk_html_form_buildformfield($frm, $data){
     });
     return $frm;
 }
+///<summary>get select data</summary>
+/**
+ * get select data
+ * @param array $data get select data
+ * @param callback $callback callback to resolve data to field data
+ */
+function igk_html_form_select_data($data, $callback){
+    $o = [];
+    foreach($data as $r){
+        $g = $callback($r);
+        if (is_array($g)){
+            $o[] = ["i"=>$g["i"], "t"=>$g["t"]];
+        }
+    }
+    return $o;
+}
 ///<summary>build form field on modele view </summary>
 /**
 * build form field on modele view
@@ -688,8 +758,19 @@ function igk_html_form_fields($formFields, $render=0){
     };
     $load_attr=function($v, & $o) use( $get_attr_key) {
         $key = $get_attr_key($v);
+        $v_def_form_control = igk_environment()->get("css/default/controlstyle", " class=\"igk-form-control form-control\" ");
         if($key === null){
+            //default engine form control
+            $e = igk_get_selected_builder_engine();
+            if ($e){
+                $o .= $e->initAttributes($key, $v);
+            }else {
+                $o .= $v_def_form_control;
+            }
             return;
+        } 
+        if (!isset($v[$key]["class"])){
+            $o .= $v_def_form_control;
         }
         foreach($v[$key] as $k=>$v){
             $o .= " ".$k."=\"".$v."\"";
@@ -739,7 +820,7 @@ function igk_html_form_fields($formFields, $render=0){
         }
         $o .= ">";
         if(!preg_match("/(hidden|fieldset|button|submit|reset)/", $_type)){
-            $o .= "<label for='{$k}'>".igk_getv($v, "label_text", __($k))."</label>";
+            $o .= "<label for='{$k}'>".ucfirst(igk_getv($v, "label_text", __($k)))."</label>";
         }
         switch($_type){
             case "fieldset":
@@ -765,7 +846,7 @@ function igk_html_form_fields($formFields, $render=0){
                     $o .= "<option ";
                     $o .= "value=\"{$row['i']}\" ";
                     $o .= ">";
-                    $o .= isset($row["t"]) ? $row["t"]: "";
+                    $o .= isset($row["t"]) ? __($row["t"]): "";
                     $o .= "</option>";
                 }
             }
@@ -795,7 +876,7 @@ function igk_html_form_fields($formFields, $render=0){
                         $o .= "selected";
                     }
                     $o .= ">";
-                    $o .= $row["t"];
+                    $o .= __($row["t"]);
                     $o .= "</option>";
                 }
             }
@@ -831,6 +912,8 @@ function igk_html_form_fields($formFields, $render=0){
     }
     return $o;
 }
+
+
 ///<summary>Represente igk_html_form_init function</summary>
 /**
 * Represente igk_html_form_init function
@@ -1184,111 +1267,6 @@ function igk_html_toast($doc, $message, $type="igk-default"){
 */
 function igk_html_utils_buildformfield($formfields, $render=1){
     return igk_html_form_fields($formfields, $render);
-    // $o="";
-    // $load_attr=function($v, & $o){
-    //     if(!isset($v["attribs"])){
-    //         return;}
-    //     foreach($v["attribs"] as $k=>$v){
-    //         $o .= " ".$k."=\"".$v."\"";
-    //     }
-    // };
-    // $fieldset=0;
-    // foreach($formfields as $k=>$v){
-    //     $_type=strtolower(isset($v["type"]) ? $v["type"]: "text");
-    //     $_value=isset($v["value"]) ? $v["value"]: "";
-    //     $_allow_empty=isset($v["allow_empty"]) ? $v["allow_empty"]: "";
-    //     $_empty_value=isset($v["empty_value"]) ? $v["empty_value"]: "0";
-    //     if($_type == "fieldset"){
-    //         if($fieldset){
-    //             $o .= "</fieldset>";
-    //         }
-    //         $o .= "<fieldset";
-    //         $load_attr($v, $o);
-    //         $o .= ">";
-    //         if(isset($v["legend"])){
-    //             $o .= "<legend>".$v["legend"]."</legend>";
-    //         }
-    //         $fieldset=1;
-    //         continue;
-    //     }
-    //     $_id="";
-    //     if(isset($v["id"])){
-    //         $_id=' id="'.$v["id"].'"';
-    //     }
-    //     $o .= "<div";
-    //     if((isset($v["required"]) ? $v["required"]: 0)){
-    //         $o .= " class=\"require\" ";
-    //     }
-    //     $o .= ">";
-    //     if(!preg_match("/(hidden|fieldset)/", $_type)){
-    //         $o .= "<label for='{$k}'>".(isset($v["label_text"]) ? $v["label_text"]: $k)."</label>";
-    //     }
-    //     switch($_type){
-    //         case "fieldset":
-    //         break;
-    //         case "textarea":
-    //         $o .= "<textarea name=\"{$k}\" id=\"{$k}\" ";
-    //         $load_attr($v, $o);
-    //         $o .= ">{$_value}</textarea>";
-    //         break;
-    //         case "radiogroup":
-    //         $o .= '<div style="display:inline-block;">';
-    //         foreach($v["data"] as $kk=>$vv){
-    //             $o .= '<span >'.__($kk).'</span><input type="radio" name="'.$k.'"'.$_id.' value="'.$vv.'" />';
-    //         }
-    //         $o .= "</div>";
-    //         break;
-    //         case "select":
-    //         $k_data="";
-    //         $bas=isset($v["selected"]) ? $v["selected"]: null;
-    //         if(isset($v["data"]) && is_string($k_data=$v["data"])){
-    //             $k_data="data=\"".$k_data."\" selected=\"{$bas}\" ";
-    //         }
-    //         else{
-    //             $k_data=null;
-    //         }
-    //         $o .= "<select name=\"{$k}\"".$_id.$k_data.">";
-    //         if($_allow_empty){
-    //             $o .= "<option ";
-    //             $o .= "value=\"{$_empty_value}\" ></option>";
-    //         }
-    //         if(isset($v["data"]) && is_array($_tab=$v["data"])){
-    //             foreach($_tab as $row){
-    //                 $o .= "<option ";
-    //                 $o .= "value=\"{$row['i']}\" ";
-    //                 if(isset($bas) && ($bas == $row['i'])){
-    //                     $o .= "selected";
-    //                 }
-    //                 $o .= ">";
-    //                 $o .= $row["t"];
-    //                 $o .= "</option>";
-    //             }
-    //         }
-    //         else{}
-    //         $o .= "</select>";
-    //         break;
-    //         case "text":
-    //         case "hidden":
-    //         case "password":default:
-    //         if(empty($_id))
-    //             $_id=' id="'.$k.'"';
-    //         $o .= "<input type=\"{$_type}\" value=\"{$_value}\" name=\"{$k}\"{$_id} class=\"clinput cl{$_type}\" ";
-    //         if(isset($v["maxlength"])){
-    //             $o .= "maxlength=\"{$v["maxlength"]}\" ";
-    //         }
-    //         if(isset($v["placeholder"])){
-    //             $o .= "placeholder=\"{$v["placeholder"]}\" ";
-    //         }
-    //         $load_attr($v, $o);
-    //         $o .= "/>";
-    //         break;
-    //     }
-    //     $o .= "</div>";
-    // }
-    // if($fieldset){
-    //     $o .= "</fieldset>";
-    // }
-    return $o;
 }
 
 ///<summary>Represente igk_html_view_node function</summary>

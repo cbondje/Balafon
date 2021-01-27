@@ -486,7 +486,9 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
             $g=$this->sendQuery($q, false);
             return $g;
         }
-        catch(Exception $ex){}
+        catch(Exception $ex){
+            igk_ilog("Exception: ".$ex->getMessage());
+        }
         return 0;
     }
     ///<summary>Represente CreateEmptyResult function</summary>
@@ -549,9 +551,9 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     /**
     * Represente flushForInitDb function
     */
-    public function flushForInitDb(){
+    public function flushForInitDb($complete=null){
         if($this->m_dbManager)
-            $this->m_dbManager->flushForInitDb();
+            $this->m_dbManager->flushForInitDb($complete);
     }
     ///<summary>Represente getAllRelations function</summary>
     /**
@@ -836,6 +838,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     */
     public function update($tbname, $entries, $where=null, $querytabinfo=null){
         if(($entries == null) || ($this->m_dbManager == null)){
+           
             return false;
         }
         return $this->m_dbManager->update($tbname, $entries, $where, $querytabinfo);
@@ -1118,8 +1121,7 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     */
     public function sendQuery($query, $throwex=true, $options=null){
         $sendquery=$this->queryListener ?? $this->m_dbManager;
-        if($sendquery){
-
+        if($sendquery){            
             $options=$options ?? (object)[];
             $r=$sendquery->sendQuery($query, $throwex);
             if($r !== null)
@@ -1496,6 +1498,7 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
     private $m_tables;
     private $m_type;
     private $m_value;
+    private $m_multitable; 
     ///<summary>Represente __construct function</summary>
     /**
     * Represente __construct function
@@ -1509,6 +1512,7 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
         $this->m_adapterName="MYSQL";
         $this->m_type="none";
         $this->m_result=0;
+        $this->m_multitable = false;
     }
     ///retult of the query  uses for boolean data
     /**
@@ -1633,13 +1637,21 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
         }
         $v_primkey=count($prim_key) == 1 ? $prim_key[0]->name: null;
         $v_primkeyindex=count($prim_key) == 1 ? $prim_key[0]->index: null;
-        $callback=is_callable($options) ? $options: igk_getv($options, "@callback");
+        $callback=is_callable($options) ? $options: igk_getv($options, self::CALLBACK_OPTS );
         $_nn=(igk_count($out->m_tables) > 1);
         $c=0;
         while($d=igk_db_fetch_row($dbresult)){
             $t=array();
             foreach($out->m_columns as $k=>$s){
-                $t[($_nn ? $s->table.".": ''). $s->name]=$d[$s->index];
+                if(!isset($t[$s->name])){
+                    $t[$s->name]=$d[$s->index];
+                } else { 
+                if ($_nn)
+                    $t[$s->table.".". $s->name]=$d[$s->index];
+                else 
+                    $t[$s->name]=$d[$s->index];
+                }
+
             }
             $obj=  IGKQueryRowObj::Create($t);
             if($callback && !$callback($obj)){
@@ -1657,6 +1669,7 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
         }
         $out->m_rowcount=$c;
         $out->m_primarykey=$v_primkey;
+        $out->m_multitable = $_nn;
         return $out;
     }
     ///<summary>Represente getColumnCount function</summary>
@@ -1872,6 +1885,14 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
             $this->m_rows=$tab;
         }
         return $this;
+    }
+    public function toAssocArray($name){
+        $o = null;
+        foreach($this->Rows as $r){
+            if ($o===null) $o = [];
+            $o[$r->$name] = $r;
+        }
+        return $o;
     }
 }
 ///<summary>Represente class: IGKMySQLTimeManager</summary>

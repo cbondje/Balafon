@@ -13,6 +13,14 @@ final class IGKAppModule extends IGKControllerBase{
     private $m_fclist;
     private $m_listener;
     private $m_src;
+    private $m_initializer; // used to extend modul class properties
+
+
+    public function initClass($classname){
+        if (class_exists($classname)){
+            $this->m_initializer = new $classname();
+        }
+    }
     ///<summary>Represente __call function</summary>
     ///<param name="n"></param>
     ///<param name="args"></param>
@@ -61,10 +69,17 @@ final class IGKAppModule extends IGKControllerBase{
 
         $classLib = $this->getDeclaredDir()."/Lib/Classes";
         if (is_dir($classLib)){
-            $entry_ns = str_replace("/","\\", igk_get_module_name(readlink($this->getDeclaredDir())));
+            $dir = $this->getDeclaredDir();
+            if (!empty($dir) &&  is_link($dir)){
+                $dir = @readlink($dir);
+            } 
+            if (!is_dir($dir)){
+                $dir = "";
+            } 
+            $entry_ns = str_replace("/","\\", igk_get_module_name($dir));
             $libdir=$classLib;
             spl_autoload_register(function($n)use($entry_ns, $libdir){
-                if (strpos($n, $entry_ns)===0){
+                if (!empty($entry_ns) && (strpos( $n, $entry_ns)===0)){
                     $cl = substr($n, strlen($entry_ns));
                     if (file_exists($fc = $libdir."/".$cl.".php")){
                         include($fc);
