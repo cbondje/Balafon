@@ -8096,9 +8096,10 @@ function igk_get_attrib_raw_context($n_context){
     } else {
         if (is_array($n_context)){
             $raw = igk_getv($n_context, "raw");
-        }else {
-            igk_wln($o);
-            igk_die("context does't provide a raw object");
+        }else { 
+            if (igk_environment()->is("DEV")){
+                igk_ilog("context does't provide a raw object");
+            }
         }
     }
     return [
