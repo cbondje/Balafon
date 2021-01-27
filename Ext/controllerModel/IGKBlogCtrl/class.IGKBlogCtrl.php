@@ -33,7 +33,7 @@ abstract class IGKBlogCtrl extends IGKCtrlTypeBase
 				$this->renderError($c);
 			}
 		}
-		exit;
+		igk_exit();
 	}
 	public function getcanAddChild(){
 		return false;
@@ -48,5 +48,4 @@ abstract class IGKBlogCtrl extends IGKCtrlTypeBase
 			$d->RenderAJX();
 			unset($d);
 	}
-}
-?>
+} 

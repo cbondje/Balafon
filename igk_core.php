@@ -130,6 +130,14 @@ function igk_load_library($name){
     }
     return 0;
 }
+
+function igk_wl_tag($tag){
+    echo "<$tag>";
+    foreach(array_slice($tab = func_get_args(), 1) as $c){
+        igk_wl($c);
+    }
+    echo "</$tag>";
+}
 ///<summary>shortcut to get server info data</summary>
 /**
 * shortcut to get server info data
@@ -186,6 +194,11 @@ function igk_wl($msg){
 function igk_wl_pre($p){
     echo "<pre>";
     print_r($p);
+    echo "</pre>";
+}
+function igk_dump_pre($p){
+    echo "<pre>";
+    var_dump($p);
     echo "</pre>";
 }
 function igk_dev_wln(){
@@ -470,7 +483,9 @@ class IGKLoader {
             "fname"=>igk_io_getviewname($file, $this->_controller->getViewDir())
         ), $data);
         ob_start();
+        igk_environment()->viewfile = 1;
         $this->_inc_file($file, $data);
+        igk_environment()->viewfile = null;
         $o=ob_get_contents();
         ob_end_clean();
         set_include_path($bck);
@@ -582,6 +597,9 @@ final class IGKServer{
 				return $this->REQUEST_METHOD;
         return $this->REQUEST_METHOD == $type;
     }
+    public function isMultipartFormData(){
+        return strpos($this->CONTENT_TYPE, "multipart/form-data") === 0;
+    }
     ///<summary>Represente prepareServerInfo function</summary>
     /**
     * Represente prepareServerInfo function
@@ -638,4 +656,26 @@ final class IGKServer{
     public function toArray(){
         return $this->data;
     }
+}
+
+
+///<summary>Represente igk_app_is_appuser function</summary>
+///<param name="ctrl"></param>
+/**
+* Represente igk_app_is_appuser function
+* @param mixed $ctrl
+*/
+function igk_app_is_appuser($ctrl){
+    return ($u=$ctrl->User) && $u->clLogin == $ctrl->Configs->{'app.DefaultUser'};
+}
+///<summary>get if application is on uri demand</summary>
+/**
+* get if application is on uri demand
+*/
+function igk_app_is_uri_demand($app, $function){
+    return (igk_io_currentUri() == $app->getAppUri($function));
+}
+///<summary>encrypt in sha256 </summary>
+function igk_encrypt($data,$prefix=IGK_PWD_PREFIX){
+    return hash("sha256", $prefix.$data);
 }

@@ -178,13 +178,15 @@ EOF;
 		$box = $d->addPanelBox();
 		igk_html_title($box->addDiv(), R::ngets( "title.CDNSettings" ) );
 
-		igk_html_build_form($box->add("ul"), array(
-			"bootstrap.cdn.css"=>array("attribs"=>array("value"=>$this->getCDNCss())),
-			"bootstrap.cdn.js"=>array("attribs"=>array("value"=>$this->getCDNJs())),
-			"bootstrap.cdn.bundle.js"=>array("attribs"=>array("value"=>$this->getCDNBundleJs()))
+		$box->add("ul")->addFields(
+		//igk_html_build_form($box->add("ul"), 
+		array(
+			"bootstrap.cdn.css"=>array("attribs"=>array("class"=>"igk-form-control form-control", "value"=>$this->getCDNCss())),
+			"bootstrap.cdn.js"=>array("attribs"=>array("class"=>"igk-form-control form-control", "value"=>$this->getCDNJs())),
+			"bootstrap.cdn.bundle.js"=>array("attribs"=>array("class"=>"igk-form-control form-control", "value"=>$this->getCDNBundleJs()))
 		));
 
-		$box->addInput("update", "submit", R::ngets("btn.update"))->setClass("igk-btn igk-default")->setStyle("font-size:1em; width:auto; line-height:1em;");
+		$box->addInput("update", "submit", R::ngets("btn.update"))->setClass("igk-btn igk-btn-default")->setStyle("font-size:1em; width:auto; line-height:1em;");
 
 
 		$f = igk_io_getfiles(igk_io_currentRelativePath("Lib/bootstrap"), "/\.(css|js)$/i");

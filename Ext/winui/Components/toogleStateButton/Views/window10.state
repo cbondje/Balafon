@@ -4,7 +4,7 @@
 //parameter : $node is a parent node that add a addOnRenderCallback node
 // igk_wln(array_keys(get_defined_vars()));
 // igk_wln($i_value);
-// exit;
+
 
 igk_css_bind_wuistyle($doc, $CF, $type);
 

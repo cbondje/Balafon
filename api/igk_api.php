@@ -359,21 +359,26 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                 },
             "backupdb"=>function($cmd, $args){
                     if(!igk_is_conf_connected()){
-                        igk_wln("/!\\ not allowed");
+                        igk_wln("/!\\ Operation not allowed");
                         igk_exit();
                     }
-                    $n=igk_getv($args, 0);
+                    // igk_wln_e($args);
+                    $n= implode("\\", $args);//igk_getv($args, 0);
                     $ctrl=igk_getctrl($n);
                     if($ctrl){
-                        $schema=igk_db_backup_ctrl($ctrl);
+                        $schema=igk_db_backup_ctrl($ctrl, 1);
                         header("Content-Type:application/xml");
-                        igk_wl(utf8_encode($schema->Render()));
-                        igk_exit();
-                        return $schema;
+                        igk_wl("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
+                        igk_wl($schema->Render());
+                        igk_exit(); 
                     }
                     else{
                         igk_wln("No Ctrl [{$n}] found");
                         igk_wln("usage : /datadb/backupdb/[ctrlName]");
+                        $ctrl = igk_get_defaultwebpagectrl();
+                        if ($ctrl){
+                        igk_wl("<a href=\"".$this->getAppUri("/datadb/backupdb/".get_class($ctrl))."\" >".get_class($ctrl)."</a>");
+                        }
                     }
                     igk_exit();
                 },
@@ -533,6 +538,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
             }
             else{
                 $f="igk_api_mysql_".str_replace("-", "_", $cmd);
+          
                 if(!function_exists($f)){
                     // igk_ilog(__FUNCTION__."::", "function {$f} not exists");
                     igk_wln_e("function [$f] not exists in ".$file);

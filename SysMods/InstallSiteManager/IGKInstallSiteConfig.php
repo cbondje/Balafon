@@ -77,6 +77,9 @@ EOF
 );
 $listen = igk_getr("listen");
 $environment = igk_getr("environment", "development");
+if (empty($environment)){
+	$environment = "development";
+}
 $tport = "80";
 if (is_numeric($listen) && (strlen($listen)>=4)){
 	$tport = $listen;
@@ -105,9 +108,22 @@ RewriteRule ^(.)+$ "/index.php?rwc=1" [QSA,L]
 </IfModule>
 
 </Directory>
+<Directory {$src}/public/assets/_chs_/dist/js>
+ AddType text/javascript js
+ AddEncoding deflate js
+</Directory>
 </VirtualHost>
 EOF
 );
+// create vhost link on apache
+$vhost_dir = "/private/etc/apache2/other";
+if (is_dir($vhost_dir)){
+	$conf_file = $vhost_dir."/vhost.".basename($folder).".conf";
+	igk_io_symlink($conf_file, $src."/vhost.conf");
+
+
+}
+
 
 igk_notifyctrl("installsite")->addSuccessr("Install site success");
 

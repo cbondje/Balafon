@@ -130,7 +130,7 @@ abstract class IGKBillingCtrl extends IGKCtrlTypeBase
 		$pdf = new IGKPDF();
 
 		$pdf->Render();
-		exit;
+		igk_exit();
 	}
 }
 

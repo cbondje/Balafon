@@ -13,7 +13,8 @@
 function igk_html_node_expression_node($raw, $ctrl=null){
     if($ctrl === null){
         $g=igk_get_env("sys:://expression_context");
-        igk_wln_e("loading context ", $ctrl);
+        $ctrl = $g->ctrl;
+        // igk_wln_e(__FILE__.":".__LINE__, "loading context ", $g);
     }
     $n=new IGKHtmlExpressionNodeItem($raw, $ctrl);
     return $n;
@@ -1313,7 +1314,7 @@ final class IGKHtmlContactFormItem extends IGKHtmlComponentNodeItem {
     public function __construct(){
         parent::__construct("form");
         $this["method"]="POST";
-        $this["enctype"]="multipart/form-data";
+        // $this["enctype"]="multipart/form-data";
         $this->m_msbox=$this->addDiv();
         $i=$this->addSLabelInput("clYourName", "text");
         $i->input->setClass("igk-form-control igk-form-required");
@@ -1571,7 +1572,7 @@ final class IGKHtmlCtrlViewNodeItem extends IGKHtmlCtrlNodeItemBase {
     * @param mixed $childs
     * @param mixed $setParent the default value is 1
     */
-    public function remove($childs, $setParent=1){
+    public function remove($childs=null, $setParent=1){
         $this->m_content->remove($childs, $setParent);
     }
     ///<summary>Represente RenderComplete function</summary>
@@ -3781,6 +3782,7 @@ EOF
     public function Load($content, $context=IGKHtmlContext::XML){
         if(empty($content))
             return;
+        
         $c=IGKHtmlReader::Load($content, $context);
         $root=null;
         foreach($c->Childs as  $v){

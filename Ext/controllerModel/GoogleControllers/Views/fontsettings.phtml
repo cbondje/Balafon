@@ -28,7 +28,7 @@ $box->addbutton("btn.install")
 if (!igk_sys_env_production())
     $t->addDiv()->addA($ctrl->geturi("resave"))
     ->setClass("igk-btn igk-btn-default")
-    ->Content = "Resave";
+    ->Content = __("Build");
 
 $box=$frm->addPanelBox();
 $box->add("h2")->Content=__("Intalled font");

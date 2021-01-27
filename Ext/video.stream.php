@@ -68,7 +68,7 @@ class VideoStream
             if (strpos($range, ',') !== false) {
                 header('HTTP/1.1 416 Requested Range Not Satisfiable');
                 header("Content-Range: bytes $this->start-$this->end/$this->size");
-                exit;
+                igk_exit();
             }
             if ($range == '-') {
                 $c_start = $this->size - substr($range, 1);
@@ -82,7 +82,7 @@ class VideoStream
             if ($c_start > $c_end || $c_start > $this->size - 1 || $c_end >= $this->size) {
                 header('HTTP/1.1 416 Requested Range Not Satisfiable');
                 header("Content-Range: bytes $this->start-$this->end/$this->size");
-                exit;
+                igk_exit();
             }
             $this->start = $c_start;
             $this->end = $c_end;

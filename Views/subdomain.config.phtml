@@ -18,19 +18,20 @@ $dv=$t->addDiv();
 $dv["class"]="igk-roll-owner";
 $dv->Content=$dom;
 $dv->addRollIn()->setClass("igk-pull-right")->addAJXA($ctrl->getUri("dom_add_db_edit_domain_ajx"))->addResImg("edit_16x16");
-$tdv=$t->addDiv();
-$tdv["class"]="bgcl-white igk-row";
-$tdv["style"]="margin:0px; margin-bottom:10px;";
-$tdv->addDiv()->addTitleLevel(5)->Content=R::ngets("title.SystemDomain");
+
 $vlist=IGKSubDomainManager::getInstance()->domainList();
 if($vlist && (count($vlist) > 0) ){
+    $tdv=$t->addDiv();
+    $tdv["class"]="igk-row";
+    $tdv["style"]="margin:0px; margin-bottom:10px;";
+    $tdv->addDiv()->addTitleLevel(5)->Content=R::ngets("title.SystemDomain");
     $dv=$tdv->addDiv();
     foreach($vlist as $k=>$v){
         $dv->add("div")->setClass("floatl")->setStyle("width:180px;")->Content=$v;
     }
 }
 $tdv=$t->addDiv();
-$tdv["class"]="c-z bgcl-white igk-write";
+$tdv["class"]="c-z igk-write";
 $tdv->addDiv()->addTitleLevel(5)->Content=R::ngets("title.DatbaseRegisteredDomain");
 igk_notifyctrl()->setNotifyHost($tdv->addDiv(), "domain/dbz");
 $db=igk_db_table_select_where($ctrl->DataTableName, null, $ctrl);
@@ -72,7 +73,8 @@ $b->addAJXA($ctrl->getUri("dom_add_db_domain_ajx"))->setClass("igk-btn")->addRes
 $a=$b->addA($ctrl->getUri("dom_drop_db_s_domain_ajx"))->setClass("igk-btn");
 $a["onclick"]="javascript: var s = \$igk(this).select(\"^.c-z\").getItemAt(0).select(\"form\").getItemAt(0);"."ns_igk.ajx.postform(s.o, this.href, ns_igk.ajx.fn.replace_or_append_to_body); return false;";
 $a->addResImg("drop_16x16");
-$b->addAJXA($ctrl->getUri('dom_drop_domaintable'))->setClass("igk-btn")->setContent(__("Clear Table"));
+$b->addAJXA($ctrl->getUri('dom_drop_domaintable'))->setClass("igk-btn")->addDiv() //->setStyle("line-height:1")
+->setContent(__("Clear Table"));
 $t->addBalafonJS()->Content=<<<EOF
 igk.system.createNS('igk.conf.subdomain', {
 	drop: function(t){

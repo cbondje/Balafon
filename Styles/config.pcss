@@ -43,18 +43,13 @@ $cl["igk-framebox-title-fcl"] = "transparent";
 $cl["igk-hsep-bg"] = "transparent";
 $cl["igk-cnf-add-prop-color"] = "transparent"; 
 $cl["pickfileHoverBackground"] = "red";
-
-
+ 
 
 //dark theme
 include(dirname(__FILE__)."/config.dark.pcss");
 
-
-
 $menu_border_size = 0;
-
 // configMenuHeadingHoverColor
-
 $cl["configMenuHeadingHoverBackground"] = "#aaa";
 $cl["configMenuHeadingHoverColor"] = "#eee";
 $cl["configLoginLogoBackgroundColor"] = "white";
@@ -119,6 +114,9 @@ $def[$page." .fmenu-h .ico:after"] = "content:' '; display:block; width: 32px; h
 
 $def["#id_board .igk-panel"]= "border-radius: 4px;";
 $def["#id_board .igk-panel.igk-error"] = "[bgcl:configPanelDangerBackgroundColor]; [fcl:configPanelDangerForeColor]";
+
+
+$def[".igk-panel.igk-error"] = "[bgcl:configPanelDangerBackgroundColor]; [fcl:configPanelDangerForeColor]";
 
 // ------------------------------------------------------------------------------
 // accordeon menu setting
@@ -337,7 +335,7 @@ $def[".igk-android.igk-cnf-body .igk-db-tableentries"] = "width:auto !important;
 $def[".igk-cnf-body .igk-db-tableentries .datas"] = "width:600px; max-height: 400px;";
 $def[".igk-android.igk-cnf-body .igk-db-tableentries .datas"] = "width:auto;";
 $def[$page." .igk-table"] = "border-spacing:0 0; font-size:10pt; border-collapse:collapse;";
-$def[$page." .igk-table td"]  = "border:1px solid #E7E7E8;";
+$def[$page." .igk-table td"]  = "border:none;";
 $def[$page." .igk-table th:hover"]  = "[fcl:configtableHeaderHoverColor]";
 $def[$page." .table_lightrow"]=  "[sysbgcl:tableLightRowColor]";
 $def[$page." .table_lightrow:hover a"]= "[sysbgcl:tableLightHoverColor]";
@@ -541,6 +539,8 @@ $def[$page." .igk-cnf-menu .igk-config-menu-font"] =
 
  $def[".igk-cnf-body .igk-winui-toast"]="border-radius:0.4em;";
  $def[".igk-cnf-body .igk-winui-toast.igk-success"] = "background-color:[cl: configToastSuccessBgColor];color: [cl:configToastSuccessFgColor];";
+ $def[".igk-cnf-body .igk-winui-toast.igk-danger"] = "[bgcl: configToastDangerBgColor, #D23040] [fcl: configToastDangerColor, #d4d4d4] "; 
+
 
 
  $def[$page." form textarea"] = "padding: 4px;";
@@ -563,3 +563,27 @@ $def[$page." #igk_cpv"] = "[fcl:configFormBgColor]; font-size: 10pt;margin: 2em 
 
 $def[$page.".con-start"] = "background-color:transparent !important";
 $def[$page.".con-start .igk-cnf-connexion-div"] = "border-radius:4px; box-shadaow: #444 0p 4px 20px 10px";
+
+
+$def[$page." .igk-action-bar a.igk-btn"] = "line-height:0; vertical-align:middle; border:none; [trans:transform 0.2s, background-color .3s]";
+$def[$page." .igk-action-bar a.igk-btn > *"] = "line-height:1"; 
+$def[$page." .igk-action-bar a.igk-btn:hover"] = "[bgcl: actionBarButtonHoverBackgroundColor, #333]; box-shadow: 0px 2px 6px [cl:ationBarButtonShadowColor, #111]; [transform:scale(1.1)]"; 
+
+
+// "init table"
+
+$def[".igk-table.igk-table-striped > tbody > tr:nth-child(odd) > td, .igk-table-striped > tbody > tr:nth-child(odd) > th"] = 
+"[bgcl:stripTableEventRowBackgroundcolor,red] [sysfcl:igk-table-row-odd-fcl] ";
+
+$def[".igk-table.igk-table-striped > tbody > tr:nth-child(odd) > td:hover, .igk-table-striped > tbody > tr:nth-child(odd) > th:hover"] = 
+"";
+
+
+$def[".igk-table.igk-table-striped > tbody > tr:hover > td"]="[bgcl:stripTableEventRowHoverBackgroundcolor]";
+
+$def[$page." input.igk-btn.igk-default"] = "[bgcl:configLinkColor]";
+
+$def[$page ." h1"] = 
+$def[$page ." div.igk-title"] = 
+$def[$page ." .igk-section-title.igk-title-4"] = 
+"padding-bottom:1.6em; font-weight: 200; margin-bottom:0 !important;";

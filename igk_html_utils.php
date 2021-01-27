@@ -220,7 +220,8 @@ function igk_html_build_form($t, $data, $defaultTarget="li"){
             break;
             case "hidden":
             case "text":
-            case "password":default:
+            case "password":                
+            default:
             $a=$li->addInput($id, $type);
             $a["type"]=strtolower($type);
             if($args){
@@ -240,18 +241,20 @@ function igk_html_build_form($t, $data, $defaultTarget="li"){
 /**
 * build entry
 */
-function igk_html_build_form_array_entry($name, $type, $n, $value=null){
-    $pwd=$name == IGK_FD_PASSWORD;
+function igk_html_build_form_array_entry($name, $type, $n, $value=null){    
+    $pwd = $name == IGK_FD_PASSWORD;
     switch(strtolower($type)){
         case "text":
         case "string":
         case "varchar":
-        $n->addSLabelInput($name, $pwd ? "password": "text", $pwd ? "": $value);
+            $n->addSLabelInput($name, $pwd ? "password": "text", $pwd ? "": $value);
         break;
         case "blob":
-        $t=$n->addSLabelTextarea($name, "lb.".$name, array("class"=>"-cltextarea"));
-        $t->textarea->Content=$pwd ? "": $value;
-        break;default: $n->addSLabelInput($name, "text", $value);
+            $t=$n->addSLabelTextarea($name, "lb.".$name, array("class"=>"-cltextarea"));
+            $t->textarea->Content=$pwd ? "": $value;
+        break;
+        default: 
+            $n->addSLabelInput($name, "text", $value);
         break;
     }
 }
@@ -721,6 +724,22 @@ function igk_html_form_buildformfield($frm, $data){
     });
     return $frm;
 }
+///<summary>get select data</summary>
+/**
+ * get select data
+ * @param array $data get select data
+ * @param callback $callback callback to resolve data to field data
+ */
+function igk_html_form_select_data($data, $callback){
+    $o = [];
+    foreach($data as $r){
+        $g = $callback($r);
+        if (is_array($g)){
+            $o[] = ["i"=>$g["i"], "t"=>$g["t"]];
+        }
+    }
+    return $o;
+}
 ///<summary>build form field on modele view </summary>
 /**
 * build form field on modele view
@@ -739,8 +758,19 @@ function igk_html_form_fields($formFields, $render=0){
     };
     $load_attr=function($v, & $o) use( $get_attr_key) {
         $key = $get_attr_key($v);
+        $v_def_form_control = igk_environment()->get("css/default/controlstyle", " class=\"igk-form-control form-control\" ");
         if($key === null){
+            //default engine form control
+            $e = igk_get_selected_builder_engine();
+            if ($e){
+                $o .= $e->initAttributes($key, $v);
+            }else {
+                $o .= $v_def_form_control;
+            }
             return;
+        } 
+        if (!isset($v[$key]["class"])){
+            $o .= $v_def_form_control;
         }
         foreach($v[$key] as $k=>$v){
             $o .= " ".$k."=\"".$v."\"";
@@ -790,7 +820,7 @@ function igk_html_form_fields($formFields, $render=0){
         }
         $o .= ">";
         if(!preg_match("/(hidden|fieldset|button|submit|reset)/", $_type)){
-            $o .= "<label for='{$k}'>".igk_getv($v, "label_text", __($k))."</label>";
+            $o .= "<label for='{$k}'>".ucfirst(igk_getv($v, "label_text", __($k)))."</label>";
         }
         switch($_type){
             case "fieldset":
@@ -816,7 +846,7 @@ function igk_html_form_fields($formFields, $render=0){
                     $o .= "<option ";
                     $o .= "value=\"{$row['i']}\" ";
                     $o .= ">";
-                    $o .= isset($row["t"]) ? $row["t"]: "";
+                    $o .= isset($row["t"]) ? __($row["t"]): "";
                     $o .= "</option>";
                 }
             }
@@ -846,7 +876,7 @@ function igk_html_form_fields($formFields, $render=0){
                         $o .= "selected";
                     }
                     $o .= ">";
-                    $o .= $row["t"];
+                    $o .= __($row["t"]);
                     $o .= "</option>";
                 }
             }
@@ -882,6 +912,8 @@ function igk_html_form_fields($formFields, $render=0){
     }
     return $o;
 }
+
+
 ///<summary>Represente igk_html_form_init function</summary>
 /**
 * Represente igk_html_form_init function

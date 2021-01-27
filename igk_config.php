@@ -99,7 +99,6 @@ define('IGK_LOG_VERBOSITY', 74);
 define('IGK_LOG_VERBOSITY_NONE', 75);
 define('IGK_LOG_VERBOSITY_SOURCE_FILE', 76);
 define('IGK_LOG_VERBOSITY_SOURCE_LOCATION', 77);
-define('IGK_MAX_CONFIG_PWD_LENGHT', 78);
 define('IGK_MSBOX_CTRL', 79);
 define('IGK_NAMED_ID_PARAM', 80);
 define('IGK_NAMED_NODE_PARAM', 81);
@@ -250,8 +249,8 @@ define("IGK_HTML_NOTAG_ELEMENT", "NoTagNode");
 //+ define('IGK_VERBOSE', '1');
 //+ define('IGK_WRITE_LOG', '1');
 //+ define('IGK_X_REQUESTED_WITH', '1');
-date_default_timezone_set('Europe/Brussels');
-define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
+// date_default_timezone_set('Europe/Brussels');
+// define("IGK_DEFAULT_TIMEZONE", 'Europe/Brussels');
 // define("IGK_AJX_BINDSTYLES", 0x001C);
 // define("IGK_COMPONENT_ID_KEY", 0x001D);
 // define("IGK_COMPONENT_REG_FUNC_KEY", 0x0023);
@@ -444,7 +443,7 @@ define("IGK_CSS_CTN_XXLG_SIZE", 1580);
 define("IGK_ENCODINGTYPE", "text/html; charset=utf-8");
 define("IGK_SERVERNAME", "IGKDEV");
 define("IGK_STR_EMPTY", "");
-// define("IGK_MAX_CONFIG_PWD_LENGHT", 4);
+define("IGK_MAX_CONFIG_PWD_LENGHT", 5);
 define("IGK_DEFAULT_FOLDER_MASK", 0775);
 define("IGK_DEFAULT_FILE_MASK", 0775);
 define("IGK_LF", "\n");
@@ -524,7 +523,7 @@ define("IGK_HOME_PAGE", "home");
 define("IGK_FIELD_PREFIX", "cl");
 define("IGK_TABLE_PREFIX", "tb");
 //+ engine
-define("IGK_ENGINE_EXPRESSION_NODE", "igk:expression-node");
+define("IGK_ENGINE_EXPRESSION_NODE", "igk:expression-node"); // used internally to replace data with expression node
 define("IGK_ENGINE_ATTR_EXPRESSION_NODE", "igk:attr-expression");
 //	define("IGK_XML_HTML_TEMPLATE_PARENT_KEY", "sys://html/engine/parent");
 
@@ -788,3 +787,5 @@ define("IGK_ENV_GLOBAL_SCRIPT_KEY", "sys://globalscript");
 // echo "define('".$k."', ".$c.");<br />\n";
 // }
 // }
+
+defined("IGK_PWD_PREFIX") || define("IGK_PWD_PREFIX", "(!)8Zmb90-&");

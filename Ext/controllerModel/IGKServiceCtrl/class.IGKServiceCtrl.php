@@ -28,7 +28,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 	}
 	protected function pageFolderChanged(){
 		// igk_wln("page folder changed ? ");
-		// exit;
+		
 	}
 	protected function register_service(){
 		$c = "^/".IGK_SERVICE_BASE_URI."/".$this->getServiceName();
@@ -117,20 +117,8 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 		$c = igk_getv($p, "function");
 		$p = igk_getv($p, "params");
 		header("content-type: text/html");
-		igk_set_session_redirection($this->getServiceUri());
-
-
-		//igk_wln(igk_get_allheaders());
-		//exit;
-	//header("Content-Type:text/xml"); //expected in c# web service consumer
-		// header_remove('charset');
-	//	exit;
-		//ini_set('default_charset', NULL);
-		// igk_wln("file ".$c);
-		$u = igk_io_request_uri();
-		// igk_ilog($u);
-		// igk_ilog($_SERVER);
-
+		igk_set_session_redirection($this->getServiceUri()); 
+		$u = igk_io_request_uri();  
 		if (preg_match('#\$metadata$#i', trim($u))){
 
 			igk_set_header('404 not found');
@@ -145,7 +133,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 				//render discovery information
 				// igk_set_header('200', "Content-Type: text/xml");
 				// $this->wsdl(null,0);
-				// exit;
+				
 				//igk_ilog("render default doc.... \$f = ".$c);
 				 ob_clean();
 				 //handler server or render
@@ -163,7 +151,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 				}
 				else{
 					$this->renderError($c);
-					exit;
+					igk_exit();
 				}
 			}
 		}
@@ -171,7 +159,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 		// igk_ilog("wsdl");
 		igk_set_header('200', "Content-Type: application/xml");
 		$this->wsdl();
-		exit;
+		igk_exit();
 	}
 	public function renderError($c){
 		$doc = igk_get_document("sys:://document/services");
@@ -291,7 +279,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 		}
 		// igk_wln(igk_get_session(IGK_REDIRECTION_SESS_PARAM));
 		igk_nav_session();
-		// exit;
+		
 	}
 	protected function init_wsdl($wsdl){
 		//initalize the wsdl function list
@@ -465,7 +453,7 @@ EOF;
 				// $jdata = igk_json_array_parse($s);
 			 // igk_wln($s);
 			// igk_wln($jdata);
-			// exit;
+			
 			// }
 
 			$lg = R::GetCurrentLang();

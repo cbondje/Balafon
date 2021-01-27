@@ -15,7 +15,7 @@ class IGKHtmlToScriptTool extends IGKToolCtrlBase
 		$out .= self::ConvertToScript($dv);
 		$out .="?>";
 		igk_download_content("script.php", strlen($out) , $out);
-		exit;
+		igk_exit();
 	}
 	private static function GetAttribute($k)
 	{

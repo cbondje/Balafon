@@ -25,8 +25,7 @@ final class IGKGoogleConfigurationSetting extends IGKConfigCtrlBase{
 		$frm = $box->addDiv()->addForm();
 		$frm["action"] = $this->getUri("storeApiKey");
 		$frm->add("label")->Content = __("API KEY");
-		$frm->addInput("clApiKey", "text", igk_google_apikey() 
-		)->setAttribute("placeholder", __("google api key"));
+		$frm->addInput("clApiKey", "text", igk_google_apikey())->setAttribute("placeholder", __("google api key"));
 
 		$frm->addActionBar()->addInput("btn.valid", "submit", __("Update"));
 	}

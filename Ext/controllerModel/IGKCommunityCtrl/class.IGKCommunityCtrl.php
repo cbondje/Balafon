@@ -103,7 +103,7 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 			$coms = igk_db_select($this, "tbigk_community");
 			$n = "";
 				// igk_wln($coms->Rows);
-				// exit;
+				
 				foreach($e->Rows as  $v)
 				{
 							if (!$v || !$v->clAvailable)

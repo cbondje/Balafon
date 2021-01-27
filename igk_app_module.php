@@ -69,7 +69,14 @@ final class IGKAppModule extends IGKControllerBase{
 
         $classLib = $this->getDeclaredDir()."/Lib/Classes";
         if (is_dir($classLib)){
-            $entry_ns = str_replace("/","\\", igk_get_module_name(readlink($this->getDeclaredDir())));
+            $dir = $this->getDeclaredDir();
+            if (!empty($dir) &&  is_link($dir)){
+                $dir = @readlink($dir);
+            } 
+            if (!is_dir($dir)){
+                $dir = "";
+            } 
+            $entry_ns = str_replace("/","\\", igk_get_module_name($dir));
             $libdir=$classLib;
             spl_autoload_register(function($n)use($entry_ns, $libdir){
                 if (!empty($entry_ns) && (strpos( $n, $entry_ns)===0)){

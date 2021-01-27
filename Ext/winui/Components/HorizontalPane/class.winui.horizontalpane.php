@@ -88,7 +88,7 @@ final class IGKJS_HorizontalPane extends IGKObject
 		$b = igk_parsebool($this->m_IsAutoAnimate);
 
 		// igk_wln("animtype ".$this->m_AnimType);
-		// exit;
+		
 		$this->m_script->Content = <<<EOF
 (function(q){ ns_igk.ready(function(){igk.winui.horizontalScrollPane.init(q, {autoanimate: {$b}, animtype: '{$this->m_AnimType}', period: {$this->m_AnimPeriod}},  {duration:{$this->m_AnimDuration}, interval: {$this->m_AnimInterval}, orientation:'horizontal'}); }); })(ns_igk.getParentScript());
 EOF;
@@ -282,7 +282,7 @@ $pane->RenderAJX();
 		if ($pane){
 			igk_wl($pane->getOptionsXML($this->getController()->getUri("set_nav_options", $this)));
 		}
-		exit;
+		igk_exit();
 	}
 
 	public function update_nav_options()
@@ -560,13 +560,13 @@ $target->Load( igk_html_databinding_treatresponse($s,null, null,null));
 		parent::Dispose();
 		// igk_wln("dispose");
 		// throw new Exception("dikd");
-		// exit;
+		
 	}
 	public function loadData($data){
 		// igk_ilog("load data");
 		// $data->RenderAJX();
 		// igk_wln($data->getElementsByTagName("page"));
-		// exit;
+		
 		foreach($data->getElementsByTagName("page") as $e){
 			$file = $e["file"];
 			//igk_ilog("file .... ".$file);

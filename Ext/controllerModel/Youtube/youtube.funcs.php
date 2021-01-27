@@ -25,8 +25,7 @@ function igk_html_demo_youtubevideo($tg){
 	//major lazer
 	$n->addyoutubeVideo("https://www.youtube.com/embed/YqeW9_5kURI");
 	$tg->addDiv()->Content = "You tube demonstration";
-	$tg->add($n);
-	//exit;
+	$tg->add($n); 
 }
 //<summary>description of you tube video</summary>
 function igk_html_desc_youtubeVideo($tg){

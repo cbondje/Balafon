@@ -94,14 +94,11 @@ foreach($screen_resolutions as $scr){
     }
     $$xn[".igk-".$scr.
     "-fitw"]="width:100% !important;";
-    $$xn[".igk-".$scr.
-    "-alignc"]="text-align:center !important;";
-    $$xn[".igk-".$scr.
-    "-dispn"]="display: none !important;";
-    $def[".igk-".$scr.
-    "-show"]="display:none;";
-    $$xn[".igk-".$scr.
-    "-show"]="display: inherit !important;";
+    $$xn[".igk-".$scr."-alignc"]="text-align:center !important;";
+    $$xn[".igk-".$scr."-dispn"]="display: none;"; 
+    $$xn[".igk-".$scr."-show"]="display: inherit !important;";
+    $$xn[".".$scr."-dispn"] = "display:none;";
+
     foreach($ts as $s){
         for($i=1; $i<=$s; $i++){
             $is="$s-$i";
@@ -352,10 +349,9 @@ $def[".igk-hmenu.igk-pull-right"]="{sys:alignr}";
 $def[".igk-hmenu.igk-pull-right:after"]="content:' '; display:table; clear:both;";
 
 //capitalize all input element
-$def["input[type='button']"] =
-$def["input[type='submit']"] =
-$def["input[type='reset']"] =
-"text-transform:capitalize;";
+$def["input[type=button]"] =
+$def["input[type=submit]"] =
+$def["input[type=reset]"] = "";
 
 
 
@@ -449,14 +445,14 @@ $def[".igk-table.th-right > tbody  th"]="{sys:alignr};";
 $def[".igk-table > tbody > tr.alignl th"]="text-align:left;";
 $def[".igk-table > tbody > tr:first-child > td, .igk-table > tbody > tr:first-child > th"]="padding:8px;";
 $def[".igk-table > tbody > tr:not(:first-child) > td, .igk-table > tbody > tr:not(:first-child) > th"]
-="border-top: 1px solid [syscl:igk-table-cell-border];";
+="border-top: none;";
 $def[".igk-table tr td"]="padding:{$pad1};";
 $def[".igk-table > thead td, .igk-table > thead th"]="border:0;";
 $def[".igk-table-hover > tbody > tr:hover"]
 ="";
 $def[".igk-table .igk-form-control"]="min-width: 150px;";
-$def[".igk-table.igk-table-striped > tbody > tr:nth-child(odd) > td, .igk-table-striped > tbody > tr:nth-child(odd) > th"]="[sysbgcl:igk-table-row-odd-bgcl] [sysfcl:igk-table-row-odd-fcl] ";
-$def[".igk-table.igk-table-striped > tbody > tr:hover > td"]="background-color:transparent !important; color:inherit;";
+$def[".igk-table.igk-table-striped > tbody > tr:nth-child(odd) > td, .igk-table-striped > tbody > tr:nth-child(odd) > th"]="[bgcl:stripTableEventRowBackgroundcolor,red] [sysfcl:igk-table-row-odd-fcl] ";
+$def[".igk-table.igk-table-striped > tbody > tr:hover > td"]="background-color:transparent; color:inherit;";
 $def[".igk-table.igk-table-striped > tbody > tr:nth-child(odd) > th"]="";
 $def[".igk-table.igk-table-striped > tbody > tr:hover"]="[sysbgcl:stripTableHoverBackground];";
 $def[".igk-table.igk-table-striped > tbody > tr:hover:nth-child(odd)"]="[sysfcl:stripTableHoverRowEvenColor]";
@@ -513,7 +509,7 @@ $def[".igk-panel"]="{sys:dispb} [sysfcl:igk-panel-fcl] [sysbgcl:igk-panel-bcl] m
 $def[".igk-btn"]=
 $def[".igk-btn-lnk"]=
 $def[".clsubmit"]=
-$def[".clbutton"]="display:inline-block; margin:auto; padding: {$pad1}; border:none; cursor:pointer;";
+$def[".clbutton"]="display:inline-block; margin:auto; padding: {$pad2}; border:1px solid [cl:buttonBorderColor, rgb(221,221,221)]; border-radius: 4px; cursor:pointer;";
 $def[".igk-btn.igk-active"]="border-left: solid 4px #FFBF00; color: #683500";
 $def[".igk-btn-connect, input.igk-btn-connect, .igk-btn-connect a"]="[sysbgcl:igk-btn-connect-bg] [sysfcl:igk-btn-connect-fcl]";
 $def[".igk-form-control, .cltext, .clpassword, .clemail, .clnumber, .clsearch, .cltel, .clselect"]="{sys:fitw,dispib} padding:{$pad1}; margin:0px;[trans: 0.1s color ease-in] [sysfcl:igk-input-cl]";
@@ -850,6 +846,10 @@ $def[".igk-winui-panel-dialog > .box > .igk-title .close"]="{sys:posab, loc_r, n
 $def[".igk-winui-panel-dialog > .box > .igk-title .close svg"]="{sys:fit}";
 $def[".igk-winui-panel-dialog::after"]="content:' '; display:table;";
 $def[".igk-winui-panel-dialog.igk-hide"]="opacity: 0.0";
+$def[".igk-winui-panel-dialog .igk-title > span"]="margin-right: 32px";
+
+
+
 $def[".svg-16 svg"]="width:16px; height:16px; display: inline-block; line-height:0;";
 $def[".svg-32 svg"]="width:32px; height:32px; display: inline-block; line-height:0;";
 $def[".svg-24 svg"]="width:24px; height:24px; display: inline-block; line-height:0;";
@@ -858,6 +858,10 @@ $def["div.clsearch form a"]="{sys:posab, alignm}";
 $def["div.clsearch"]="padding:0px;";
 $def["div.clsearch div.disptabr"]="padding-left:32px;";
 $def["div.clsearch div.disptabr input"]=" margin-right:-32px; padding-left: 32px;";
+
+$def["ul.debug-panel"] = "";
+$def["ul.debug-panel:after"] = "{sys:clearb, dispb} content:' ';";
+$def["ul.debug-panel > li"] = "float:left;";
 igk_set_env("sys://globalcolor", 1);
 igk_css_regcolor("igk-btn-default-bg", "#eee");
 igk_css_regcolor("igk-btn-default-fcl", "#aaa");
@@ -959,3 +963,7 @@ $cl["textColor"]="#222";
 $cl["backgroundColor"]="transparent";
 $cl["pickfileHoverBackground"]="indigo";
 $cl["buttonActiveBackground"]="red";
+
+
+//+ igk-img-host
+$def["span.igk-img-host"]= "display:inline-block; line-height: 0;";

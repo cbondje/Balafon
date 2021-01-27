@@ -317,10 +317,10 @@ Name:balafon.js
 			ob.o.type =  mimetype || "text/xml";
 
 		// ob.o.type = "text/plain";
+		// ob.o.type = "application/json";
 		ob.addClass("bdr-1");
 		ob.reg_event("load", function (evt) {
-	
-		 
+	 
 			var _o = {
 				uri:uri,
 				source: ob.o, 
@@ -1702,24 +1702,32 @@ Name:balafon.js
 			};
 			
 			
-			var i = 0;
+			var i = 0, v_host = null;
 			for (; i < v_tab.length; i++) {
 				// new Image();// 
 				var src = v_tab[i].getAttribute("src");
 				
 				if (src) {
+					v_host = document.createElement("span");
+					$igk(v_host).addClass("igk-img-host");
 					v_cimg = document.createElement("img");
 					v_cimg.source = v_tab[i];
 					v_cimg.src = src;
-					if (v_cimg.complete && ((v_cimg.width + v_cimg.height) > 0)) {
-						// cached			
+					v_host.appendChild(v_cimg);
+					if (/^data:/.test(src)){
 						v_preload.copyAttribute(v_tab[i], v_cimg);
-						v_preload.replace(v_cimg, v_tab[i]);
-					}
-					else {
-						v_img = v_cimg;
-						v_preload.init(v_img, v_tab[i]);
-						v_preload.copyAttribute(v_tab[i], v_img);
+						v_preload.replace(v_host, v_tab[i]);
+					}else {
+						if (v_cimg.complete && ((v_cimg.width + v_cimg.height) > 0)) {
+							// cached			
+							v_preload.copyAttribute(v_tab[i], v_cimg);
+							v_preload.replace(v_host, v_tab[i]);
+						}
+						else {
+							v_img = v_cimg;
+							v_preload.init(v_img, v_tab[i]);
+							v_preload.copyAttribute(v_tab[i], v_img);
+						}
 					}
 				}
 			}
@@ -2263,18 +2271,7 @@ Name:balafon.js
 	createNS("igk.winui.notify", {}, { desc: "winui.notify global igk js namespace" });
 	createNS("igk.html", {}, { desc: "igk.html namespace. to manage dom element" });
 	createNS("igk.html5", {}, { desc: "igk.html5 namespace" });
-
-
-	// var _R = createNS("igk.R", {
-		// format: function(n){
-			// if (typeof(_R[n]) == "undefined")
-				// return n;
-			
-			// format string
-			// var txt_ = _R[n];
-			// return txt_;
-		// }
-	// }, { desc: "resource namespace" }); // resource management
+ 
 	
 	igk.log = function(msg, tag, t){
 		var fc = null;
@@ -2548,6 +2545,9 @@ Name:balafon.js
 	
 	createNS("igk.resources", {
 		getlang: function(_loc, t){
+			if (!_loc){
+				return null;
+			}
 			if (!t)
 				t = igk.dom.html().getAttribute("lang") || igk.navigator.getLang();
 			
@@ -4774,7 +4774,7 @@ igk_appendProp(__prop, {
 					this.o.innerHTML = v;
 					if (evalScript) { 
 						igk.system.evalScript(this.o);
-					}
+					}					
 				}
 				catch (ex) {
 					console.debug("set:InnerHtml failed : " + v + "\n"+ex);
@@ -16306,8 +16306,7 @@ function createObject (T, t, args){
 		}
 		});
 
-	}; 
-	//igk.R
+	};  
 	igk.defineProperty(igk, 'R', {
 		get: function () {
 			return _res;
@@ -16322,8 +16321,7 @@ function createObject (T, t, args){
 			var _getRes = 0;
 			var _src = ["_getRes = async function (){",
 					"try{",
-					"var o  = await igk.ajx.asyncget(loc,null, mime);",
-					"console.debug ('result o0000000000000000000000000');",
+					"var o  = await igk.ajx.asyncget(loc,null, mime);", 
 					"o  = o ? opts.then(o) : null;",
 					"return  o;",
 					"}catch(ex){",
@@ -16337,8 +16335,7 @@ function createObject (T, t, args){
 				eval(_src);
 
 			}
-			catch (ex) { // do not support async data
-// alert("loading from : "+ex+"\n"+_src);
+			catch (ex) { // do not support async data 
 				_getRes = function () {
 					var _ext = igk.navigator.isIE() ? ".ejson" : ".json";// because of mime type        
 					var e = {
@@ -20926,8 +20923,7 @@ function igk_getFilterProp(o){
 			s.o.value = null;
 			if (p.accept){
 				s.o.setAttribute("accept",  p.accept);
-			} 
-			
+			}  
 			// pick file. 
 			// >uri: uri to send the picked file
 			// >p: property to manage picking file
@@ -23502,13 +23498,13 @@ igk.system.createNS("igk.system", {
 			return;
 		}
 
-		var s = this.getAttribute("igk:param");
+		var s = this.getAttribute("igk:data");
+		 
 
 		var p = igk.JSON.parse(s, this);
 		if (typeof(p) !='object'){
 			p = {};
-		}
-		
+		} 
 		if (q.o.tagName.toLowerCase() == "input") {
 			var n = igk.dom.replaceTagWith(q, "div");
 			var v = q.getAttribute("value");
@@ -23516,8 +23512,7 @@ igk.system.createNS("igk.system", {
 			n.o.removeAttribute("value");
 			n.o.removeAttribute("type");
 			n.o.removeAttribute("igk:uri");
-			n.o.removeAttribute("igk:param");
-			
+			n.o.removeAttribute("igk:data"); 
 			q = n;
 		}
 		q.reg_event('click', function (evt) {
@@ -24884,6 +24879,9 @@ igk.system.createNS("igk.system", {
 			
 			$igk(p).addClass("igk-svg-host");
 			p.replaceChild(g.o, this.o);
+			if (p.getAttribute("title"))
+				$igk(p).qselect("svg > title").remove();
+
 		} else {
 			console.debug("item not found :" + n);
 		}

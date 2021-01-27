@@ -549,9 +549,9 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     /**
     * Represente flushForInitDb function
     */
-    public function flushForInitDb(){
+    public function flushForInitDb($complete=null){
         if($this->m_dbManager)
-            $this->m_dbManager->flushForInitDb();
+            $this->m_dbManager->flushForInitDb($complete);
     }
     ///<summary>Represente getAllRelations function</summary>
     /**

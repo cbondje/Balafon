@@ -1,4 +1,4 @@
-(function() {
+(function(){
     var _NS  = igk.system.getNS("igk.dom.extension.FORM") || igk.system.createExtensionProperty("FORM", "igk.dom.extension") ;
     _NS.submit = function(func){
         if (this.getAttribute("enctype") == "application/json"){

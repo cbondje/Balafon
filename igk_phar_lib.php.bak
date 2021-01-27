@@ -28,7 +28,7 @@ $web = "/index.php";
     // }
 	// // echo (getcwd()." : failed : ".$furi . " ".file_exists($furi).
 	// // " -- ". file_exists(getcwd().$furi) );
-	// // exit;
+	// 
 // }
 
 //present cache out lib
