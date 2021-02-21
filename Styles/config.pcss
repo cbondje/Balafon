@@ -12,9 +12,10 @@ $page = ".igk-cnf-page";
 
 // $theme->data =  "CONFIG.";
 
+include(dirname(__FILE__)."/config.dark.pcss");
 
 //color definition
-$cl["configBackgroundColor"]= "red"; //"transparent"; //"#fefefe";
+$cl["configBackgroundColor"]= "transparent";  
 $cl["configColor"]="#222";
 $cl["configMenuHoverColor"] = "#fff";
 $cl["configMenuColor"] = "#222";
@@ -46,7 +47,6 @@ $cl["pickfileHoverBackground"] = "red";
  
 
 //dark theme
-include(dirname(__FILE__)."/config.dark.pcss");
 
 $menu_border_size = 0;
 // configMenuHeadingHoverColor
@@ -74,7 +74,7 @@ $def[$page. " a.igk-btn-default"] = "[bgcl:configLinkButtonDefaultBackgroundColo
 //CONFIG PAGE STYLE CONFIGURATION
 //---------------------------------------------------------
 
-$def["body.igk-cnf-body"] = "background-color:red; (sys:.google-Roboto)";
+$def["body.igk-cnf-body"] = "(sys:.google-Roboto)";
 $def["body.igk-cnf-body .framebox-dialog .cltext, body.igk-cnf-body .framebox-dialog .clpassword"] = "padding:4px; margin-bottom:4px;";
 
 //config page
@@ -342,8 +342,8 @@ $def[$page." .table_lightrow:hover a"]= "[sysbgcl:tableLightHoverColor]";
 $def[$page." .table_darkrow"]=  "[sysbgcl:tableDarkRowColor]";
 $def[$page." .table_darkrow:hover"]= "[sysbgcl:tableDarkHoverColor][sysfcl:tableDarkRowHoverTextColor]";
 $def[$page." .table_lightrow a,.igk-cnf-page .table_darkrow a"] ="{sys:dispb,fitw,fith}";
-$def[$page." .table_darkrow a:hover"] = "color:[syscl:tableDarkLinkHoverForeColor];";
-$def[$page." .table_lightrow a:hover"] = "color:[syscl:tableLightLinkHoverForeColor];";
+$def[$page." .table_darkrow a:hover"] = "[fcl:tableDarkLinkHoverForeColor];";
+$def[$page." .table_lightrow a:hover"] = "[fcl:tableLightLinkHoverForeColor];";
 
 $def[$page." .db_info"] = "{sys:alignt} overflow:hidden;";
 $def[$page." .row .db_info"] = "margin: 0px !important;";
@@ -573,7 +573,7 @@ $def[$page." .igk-action-bar a.igk-btn:hover"] = "[bgcl: actionBarButtonHoverBac
 // "init table"
 
 $def[".igk-table.igk-table-striped > tbody > tr:nth-child(odd) > td, .igk-table-striped > tbody > tr:nth-child(odd) > th"] = 
-"[bgcl:stripTableEventRowBackgroundcolor,red] [sysfcl:igk-table-row-odd-fcl] ";
+"[bgcl:stripTableEventRowBackgroundcolor,red] [sysfcl:stripTableEventRowForeColor] ";
 
 $def[".igk-table.igk-table-striped > tbody > tr:nth-child(odd) > td:hover, .igk-table-striped > tbody > tr:nth-child(odd) > th:hover"] = 
 "";

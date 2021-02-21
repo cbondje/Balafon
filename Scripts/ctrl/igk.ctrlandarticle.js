@@ -1,3 +1,7 @@
+"use strict";
+(function(){
+	var djx = 0;
+
 igk.system.createNS("igk.ctrl",{
 		ca_update: function(xhr, target){ 		
 		if (this.isReady())
@@ -45,7 +49,10 @@ igk.system.createNS("igk.ctrl",{
 		ca_ctrl_change: function(uri, q){
 			if (!q)
 			return; 
-			window.igk.ajx.post(uri+q.value,null,function(xhr){
+			if (djx){
+				djx.abort();
+			}
+			djx = window.igk.ajx.post(uri+q.value,null,function(xhr){
 			if (this.isReady()){ 	
 				var s = $igk(q.form); 				
 				s = s.getChildById('view_frame'); 				
@@ -56,3 +63,4 @@ igk.system.createNS("igk.ctrl",{
 		}
 		
 });
+})();

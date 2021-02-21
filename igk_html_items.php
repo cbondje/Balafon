@@ -2,23 +2,7 @@
 // author: C.A.D. BONDJE DOUE
 // licence: IGKDEV - Balafon @ 2019
 
-///<summary>Represente igk_html_node_expression_node function</summary>
-///<param name="raw"></param>
-///<param name="ctrl" default="null"></param>
-/**
-* Represente igk_html_node_expression_node function
-* @param mixed $raw
-* @param mixed $ctrl the default value is null
-*/
-function igk_html_node_expression_node($raw, $ctrl=null){
-    if($ctrl === null){
-        $g=igk_get_env("sys:://expression_context");
-        $ctrl = $g->ctrl;
-        // igk_wln_e(__FILE__.":".__LINE__, "loading context ", $g);
-    }
-    $n=new IGKHtmlExpressionNodeItem($raw, $ctrl);
-    return $n;
-}
+
 
 final class IGKHtmlComponents {
 	const AJXTabControl = "AJXTabControl";

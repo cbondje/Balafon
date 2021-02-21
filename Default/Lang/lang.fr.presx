@@ -1613,4 +1613,6 @@ $l["Update authorization : {0}"] = "Modifier les autorisations de {0}";
 
 $l["Connexion failed, please try again later"] = "Login ou Mot de passe incorrect. Réessayer.";
 $l["Sign in"] = "Connexion";
+$l["email or login"] = "Email ou identifiant";
+$l["all rights reserved"] = "tous droits reservés";
 

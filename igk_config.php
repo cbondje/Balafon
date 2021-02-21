@@ -372,8 +372,7 @@ define("IGK_LANG_FILE_EXTENSION", ".presx");
 // define("IGK_SESS_FLAG", IGK_VIEW_MODE_FLAG +5 );
 // define("IGK_CREATE_AT", IGK_VIEW_MODE_FLAG + 6);
 // define("IGK_SESSION_ID", IGK_VIEW_MODE_FLAG + 7);
-// define("IGK_CURRENT_DOC_INDEX_ID", IGK_VIEW_MODE_FLAG + 8);
-// define("IGK_VERSION_ID", IGK_VIEW_MODE_FLAG + 9);
+// define("IGK_CURRENT_DOC_INDEX_ID", IGK_VIEW_MODE_FLAG + 8); 
 // define("IGK_KEY_DOCUMENTS", dechex(IGK_VIEW_MODE_FLAG + 10)); //+ store document index
 //+ config flags
 // define("IGK_CONFIG_FLAG", 0xA0);
@@ -389,7 +388,6 @@ define("IGK_LANG_FILE_EXTENSION", ".presx");
 // define("IGK_AUTODINDEX_FLAG", IGK_NODE_FLAG + 2);
 // define("IGK_ZINDEX_FLAG", IGK_NODE_FLAG + 3);
 // define("IGK_ISLOADING_FLAG", IGK_NODE_FLAG + 4);
-// define("IGK_LOADINGCONTEXT_FLAG", IGK_NODE_FLAG + 5);
 // define("IGK_NODETYPE_FLAG", IGK_NODE_FLAG + 6);
 // define("IGK_NODETYPENAME_FLAG", IGK_NODE_FLAG + 7);
 // define("IGK_NODETAG_FLAG", IGK_NODE_FLAG + 8);

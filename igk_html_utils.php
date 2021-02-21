@@ -7,7 +7,9 @@ use function igk_resources_gets as __;
 ///<summary>pre render argument</summary>
 function igk_html_pre(){
     echo "<pre>";
-    print_r(func_get_args());
+    foreach(func_get_args() as $k){
+        print_r($k);
+    }
     echo "</pre>";
 }
 
@@ -776,8 +778,7 @@ function igk_html_form_fields($formFields, $render=0){
             $o .= " ".$k."=\"".$v."\"";
         }
     };
-    $fieldset=0;
-    foreach($formFields as $k=>$v){
+    $bindValue = function(&$o, & $fieldset, $k, $v) use ($get_attr_key, $load_attr){
         $attr_key = $get_attr_key($v);
         $_value= isset($v["value"]) ? $v["value"]: "";
         if ($attr_key){
@@ -801,19 +802,25 @@ function igk_html_form_fields($formFields, $render=0){
                 $o .= "<legend>".$v["legend"]."</legend>";
             }
             $fieldset=1;
-            continue;
+            return;
         }
         if ($_type ==="efieldset"){
             if ($fieldset){
                 $o.="</fieldset>";
                 $fieldsett = 0;
             }
-            continue;
+            return;
         }
         $_id="";
         if(isset($v["id"])){
             $_id=' id="'.$v["id"].'"';
         }
+        $_name="";
+        if (isset($v["name"])){
+            $_name = "name=\"". $v["name"] ."\" " ; // name=\"{$k}\" ";
+        }else {
+            $_name = "name=\"{$k}\" ";
+        } 
         $o .= "<div";
         if((isset($v["required"]) ? $v["required"]: 0)){
             $o .= " class=\"require\" ";
@@ -826,7 +833,7 @@ function igk_html_form_fields($formFields, $render=0){
             case "fieldset":
             break;
             case "textarea":
-            $o .= "<textarea name=\"{$k}\" id=\"{$k}\" ";
+            $o .= "<textarea {$_name} {$_id}";
             $load_attr($v, $o);
             $o .= ">{$_value}</textarea>";
             break;
@@ -861,7 +868,7 @@ function igk_html_form_fields($formFields, $render=0){
             // if ($bas){
             //     $k_data.= "selected=\"{$bas}\" ";
             // }
-            $o .= "<select name=\"{$k}\"".$_id.$k_data;
+            $o .= "<select {$_name}".$_id.$k_data;
             $load_attr($v, $o);
             $o.= " >";
             if($_allow_empty){
@@ -891,7 +898,7 @@ function igk_html_form_fields($formFields, $render=0){
             $_vt ="";
             if (!empty($_value))
                 $_vt="value=\"{$_value}\"";
-            $o .= "<input type=\"{$_type}\" {$_vt} name=\"{$k}\"{$_id} ";
+            $o .= "<input type=\"{$_type}\" {$_vt} {$_name}{$_id} ";
             if(isset($v["maxlength"])){
                 $o .= "maxlength=\"{$v["maxlength"]}\" ";
             }
@@ -903,6 +910,21 @@ function igk_html_form_fields($formFields, $render=0){
             break;
         }
         $o .= "</div>";
+    };
+    $fieldset=0;
+    foreach($formFields as $k=>$v){
+        if ( ($cpos = strrpos($k, "[]")) !== false){   
+            $name = substr($k, 0, $cpos);
+            $ct = count($v);
+            for ($i = 0; $i < $ct ; $i++){
+                $b = $v[$i];
+                $b["name"]= $k;  
+                $bindValue($o, $fieldset, $name, $b );
+            }
+            //igk_wln_e("position : ", $cpos, count($v), $k, $name);
+            continue;
+        }
+        $bindValue($o, $fieldset, $k, $v );
     }
     if($fieldset){
         $o .= "</fieldset>";

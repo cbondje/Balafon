@@ -624,6 +624,19 @@ function & igk_html_node_blocknode(){
     $n->setCallback("getIsRenderTagName", "return false;");
     return $n;
 }
+function igk_html_node_submit($name=null, $type="submit", $value=null){
+    $n = igk_createnode("input");
+    $n["class"] = "igk-form-control clsubmit";
+    $n["type"] = $type;
+    if ($name){
+        $n->setAttribute("name", $name);
+    }
+    if (!$value){
+        $value = __("submit");
+    } 
+    $n["value"] = $value;
+    return $n;
+}
 ///<summary>Represente igk_html_node_bmcloginpage function</summary>
 ///<param name="listener"></param>
 /**
@@ -1634,7 +1647,7 @@ function igk_html_node_huebar(){
 function igk_html_node_igkcopyright(){
     $n=igk_createnode();
     $n->setClass("igk-copyright");
-    $n->setCallback("getCopyright", "return IGK_COPYRIGHT;");
+    $n->setCallback("getCopyright", "return igk_sys_copyright();");
     $g=new IGKValueListener($n, "getCopyright");
     $n->Content=$g;
     return $n;
@@ -3559,5 +3572,23 @@ function igk_html_node_containerRowCol($style=""){
 	$p = igk_html_parent_node();
 	$n = $p->addContainer()->addRow()->addCol($style);
 	return ["node"=>$n];
+}
+
+///<summary>Represente igk_html_node_expression_node function</summary>
+///<param name="raw"></param>
+///<param name="ctrl" default="null"></param>
+/**
+* Represente igk_html_node_expression_node function
+* @param mixed $raw
+* @param mixed $ctrl the default value is null
+*/
+function igk_html_node_expression_node($raw, $ctrl=null){
+    if($ctrl === null){
+        $g=igk_get_env("sys:://expression_context");
+        $ctrl = $g->ctrl;
+        // igk_wln_e(__FILE__.":".__LINE__, "loading context ", $g);
+    }
+    $n=new IGKHtmlExpressionNodeItem($raw, $ctrl);
+    return $n;
 }
 

@@ -14,7 +14,7 @@ Name:balafon.js
 
 "use strict";
 
-(function (window) { 
+(function (window) {
 	if (typeof (window.igk) != 'undefined') {
 		return;
 	}
@@ -70,21 +70,21 @@ Name:balafon.js
 		if (__debug_z) {
 
 			var d = __igk_settings["console"];
-			if (d){
-			for (var i = 0; i < d.length; i++) {
-				var dv = __debug_z.add('div');
+			if (d) {
+				for (var i = 0; i < d.length; i++) {
+					var dv = __debug_z.add('div');
 
-				switch (d[i].t) {
-					case -1:
-						dv.addClass('igk-danger');
-						break;
-					case 1:
-						dv.addClass('igk-info');
-					default:
-						break;
+					switch (d[i].t) {
+						case -1:
+							dv.addClass('igk-danger');
+							break;
+						case 1:
+							dv.addClass('igk-info');
+						default:
+							break;
+					}
+					dv.setHtml(d[i].m);
 				}
-				dv.setHtml(d[i].m);
-			}
 			}
 		}
 		delete (__igk_settings["console"]);
@@ -188,32 +188,32 @@ Name:balafon.js
 		ev.preventDefault();
 		ev.stopPropagation();
 	};
-	
-	
-	function igk_url(u){
-		return new (function(){
+
+
+	function igk_url(u) {
+		return new (function () {
 			this.uri = u;
 		})();
 	};
-	function igk_is_coers(uri){
+	function igk_is_coers(uri) {
 		var cu = window.URL || igk_url;
 		var c = 0;
-		if (typeof(cu) == 'function'){
-			c = new cu(uri);	
-		}else{
-			if (typeof(URL.createObjectURL)!='function')
+		if (typeof (cu) == 'function') {
+			c = new cu(uri);
+		} else {
+			if (typeof (URL.createObjectURL) != 'function')
 				return -1;
 			return 0;
-			
+
 		}
-		
-		
-		
-		
-		if (igk.validator.isUri(uri)){
-			if ((window.location.protocol != c.protocol)|| 
+
+
+
+
+		if (igk.validator.isUri(uri)) {
+			if ((window.location.protocol != c.protocol) ||
 				(window.location.host != c.host)
-			){
+			) {
 				return 1;
 			}
 			return 0;
@@ -222,20 +222,20 @@ Name:balafon.js
 	};
 
 	function igk_io_getData(uri, callback, mimetype) {
-		
-	 
+
+
 		if (!uri)
 			return null;
 		var _promise = new igk.system.Promise();
-		if (igk_is_coers(uri)){
+		if (igk_is_coers(uri)) {
 
-			igk.ajx.get(uri, null, function(xhr){
-				if (this.isReady()){
+			igk.ajx.get(uri, null, function (xhr) {
+				if (this.isReady()) {
 					var _o = {
-						uri:uri,
-						source: "xhr", 
+						uri: uri,
+						source: "xhr",
 						"from": 'igk_io_getData',
-						data:null
+						data: null
 					};
 					_o.data = xhr.responseText;
 					callback(_o);
@@ -244,62 +244,62 @@ Name:balafon.js
 
 			return _promise;
 		};
-		
-	
-		
-		if (igk.system.string.startWith(uri, "file://")){
+
+
+
+		if (igk.system.string.startWith(uri, "file://")) {
 			// alert("loading from data file : "+uri);
-			setTimeout(function(){
-			var s = igk.invoke("IOGetFileContent", uri);
-			// alert("s file :::: "+s);
-			if (s && (s.length > 0)){
-				if (callback){
-					try{
-						// igk.html.canva.animate(
-						// function(){
+			setTimeout(function () {
+				var s = igk.invoke("IOGetFileContent", uri);
+				// alert("s file :::: "+s);
+				if (s && (s.length > 0)) {
+					if (callback) {
+						try {
+							// igk.html.canva.animate(
+							// function(){
 							// callback({ source: ob, data:s});
-						// });
-						callback({data:s, source:'IOGetFileContent', uri:uri});
-					
+							// });
+							callback({ data: s, source: 'IOGetFileContent', uri: uri });
+
+						}
+						catch (e) {
+							console.error("exception raise: " + e);
+						}
 					}
-					catch(e){
-						console.error("exception raise: "+e);
-					}
-				}		
-			}
+				}
 			}, 1);
 			return;
 		}
-		var ob = igk.createNode('object'); 
-		if (igk.navigator.isIE()){
+		var ob = igk.createNode('object');
+		if (igk.navigator.isIE()) {
 			// ie force download
-			 var _o = {
-				uri:uri,
+			var _o = {
+				uri: uri,
 				"from": 'igk_io_getData',
 			};
-			igk.ajx.get(uri, null, function(xhr){
-				if (this.isReady()){
-					 _o.data = xhr.responseText;
-				
-					
-					
+			igk.ajx.get(uri, null, function (xhr) {
+				if (this.isReady()) {
+					_o.data = xhr.responseText;
+
+
+
 					// _o.data = _data;
 					callback(_o);
-					
-				}else{
-					
-					if ((xhr.readyState==4) && (xhr.status !=200)){
+
+				} else {
+
+					if ((xhr.readyState == 4) && (xhr.status != 200)) {
 						_o.data = null;
-						_o.errorCode = xhr.status;					 
+						_o.errorCode = xhr.status;
 						callback(_o);
-						
+
 					}
 				}
-			}); 
+			});
 			return;
 		};
-		
-		
+
+
 		var __loaded = !1;// false;		
 		ob.o.style.visibility = 'hidden';
 		ob.o.style.position = 'absolute';
@@ -309,30 +309,30 @@ Name:balafon.js
 
 		_data_first = igk.navigator.isChrome() || igk.navigator.isFirefox() || /Google Inc\./.test(navigator.vendor);
 
-		 
+
 		if (igk.navigator.isIEEdge()) {
 			ob.o.type = "text/xml";
 		}
 		else
-			ob.o.type =  mimetype || "text/xml";
+			ob.o.type = mimetype || "text/xml";
 
 		// ob.o.type = "text/plain";
 		// ob.o.type = "application/json";
 		ob.addClass("bdr-1");
 		ob.reg_event("load", function (evt) {
-	 
+
 			var _o = {
-				uri:uri,
-				source: ob.o, 
+				uri: uri,
+				source: ob.o,
 				"from": 'igk_io_getData',
-				data:null
+				data: null
 			};
-			
+
 			if (callback) {
 				var o = ob.o;
 				if (ob.o.data == "") {
-					
-					
+
+
 
 					var e = callback.error;
 					if (e)
@@ -341,29 +341,29 @@ Name:balafon.js
 						callback(_o);
 				} else {
 					var _data = '';
-					try{
+					try {
 						if (ob.o.contentDocument) {
 							var c = (ob.o.contentDocument.firstElementChild || ob.o.contentDocument.firstChild);
 							_data = c.innerText || c.textContent;
 						} else {
-							throw new Error("no content document : " + uri + " for "+ob.o.type);
+							throw new Error("no content document : " + uri + " for " + ob.o.type);
 							//console.debug(ob.o);
 						}
 						_o.data = _data;
 						callback(_o);
-						
+
 					}
-					catch(e){
-						igk.log("Failed: loading ===> "+ uri);
+					catch (e) {
+						igk.log("Failed: loading ===> " + uri);
 						_o.error = 1;
 						_o.errormsg = igk.R.error_failedtoload;
 					}
-					
+
 				}
 			}
 			ob.remove();
 			_promise.resolve();
-		
+
 		}).reg_event("error", function (evt) {
 
 
@@ -378,12 +378,12 @@ Name:balafon.js
 				else if (callback) {
 					callback({ source: ob, data: null, error: 1 });
 				}
-				_promise.reject();				
+				_promise.reject();
 				return;
 			}
-			
-			
-			
+
+
+
 			if (e)
 				e();
 			else if (callback) {
@@ -394,27 +394,27 @@ Name:balafon.js
 
 		var _body = igk.dom.body();
 		//always initialize first before append to body for loading
-		ob.o.data=uri;
+		ob.o.data = uri;
 		_body.prepend(ob);
-		
-			// }
+
+		// }
 		// if (_data_first)
-			// ob.o.data=uri;
+		// ob.o.data=uri;
 		// if (_body){
-			// try{
-				
-			// catch(ex){
-				
-				// if (!_data_first){
-					// ob.o.data = uri;
-					// _body.prepend(ob);
-				// }
-			// }
+		// try{
+
+		// catch(ex){
+
+		// if (!_data_first){
+		// ob.o.data = uri;
+		// _body.prepend(ob);
+		// }
+		// }
 		// }
 		// // for ie data must be set after include append to document to avoir twice loading
 		// if (!_data_first)
-			// ob.o.data = uri;
-		
+		// ob.o.data = uri;
+
 
 		return _promise;
 	};
@@ -460,7 +460,7 @@ Name:balafon.js
 			select: function (selector, item) {// select in expression
 				if (!item)
 					return null;
-				
+
 				var pk = null;
 				var v_it = null;
 				var b = false;
@@ -538,8 +538,8 @@ Name:balafon.js
 	function igk_getScriptLocation() {
 		var idx = 0;
 		var e = 0;
-		
-		
+
+
 		function _readUri(h, starti) {
 			var tg = h.substring(starti).split(':');
 			var uri = '';
@@ -550,47 +550,47 @@ Name:balafon.js
 			return uri;
 
 		};
-		function _readChromeUri(h){
-			var idx =  h.indexOf('(');
-					var ch = 0;
-					if (idx!=-1){
-						idx=1;
-						var depth = 1;
-						while( (depth > 0) && idx<h.length){
-							ch = h[idx];
-							if (ch==')')
-								depth--;
-							else if (ch=='('){
-								depth++;
-								uri ='';
-							}
-							else 
-								uri+=ch;
-							idx++;
-						}
-						var tb = uri.trim().split(':');
-						if(tb.length>2){
-							uri = _readUri(uri, 0);
-							l = tb[tb.length-2];
-							c = tb[tb.length-1];
-						}
-						
-					}else{
-						
-						var tb = h.split(" ");
-						h = tb[tb.length - 1];
-						uri = _readUri(h, 0);
-						l = h.substring(idx + 1, idx = h.indexOf(':', idx + 1));
-						c = h.substring(idx + 1).trim();
+		function _readChromeUri(h) {
+			var idx = h.indexOf('(');
+			var ch = 0;
+			if (idx != -1) {
+				idx = 1;
+				var depth = 1;
+				while ((depth > 0) && idx < h.length) {
+					ch = h[idx];
+					if (ch == ')')
+						depth--;
+					else if (ch == '(') {
+						depth++;
+						uri = '';
 					}
-					var e = {
-							location: uri,
-							line: l,
-							column: c
-						};
-				return e;
+					else
+						uri += ch;
+					idx++;
+				}
+				var tb = uri.trim().split(':');
+				if (tb.length > 2) {
+					uri = _readUri(uri, 0);
+					l = tb[tb.length - 2];
+					c = tb[tb.length - 1];
+				}
+
+			} else {
+
+				var tb = h.split(" ");
+				h = tb[tb.length - 1];
+				uri = _readUri(h, 0);
+				l = h.substring(idx + 1, idx = h.indexOf(':', idx + 1));
+				c = h.substring(idx + 1).trim();
+			}
+			var e = {
+				location: uri,
+				line: l,
+				column: c
+			};
+			return e;
 		};
-		
+
 		var _nav = igk.navigator;
 		var uri = "";
 		var c = 0; var l = 0;
@@ -605,9 +605,9 @@ Name:balafon.js
 				//Chrome and IEEdge set to error message
 				//safari act strange:
 				//our goal is to convert stact to interpreted exploitable data in oder to get code and line
-				
-				
-				var tdb = (ex.stack+'').split('\n');
+
+
+				var tdb = (ex.stack + '').split('\n');
 				var idx = 1;
 				// the first stack line must be ignored because is where the exception is throw.
 				var stackinfo = [];
@@ -615,118 +615,118 @@ Name:balafon.js
 					idx++;
 				if (_nav.isChrome())
 					idx++;
-				
+
 				//push only available data that not concern eval data expression as <uri>:<line>:<number>
-				while((stackinfo.length==0) && (idx < tdb.length) ){
+				while ((stackinfo.length == 0) && (idx < tdb.length)) {
 					// ie - eval stack line
 					// firefox stack line
-					if (/(at eval code|> eval:)/.test(tdb[idx])){
+					if (/(at eval code|> eval:)/.test(tdb[idx])) {
 						idx++;
 						continue;
 					}
 					// /(([^: ]+)@){0,1}([^ ]+):([0-9]+):([0-9]+)/
-					tdb[idx].replace(/([@ ]{0,1})([^ \(\)]+):([0-9]+):([0-9]+)/, function(x, b, u, l,c){
+					tdb[idx].replace(/([@ ]{0,1})([^ \(\)]+):([0-9]+):([0-9]+)/, function (x, b, u, l, c) {
 						var p = 0;
 						var _eval = 0;
 						var _cidx = -1;
-						if (u =='eval'){
+						if (u == 'eval') {
 							//firefox invoke eval on line 
 							//firefox current stack script @uri line l > eval
 							_eval = 1;
 						}
-						if ((_cidx = u.indexOf('@'))!=-1){
+						if ((_cidx = u.indexOf('@')) != -1) {
 							//for firefox
-							
-							u = u.substr(_cidx+1);
+
+							u = u.substr(_cidx + 1);
 						}
-						
-						
-						
+
+
+
 						stackinfo.push({
-							src:tdb[idx],
+							src: tdb[idx],
 							text: x,
-							'func':p,
-							location : u,
+							'func': p,
+							location: u,
 							line: parseInt(l || '0'),
-							column: parseInt(c|| '0'),
-							index:idx,							
-							'eval':_eval,
-							stack : tdb
+							column: parseInt(c || '0'),
+							index: idx,
+							'eval': _eval,
+							stack: tdb
 						});
 						return tdb[idx];
 					});
 					idx++;
 				}
-				
-				
-				
-				if (stackinfo.length==1){
+
+
+
+				if (stackinfo.length == 1) {
 					e = stackinfo[0];
 				}
 				//return;
 
-				
-				
-				
-				
+
+
+
+
 				// var tdb = (ex.stack+'').split('\n');
 				// var cidx = 1;
 				// var h = tdb[idx];
 				// var is_chrome = _nav.isChrome(); //safari edge return chrome
-				
+
 				// if (/^Error/.test(h)){
-					// //ie and chrome promt Error tag on stack
-					
-					// cidx ++;
-					// h = tdb[cidx].trim();
-					
-					
-					// while( (cidx <= (tdb.length-1)) && /eval code/.test(h)) {//edge evaluation colode
-						// cidx++;
-						
-						// h = tdb[cidx].trim();
-					// }
-					
-					// if(h.startsWith("at")){
-						// e = _readChromeUri(h);
-						// return e;
-					// }
-					// return null;
+				// //ie and chrome promt Error tag on stack
+
+				// cidx ++;
+				// h = tdb[cidx].trim();
+
+
+				// while( (cidx <= (tdb.length-1)) && /eval code/.test(h)) {//edge evaluation colode
+				// cidx++;
+
+				// h = tdb[cidx].trim();
+				// }
+
+				// if(h.startsWith("at")){
+				// e = _readChromeUri(h);
+				// return e;
+				// }
+				// return null;
 				// }
 				// cidx++;
 				// h= tdb[cidx].trim();
-				
+
 				// // return null;
- 			
+
 
 				// if (!_nav.isIEEdge() && ( _nav.isFirefox() || _nav.isSafari())) {
-					// e = {
-						// func: h.substring(0, idx = h.indexOf('@', 0)),
-						// location: _readUri(h, idx + 1),
-						// line: h.substring(idx + 1, idx = h.indexOf(':', idx + 1)),
-						// column: h.substring(idx + 1)
-					// };
+				// e = {
+				// func: h.substring(0, idx = h.indexOf('@', 0)),
+				// location: _readUri(h, idx + 1),
+				// line: h.substring(idx + 1, idx = h.indexOf(':', idx + 1)),
+				// column: h.substring(idx + 1)
+				// };
 				// }
 				// else {
-					// // edge and contain '('
-					// e = {
-						// func: h.substring(idx = h.indexOf(' at ') + 4, idx = h.indexOf('(', idx)).trim(),
-						// location: _readUri(h, idx + 1),
-						// line: h.substring(idx + 1, idx = h.indexOf(':', idx + 1)),
-						// column: h.substring(idx + 1, h.indexOf(')', idx + 1))
-					// }
+				// // edge and contain '('
+				// e = {
+				// func: h.substring(idx = h.indexOf(' at ') + 4, idx = h.indexOf('(', idx)).trim(),
+				// location: _readUri(h, idx + 1),
+				// line: h.substring(idx + 1, idx = h.indexOf(':', idx + 1)),
+				// column: h.substring(idx + 1, h.indexOf(')', idx + 1))
+				// }
 
 				// }
-				
-			// } else {
+
+				// } else {
 				// //old safari does not support stack property
-				
-				
-				
+
+
+
 				// return null;
-			// }
+				// }
+			}
 		}
-	}
 		return e;
 	}
 
@@ -745,8 +745,8 @@ Name:balafon.js
 	function igk_item_inherit_class(p, n) {
 		var q = n;
 		while (q) {
-			
-			
+
+
 			if (igk_item_match_class(p, q)) {
 				return !0;
 			}
@@ -965,7 +965,7 @@ Name:balafon.js
 		if (typeof (win) == 'undefined') {
 			throw 'win is not defined';
 		}
-		
+
 		var _fileSrc = (d && d.fileSrc) || igk_getCurrentScript().src;
 		if ((_fileSrc == "") && (_iswin)) {
 			_fileSrc = "@" + m_LibScript;
@@ -989,26 +989,26 @@ Name:balafon.js
 				};
 				var tn = new igk_namespace();
 				var mps = ps;
-				var _hierarchie =  {
-						getParent: function () {
-							if (mps)
-								return igk_get_namespace(mps);
-							return null;
-						}
+				var _hierarchie = {
+					getParent: function () {
+						if (mps)
+							return igk_get_namespace(mps);
+						return null;
+					}
 				};
-				igk_defineProperty(tn, "namespace",  {get: function(){return n;}, set: function(){throw "not allowed";}});
-				igk_defineProperty(tn, "type",  {get: function(){return IGK_CLASS;} });
-				igk_defineProperty(tn, "fullname",  {get: function(){return n;} });
-				igk_defineProperty(tn, "hierarchie",  {get: function(){return _hierarchie;}});
+				igk_defineProperty(tn, "namespace", { get: function () { return n; }, set: function () { throw "not allowed"; } });
+				igk_defineProperty(tn, "type", { get: function () { return IGK_CLASS; } });
+				igk_defineProperty(tn, "fullname", { get: function () { return n; } });
+				igk_defineProperty(tn, "hierarchie", { get: function () { return _hierarchie; } });
 				igk_appendProp(tn, {
 					// namespace: n,
 					// type: IGK_CLASS,
 					// fullname: n,
 					// hierarchie:,
 					getParent: function () {
-						
-						
-						
+
+
+
 						return this.hierarchie.getParent();
 					},
 					getType: function () {
@@ -1107,7 +1107,7 @@ Name:balafon.js
 	}
 	// register getComputedStyle if not defined
 	if (typeof (getComputedStyle) == IGK_UNDEF) {
-		
+
 		createNS("window", {
 			getComputedStyle: function (item, selector) {
 
@@ -1252,7 +1252,7 @@ Name:balafon.js
 			case "auto":
 				if (cibling && cibling.parentNode) {
 					var v = igk_getPixel($igk(cibling.parentNode).getComputedStyle(property));
-					
+
 					// d=v *(d /100.0);
 					return v;
 				}
@@ -1272,10 +1272,10 @@ Name:balafon.js
 								return o;
 								break;
 							case "%":
-								
+
 								if (cibling && cibling.parentNode) {
 									var v = igk_getPixel($igk(cibling.parentNode).getComputedStyle(property));
-									
+
 									d = v * (d / 100.0);
 									return d;
 								}
@@ -1410,7 +1410,7 @@ Name:balafon.js
 					property.nopropfunc.apply(target);
 				}
 				else {
-					
+
 					var t = {
 						toString: function () { return "data"; }
 					};
@@ -1429,9 +1429,9 @@ Name:balafon.js
 						return property.get();
 					}
 				};
-				
-				
-				
+
+
+
 				if (igk && igk.navigator && !igk.navigator.isSafari())
 					target[name] = t;
 			}
@@ -1439,54 +1439,55 @@ Name:balafon.js
 	};
 
 	// define numeration on object property with only get value
-	function igk_defineGetValue(s){
-		return function(){
-		return s};
+	function igk_defineGetValue(s) {
+		return function () {
+			return s
+		};
 	}
 	// define enumeration 
-	function igk_defineEnum(o,t){
+	function igk_defineEnum(o, t) {
 		if (!o)
-		o = {};
+			o = {};
 		var _is = (o.isEnum && o.isEnum());
-		
-		if (_is){
-			for(var i in t){
-				igk_defineProperty(o, i , {get: igk_defineGetValue(t[i]) });
-				o.addEnum(i,t[i]);
-			}	
-		}else{
-		for(var i in t){
-			igk_defineProperty(o, i , {get: igk_defineGetValue(t[i]) });
+
+		if (_is) {
+			for (var i in t) {
+				igk_defineProperty(o, i, { get: igk_defineGetValue(t[i]) });
+				o.addEnum(i, t[i]);
+			}
+		} else {
+			for (var i in t) {
+				igk_defineProperty(o, i, { get: igk_defineGetValue(t[i]) });
+			}
 		}
-		}
-		
-		
-		o.addEnum = function(i, v){
+
+
+		o.addEnum = function (i, v) {
 			t[i] = v;
 		};
-		o.isEnum = function(){
+		o.isEnum = function () {
 			return 1;
 		};
-		o.isValuePresent = function(i){
+		o.isValuePresent = function (i) {
 			return i in t;
 		};
-		o.getValues=function(){
+		o.getValues = function () {
 			return t;
 		};
-		o.getComboboxEnumValue = function(){			
+		o.getComboboxEnumValue = function () {
 			var t = this.getValues();
 			var g = [];
-			
-			for(var i in t){
-				g.push({name:i, val: i});
+
+			for (var i in t) {
+				g.push({ name: i, val: i });
 			}
-			g.sort(function(a, b){
+			g.sort(function (a, b) {
 				return a.name.localeCompare(b.name);
 			});
 			return g;
 		};
 		return o;
-		
+
 	}
 
 
@@ -1654,13 +1655,13 @@ Name:balafon.js
 			return;
 
 		// TODO: PRELOAD IMAGe Failed on configuration pages
-		
+
 
 		function __preload() {
 			var v_timg = node.getElementsByTagName("igk-img");
 			if (!v_timg || (v_timg.length <= 0)) {
-				
-				
+
+
 				return;
 			}
 			var v_tab = new Array();
@@ -1691,7 +1692,7 @@ Name:balafon.js
 						var j = source.attributes[x];
 						if (j.name == "src") continue;
 						try {
-							
+
 							dest.setAttribute(j.name, j.value);
 						}
 						catch (Exception) {
@@ -1700,13 +1701,13 @@ Name:balafon.js
 					}
 				}
 			};
-			
-			
+
+
 			var i = 0, v_host = null;
 			for (; i < v_tab.length; i++) {
 				// new Image();// 
 				var src = v_tab[i].getAttribute("src");
-				
+
 				if (src) {
 					v_host = document.createElement("span");
 					$igk(v_host).addClass("igk-img-host");
@@ -1714,10 +1715,10 @@ Name:balafon.js
 					v_cimg.source = v_tab[i];
 					v_cimg.src = src;
 					v_host.appendChild(v_cimg);
-					if (/^data:/.test(src)){
+					if (/^data:/.test(src)) {
 						v_preload.copyAttribute(v_tab[i], v_cimg);
 						v_preload.replace(v_host, v_tab[i]);
-					}else {
+					} else {
 						if (v_cimg.complete && ((v_cimg.width + v_cimg.height) > 0)) {
 							// cached			
 							v_preload.copyAttribute(v_tab[i], v_cimg);
@@ -1878,7 +1879,7 @@ Name:balafon.js
 		}
 	}
 	function igk_isdefine(i, d) {// use with declared properties. if try to check that a variable is define use typeof(var) instead
-		 
+
 		if (typeof (i) == IGK_UNDEF) {
 			if (typeof (d) == IGK_UNDEF) {
 				return !1;
@@ -1902,11 +1903,11 @@ Name:balafon.js
 				sg = ex.stack.replace('\n', '<br />');
 			}
 			igk_show_notify_error("Exception",
-				"<div class='igk-error'><p>Error: igk_eval</p>Message:<b> " 
+				"<div class='igk-error'><p>Error: igk_eval</p>Message:<b> "
 				+ ex + "</b><pre>"
 				// + s + "</pre><div class='tracebox'>" + sg + "</div>"
 				+ "</div>"
-			); 
+			);
 		}
 		m_scriptNode = null;
 		igk.evaluating = false;
@@ -2104,62 +2105,61 @@ Name:balafon.js
 		// get parent node
 		var node = n || window.igk.getParentScriptByTagName('div');
 		var node = $igk(n || window.igk.getParentScriptByTagName('div'));
-		
-		igk.ready(function(){
-		var q = $igk(".igk-powered-viewer").last();
-		
-		function _update_pos(){
-			if ((q.o.scrollTop > 0)||(q.o.scrollLeft > 0))
-				{
+
+		igk.ready(function () {
+			var q = $igk(".igk-powered-viewer").last();
+
+			function _update_pos() {
+				if ((q.o.scrollTop > 0) || (q.o.scrollLeft > 0)) {
 					//+ update horizontal bar size + global view size
 					node.setCss({
 						"position": "fixed",
-						"right": (q.o.offsetWidth - q.o.clientWidth)+"px", 
-						"bottom": (q.o.offsetHeight - q.o.clientHeight)+"px"											
+						"right": (q.o.offsetWidth - q.o.clientWidth) + "px",
+						"bottom": (q.o.offsetHeight - q.o.clientHeight) + "px"
 					});
-					
-				}else{
+
+				} else {
 					node.setCss({
 						"position": "absolute",
-						"right":"0px",
-						"bottom":"0px"
-					}); 
+						"right": "0px",
+						"bottom": "0px"
+					});
 				}
-		};
-		if (q){ 
-			q.reg_event("scroll", function(){ 
-				_update_pos();				
-			});
-			q.add(node);
-			_update_pos();			
-		}
-	});
-		
+			};
+			if (q) {
+				q.reg_event("scroll", function () {
+					_update_pos();
+				});
+				q.add(node);
+				_update_pos();
+			}
+		});
+
 		// $igk(node).remove();
 		return;
 		// // 
 		// var q = igk.qselect(".igk-powered-viewer").last();
 
 		// if (!q) {
-			// // attach a powered to the first most div		
-			// q = $igk("div").first();
+		// // attach a powered to the first most div		
+		// q = $igk("div").first();
 		// }
 
 		// if (q) {
-			// igk.ready(function () {
-				// if (window.igk.ctrl) {
-					// if (q) {
-						// igk_powered_manager(node, q.o);
-					// }
-					// else
-						// igk_debug_t('igk_init_powered', 'no cibling node found');
-				// }
-				// else
-					
-			// });
+		// igk.ready(function () {
+		// if (window.igk.ctrl) {
+		// if (q) {
+		// igk_powered_manager(node, q.o);
 		// }
-	
-	
+		// else
+		// igk_debug_t('igk_init_powered', 'no cibling node found');
+		// }
+		// else
+
+		// });
+		// }
+
+
 	};
 	function igk_powered_manager(node, ciblingnode) {
 		if (!node) return;
@@ -2234,22 +2234,22 @@ Name:balafon.js
 		}
 		return o;
 	};
-	
+
 	// initialize object
 	// @n: source object
 	// @d: default object
-	function igk_initobj(n,d){
+	function igk_initobj(n, d) {
 		if (!n)
 			return d;
-		for(var i in d){
-			if (i in n){
+		for (var i in d) {
+			if (i in n) {
 				continue;
 			}
 			n[i] = d[i];
 		}
 		return n;
 	};
-	
+
 	// init
 	m_scriptTag = igk_getLastScript();
 
@@ -2271,11 +2271,11 @@ Name:balafon.js
 	createNS("igk.winui.notify", {}, { desc: "winui.notify global igk js namespace" });
 	createNS("igk.html", {}, { desc: "igk.html namespace. to manage dom element" });
 	createNS("igk.html5", {}, { desc: "igk.html5 namespace" });
- 
-	
-	igk.log = function(msg, tag, t){
+
+
+	igk.log = function (msg, tag, t) {
 		var fc = null;
-		switch(t){
+		switch (t) {
 			case "i":
 				fc = console.log;
 				break;
@@ -2288,14 +2288,14 @@ Name:balafon.js
 			default:
 				fc = console.debug;
 				break;
-				
+
 		};
 		tag = tag || 'BJS';
-		if (fc){
-			if (typeof(msg)=="string")
-				fc("["+tag+"] - "+msg);
+		if (fc) {
+			if (typeof (msg) == "string")
+				fc("[" + tag + "] - " + msg);
 			else {
-				fc("["+tag+"]");
+				fc("[" + tag + "]");
 				fc(msg);
 			}
 		}
@@ -2322,141 +2322,140 @@ Name:balafon.js
 
 	createNS("igk.system.io", {
 		getdir: igk_getdir,
-		getlocationdir:function(inf){
+		getlocationdir: function (inf) {
 			if (inf && ('location' in inf))
 				return igk_getdir(inf.location);
 			return null;
 		},
 		getData: igk_io_getData,
-		getExtension: function(n){
+		getExtension: function (n) {
 			return n.split('.').pop();
 		},
-		getLocation: function(){
+		getLocation: function () {
 			return document.location.href;
-		},	 
-		baseUri: function(){
-			var uri = ""+window.location;
-			var t ="";
-			uri.replace(/^([^#;\?]+)/g, function(m,c,s){
+		},
+		baseUri: function () {
+			var uri = "" + window.location;
+			var t = "";
+			uri.replace(/^([^#;\?]+)/g, function (m, c, s) {
 				t = m;
 			});
-			while((t.length>0) && (t[t.length-1] == "/")){			
-				t = t.substr(0, t.length-1);
-			}	 			
+			while ((t.length > 0) && (t[t.length - 1] == "/")) {
+				t = t.substr(0, t.length - 1);
+			}
 			return t;
 		},
-		baseUriDomain: function(){
+		baseUriDomain: function () {
 			var port = "";
 			var loc = window.location;
 			var is_secure = (/^https/.test(loc.protocol));
-			if (((!is_secure) && (loc.port!='') && (loc.port != 80)) || (is_secure && (loc.port!='') && (loc.port != 443) )) {			
-				port+=':'+loc.port;
+			if (((!is_secure) && (loc.port != '') && (loc.port != 80)) || (is_secure && (loc.port != '') && (loc.port != 443))) {
+				port += ':' + loc.port;
 			}
-			return loc.protocol+"//"+loc.hostname+port;
+			return loc.protocol + "//" + loc.hostname + port;
 		},
-		rootUri: function(){ // get uri location setup base base tag
+		rootUri: function () { // get uri location setup base base tag
 			var t = document.head.getElementsByTagName("base");
-			if (t.length == 0){
+			if (t.length == 0) {
 				var s = igk.getDocumentSetting();
 				var h = 0;
 				if (s)
 					h = s.baseuri;
-				
-				return  (h || (igk.system.io.baseUriDomain()))+"/";
-			}else{
+
+				return (h || (igk.system.io.baseUriDomain())) + "/";
+			} else {
 				return document.baseURI || t[0].href;
 			}
 		},
-		URL: function(uri){
+		URL: function (uri) {
 			//construct a url object
 			var _NS = igk.system.io;
 			var src = uri;
-			var relative  = 0;
+			var relative = 0;
 			var _opts = {
-				relative:0,
-				isLocal:0,
+				relative: 0,
+				isLocal: 0,
 				uri: uri,
-				request:''
+				request: ''
 			};
-			if (/^(\.(\.)?\/|\/[^\/]+)/.test(uri)){
+			if (/^(\.(\.)?\/|\/[^\/]+)/.test(uri)) {
 				_opts.relative = 1;
 				_opts.isLocal = 1;
 				_opts.protocol = window.location.protocol;
-	
+
 				// while(uri.indexOf('../')){
-					// uri = uri.substring(3);
+				// uri = uri.substring(3);
 				// }
 				var tab = uri.split('/');
 				var i = 0;
 				var luri = '';
 				var ruri = _NS.rootUri();
 				// while ((ruri.length>0) && ruri[ruri.length-1]=='/' ){
-					// ruri = ruri.substring(0, ruri.length-1);
+				// ruri = ruri.substring(0, ruri.length-1);
 				// }
-			
-				for (var j = 0; j < tab.length; j++){
-					switch(tab[j])
-					{
-						case '..': 
-							if (i){
+
+				for (var j = 0; j < tab.length; j++) {
+					switch (tab[j]) {
+						case '..':
+							if (i) {
 								//remove last entry
 								luri = luri.substring(0, luri.lastIndexOf('/'));
-							}else{
+							} else {
 								ruri = ruri.substring(0, ruri.lastIndexOf('/'));
 							}
 							break;
 						case '.':
 							break;
 						default:
-							if (luri.length>0)
-								luri+="/";
+							if (luri.length > 0)
+								luri += "/";
 							luri += tab[j];
-							i=1;
+							i = 1;
 							break;
 					}
 				}
-					
-					
-				
-				_opts.uri = ruri+'/'+luri;
-				_opts.request = '/'+luri;
-				
-				
+
+
+
+				_opts.uri = ruri + '/' + luri;
+				_opts.request = '/' + luri;
+
+
 				// throw new Error("b");
-				
-			}else {
-				if (uri.startsWith(_NS.rootUri())){
+
+			} else {
+				if (uri.startsWith(_NS.rootUri())) {
 					_opts.isLocal = 1;
 					_opts.uri = uri;
 					_opts.protocol = window.location.protocol;
-					_opts.request = "/"+uri.substring(_NS.baseUriDomain().length +1);
-					
-				}else if (/^(((http(s)?|ftp|sw):)?\/\/)/.test(uri)){
+					_opts.request = "/" + uri.substring(_NS.baseUriDomain().length + 1);
+
+				} else if (/^(((http(s)?|ftp|sw):)?\/\/)/.test(uri)) {
 					_opts.uri = uri;
 					_opts.request = "";
 				}
 			}
-			
+
 			igk.appendProperties(this, {
-				toString: function(){
+				toString: function () {
 					return _opts.uri;
 				}
 			});
-			igk.defineProperty(this, "relative", {get: function(){ return _opts.relative; }});
-			igk.defineProperty(this, "isLocal", {get: function(){ return _opts.isLocal; }});
-			igk.defineProperty(this, "uri", {get: function(){ return _opts.uri; }});
-			igk.defineProperty(this, "request", {get: function(){ return _opts.request; }});
-			
-		},		
-		loadLangRes: function(uri, lang, callback,error){
-	 
+			igk.defineProperty(this, "relative", { get: function () { return _opts.relative; } });
+			igk.defineProperty(this, "isLocal", { get: function () { return _opts.isLocal; } });
+			igk.defineProperty(this, "uri", { get: function () { return _opts.uri; } });
+			igk.defineProperty(this, "request", { get: function () { return _opts.request; } });
+
+		},
+		loadLangRes: function (uri, lang, callback, error) {
+
 			var _getRes = 0;
 			var _chtml = igk.dom.html();
-			var _lang = lang || (_chtml ? _chtml.getAttribute("lang") :null) || igk.navigator.getLang();
+			var _lang = lang || (_chtml ? _chtml.getAttribute("lang") : null) || igk.navigator.getLang();
 			var _loc = igk.system.io.getdir(uri);
-			var _uri = igk.resources.getlang(_loc, _lang); 
+			var _uri = igk.resources.getlang(_loc, _lang);
 
-			
+
 			// error.apply(this);
 			// return null;
 			var _promise = {
@@ -2465,11 +2464,11 @@ Name:balafon.js
 				}
 			};
 
-   
-        try {
+
+			try {
 				if (igk.navigator.isSafari())
 					throw ('safari not handle async - await');
-				
+
 				// TODO: Update to function 
 				eval(["_getRes = async function (){",
 					"var o=0; ",
@@ -2478,38 +2477,38 @@ Name:balafon.js
 					"o  = typeof(o)=='string' && o.length>0 ? JSON.parse(o) : null;",
 					"return  o;",
 					"}catch(ex){",
-					" console.error(ex);",					
+					" console.error(ex);",
 					"}",
 					"return null;",
 					"};"].join(" "));
 
-        }
-        catch (ex) {
-			
-            _getRes = function () {
-                // var _ext = igk.navigator.isIE() ? ".ejson" : ".json";//because of mime type        
-                var _ext = ".json"; // get data will get from ajx of mime type        
-                var _uri = igk.resources.getlang(_loc, _lang); 
-				
-				if (!document.body){
-					igk.ajx.get(_uri, null, function(xhr){
-						if (this.isReady()){
-							if(e.__then__){
-								e.__then__(JSON.parse(xhr.responseText));
+			}
+			catch (ex) {
+
+				_getRes = function () {
+					// var _ext = igk.navigator.isIE() ? ".ejson" : ".json";//because of mime type        
+					var _ext = ".json"; // get data will get from ajx of mime type        
+					var _uri = igk.resources.getlang(_loc, _lang);
+
+					if (!document.body) {
+						igk.ajx.get(_uri, null, function (xhr) {
+							if (this.isReady()) {
+								if (e.__then__) {
+									e.__then__(JSON.parse(xhr.responseText));
+								}
 							}
-						}
-					});
-				}else{
-					
-					igk.system.io.getData(_uri, function (o) {
-						
-						if (e.__then__ && o.data && o.data.length > 0)
-							e.__then__(JSON.parse(o.data));
-						else if (e.__catch__)
-							e.__catch__("/!\\ loadLangRes : " + _uri + "  " + o.data);
-					}, "application/json");
-				
-				}
+						});
+					} else {
+
+						igk.system.io.getData(_uri, function (o) {
+
+							if (e.__then__ && o.data && o.data.length > 0)
+								e.__then__(JSON.parse(o.data));
+							else if (e.__catch__)
+								e.__catch__("/!\\ loadLangRes : " + _uri + "  " + o.data);
+						}, "application/json");
+
+					}
 					var e = {
 						"then": function (t) {
 							this.__then__ = t;
@@ -2522,130 +2521,130 @@ Name:balafon.js
 					};
 					return e;
 				}
-        }
-		
-		 if (typeof (_getRes) != 'undefined') {
-                _getRes().then(function (o) {
-					callback(o);
-                    // var _res = o;
-                    if (_promise.__then) {
-						
-                        _promise.__then();
-                    }
-                    // igk.winui.events.raise(_sysnode, "resLoaded");
-                }).catch(function (e) {
-                    var error = 1;
-                    console.error("[BJS] - there is an error : " + e+
-					"\nUri:"+_uri);
-                });
+			}
 
-            }		
+			if (typeof (_getRes) != 'undefined') {
+				_getRes().then(function (o) {
+					callback(o);
+					// var _res = o;
+					if (_promise.__then) {
+
+						_promise.__then();
+					}
+					// igk.winui.events.raise(_sysnode, "resLoaded");
+				}).catch(function (e) {
+					var error = 1;
+					console.error("[BJS] - there is an error : " + e +
+						"\nUri:" + _uri);
+				});
+
+			}
 		}
 	});
-	
+
 	createNS("igk.resources", {
-		getlang: function(_loc, t){
-			if (!_loc){
+		getlang: function (_loc, t) {
+			if (!_loc) {
 				return null;
 			}
 			if (!t)
 				t = igk.dom.html().getAttribute("lang") || igk.navigator.getLang();
-			
-			return _loc+'/Lang/res.'+t+'.json';
+
+			return _loc + '/Lang/res.' + t + '.json';
 		}
 	});
-	
+
 	createNS("igk.system.Db", {
-		getIndexedDb: function(){
-				return window.indexDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+		getIndexedDb: function () {
+			return window.indexDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 		}
 	});
 
-	(function(){
+	(function () {
 
-		igk.system.Promise = function(){
-			var _t=[];
-			var _e=[];
+		igk.system.Promise = function () {
+			var _t = [];
+			var _e = [];
 			this._t = _t;
 			this._e = _e;
-		}; 
-	igk_appendProp(igk.system.Promise.prototype,{
-		resolve:function(args){
-			for(var j = 0 ; j < this._t.length; j++){
-				this._t[j].apply(this, args);
+		};
+		igk_appendProp(igk.system.Promise.prototype, {
+			resolve: function (args) {
+				for (var j = 0; j < this._t.length; j++) {
+					this._t[j].apply(this, args);
+				}
+			},
+			reject: function (args) {
+				for (var j = 0; j < this._e.length; j++) {
+					this._e[j].apply(this, args);
+				}
+			},
+			then: function (callback) {
+				this._t.push(callback);
+				return this;
+			},
+			error: function (callback) {
+				this._e.push(callback);
+				return this;
 			}
-		},
-		reject:function(args){
-			for(var j = 0 ; j < this._e.length; j++){
-				this._e[j].apply(this, args);
-			}
-		},
-		then: function(callback){
-			this._t.push(callback);
-			return this;
-		},
-		error: function(callback){
-			this._e.push(callback);
-			return this;
-		}
-	});
+		});
 
 	})();
-	
+
 	// new function added for promise call usage
-	igk.system.promiseCall = function(){
+	igk.system.promiseCall = function () {
 		var _p = {};
-		
+
 		return {
-			then: function(func){
+			then: function (func) {
 				igk.appendChain(_p, 'then', func);
 				return this;
 			},
-			error: function(func){
+			error: function (func) {
 				igk.appendChain(_p, 'error', func);
 				return this;
 			},
-			resolve: function(){
-				if ('then' in _p){
+			resolve: function () {
+				if ('then' in _p) {
 					_p.then();
 				}
 			},
-			failed : function(){
-				if ('error' in _p){
+			failed: function () {
+				if ('error' in _p) {
 					_p.error();
 				}
 			}
-			
+
 		};
-		
+
 	};
-	
-	
+
+
 
 	//igk namespace utility function 
 	createNS("igk", {
-		getQueryOptions: function(s){ //retrive query options from string
+		getQueryOptions: function (s) { //retrive query options from string
 			var e = {};
-			s.replace(/(;)?([^;]+)=([^;]+)/ig, function(m,t,n,v){				
-				e[n]= v.trim();
+			s.replace(/(;)?([^;]+)=([^;]+)/ig, function (m, t, n, v) {
+				e[n] = v.trim();
 			});
 			return e;
-		},	
-		getDocumentSetting: function(){
+		},
+		getDocumentSetting: function () {
 			return __initDocSetting;
 		},
-		isInteger: function(n){
+		isInteger: function (n) {
 			var f = Number.isInteger || _is_integer;
 			return f(n);
-		},	
-		invokeAsync: function(callback, args){
-			// custom async data call
-			setTimeout(function(){
-				callback.call(null, args);
-			},1);
-			
 		},
-		isFunc:function(n){
+		invokeAsync: function (callback, args) {
+			// custom async data call
+			setTimeout(function () {
+				callback.call(null, args);
+			}, 1);
+
+		},
+		isFunc: function (n) {
 			return n == 'function';
 		},
 		configure: function (o) {// load configuration setting
@@ -2691,12 +2690,14 @@ Name:balafon.js
 		xsl: "http://wwww.w3.org/1999/XSL/Transform",
 		svg: "http://www.w3.org/2000/svg"
 	});
-	igk_defineProperty($_NS, "igk", {get: function(){
-		return "https://schemas.igkdev.com/balafonjs"
-	}});
-	
-	
-	
+	igk_defineProperty($_NS, "igk", {
+		get: function () {
+			return "https://schemas.igkdev.com/balafonjs"
+		}
+	});
+
+
+
 
 
 	createNS("igk.convert", {
@@ -2739,7 +2740,7 @@ Name:balafon.js
 			__jsload[s] = 1;
 
 		}
-		, 
+		,
 		require: function (scs, sync, host) {
 			// @scs: scripts source array
 			// @async: synchronize call :  true|false default is false. 
@@ -2765,15 +2766,15 @@ Name:balafon.js
 				// return;
 				// }
 
-				
+
 				__jsload[u] = 1;
 				__jstoload[u] = 0;
 				var sc = document.createElement("script");
 				sc.src = u;
 				def.e[u] = i;
-				
+
 				sc.onload = (function (i, u) {
-						return function () {
+					return function () {
 						syncdata.loaded++;
 						syncdata.files = igk.isDefine(syncdata.files, []);
 						syncdata.files.push(u);
@@ -2819,14 +2820,14 @@ Name:balafon.js
 					prop.failed = callback;
 					return this;
 				},
-				load: function(callback){
+				load: function (callback) {
 					//called when a script is loaded 
 					prop.load = callback;
 					return this;
 				}
 			};
-			
-			function _loadinScript(u, type, index ){
+
+			function _loadinScript(u, type, index) {
 				return function (xhr) {
 					if (this.isReady()) {
 						__jsload[u] = xhr.responseText;
@@ -2835,7 +2836,7 @@ Name:balafon.js
 							s.type = type || "text/javascript";
 							s.innerHTML = __jsload[u];
 							_scripts.push(s);
-							if (prop.load){
+							if (prop.load) {
 								prop.load(s);
 							}
 							delete (def.e[u]); def.c--;
@@ -2848,7 +2849,7 @@ Name:balafon.js
 					}
 				};
 			};
-			
+
 			function __invoke() {
 				for (var g = 0; g < _scripts.length; g++) {
 					host.appendChild(_scripts[g]);
@@ -2860,7 +2861,7 @@ Name:balafon.js
 				if (prop.callback)
 					prop.callback.apply(o, [m, syncdata]);
 			};
-			
+
 			function _loadFormalScript(u, i) {
 				var sc = document.createElement("script");
 				sc.src = u;
@@ -2868,14 +2869,14 @@ Name:balafon.js
 				def.c++;
 				sc.onload = (function (i, u) {
 					return function () {
-						if (prop.load){
+						if (prop.load) {
 							prop.load(sc);
 						}
 						delete (def.e[u]); def.c--; if (def.c == 0) {
 							__invoke();
 						}
 					};
-					
+
 				})(i, u);
 				sc.onerror = function () {
 					console.error("/!\\ failed: " + u);
@@ -2883,8 +2884,8 @@ Name:balafon.js
 				};
 				host.appendChild(sc);
 			};
-					
-					
+
+
 			if (sync) {
 				def.c = scs.length;
 				syncdata = {
@@ -2900,31 +2901,31 @@ Name:balafon.js
 
 			} else {
 				//async call
-				var _type =null;
+				var _type = null;
 				for (var i = 0; i < scs.length; i++) {
 
 					u = scs[i];
-					_type =null;
-					
-					if (typeof(u)=='object'){
+					_type = null;
+
+					if (typeof (u) == 'object') {
 						_type = u.type;
 						u = u.uri;
-						
+
 					}
-					
-					
+
+
 					if (__jsload[u]) {
 						def.c--;
 						continue;
 					}
 					if (u in scs) {
-						igk.ajx.get(u, null, _loadingScript(u,_type, i));
+						igk.ajx.get(u, null, _loadingScript(u, _type, i));
 						continue;
 					};
 					__jsload[u] = 1;
 					_loadFormalScript(u, i);
-					
-					
+
+
 				}
 			}
 			// promise object
@@ -2942,7 +2943,7 @@ Name:balafon.js
 			$igk(d).select('script').each_all(function () {
 				var s = this.o.src;
 				var r = this.getAttribute("reloaded");
-				
+
 				if (s && (!(s in __jsload) || r)) {
 					if (r) {
 						l.push(s);
@@ -2966,10 +2967,10 @@ Name:balafon.js
 
 	//store inline script to eval
 	igk.scripts = {};
-	igk.scripts["@injectlocation"] = "((typeof(getLocalScriptUri) !='undefined')?"+"getLocalScriptUri():"+"igk.system.io.getlocationdir(igk.getScriptLocation()))";
-	
+	igk.scripts["@injectlocation"] = "((typeof(getLocalScriptUri) !='undefined')?" + "getLocalScriptUri():" + "igk.system.io.getlocationdir(igk.getScriptLocation()))";
 
-	
+
+
 
 	(function () {
 		// store global event
@@ -3030,7 +3031,7 @@ Name:balafon.js
 	});
 
 
-	createNS("igk.html5",{
+	createNS("igk.html5", {
 		animate: igk_animate,
 		cancelAnimate: igk_animate_cancel
 	});
@@ -3052,21 +3053,21 @@ Name:balafon.js
 	(function () {
 		//igk.io
 		createNS("igk.io", {
-			copyToClipboard : function(s){
+			copyToClipboard: function (s) {
 				var g = document.createElement("textarea");
-				var selected = 
-				document.getSelection().rangeCount > 0    
-				? document.getSelection().getRangeAt(0)
-				: !1;
+				var selected =
+					document.getSelection().rangeCount > 0
+						? document.getSelection().getRangeAt(0)
+						: !1;
 				g.innerText = s;
 				g.style.position = "absolute";
 				g.style.left = "-9999";
 				document.body.appendChild(g);
 				g.select();
 				document.exec("copy");
-				$igk(g).remove(); 
+				$igk(g).remove();
 
-				if (selected){
+				if (selected) {
 					document.getSelection().removeAllRanges();
 					document.getSelection().addRange(selected);
 				}
@@ -3084,10 +3085,10 @@ Name:balafon.js
 			/**
 			 * download the current data
 			 * */
-			downloadData: function(name, data){
+			downloadData: function (name, data) {
 				var a = igk.createNode("a");
 				igk.dom.body().appendChild(a.o); // not require in IE 
-				a.o.download = name; 
+				a.o.download = name;
 				a.o.href = data;
 				a.o.click();
 				a.remove();
@@ -3095,7 +3096,7 @@ Name:balafon.js
 			// load a html or text document,
 			// >u: uri
 			// >f: callback function on document recieve
-			load: function (u, f){ //load file argument
+			load: function (u, f) { //load file argument
 				if (!f)
 					throw ("argument f require");
 
@@ -3107,13 +3108,13 @@ Name:balafon.js
 					var c = n.childNodes.length;
 					var i = 0;
 					var m = null;
-					
-					
+
+
 					// copy node
 
 					while (c > 0) {
 						m = n.childNodes[i];
-						
+
 						switch (m.nodeType) {
 							case 8:// comment
 							case 3:// empty text node
@@ -3152,7 +3153,7 @@ Name:balafon.js
 						eCb.apply(ob);
 					}
 					// alert("error for : "+u);
-					
+
 					f.apply(document, [{
 						error: 1,
 						data: evt,
@@ -3161,17 +3162,17 @@ Name:balafon.js
 					ob.remove();
 				});
 				ob.reg_event("load", function (evt) {
-					
+
 					// alert(ob.o.contentDocument.readyState);
 					try {
 						if (!ob.o.contentDocument || ob.o.contentDocument.readyState != "complete")
 							return;
 						var s = ob.o.contentDocument;
 						var d = getNodeData(s);
-						f.apply(document, [{ 
-						data: d, 
-						document: s,
-						uri: u					
+						f.apply(document, [{
+							data: d,
+							document: s,
+							uri: u
 						}]);
 						__loaded = 1;
 					}
@@ -3220,142 +3221,141 @@ Name:balafon.js
 	}
 
 	var _FM_ = "BalafonJS";
-	
-	
-function __igk_nodeProperty(element) 
-{
-	
-	var m_o = element;
-	var m_self = this;
-	var m_anim; // animation property
-	var m_timeOutList = [];
-	var m_unregfuncs = [];
-	var m_config = {};
-	var m_data = {};
-	// define readonly property
-	igk_defineProperty(this, "o", {
-		get: function () { return m_o; },
-		nopropfunc: function () { this.o = m_o; }
-	});
-	igk_defineProperty(this, "t", {
-		get: function () { return $igk(m_o.parentNode); },
-		nopropfunc: function () { this.t = $igk(m_o.parentNode); }
-	});
-	igk_defineProperty(this, "timeOutList", {
-		get: function () { return m_timeOutList; }
-	});
-	
-	// used to store extra data
+
+
+	function __igk_nodeProperty(element) {
+
+		var m_o = element;
+		var m_self = this;
+		var m_anim; // animation property
+		var m_timeOutList = [];
+		var m_unregfuncs = [];
+		var m_config = {};
+		var m_data = {};
+		// define readonly property
+		igk_defineProperty(this, "o", {
+			get: function () { return m_o; },
+			nopropfunc: function () { this.o = m_o; }
+		});
+		igk_defineProperty(this, "t", {
+			get: function () { return $igk(m_o.parentNode); },
+			nopropfunc: function () { this.t = $igk(m_o.parentNode); }
+		});
+		igk_defineProperty(this, "timeOutList", {
+			get: function () { return m_timeOutList; }
+		});
+
+		// used to store extra data
 
 
 
-	// this.o=element;
-	// define function property
-	createPNS(this, "fn", {// function utility
-		o: element,
-		igk: m_self,
-		vscrollWidth: function () { return this.o.offsetWidth - this.o.clientWidth; },
-		hscrollHeight: function () { return this.o.offsetHeight - this.o.clientHeight; },
-		hasVScrollBar: function () { // has vertical scrollbar
-			var h = this.igk.getHeight();
-			// return (this.o.clientHeight > 0) && (this.o.scrollHeight > h);
-			return (this.o.clientHeight > 0) && (this.o.offsetHeight > h);
-		},
-		hasHScrollBar: function () { // has horizontal scrollbar
-			var w = this.igk.getWidth();
-			// return (this.o.clientWidth > 0) && (this.o.scrollWidth > w);
-			return (this.o.clientWidth > 0) && (this.o.offsetWidth > w);
-		}
-	});
-
-	createPNS(this, "data", {
-		contains: function (k) {
-			if (typeof (m_data[k]) != IGK_UNDEF)
-				return !0;
-			return !1;
-		},
-		add: function (k, v) {
-			m_data[k] = v;
-		},
-		remove: function (k) {
-			delete (m_data[k]);
-		},
-		getData: function () {
-			return m_data;
-		}
-	});
-
-	this.getUnregfunc = function(){
-		return m_unregfuncs;
-	};
-	this.getConf=function(){
-		return m_config;
-	};
-	// 
-	// configuration 
-	// 
-	// used to store properties configuration on igk node
-	// 
-
-	if (!this.isSr()) {
-		// -------------------------------
-		// not selector properties
-		// -------------------------------
-		var m_bE = "igk-eventcreated";
-		igk_appendProp(this, {
-			// -------------------------------
-			// EVENTS
-			// -------------------------------
-			raiseEventCreated: function (n) {
-				var e = this.o[m_bE];
-				if (e) {
-					e.name = n;
-					this.raiseEvent(m_bE);
-				} else {
-					console.error("no event to raise : " + n);
-				}
+		// this.o=element;
+		// define function property
+		createPNS(this, "fn", {// function utility
+			o: element,
+			igk: m_self,
+			vscrollWidth: function () { return this.o.offsetWidth - this.o.clientWidth; },
+			hscrollHeight: function () { return this.o.offsetHeight - this.o.clientHeight; },
+			hasVScrollBar: function () { // has vertical scrollbar
+				var h = this.igk.getHeight();
+				// return (this.o.clientHeight > 0) && (this.o.scrollHeight > h);
+				return (this.o.clientHeight > 0) && (this.o.offsetHeight > h);
 			},
-			postRegisterEvent: function (n, func) {
-				if (!n || !func)
-					return;
-				if (n == "igk-eventcreated") {
-					this.reg_event(n, func);
-				}
-				else {
-					if (typeof (this.o[n]) == IGK_UNDEF) {
-						var _b = this;
-						this.reg_event(m_bE, function _postevent(evt) {
-							if (evt.name == n) {
-								_b.unreg_event(m_bE, _postevent);
-								_b.reg_event(n, func);
-							}
-						});
-					}
-					else {
-						this.reg_event(n, func);
-					}
-				}
+			hasHScrollBar: function () { // has horizontal scrollbar
+				var w = this.igk.getWidth();
+				// return (this.o.clientWidth > 0) && (this.o.scrollWidth > w);
+				return (this.o.clientWidth > 0) && (this.o.offsetWidth > w);
 			}
 		});
-		this.addEvent("igk-eventcreated", { name: null });
 
-	
-		// good way to register function extension according to tag name
-		var tag = element.tagName;
-		if (tag){
-			var b = igk.system.createExtensionProperty(tag, "igk.dom.extension", this);
+		createPNS(this, "data", {
+			contains: function (k) {
+				if (typeof (m_data[k]) != IGK_UNDEF)
+					return !0;
+				return !1;
+			},
+			add: function (k, v) {
+				m_data[k] = v;
+			},
+			remove: function (k) {
+				delete (m_data[k]);
+			},
+			getData: function () {
+				return m_data;
+			}
+		});
+
+		this.getUnregfunc = function () {
+			return m_unregfuncs;
+		};
+		this.getConf = function () {
+			return m_config;
+		};
+		// 
+		// configuration 
+		// 
+		// used to store properties configuration on igk node
+		// 
+
+		if (!this.isSr()) {
+			// -------------------------------
+			// not selector properties
+			// -------------------------------
+			var m_bE = "igk-eventcreated";
+			igk_appendProp(this, {
+				// -------------------------------
+				// EVENTS
+				// -------------------------------
+				raiseEventCreated: function (n) {
+					var e = this.o[m_bE];
+					if (e) {
+						e.name = n;
+						this.raiseEvent(m_bE);
+					} else {
+						console.error("no event to raise : " + n);
+					}
+				},
+				postRegisterEvent: function (n, func) {
+					if (!n || !func)
+						return;
+					if (n == "igk-eventcreated") {
+						this.reg_event(n, func);
+					}
+					else {
+						if (typeof (this.o[n]) == IGK_UNDEF) {
+							var _b = this;
+							this.reg_event(m_bE, function _postevent(evt) {
+								if (evt.name == n) {
+									_b.unreg_event(m_bE, _postevent);
+									_b.reg_event(n, func);
+								}
+							});
+						}
+						else {
+							this.reg_event(n, func);
+						}
+					}
+				}
+			});
+			this.addEvent("igk-eventcreated", { name: null });
+
+
+			// good way to register function extension according to tag name
+			var tag = element.tagName;
+			if (tag) {
+				var b = igk.system.createExtensionProperty(tag, "igk.dom.extension", this);
+			}
 		}
+	};
+	function __extensionPrototype(tag) {
+		this.ctag = tag;
+		igk_defineProperty(this, "tagName", { get: function () { return this.ctag } });
+		igk_defineProperty(this, "IsExtension", { get: function () { return true; } });
+		this.__proto__ = __igk_nodeProperty.prototype;
 	}
-};
-function __extensionPrototype(tag){
-	this.ctag = tag;
-	igk_defineProperty(this, "tagName", {get: function(){return this.ctag}});	
-	igk_defineProperty(this, "IsExtension", {get: function(){return true;}}); 
-	this.__proto__ = __igk_nodeProperty.prototype;
-}
 
-var __prop = __igk_nodeProperty.prototype;
-igk_appendProp(__prop, {
+	var __prop = __igk_nodeProperty.prototype;
+	igk_appendProp(__prop, {
 		setConfig: function (k, v) {
 			this.getConf()[k] = v;
 		},
@@ -3371,13 +3371,13 @@ igk_appendProp(__prop, {
 			}
 			return t;
 		}
-	
 
-	// -------------------------------
-	// -------------- SET PROPERTIES			
-	// -------------------------------
-	
-		,toString: function () { return "igk_node_properties[" + this.o + "]"; },
+
+		// -------------------------------
+		// -------------- SET PROPERTIES			
+		// -------------------------------
+
+		, toString: function () { return "igk_node_properties[" + this.o + "]"; },
 		get: function (s, d) {
 			if (typeof (d) == 'undefined') {
 				d = 0;
@@ -3396,7 +3396,7 @@ igk_appendProp(__prop, {
 		},
 		unregister: function () {
 			// unregister functions. delete mecanism
-			
+
 			// unregevents 
 			var m_unregfuncs = this.getUnregfunc();
 
@@ -3535,7 +3535,7 @@ igk_appendProp(__prop, {
 		},
 		clone: function () {// return a clone object of this node
 			var cl = igk.createNode(this.o.tagName.toLowerCase(), this.o.namespaceURI);
-			cl.copyAttributes(this);					
+			cl.copyAttributes(this);
 			if (this.o.childNodes.length > 0) {
 				for (var i = 0; i < this.o.childNodes.length; i++) {
 					if (this.o.childNodes[i].tagName)
@@ -3600,7 +3600,7 @@ igk_appendProp(__prop, {
 			}
 			return null;
 		},
-		found:function(){ // get if selection get on on more items 
+		found: function () { // get if selection get on on more items 
 			if (this.o.getItemAt) {
 				return this.o.getCount() > 0;
 			}
@@ -3693,69 +3693,70 @@ igk_appendProp(__prop, {
 			}
 			return o;
 		},
-		getCssValue:function(){
+		getCssValue: function () {
 			var o = "";
 			var v, d;
-			
-			var prop  = igk.css.getProperties();
+
+			var prop = igk.css.getProperties();
 			var q = this;
-			var check = typeof(window.getDefaultComputedStyle) =='function' ?  function(n, d){ 
-				return window.getDefaultComputedStyle(q.o).getPropertyValue(n) !=d;
-				
-			} : function(n, d){
+			var check = typeof (window.getDefaultComputedStyle) == 'function' ? function (n, d) {
+				return window.getDefaultComputedStyle(q.o).getPropertyValue(n) != d;
+
+			} : function (n, d) {
 				var domStyle = igk.css.getDomStyle();
-				return(d != domStyle[n]);
+				return (d != domStyle[n]);
 			};
-			for(var i in prop){			 
+			for (var i in prop) {
 				v = i;
 				if ((d = this.getComputedStyle(i)) && check(i, d)) //o.style[i];
-				{	o+= v+":"+d+"; ";
+				{
+					o += v + ":" + d + "; ";
 				}
 			}
 			return o;
 		},
-		disablecontextmenu: function(){
+		disablecontextmenu: function () {
 			if (this.isSr()) {
 				this.o.each(this.editable, arguments);
 				return this;
 			}
 			else {
-				this.on("contextmenu", igk.winui.event.cancelBehaviour);							
+				this.on("contextmenu", igk.winui.event.cancelBehaviour);
 			}
 			return this;
 		},
-		selectable: function(v){
+		selectable: function (v) {
 			if (this.isSr()) {
 				this.o.each(this.selectable, arguments);
 				return this;
 			}
 			else {
-				if (!v){
+				if (!v) {
 					igk.ctrl.selectionmanagement.disable_selection(this);
-				}else{
+				} else {
 					igk.ctrl.selectionmanagement.enableSelection(this);
 				}
 			}
 			return this;
 		},
-		editable:function(v){
+		editable: function (v) {
 			if (this.isSr()) {
 				this.o.each(this.editable, arguments);
 				return this;
 			}
 			else {
-				this.o.contentEditable = v;								
+				this.o.contentEditable = v;
 			}
 			return this;
 		},
-		autocorrect: function(v){
+		autocorrect: function (v) {
 			if (this.isSr()) {
 				this.o.each(this.autocorrect, arguments);
 				return this;
 			}
 			else {
 				this.o.setAttribute("spellcheck", v);
-				 					
+
 			}
 			return this;
 		},
@@ -3766,16 +3767,16 @@ igk_appendProp(__prop, {
 			}
 			else {
 				igk.css.setProperties(this.o, properties);
-				 					
+
 			}
 			return this;
 		},
-		height: function(){
-			var h = this.getComputedStyle("height");		
-				return igk.getNumber(h, this.o, "height");
+		height: function () {
+			var h = this.getComputedStyle("height");
+			return igk.getNumber(h, this.o, "height");
 		},
-		width: function(){
-			var h = this.getComputedStyle("width");		
+		width: function () {
+			var h = this.getComputedStyle("width");
 			return igk.getNumber(h, this.o, "width");
 		},
 		setCssAssert: function (c, p)// conditional css property
@@ -3854,14 +3855,14 @@ igk_appendProp(__prop, {
 				}
 			}
 		},
-		raiseEvent: function (n,p) {
+		raiseEvent: function (n, p) {
 			// raise custom event
 			// n: event name
 			// p: properties
 			if (!this.isSr()) {
 				var e = this.o[n];
 				if (e != null) {
-					
+
 					// ei make some error
 					if (arguments.length > 1) {
 						igk.appendProperties(e, arguments[1]);
@@ -3907,14 +3908,14 @@ igk_appendProp(__prop, {
 					}
 					else {
 						// this will raise UnpsecifiedEventTypeError in ie8 not supporting createEvent Method
-						
+
 						// alert(" disp "+document.dispatchEvent);
 						// e= document.createEventObject(window.event); // document.createEventObject(q.o);
 						// igk_appendProp(e,p);
 						// igk_appendProp(e,{fordoc:true});
 
-						e = new __igk_event(q,p,n);
-						
+						e = new __igk_event(q, p, n);
+
 					}
 				}
 				if (e != null) {
@@ -3923,7 +3924,7 @@ igk_appendProp(__prop, {
 						this.raiseEventCreated(n);
 					}
 					catch (e) { // failed to add property 
-						
+
 					}
 				}
 			}
@@ -4029,7 +4030,7 @@ igk_appendProp(__prop, {
 						}
 					}
 					ch = __appendClass(this, tab) || __rmClass(this, rm);
-					
+
 				}
 
 				if (ch) {
@@ -4061,16 +4062,16 @@ igk_appendProp(__prop, {
 						for (var i = 0; i < tab.length; i++) {
 							s = tab[i];
 							//if(s == classname){
-								
-								index = cur.indexOf(s); 
-								if(index != -1){
-									delete(cur[index]);
-								}
-								// while ((index >= 0) && ((index + s.length) <= cur.length)) {
-									// cur = cur.replace(tab[i], "");
-									// index = cur.indexOf(tab[i]);
-									// removing = !0;
-								// }								
+
+							index = cur.indexOf(s);
+							if (index != -1) {
+								delete (cur[index]);
+							}
+							// while ((index >= 0) && ((index + s.length) <= cur.length)) {
+							// cur = cur.replace(tab[i], "");
+							// index = cur.indexOf(tab[i]);
+							// removing = !0;
+							// }								
 							//}
 						}
 						var h = igk.system.string.trim(cur.join(" "));
@@ -4100,7 +4101,7 @@ igk_appendProp(__prop, {
 							}
 							o += tab[i] + " ";
 							// cur = cur.replace(_rg, '');		
-							
+
 						}
 						cur = o;
 						var h = igk.system.string.trim(cur);
@@ -4164,7 +4165,7 @@ igk_appendProp(__prop, {
 			if (this.isSr()) {
 				return !1;
 			}
-			else{
+			else {
 				if (this.supportClass(cl)) {
 					this.rmClass(cl);
 				} else {
@@ -4236,11 +4237,11 @@ igk_appendProp(__prop, {
 			// make this element visible by scrolling to it
 			if (this.isSr()) {
 				return this;
-			}						
+			}
 			var p = this.getscrollParent();
 			if (p) {
 				if (p.o.scroll)
-					p.o.scroll(this.o.offsetLeft, this.o.offsetTop);							
+					p.o.scroll(this.o.offsetLeft, this.o.offsetTop);
 			}
 			return this;
 		},
@@ -4297,7 +4298,7 @@ igk_appendProp(__prop, {
 			function __init_scroll() {// on 		
 				var offsetParent = it.getscrollParent();
 				if (offsetParent == null) {
-					
+
 					return null;
 				}
 				return new (function () {
@@ -4316,7 +4317,7 @@ igk_appendProp(__prop, {
 					v_ttloc.y += it.o.scrollTop;
 					v_ttloc.x += it.o.scrollLeft;
 					var v_tloc = it.getscrollLocation(offsetParent.o);
-					
+
 					// fixed data
 					// if((v_loc.y==v_tloc.y) &&(v_loc.x==v_tloc.x))
 					// {
@@ -4326,7 +4327,7 @@ igk_appendProp(__prop, {
 					if (!property.orientation) {
 						// auto detect orientation 
 						var pp = it.getOffsetScreenLocation(self);
-						
+
 						orientation = pp.orientation;
 					}
 					else {
@@ -4345,7 +4346,7 @@ igk_appendProp(__prop, {
 						d = endscroll - startpos;// - 0;// v_loc.x;
 						q.dir = (d > 0) ? "goright" : "goleft";
 
-						
+
 					}
 					// calculate the normal step	
 					distance = Math.abs(d);
@@ -4409,7 +4410,7 @@ igk_appendProp(__prop, {
 					callback({ "type": "transition", target: t, x: pp.X(), y: pp.Y() });
 				}
 			}
-			
+
 			function __transition_end(evt) {
 				var g = $igk(igk.winui.eventTarget(evt));
 				m_il.remove(g);
@@ -4429,12 +4430,12 @@ igk_appendProp(__prop, {
 				igk.winui.unreg_event(this, 'transitionend', __transition_end);
 			};
 			if (ts && trf) {// item support animation and transitions
-				
+
 				scrollprop = __init_scroll();
 				counter = 0;
 				if (scrollprop && scrollprop.distance != 0) {
 					if (!scrollprop.getTransform) {
-						
+
 						throw ("[IGK] no scrollprop.getTransform function found");
 						return;
 					}
@@ -4537,7 +4538,7 @@ igk_appendProp(__prop, {
 					if (d == 0) {
 						return !0;
 					}
-					
+
 					var v_o = this.offsetParent != null ? this.offsetParent : this.getOwner();
 					var y = 0;
 					var end = false;
@@ -4547,10 +4548,10 @@ igk_appendProp(__prop, {
 
 
 					this.pos = y;// Math.min(this.startpos +d ,y);		
-					
+
 					end = (this.getEllapsed() / this.getDuration()) >= 1.0;
 					// (y- this.startpos)==d);// d( this.pos - d);(this.pos >=this.startpos +d);							
-					
+
 					switch (this.dir) {
 						case "godown":
 							v_o.scroll(0, y);// this.startpos + this.pos); 							
@@ -4559,7 +4560,7 @@ igk_appendProp(__prop, {
 							v_o.scroll(0, y);// this.startpos - this.pos); 							
 							break;
 						case "goright":
-							
+
 							v_o.scroll(y, 0);// (this.startpos + this.pos,0); 
 							break;
 						case "goleft":
@@ -4606,10 +4607,10 @@ igk_appendProp(__prop, {
 			var q = this;
 
 			function __function_end(evt) {
-				
-				
+
+
 				if (evt.target == q.o) {
-					
+
 					if (typeof (n) == "function")
 						n.apply(q);
 					else {
@@ -4654,7 +4655,7 @@ igk_appendProp(__prop, {
 			return this;
 		}
 		, istouchable: function () {// utility
-			
+
 			if (
 				(typeof (this.o.ontouchstart) != IGK_UNDEF) &&
 				(typeof (this.o.ontouchend) != IGK_UNDEF) &&
@@ -4707,47 +4708,47 @@ igk_appendProp(__prop, {
 			}
 			return this;
 		}
-		, replaceBy: function(t){
+		, replaceBy: function (t) {
 			if (this.o.each) {
 				this.o.each(this.replaceBy, arguments);
 			}
 			else {
 				var p = this.o.parentNode;
-				if (p){					
+				if (p) {
 					this.insertBefore($igk(t).o);
 					this.remove();
-				}				
+				}
 			}
 			return this;
 		}
 		// ,
 		// replaceBy: function (i) {
-			// if (igk_is_string(i)) {
-				// var d = igk.createNode("dummy");
-				// i = d.setHtml(i).o.firstChild;
-			// }
-			// var v_si = $igk(i);
-			// if (!this.isSr()) {
-				// var p = this.o.parentNode;
-				// p.replaceChild(v_si.o, this.o);
-			// } else {
-				// if (this.getCount() > 1) {
-					// var c = 0;
-					// this.o.each(function () {
-						// if (c == 0) {
-							// this.replaceBy(i);
-						// }
-						// else {
-							// this.replaceBy($igk(i).clone());
-						// }
-						// c = 1;
-						// return !0;
-					// });
-				// }
-				// else
-					// this.o.each(this.replaceBy, arguments);
-			// }
-			// return this;
+		// if (igk_is_string(i)) {
+		// var d = igk.createNode("dummy");
+		// i = d.setHtml(i).o.firstChild;
+		// }
+		// var v_si = $igk(i);
+		// if (!this.isSr()) {
+		// var p = this.o.parentNode;
+		// p.replaceChild(v_si.o, this.o);
+		// } else {
+		// if (this.getCount() > 1) {
+		// var c = 0;
+		// this.o.each(function () {
+		// if (c == 0) {
+		// this.replaceBy(i);
+		// }
+		// else {
+		// this.replaceBy($igk(i).clone());
+		// }
+		// c = 1;
+		// return !0;
+		// });
+		// }
+		// else
+		// this.o.each(this.replaceBy, arguments);
+		// }
+		// return this;
 		// }
 		, clearAttributes: function () {
 			while (this.o.attributes.length > 0) {
@@ -4770,14 +4771,14 @@ igk_appendProp(__prop, {
 			}
 			else {
 				try {
-					
+
 					this.o.innerHTML = v;
-					if (evalScript) { 
+					if (evalScript) {
 						igk.system.evalScript(this.o);
-					}					
+					}
 				}
 				catch (ex) {
-					console.debug("set:InnerHtml failed : " + v + "\n"+ex);
+					console.debug("set:InnerHtml failed : " + v + "\n" + ex);
 				}
 			}
 			return this;
@@ -4789,17 +4790,17 @@ igk_appendProp(__prop, {
 			}
 			return s;
 		},
-		val: function(){
+		val: function () {
 			if (this.o.each) {
 				this.o.each(this.setHtml, arguments);
 			}
-			else{
-				if (arguments.length>0){
-					if ('value' in this.o){
+			else {
+				if (arguments.length > 0) {
+					if ('value' in this.o) {
 						this.o.value = arguments[0];
 					}
 				}
-				return  this.o.value;
+				return this.o.value;
 			}
 			return this;
 		},
@@ -4880,18 +4881,18 @@ igk_appendProp(__prop, {
 		}
 		, getAllAttribs: function () {// return a string of all attribute of this node				
 			var msg = "";
-			var attrs=null;
+			var attrs = null;
 			if (this.o.attributes) {
 				attrs = this.o.attributes;
-				var ln=  attrs.length;
+				var ln = attrs.length;
 				for (var h = 0; h < ln; h++) {
-					try{
-					var j = attrs[h];
-					if (j)
-						msg += j.name + " ";
+					try {
+						var j = attrs[h];
+						if (j)
+							msg += j.name + " ";
 					}
-					catch(ex){
-						console.debug("error on "+h);
+					catch (ex) {
+						console.debug("error on " + h);
 					}
 				}
 			}
@@ -4910,13 +4911,13 @@ igk_appendProp(__prop, {
 			if (!this.isSr()) {
 				if (window.getComputedStyle) {
 					// get styles
-					if (this.o.nodeType && (this.o.nodeType == 3)){
+					if (this.o.nodeType && (this.o.nodeType == 3)) {
 						return null;
 					}
 					var q = window.getComputedStyle(this.o, select);
 					return igk.css.getStyleValue(q, n);
 				}
-				
+
 				return null;//"no-value-computed"; 
 			}
 			return "no-value";
@@ -4930,7 +4931,7 @@ igk_appendProp(__prop, {
 					var q = window.getComputedStyle(this.o, select).getPropertyValue(n);
 					return q;
 				}
-				
+
 				return null;//"no-value-computed"; 
 			}
 			return "no-value";
@@ -4946,9 +4947,11 @@ igk_appendProp(__prop, {
 		},
 		setSize: function (w, h) { if (h == null) h = w; this.setCss({ "width": w, "height": h }); return this; }
 		// -------------- GET PROPERTIES
-		, getAttribute: function (value) { if (typeof(this.o.getAttribute)=='function') 
-			return this.o.getAttribute(value); 
-		return null; }
+		, getAttribute: function (value) {
+			if (typeof (this.o.getAttribute) == 'function')
+				return this.o.getAttribute(value);
+			return null;
+		}
 		, getChildById: function (id) { return igk_getChildById(this.o, id); }
 		, getChildsByAttr: function (properties) { return igk_getChildsByAttr(this.o, properties); }
 		, getParent: function (tagname) { if (tagname) { return this.getParentByTagName(tagname); } return $igk(this.o.parentNode); }
@@ -4964,10 +4967,10 @@ igk_appendProp(__prop, {
 			// @ item to add
 			var p = 0;
 			if (item && (p = this.o.parentNode)) {
-				if (p.firstChild == this.o){
+				if (p.firstChild == this.o) {
 					if (p.prepend)
 						p.prepend(item);
-					else{
+					else {
 						p.insertBefore(item, p.firstChild);
 					}
 				}
@@ -5022,41 +5025,41 @@ igk_appendProp(__prop, {
 			return this;
 		},
 		getOffsetScreenLocation: function (t) {// return the point 
-				var v1 = t.getScreenLocation();
-				var v2 = { x: this.o.offsetLeft, y: this.o.offsetTop };
+			var v1 = t.getScreenLocation();
+			var v2 = { x: this.o.offsetLeft, y: this.o.offsetTop };
 
-				var q = this.o.offsetParent;
-				var v3 = { x: 0, y: 0 };
-				var v4 = this.getScreenLocation();
-				var p = this.o;
-				var o = "horizontal";
-				while (q && (q != igk.dom.body().o)) {
-					if (q == t.o) {
-						
-						
-						
-						if (t.o.offsetWidth < v2.x) {
-							
-						}
-						if (((v4.x == 0) && (v4.y != 0)) || (t.o.offsetHeight < v2.y)) {
-							o = "vertical";
-						}
-						break;
+			var q = this.o.offsetParent;
+			var v3 = { x: 0, y: 0 };
+			var v4 = this.getScreenLocation();
+			var p = this.o;
+			var o = "horizontal";
+			while (q && (q != igk.dom.body().o)) {
+				if (q == t.o) {
+
+
+
+					if (t.o.offsetWidth < v2.x) {
+
 					}
-					p = q;
-					q = q.offsetParent;
-					v2.x += p.offsetLeft;
-					v2.y += p.offsetTop;
-
-					v4.x -= p.offsetLeft;
-					v4.y -= p.offsetTop;
-
+					if (((v4.x == 0) && (v4.y != 0)) || (t.o.offsetHeight < v2.y)) {
+						o = "vertical";
+					}
+					break;
 				}
-				return { orientation: o, x: v4.x, y: v4.y };
+				p = q;
+				q = q.offsetParent;
+				v2.x += p.offsetLeft;
+				v2.y += p.offsetTop;
+
+				v4.x -= p.offsetLeft;
+				v4.y -= p.offsetTop;
+
 			}
+			return { orientation: o, x: v4.x, y: v4.y };
+		}
 	});
 
-	
+
 	__prop.getElementsByTagName = function (tag) { if (this.o.getElementsByTagName) return this.o.getElementsByTagName(tag); };
 	// return the client width
 	__prop.getWidth = function () { return this.o.clientWidth; };
@@ -5071,24 +5074,24 @@ igk_appendProp(__prop, {
 	__prop.getLocation = function () { return igk.winui.GetScreenPosition(this.o); };
 	// return the location of the host in client screen display
 	__prop.getScreenLocation = function () { return igk.winui.GetRealScreenPosition(this.o); };
-	__prop.getOffsetBounds = function(){
-			var p = this;
-			var real_size = {x:0, y:0, h:0, w:0};
-			for(var n = 0; n < p.o.childNodes.length; n++){
-				var c = $igk( p.o.childNodes[n]);
-				var loc = c.getScreenLocation();
-				var boc = c.getScreenBounds();
-				real_size.x = Math.min(loc.x, real_size.x);
-				real_size.y = Math.min(loc.y, real_size.y);
-				real_size.w = Math.max(loc.x + boc.w, real_size.w);
-				real_size.h = Math.max(loc.y + boc.h, real_size.h);
-				// real_size.x = Math.min(loc.x, real_size.x);
-				
-			}
-			loc = p.getScreenLocation();
-			real_size.w -= loc.x;
-			real_size.h -= loc.y;
-			return real_size;
+	__prop.getOffsetBounds = function () {
+		var p = this;
+		var real_size = { x: 0, y: 0, h: 0, w: 0 };
+		for (var n = 0; n < p.o.childNodes.length; n++) {
+			var c = $igk(p.o.childNodes[n]);
+			var loc = c.getScreenLocation();
+			var boc = c.getScreenBounds();
+			real_size.x = Math.min(loc.x, real_size.x);
+			real_size.y = Math.min(loc.y, real_size.y);
+			real_size.w = Math.max(loc.x + boc.w, real_size.w);
+			real_size.h = Math.max(loc.y + boc.h, real_size.h);
+			// real_size.x = Math.min(loc.x, real_size.x);
+
+		}
+		loc = p.getScreenLocation();
+		real_size.w -= loc.x;
+		real_size.h -= loc.y;
+		return real_size;
 	};
 	// get the bounding visibility in client screen display
 	__prop.getBoundingClientRect = function () {
@@ -5121,7 +5124,7 @@ igk_appendProp(__prop, {
 	// return true is item is visible in screen display
 	__prop.getisVisible = function () {
 		var j = this;
-		var loc = j.getBoundingClientRect(); 
+		var loc = j.getBoundingClientRect();
 		// j.o.getBoundingClientRect ? j.o.getBoundingClientRect(): 
 		// {x:0,y:0};
 		// {x:j.getscrollLeft(), y:j.getscrollTop()};
@@ -5132,7 +5135,7 @@ igk_appendProp(__prop, {
 		return vsb;
 
 	};
-	
+
 	__prop.getpresentOnDocument = function (doc) {
 		// > get if this is present on document
 		var j = this.o;
@@ -5152,8 +5155,8 @@ igk_appendProp(__prop, {
 
 	// -------------- WINDOW function
 	__prop.createElement = function (tagname) {
-		
-		if (this.o.namespaceURI==null){
+
+		if (this.o.namespaceURI == null) {
 			var c = document.createElementNS(null, tagname);
 			return c;
 		}
@@ -5190,7 +5193,7 @@ igk_appendProp(__prop, {
 		anim1.start();
 		return !0;
 	};
- __prop.expand = function (property, callback) {
+	__prop.expand = function (property, callback) {
 		if (m_anim && m_anim.expanding) {
 			// stop scrolling of this item
 			m_anim.expanding.stop();
@@ -5212,51 +5215,51 @@ igk_appendProp(__prop, {
 	};
 
 
-function __igk_event(q,p,n){
-	var self = this;
-	function __ecall(evt) {
-		if (evt.propertyName == n) {
-			igk.winui.getEventObjectManager && igk.winui.getEventObjectManager().raise(self.target.o, n);
-		}
+	function __igk_event(q, p, n) {
+		var self = this;
+		function __ecall(evt) {
+			if (evt.propertyName == n) {
+				igk.winui.getEventObjectManager && igk.winui.getEventObjectManager().raise(self.target.o, n);
+			}
 
-	}
-	document.documentElement.attachEvent('onpropertychange', __ecall);
-	if(p)
-	igk_appendProp(this, p);
-	igk_appendProp(this, {
-		fordoc: true,
-		target: q,
-		unregister: function () {
-			document.documentElement.detachEvent('onpropertychange', __ecall);
 		}
-	});
-};
-	
-	
+		document.documentElement.attachEvent('onpropertychange', __ecall);
+		if (p)
+			igk_appendProp(this, p);
+		igk_appendProp(this, {
+			fordoc: true,
+			target: q,
+			unregister: function () {
+				document.documentElement.detachEvent('onpropertychange', __ecall);
+			}
+		});
+	};
+
+
 	// extend properties
 	// _base['fill'] = Object.getOwnPropertyDescriptor(this,'fill');
 	// igk.defineProperty(this, 'fill',  {get:function(){ return _base['fill'].get.apply(_q); }, set: function(v){
-		// if (!_ri)
-			// _base['fill'].set(v);
+	// if (!_ri)
+	// _base['fill'].set(v);
 	// }});
-	function igk_extendProperty(o, n, p){
+	function igk_extendProperty(o, n, p) {
 		if (!o)
 			return !1;
-		var h = Object.getOwnPropertyDescriptor(o, n ) || Object.getOwnPropertyDescriptor(o, n );
+		var h = Object.getOwnPropertyDescriptor(o, n) || Object.getOwnPropertyDescriptor(o, n);
 		var e = {};
-		if (('get' in p) && ('get' in h)){
-			e.get = function(){
+		if (('get' in p) && ('get' in h)) {
+			e.get = function () {
 				return p.get.apply(this, [h.get]);
 			};
 		}
-		if (('set' in p) && ('set' in h)){
-			e.set = function(v){
+		if (('set' in p) && ('set' in h)) {
+			e.set = function (v) {
 				return p.set.apply(this, [v, h.set]);
 			};
-		}		
+		}
 		igk.defineProperty(o, n, e);
 	};
-	
+
 
 	// >namespace: igk
 	createNS("igk", {
@@ -5283,14 +5286,14 @@ function __igk_event(q,p,n){
 		isUndef: isUndef,
 		initObj: igk_initobj,
 		// function (o, def) {
-			// if (o == null || typeof (o) !== "object")
-				// return def;
-			// for (var i in def) {
-				// if ((i in o) == false) {
-					// o[i] = def[i];
-				// }
-			// }
-			// return o;
+		// if (o == null || typeof (o) !== "object")
+		// return def;
+		// for (var i in def) {
+		// if ((i in o) == false) {
+		// o[i] = def[i];
+		// }
+		// }
+		// return o;
 		// },		
 		createNode: function (tag, ns) {
 			if (!tag)
@@ -5334,7 +5337,7 @@ function __igk_event(q,p,n){
 				return s;
 			}
 			return null;
-			
+
 		},
 		createText: function (s) {
 			return __igk(document.createTextNode(s));
@@ -5344,7 +5347,7 @@ function __igk_event(q,p,n){
 			return igk.createText(o.textContent);
 		},
 		clearTimeout: function (timeout) {
-			
+
 			window.clearTimeout(timeout);
 		},
 		eval: igk_eval,
@@ -5359,8 +5362,8 @@ function __igk_event(q,p,n){
 			var uri = null;
 			var p = m_scriptTag;// get the current script tag
 			if (p) {
-				
-				
+
+
 				uri = igk.constants.http_scheme + document.domain + igk_getdir(window.location.pathname + "") + "/" + igk_getdir(p.getAttribute("src")) + "/" + filename;
 			}
 
@@ -5425,7 +5428,7 @@ function __igk_event(q,p,n){
 			});
 		},
 		canInvoke: function () {
-			return (window.external)  &&  (('notify' in window.external) || (typeof (window.external.callFunc) != igk.constants.undef));
+			return (window.external) && (('notify' in window.external) || (typeof (window.external.callFunc) != igk.constants.undef));
 			// return ('notify' in window.external) || window.external && (typeof (window.external.callFunc) != igk.constants.undef);
 		},
 		invoke: function (method, params) {// used to invoke external script function	
@@ -5433,14 +5436,14 @@ function __igk_event(q,p,n){
 			var n = 0;
 			var fc = null;
 			var _out = 0;
-			var _json = {method: method};
+			var _json = { method: method };
 			if (params) {
-				if (typeof (params) == 'object'){					
-					params = igk.JSON.convertToString(params);			
+				if (typeof (params) == 'object') {
+					params = igk.JSON.convertToString(params);
 				}
 				_json.param = params;
 			}
-		
+
 
 			if ((igk.navigator.IEVersion() <= 7.0) || ('notify' in window.external)) {
 				try {
@@ -5500,8 +5503,8 @@ function __igk_event(q,p,n){
 			__applyPreloadDocument(document);
 			__initDocSetting = s;
 		},
-		alert:function(m, t){
-			igk_show_notify_msg(t || 'alert', m);			
+		alert: function (m, t) {
+			igk_show_notify_msg(t || 'alert', m);
 		},
 		console_debug: igk_console_debug,
 		show_prop: igk_show_prop,
@@ -5541,54 +5544,52 @@ function __igk_event(q,p,n){
 		appendProperties: igk_appendProp,
 		defineProperty: igk_defineProperty,
 		extendProperty: igk_extendProperty,
-		defineEnum: igk_defineEnum, 
+		defineEnum: igk_defineEnum,
 		checkOnePropertyExists: igk_checkOnePropertyExists,
 		checkAllPropertyExists: igk_checkAllPropertyExists,
 		callfunction: igk_callfunction,
-		appendChain: function(q, n, func){
-		
-		 switch(typeof(q[n]))
-		 {
-			 case 'function':
-				var fc = q[n];
-				
-				q[n] = function(){
-					fc.apply(q, arguments);
-					func.apply(q, arguments);
-				};
-				return 1;
-				
-			case 'undefined':	
-				q[n] = func;
-				return 1;
-		}
-		return 0;
-	},
-		prependChain:function(q, n, func){
-			
-			 switch(typeof(q[n]))
-			 {
-				 case 'function':
+		appendChain: function (q, n, func) {
+
+			switch (typeof (q[n])) {
+				case 'function':
 					var fc = q[n];
-					
-					q[n] = function(){
-						func.apply(q, arguments);
+
+					q[n] = function () {
 						fc.apply(q, arguments);
+						func.apply(q, arguments);
 					};
 					return 1;
-					
-				case 'undefined':	
+
+				case 'undefined':
 					q[n] = func;
 					return 1;
 			}
 			return 0;
 		},
-		pushFunction: function(f, fc){
+		prependChain: function (q, n, func) {
+
+			switch (typeof (q[n])) {
+				case 'function':
+					var fc = q[n];
+
+					q[n] = function () {
+						func.apply(q, arguments);
+						fc.apply(q, arguments);
+					};
+					return 1;
+
+				case 'undefined':
+					q[n] = func;
+					return 1;
+			}
+			return 0;
+		},
+		pushFunction: function (f, fc) {
 			//utility function used push 
 			var _s = f;
-			if (_s==null)
+			if (_s == null)
 				return fc;
-			_s = function(){
+			_s = function () {
 				f.apply(this, arguments);
 				fc.apply(this, arguments);
 			};
@@ -5606,7 +5607,7 @@ function __igk_event(q,p,n){
 			if (item.querySelectorAll) {
 				var p = item.querySelectorAll(pattern);
 				for (var i = 0; i < p.length; i++) {
-					
+
 					v_sl.push($igk(p[i]));
 				}
 			}
@@ -5622,10 +5623,10 @@ function __igk_event(q,p,n){
 			// query selector detection
 			var v_list = pattern.split(',');
 			if (v_list.length > 1) {
-				
+
 				for (var sm = 0; sm < v_list.length; sm++) {
 					var v_cq = igk.select(item, v_list[sm]);
-					
+
 					if (v_cq.getCount() > 0) {
 						v_sl.load(v_cq);
 					}
@@ -5661,9 +5662,9 @@ function __igk_event(q,p,n){
 			if (igk.system.string.startWith(pattern, '^')) {
 				//+ parent search 
 				// sample : ^div
-				
+
 				var spattern = pattern.split(" ");
-				
+
 				pattern = spattern[0];
 
 				if ((/^\^[\w\-_]+$/.exec(pattern))) {
@@ -5703,7 +5704,7 @@ function __igk_event(q,p,n){
 				// search on next sibling
 				var h = $igk(item).o.nextSibling;
 				var spattern = pattern.substr(1).split(" ");
-				
+
 				pattern = spattern[0];
 				while (h) {
 					if (igk.css.isMatch(h, pattern)) {
@@ -5759,7 +5760,7 @@ function __igk_event(q,p,n){
 						break;
 				}
 
-				
+
 				if (!item.getElementsByTagName) {
 					// return empty selection. becoause of item not supported getElementsByTagName
 					if (igk.DEBUG) console.debug("/!\ selection will failed because element not support getElementByTagName");
@@ -5804,7 +5805,7 @@ function __igk_event(q,p,n){
 					}
 					else if ((/^\>[\w\-_]+$/.exec(pattern))) {// search by child node tagname
 						// if(igk.DEBUG) 
-						
+
 						pattern = pattern.substring(1);
 						exp = new RegExp("(" + pattern + ")", "i");
 						for (var i = 0; i < v_it.length; i++) {
@@ -5815,7 +5816,7 @@ function __igk_event(q,p,n){
 						}
 					}
 					else {
-						
+
 						if ((igk.constants.regex.idSearch.exec(pattern))) {// search in id
 							fid = !0;
 							pattern = pattern.substring(1);
@@ -5828,15 +5829,15 @@ function __igk_event(q,p,n){
 							}
 						}
 						else {
-							
-							
+
+
 							var m = igk_select_exp(pattern);
 							// if(pattern==".igk-body#query-s-r"){
-							
-							
+
+
 							// m.debug=1;
 							// }
-							
+
 							if (m != null) {
 								m.select(v_sl, item);
 							}
@@ -5887,33 +5888,33 @@ function __igk_event(q,p,n){
 				m_readyGlobalFunc[m_readyGlobalFunc.length] = func;
 			}
 		},
-		isdevelop: function(){
-			if (typeof(__isdev)=='undefined'){
-				__isdev = igk.getScriptLocation().location.split('/').pop()== __devscript;
+		isdevelop: function () {
+			if (typeof (__isdev) == 'undefined') {
+				__isdev = igk.getScriptLocation().location.split('/').pop() == __devscript;
 			}
 			return __isdev;
 		},
 		readyinvoke: function (n) {// call this function in script that have source content 
-		
+
 			//executing script name
-			
-			
-			
-			
-		
+
+
+
+
+
 			var s = igk_getCurrentScript();
 			var t = igk.system.array.slice(arguments, 1);
 			igk.ready(function () {
 				// script :  readyinvoke
-				
+
 				var ns = igk.system.getNS(n);
 				if (typeof (ns) == 'function') {
 					var bck = m_scriptNode;
 					m_scriptNode = s;
 					ns.apply(s, t);
 					m_scriptNode = bck;
-				}else if (igk.isdevelop()){
-					console.debug(n+ " : not found");
+				} else if (igk.isdevelop()) {
+					console.debug(n + " : not found");
 				}
 			});
 		},
@@ -5924,7 +5925,7 @@ function __igk_event(q,p,n){
 			// if (typeof(document.DOMContentLoad) == 'undefined'){
 			// return;
 			// }
-			
+
 			priority = igk.isDefine(priority, 10);
 			var k = "igk.event.contentLoad";
 			var g = igk.system.getNS(k) || igk.system.createNS(k, { isRegister: 0 });
@@ -5954,14 +5955,14 @@ function __igk_event(q,p,n){
 		ready: function (func, sys) {
 			// ready function
 			// sys call by system
-			function _async_call(e, document, i){
+			function _async_call(e, document, i) {
 				//@i : name of the measurement function for 'warning duration violation' raise in chrome
-				 // if (i=="f5")
-					  
-				setTimeout(function(){
-					
+				// if (i=="f5")
+
+				setTimeout(function () {
+
 					e.apply(document);
-				},10);
+				}, 10);
 			}
 
 			if ((func == null) || (func == 0)) {
@@ -5989,7 +5990,7 @@ function __igk_event(q,p,n){
 					for (var i = 0; i < readyFunc.length; i++) {
 						e = readyFunc[i];
 						try {
-							_async_call(e, document, "f"+i);
+							_async_call(e, document, "f" + i);
 							// e.apply(document);
 						}
 						catch (ex) {
@@ -6183,17 +6184,17 @@ function __igk_event(q,p,n){
 
 			igk.initprop(this);
 		},
-		initprop: function(element) {
-			
-			
+		initprop: function (element) {
+
+
 			// end __igk_nodeProperty
 
 			if (typeof (element.igk) == igk.constants.undef) {
 				// build element igk property
 				(function () {
-					
+
 					this.igk = new __igk_nodeProperty(element);
-					
+
 					this.igk.$ = window.igk;
 
 				}).apply(element);
@@ -6212,8 +6213,8 @@ function __igk_event(q,p,n){
 			}// endif
 			// element.igk.$=window.igk;
 		},
-		
-		
+
+
 		getNumber: igk_getNumber,// expose get number function
 		getUnit: igk_getUnit,// expose get unit
 		getPixel: igk_getPixel // igk.getPixel
@@ -6306,9 +6307,9 @@ function __igk_event(q,p,n){
 		if (n.isIE() && n.IEVersion() <= 11) {
 			b.addClass("ie-11-service");// no support of css 3 setting
 		}
-		
+
 		//
-		if (n.isSafari()){
+		if (n.isSafari()) {
 			b.addClass("safari"); //.igk.dom.body();
 		}
 	});
@@ -6360,12 +6361,12 @@ function __igk_event(q,p,n){
 				}
 			},
 			publish: function (n, prop) {
-				
+
 				var e = m_publisher[n];
 				if (typeof (e) == IGK_UNDEF)
 					return;
 				// m_names.push(n);
-				
+
 				// array copy
 				var tab = [];
 				for (var i = 0; i < e.s.getCount(); i++) {
@@ -6389,7 +6390,7 @@ function __igk_event(q,p,n){
 					}
 				}
 				else {
-					
+
 					for (var i in ns) {
 						if (obj.constructor == ns[i])
 							return i;
@@ -6479,7 +6480,7 @@ function __igk_event(q,p,n){
 			if (_js_version != -1)
 				return _js_version;
 			var _body = igk.dom.body();
-			
+
 
 			var t = ["1.1", "1.2", "1.3", "1.4",
 				"1.5", "1.6", "1.7", "1.8", "1.8.1", "1.8.5", "1.9"
@@ -6507,16 +6508,16 @@ function __igk_event(q,p,n){
 		},
 		checkupdate: function (uri, v) {
 
-			var q = $igk(igk.getParentScript()); 
-			
-			
+			var q = $igk(igk.getParentScript());
+
+
 			(function () {
 				igk.io.file.load(uri, function (d) {
-					
-					
+
+
 					if (!d.error) {
 						var c = igk.createNode("dummy");
-						var d =  igk.utils.getBodyContent(d.data);
+						var d = igk.utils.getBodyContent(d.data);
 						c.setHtml(d);
 						var m = c.getElementsByTagName("Message")[0];
 						var s = c.getElementsByTagName("status")[0] || null;
@@ -6524,7 +6525,7 @@ function __igk_event(q,p,n){
 						if (m)
 							q.setHtml(m.innerHTML);
 						else {
-							 q.remove();
+							q.remove();
 						}
 						return;
 					}
@@ -6544,14 +6545,14 @@ function __igk_event(q,p,n){
 				// igk.dom.body().prepend(ob);
 				// ob.reg_event("error",function(evt){			
 				// igk.show_notify_error("Loading ...","check update failed");	
-				
+
 				// });
 
 				// ob.reg_event("load",function(evt){
 				// if(!ob.o.contentDocument || ob.o.contentDocument.readyState!="complete")
 				// return;	
 				// var data=getNodeData(ob.o.contentDocument);
-				
+
 				// ob.remove();
 				// q.remove();
 
@@ -6589,7 +6590,7 @@ function __igk_event(q,p,n){
 					}
 					var k = igk.utils.getBodyContent(d.data);
 					var m = igk.createNode('div').setHtml(k);
-					
+
 					var uk = m.select('ruri').first().o.innerHTML;
 					// var not=igk.winui.notify.getView();
 
@@ -6789,21 +6790,21 @@ function __igk_event(q,p,n){
 		call: function (name, p) {
 			return igk.invoke(name, p);
 			// alert("call .igk.invoke");
-			
-			
+
+
 			// var r = arguments.length > 1 ? igk.system.array.slice(arguments, 1) : IGK_UNDEF;
 			// // check if external is define ie
 			// if (typeof (external) != "undefined") {
-				// r = (typeof (p) == "object") ? igk.JSON.convertToString(p) : r;
-				// try {
-					// if (r == IGK_UNDEF)
-						// return external[name]();
-					// return external[name](r);
-				// } catch (ex) {
-					// igk.show_notify_error("Exception on Call : " + name,
-						// ex + "<br /><pre>" + ex.stack + "</pre>"
-					// );
-				// }
+			// r = (typeof (p) == "object") ? igk.JSON.convertToString(p) : r;
+			// try {
+			// if (r == IGK_UNDEF)
+			// return external[name]();
+			// return external[name](r);
+			// } catch (ex) {
+			// igk.show_notify_error("Exception on Call : " + name,
+			// ex + "<br /><pre>" + ex.stack + "</pre>"
+			// );
+			// }
 			// }
 			// return null;
 		},
@@ -6836,19 +6837,20 @@ function __igk_event(q,p,n){
 			return s;
 		}
 	});
-	
-	
+
+
 	// igk.color namespace
-	var _colors= { transparent: "Transparent", black: "#000", navy: "#00007F", darkblue: "#00008C", mediumblue: "#00C", blue: "#00F", darkgreen: "#006300", green: "#007F00", teal: "#007F7F", darkcyan: "#008C8C", deepskyblue: "#00BFFF", darkturquoise: "#00CED1", mediumspringgreen: "#00F999", lime: "#0F0", springgreen: "#00FF7F", aqua: "#0FF", cyan: "#0FF", midnightblue: "#191970", dodgerblue: "#1E8EFF", lightseagreen: "#21B2AA", forestgreen: "#218C21", seagreen: "#2D8C56", darkslategrey: "#2D4F4F", darkslategray: "#2D4F4F", limegreen: "#3C3", mediumseagreen: "#3DB270", turquoise: "#3FE0D1", royalblue: "#3F68E0", steelblue: "#4482B5", darkslateblue: "#473D8C", mediumturquoise: "#47D1CC", indigo: "#490082", darkolivegreen: "#546B2D", cadetblue: "#5E9EA0", cornflowerblue: "#6393ED", mediumaquamarine: "#6CA", dimgray: "#686868", dimgrey: "#686868", slateblue: "#6B59CC", olivedrab: "#6B8E23", slategrey: "#707F8E", slategray: "#707F8E", lightslategray: "#778799", lightslategrey: "#778799", mediumslateblue: "#7A68ED", lawngreen: "#7CFC00", chartreuse: "#7FFF00", aquamarine: "#7FFFD3", maroon: "#7F0000", purple: "#7F007F", olive: "#7F7F00", grey: "#7F7F7F", gray: "#7F7F7F", skyblue: "#87CEEA", lightskyblue: "#87CEF9", blueviolet: "#892BE2", darkred: "#8C0000", darkmagenta: "#8C008C", saddlebrown: "#8C4411", darkseagreen: "#8EBC8E", lightgreen: "#8EED8E", mediumpurple: "#9370D8", darkviolet: "#9300D3", palegreen: "#99F999", darkorchid: "#93C", yellowgreen: "#9C3", sienna: "#A0512D", brown: "#A52828", darkgrey: "#A8A8A8", darkgray: "#A8A8A8", lightblue: "#ADD8E5", greenyellow: "#ADFF2D", paleturquoise: "#AFEDED", lightsteelblue: "#AFC4DD", powderblue: "#AFE0E5", firebrick: "#B22121", darkgoldenrod: "#B7870A", mediumorchid: "#BA54D3", rosybrown: "#BC8E8E", darkkhaki: "#BCB76B", silver: "#BFBFBF", mediumvioletred: "#C61484", indianred: "#CC5B5B", peru: "#CC843F", chocolate: "#D1681E", tan: "#D1B58C", lightgrey: "#D3D3D3", lightgray: "#D3D3D3", palevioletred: "#D87093", thistle: "#D8BFD8", orchid: "#D870D6", goldenrod: "#D8A521", crimson: "#DB143D", gainsboro: "#DBDBDB", plum: "#DDA0DD", burlywood: "#DDB787", lightcyan: "#E0FFFF", lavender: "#E5E5F9", darksalmon: "#E8967A", violet: "#ED82ED", palegoldenrod: "#EDE8AA", lightcoral: "#EF7F7F", khaki: "#EFE58C", aliceblue: "#EFF7FF", honeydew: "#EFFFEF", azure: "#EFFFFF", sandybrown: "#F4A360", wheat: "#F4DDB2", beige: "#F4F4DB", whitesmoke: "#F4F4F4", mintcream: "#F4FFF9", ghostwhite: "#F7F7FF", salmon: "#F97F72", antiquewhite: "#F9EAD6", linen: "#F9EFE5", lightgoldenrodyellow: "#F9F9D1", oldlace: "#FCF4E5", red: "#F00", magenta: "#F0F", fuchsia: "#F0F", deeppink: "#FF1493", orangered: "#F40", tomato: "#FF6347", hotpink: "#FF68B5", coral: "#FF7F4F", darkorange: "#FF8C00", lightsalmon: "#FFA07A", orange: "#FFA500", lightpink: "#FFB5C1", pink: "#FFBFCC", gold: "#FFD600", peachpuff: "#FFD8BA", navajowhite: "#FFDDAD", moccasin: "#FFE2B5", bisque: "#FFE2C4", mistyrose: "#FFE2E0", blanchedalmond: "#FFEACC", papayawhip: "#FFEFD6", lavenderblush: "#FFEFF4", seashell: "#FFF4ED", cornsilk: "#FFF7DB", lemonchiffon: "#FFF9CC", floralwhite: "#FFF9EF", snow: "#FFF9F9", yellow: "#FF0", lightyellow: "#FFFFE0", ivory: "#FFFFEF", white: "#FFF" };
-	
+	var _colors = { transparent: "Transparent", black: "#000", navy: "#00007F", darkblue: "#00008C", mediumblue: "#00C", blue: "#00F", darkgreen: "#006300", green: "#007F00", teal: "#007F7F", darkcyan: "#008C8C", deepskyblue: "#00BFFF", darkturquoise: "#00CED1", mediumspringgreen: "#00F999", lime: "#0F0", springgreen: "#00FF7F", aqua: "#0FF", cyan: "#0FF", midnightblue: "#191970", dodgerblue: "#1E8EFF", lightseagreen: "#21B2AA", forestgreen: "#218C21", seagreen: "#2D8C56", darkslategrey: "#2D4F4F", darkslategray: "#2D4F4F", limegreen: "#3C3", mediumseagreen: "#3DB270", turquoise: "#3FE0D1", royalblue: "#3F68E0", steelblue: "#4482B5", darkslateblue: "#473D8C", mediumturquoise: "#47D1CC", indigo: "#490082", darkolivegreen: "#546B2D", cadetblue: "#5E9EA0", cornflowerblue: "#6393ED", mediumaquamarine: "#6CA", dimgray: "#686868", dimgrey: "#686868", slateblue: "#6B59CC", olivedrab: "#6B8E23", slategrey: "#707F8E", slategray: "#707F8E", lightslategray: "#778799", lightslategrey: "#778799", mediumslateblue: "#7A68ED", lawngreen: "#7CFC00", chartreuse: "#7FFF00", aquamarine: "#7FFFD3", maroon: "#7F0000", purple: "#7F007F", olive: "#7F7F00", grey: "#7F7F7F", gray: "#7F7F7F", skyblue: "#87CEEA", lightskyblue: "#87CEF9", blueviolet: "#892BE2", darkred: "#8C0000", darkmagenta: "#8C008C", saddlebrown: "#8C4411", darkseagreen: "#8EBC8E", lightgreen: "#8EED8E", mediumpurple: "#9370D8", darkviolet: "#9300D3", palegreen: "#99F999", darkorchid: "#93C", yellowgreen: "#9C3", sienna: "#A0512D", brown: "#A52828", darkgrey: "#A8A8A8", darkgray: "#A8A8A8", lightblue: "#ADD8E5", greenyellow: "#ADFF2D", paleturquoise: "#AFEDED", lightsteelblue: "#AFC4DD", powderblue: "#AFE0E5", firebrick: "#B22121", darkgoldenrod: "#B7870A", mediumorchid: "#BA54D3", rosybrown: "#BC8E8E", darkkhaki: "#BCB76B", silver: "#BFBFBF", mediumvioletred: "#C61484", indianred: "#CC5B5B", peru: "#CC843F", chocolate: "#D1681E", tan: "#D1B58C", lightgrey: "#D3D3D3", lightgray: "#D3D3D3", palevioletred: "#D87093", thistle: "#D8BFD8", orchid: "#D870D6", goldenrod: "#D8A521", crimson: "#DB143D", gainsboro: "#DBDBDB", plum: "#DDA0DD", burlywood: "#DDB787", lightcyan: "#E0FFFF", lavender: "#E5E5F9", darksalmon: "#E8967A", violet: "#ED82ED", palegoldenrod: "#EDE8AA", lightcoral: "#EF7F7F", khaki: "#EFE58C", aliceblue: "#EFF7FF", honeydew: "#EFFFEF", azure: "#EFFFFF", sandybrown: "#F4A360", wheat: "#F4DDB2", beige: "#F4F4DB", whitesmoke: "#F4F4F4", mintcream: "#F4FFF9", ghostwhite: "#F7F7FF", salmon: "#F97F72", antiquewhite: "#F9EAD6", linen: "#F9EFE5", lightgoldenrodyellow: "#F9F9D1", oldlace: "#FCF4E5", red: "#F00", magenta: "#F0F", fuchsia: "#F0F", deeppink: "#FF1493", orangered: "#F40", tomato: "#FF6347", hotpink: "#FF68B5", coral: "#FF7F4F", darkorange: "#FF8C00", lightsalmon: "#FFA07A", orange: "#FFA500", lightpink: "#FFB5C1", pink: "#FFBFCC", gold: "#FFD600", peachpuff: "#FFD8BA", navajowhite: "#FFDDAD", moccasin: "#FFE2B5", bisque: "#FFE2C4", mistyrose: "#FFE2E0", blanchedalmond: "#FFEACC", papayawhip: "#FFEFD6", lavenderblush: "#FFEFF4", seashell: "#FFF4ED", cornsilk: "#FFF7DB", lemonchiffon: "#FFF9CC", floralwhite: "#FFF9EF", snow: "#FFF9F9", yellow: "#FF0", lightyellow: "#FFFFE0", ivory: "#FFFFEF", white: "#FFF" };
+
 	createNS("igk.system.colors", {}); // transparent: "Transparent", black: "#000", navy: "#00007F", darkblue: "#00008C", mediumblue: "#00C", blue: "#00F", darkgreen: "#006300", green: "#007F00", teal: "#007F7F", darkcyan: "#008C8C", deepskyblue: "#00BFFF", darkturquoise: "#00CED1", mediumspringgreen: "#00F999", lime: "#0F0", springgreen: "#00FF7F", aqua: "#0FF", cyan: "#0FF", midnightblue: "#191970", dodgerblue: "#1E8EFF", lightseagreen: "#21B2AA", forestgreen: "#218C21", seagreen: "#2D8C56", darkslategrey: "#2D4F4F", darkslategray: "#2D4F4F", limegreen: "#3C3", mediumseagreen: "#3DB270", turquoise: "#3FE0D1", royalblue: "#3F68E0", steelblue: "#4482B5", darkslateblue: "#473D8C", mediumturquoise: "#47D1CC", indigo: "#490082", darkolivegreen: "#546B2D", cadetblue: "#5E9EA0", cornflowerblue: "#6393ED", mediumaquamarine: "#6CA", dimgray: "#686868", dimgrey: "#686868", slateblue: "#6B59CC", olivedrab: "#6B8E23", slategrey: "#707F8E", slategray: "#707F8E", lightslategray: "#778799", lightslategrey: "#778799", mediumslateblue: "#7A68ED", lawngreen: "#7CFC00", chartreuse: "#7FFF00", aquamarine: "#7FFFD3", maroon: "#7F0000", purple: "#7F007F", olive: "#7F7F00", grey: "#7F7F7F", gray: "#7F7F7F", skyblue: "#87CEEA", lightskyblue: "#87CEF9", blueviolet: "#892BE2", darkred: "#8C0000", darkmagenta: "#8C008C", saddlebrown: "#8C4411", darkseagreen: "#8EBC8E", lightgreen: "#8EED8E", mediumpurple: "#9370D8", darkviolet: "#9300D3", palegreen: "#99F999", darkorchid: "#93C", yellowgreen: "#9C3", sienna: "#A0512D", brown: "#A52828", darkgrey: "#A8A8A8", darkgray: "#A8A8A8", lightblue: "#ADD8E5", greenyellow: "#ADFF2D", paleturquoise: "#AFEDED", lightsteelblue: "#AFC4DD", powderblue: "#AFE0E5", firebrick: "#B22121", darkgoldenrod: "#B7870A", mediumorchid: "#BA54D3", rosybrown: "#BC8E8E", darkkhaki: "#BCB76B", silver: "#BFBFBF", mediumvioletred: "#C61484", indianred: "#CC5B5B", peru: "#CC843F", chocolate: "#D1681E", tan: "#D1B58C", lightgrey: "#D3D3D3", lightgray: "#D3D3D3", palevioletred: "#D87093", thistle: "#D8BFD8", orchid: "#D870D6", goldenrod: "#D8A521", crimson: "#DB143D", gainsboro: "#DBDBDB", plum: "#DDA0DD", burlywood: "#DDB787", lightcyan: "#E0FFFF", lavender: "#E5E5F9", darksalmon: "#E8967A", violet: "#ED82ED", palegoldenrod: "#EDE8AA", lightcoral: "#EF7F7F", khaki: "#EFE58C", aliceblue: "#EFF7FF", honeydew: "#EFFFEF", azure: "#EFFFFF", sandybrown: "#F4A360", wheat: "#F4DDB2", beige: "#F4F4DB", whitesmoke: "#F4F4F4", mintcream: "#F4FFF9", ghostwhite: "#F7F7FF", salmon: "#F97F72", antiquewhite: "#F9EAD6", linen: "#F9EFE5", lightgoldenrodyellow: "#F9F9D1", oldlace: "#FCF4E5", red: "#F00", magenta: "#F0F", fuchsia: "#F0F", deeppink: "#FF1493", orangered: "#F40", tomato: "#FF6347", hotpink: "#FF68B5", coral: "#FF7F4F", darkorange: "#FF8C00", lightsalmon: "#FFA07A", orange: "#FFA500", lightpink: "#FFB5C1", pink: "#FFBFCC", gold: "#FFD600", peachpuff: "#FFD8BA", navajowhite: "#FFDDAD", moccasin: "#FFE2B5", bisque: "#FFE2C4", mistyrose: "#FFE2E0", blanchedalmond: "#FFEACC", papayawhip: "#FFEFD6", lavenderblush: "#FFEFF4", seashell: "#FFF4ED", cornsilk: "#FFF7DB", lemonchiffon: "#FFF9CC", floralwhite: "#FFF9EF", snow: "#FFF9F9", yellow: "#FF0", lightyellow: "#FFFFE0", ivory: "#FFFFEF", white: "#FFF" });
-	for(var c in _colors){
+	for (var c in _colors) {
 		igk_defineProperty(igk.system.colors, c, {
-			get: (function(c){
-					return function(){
-				return _colors[c];
-			}})(c),
-			configurable : false,
+			get: (function (c) {
+				return function () {
+					return _colors[c];
+				}
+			})(c),
+			configurable: false,
 			enumerable: true
 		});
 	}
@@ -6901,7 +6903,7 @@ function __igk_event(q,p,n){
 			// h=(h / 255 * 360) % 360;
 			// s=(s / 255);
 			// v=(v / 255);
-			
+
 			// if(s==0)
 			// {
 			// // If s is 0,all colors are the same.
@@ -6977,7 +6979,7 @@ function __igk_event(q,p,n){
 	}
 	createNS("igk.system.colors", {
 		toFloatArray: function (n) { // convert expression color to float array of argb
-			
+
 			var c = 0;// igk.system.colors[n.toLowerCase()];
 			if (igk.isInteger(n)) {
 
@@ -7139,9 +7141,9 @@ function __igk_event(q,p,n){
 
 	function __dom_get_root(e) {
 		var r = null;
-		
+
 		// igk.DEBUG=1;
-		
+
 		// igk.DEBUG=0;	
 		$igk(e).select(">>").each(function () {
 			if (this.o.nodeType == 1) {
@@ -7150,7 +7152,7 @@ function __igk_event(q,p,n){
 			}
 			return true;
 		});
-		
+
 		return r;
 
 	};
@@ -7173,11 +7175,11 @@ function __igk_event(q,p,n){
 				throw '[BJS] - body not yet loaded';
 			return __body;
 		},
-		html: function(){
-			if (!__html){
+		html: function () {
+			if (!__html) {
 				var c = document.getElementsByTagName('html');
-				if (c.length>0)
-				__html = $igk(c[0]);
+				if (c.length > 0)
+					__html = $igk(c[0]);
 			}
 			return __html;
 		},
@@ -7210,12 +7212,12 @@ function __igk_event(q,p,n){
 			var cs = 1;
 			ns = ns || "http://www.w3.org/1999/xhtml";
 
-			
+
 			if (document.implementation) {
 				// if(typeof(document.implementation.createHTMLDocument) !=igk.constants.undef){
 				// d=document.implementation.createHTMLDocument('');
 				// }else 
-				
+
 				if (typeof (document.implementation.createDocument) != igk.constants.undef) {
 					// in ie createDocument create an XMLDocument object
 					d = document.implementation.createDocument(null, t, null);
@@ -7224,7 +7226,7 @@ function __igk_event(q,p,n){
 			} else {
 
 				if (igk.navigator.$ActiveXObject()) {
-					
+
 					d = __new_activeDocumentObject(); // new ActiveXObject("htmlfile");
 					cs = 0; // disable the register event location
 
@@ -7233,7 +7235,7 @@ function __igk_event(q,p,n){
 
 			if (d) {
 				if (cs && !d.load) {
-					
+
 					d.load = function (l, callback) {
 						m_cb = callback;
 						var fc = d.async ? function (xhr) {
@@ -7242,7 +7244,7 @@ function __igk_event(q,p,n){
 							e.initEvent("readystatechange", false, false);
 							e.readyState = xhr.readyState;
 							e.xhr = xhr;
-							
+
 							if ((xhr.readyState == 4) && (xhr.status == 200)) {
 								__replace_xml_doc(d, xhr.responseText);
 								if (m_cb)
@@ -7262,7 +7264,7 @@ function __igk_event(q,p,n){
 					d.async = 1;
 				}
 				else if (d.load && d.async) {
-					
+
 					var bfc = d.load;
 					// replace load function					
 					d.load = function (l, callback) {
@@ -7271,7 +7273,7 @@ function __igk_event(q,p,n){
 						return d;
 					};
 					// __igk(d).reg_event("load",function(){
-					
+
 					// });
 					__igk(d).reg_event("readystatechange", function () {
 						if (m_cb && ((d.readyState == "complete") || (d.readyState == 4))) {
@@ -7338,46 +7340,46 @@ function __igk_event(q,p,n){
 				var xsltProcessor = new XSLTProcessor();
 				xsltProcessor.importStylesheet(xsl);
 				ex = xsltProcessor.transformToFragment(xml, document);
-				
-				
-				
+
+
+
 				if (ex) {
 					// get root node
 					ex = __dom_get_root(ex);
 				}
 
 			} else if (igk.navigator.$ActiveXObject() || (xml.responseType == "msxml-document")) {
-				
+
 				if (xml.responseType == "msxml-document") {
 					ex = xml.transformNode(xsl);
 				} else {
-					
+
 					var srcTree = new ActiveXObject("Msxml2.DOMDocument.6.0");
 					srcTree.async = false;
 					// You can substitute other XML file names here.
-					
-					
-					
+
+
+
 					// srcTree.documentElement=xml.documentElement;
-					
-					
+
+
 					srcTree.loadXML($igk(xml.documentElement).getOuterHtml());
 
 
 					if (srcTree.parseError.errorCode != 0)
 						console.debug("srcTree : error code " + srcTree.parseError.errorCode + " : " + srcTree.parseError.reason);
 
-					
-					
+
+
 					var xsltTree = new ActiveXObject("Msxml2.DOMDocument.6.0");
 					xsltTree.async = false;
 					xsltTree.validateOnParse = false;
 					xsltTree.loadXML($igk(xsl.documentElement).getOuterHtml());
 					if (xsltTree.parseError.errorCode != 0)
 						console.debug("xsl : error code " + xsltTree.parseError.errorCode + " : " + xsltTree.parseError.reason);
-					
+
 					ex = igk.dom.loadXML(srcTree.transformNode(xsltTree));
-				
+
 				}
 			}
 
@@ -7400,15 +7402,15 @@ function __igk_event(q,p,n){
 				xsltTree.async = false;
 				xsltTree.validateOnParse = false;
 				xsltTree.loadXML(sxsl);
-				
+
 				// xsltTree.replaceChild(xsl.documentElement,xsltTree.xml);
 				if (xsltTree.parseError.errorCode != 0) {
 					console.debug("xsl : error code " + xsltTree.parseError.errorCode + " : " + xsltTree.parseError.reason);
 					return 0;
 				}
-				
 
-				
+
+
 				ex = igk.dom.loadXML(srcTree.transformNode(xsltTree));
 			}
 			else {
@@ -7419,7 +7421,7 @@ function __igk_event(q,p,n){
 					var xsl = igk.dom.loadXML(sxsl);
 					var xml = igk.dom.loadXML(sxml);
 					if (xsl && xml) {
-						
+
 						var dsl = document.implementation.createDocument(null, 'xml', null);// msxml-document');
 						// 	  alert(dsl.documentElement);
 						dsl.replaceChild(xsl, dsl.documentElement);
@@ -7431,13 +7433,13 @@ function __igk_event(q,p,n){
 
 						xsltProcessor.importStylesheet(dsl);
 						ex = xsltProcessor.transformToFragment(dxl, document);
-						
-						
+
+
 
 						// if(ex){
 						// get root node
-						
-						
+
+
 						// ex=__dom_get_root(ex);
 						// }
 					}
@@ -7453,18 +7455,18 @@ function __igk_event(q,p,n){
 				doc.async = true;
 				doc.load && doc.load(u_xml,
 					function (evt) {
-						
+
 						var doc2 = igk.dom.createDocument();
 						doc2.async = false;
 						doc2.validateOnParse = false;
 						var xsl = doc2.load(u_xsl);
 						var _ch = igk.navigator.isChrome() || igk.navigator.isSafari();
-						
-						
-						
-						
-						
-						
+
+
+
+
+
+
 						if (_ch) {
 							var dh = null;
 							// correct html tag tag because ignore by those navigator implementation
@@ -7478,7 +7480,7 @@ function __igk_event(q,p,n){
 
 						if (_ch && (ex.tagName.toLowerCase() == "igk-html")) {
 							ex = $igk(ex).replaceTagWith("html").o;
-							
+
 							// igk.DEBUG=1;
 							// order is important
 							$igk(ex).select(" igk-th,igk-td,igk-tr,igk-table").each(function () {
@@ -7487,7 +7489,7 @@ function __igk_event(q,p,n){
 							});
 							// igk.DEBUG=0;
 						}
-						
+
 						ex && callback(ex);
 					}
 				);
@@ -7518,14 +7520,14 @@ function __igk_event(q,p,n){
 			if ("DOMParser" in window) {
 				var g = (new window.DOMParser()).parseFromString(s, "text/xml");
 				r = __dom_get_root(g);
-				
+
 				if (r && r.tagName.toLowerCase() == "parsererror") {
 					return null;
 				}
 			}
 			else {
 				// TODO
-				
+
 				r = igk.dom.activeXDocument();
 				r.load(s);
 
@@ -7560,12 +7562,12 @@ function __igk_event(q,p,n){
 					var opts = igk.JSON.parse(_y.getAttribute("xslt:data"));
 					var rgx = 0;
 					if (opts) {
-						
+
 						for (var s in opts) {
 							rgx = new RegExp("%" + s + "%", "g");
 							_dxsl = _dxsl.replace(rgx, opts[s]);
 						}
-						
+
 					}
 
 
@@ -7649,7 +7651,7 @@ function __igk_event(q,p,n){
 			parse: function (js, target) {
 				var q = null;
 				source = target;
-				
+
 				try {
 					if ((js != null) && (typeof (js) == "string"))
 						q = eval('(' + js + ')');
@@ -7719,7 +7721,7 @@ function __igk_event(q,p,n){
 		}
 		// else{
 		// igk.winui.notify.showErrorInfo("Error ","Item not found : "+s + " | "+q);
-		
+
 		// }
 		return null;
 	};
@@ -7732,11 +7734,8 @@ function __igk_event(q,p,n){
 			else {
 				frm.submit();
 			}
-
 		}
 	}
-	
-
 	createNS("igk.form", {
 		keypress_validate: function (i, event) {
 			var frm = null;
@@ -7898,7 +7897,7 @@ function __igk_event(q,p,n){
 					if (v) {
 						igk.ajx.fn.replace_content(v.o);
 					}
-					else{
+					else {
 						igk.ajx.fn.replace_or_append_to_body.apply(this, [xhr]);
 						// igk.winui.notify.showMsBox("ajx form response not found ", this.xhr.responseText);
 					}
@@ -7911,7 +7910,7 @@ function __igk_event(q,p,n){
 	// web utility functions
 	createNS("igk.web", {
 		setcookies: function (name, value, exdays) {
-		 
+
 			var exdate = new Date();
 			if (exdays)
 				exdate.setDate(exdate.getDate() + exdays);
@@ -8004,10 +8003,10 @@ function __igk_event(q,p,n){
 			var s = e.stack + "";
 			var t = s.trim().split("\n");
 
-			
-			
-			
-			
+
+
+
+
 			// var tt=t[c];
 			// get chain list
 			var li = [];
@@ -8018,21 +8017,21 @@ function __igk_event(q,p,n){
 			for (var i = 0; i < t.length; i++) {
 				if (regex.test(t[i])) {
 					li.push(t[i]);
-					
+
 				}
 			}
 			c = c || li.length - 1;
 			var tt = li[c];
 			if (tt) {
 				var uri = regex.exec(tt)[0];
-				
-				
+
+
 				_m.module_src = uri;// module start source
 				_m.dir = uri.substring(0, uri.lastIndexOf("/"));
 			}
 			_m.stack = e.stack;
 			_m.stack_list = li;
-			
+
 
 		} else {
 			// can't get stack in strick mode or SAFARI < 6
@@ -8051,25 +8050,25 @@ function __igk_event(q,p,n){
 	// define the a module script. set the root module
 	function igk_defineModule(n) {
 		m_currentModule = n;
-		
+
 		//try {
 		var e = new Error();
-		
-		//catch (e) {
-			// get stack info
-			var _m = {
-				name: n,
-				module_src: null,
-				dir: null
-			};
 
-			igk.error.lastError = e;
-			if (igk_get_trace_info(_m, e, 1)) {
-				m_module_info = _m;
-				m_moduleList[n] = _m;
-			} else {
-				m_module_info = null;
-			}
+		//catch (e) {
+		// get stack info
+		var _m = {
+			name: n,
+			module_src: null,
+			dir: null
+		};
+
+		igk.error.lastError = e;
+		if (igk_get_trace_info(_m, e, 1)) {
+			m_module_info = _m;
+			m_moduleList[n] = _m;
+		} else {
+			m_module_info = null;
+		}
 
 		//}
 		return _m;
@@ -8089,31 +8088,33 @@ function __igk_event(q,p,n){
 	};
 
 	m_LibScript = igk_getScriptSrc();
-	
-function createObject (T, t, args){
-	for(var j in T.prototype){
-		t[j] = T.prototype[j];
-	}
-	T.apply(t, args);
-	
-};
+
+	function createObject(T, t, args) {
+		for (var j in T.prototype) {
+			t[j] = T.prototype[j];
+		}
+		T.apply(t, args);
+
+	};
 
 	createNS("igk.system", {// system global management namespace
-		createExtensionProperty:function(p,ns, obj){
-			
+		createExtensionProperty: function (p, ns, obj) {
+
 			var prop = ns;
 			var _n = igk_get_namespace(prop);
-			if (typeof(_n) == "undefined"){
+			if (typeof (_n) == "undefined") {
 				_n = createNS(prop, {});
 			}
-			if (typeof(_n[p])=="undefined"){
-				var ob = new __extensionPrototype(p);		 
-				igk_defineProperty(_n, p, {get:function(){
-					return ob;
-				}});  
+			if (typeof (_n[p]) == "undefined") {
+				var ob = new __extensionPrototype(p);
+				igk_defineProperty(_n, p, {
+					get: function () {
+						return ob;
+					}
+				});
 			}
 			if (obj)
-				Object.setPrototypeOf(obj, _n[p]); 
+				Object.setPrototypeOf(obj, _n[p]);
 			return _n[p];
 		},
 		stringProperties: function (o) {
@@ -8142,133 +8143,133 @@ function createObject (T, t, args){
 				throw opts.msg;
 			return r;
 		},
-		isInherit: function(o, A){
-			if (!o || (typeof(o) !='object'))
+		isInherit: function (o, A) {
+			if (!o || (typeof (o) != 'object'))
 				return false;
 			var c = Object.getPrototypeOf(o);
-			while(c){
-				if (c == A){
+			while (c) {
+				if (c == A) {
 					return true;
 				}
 				c = c.prototype;
-				
-				if (c== Object)
+
+				if (c == Object)
 					break;
 			}
 			return false;
 		},
 		createClass: function (ns, tn, constructor, opts) {
-			if(!igk.system.class){
-				igk.system.class = function (){
-				}; 
+			if (!igk.system.class) {
+				igk.system.class = function () {
+				};
 			}
-			if (!constructor){
+			if (!constructor) {
 				console.error("createClass constructor required");
 				return null;
-				
+
 			}
-			
-			
+
+
 			// var tn = '';
 			var p = null;
-			if(typeof(tn) == 'object'){
+			if (typeof (tn) == 'object') {
 				var g = tn;
 				tn = g.name;
 				p = g.parent;
-				
-				if (('parent' in g) && !igk.isDefine(p)){
-					throw ("[igk] - parent not found for "+g.name + " "+p ); 
+
+				if (('parent' in g) && !igk.isDefine(p)) {
+					throw ("[igk] - parent not found for " + g.name + " " + p);
 				}
 			}
-			
-		
-			
-			
+
+
+
+
 			var fc = 0;
 			fc = function () {
 				if (this == ns) {
 					throw (opts ? opts.msg : null) || igk.R.gets("<< new >> operator is require");
 				}
-				if (p){ //invoke parent constructor
+				if (p) { //invoke parent constructor
 					createObject(p, this, arguments);
 				}
 				constructor.apply(this, arguments);
-				
+
 				//bind properties that apply to 
-				
+
 				igk.appendProperties(this, {
 					getTypeFullName: function () {
 						return ns.fullname + "." + tn;
 					},
-					getType:function(){
+					getType: function () {
 						return tn;
 					},
 					isInstanceOf: function (t) {
 						return igk.system.isInherit(this, t);
 					}
 				});
-				
+
 				// this.getTypeFullName = function () {
-					// return ns.fullname + "." + tn;
+				// return ns.fullname + "." + tn;
 				// };
 				// this.isInstanceOf = function (t) {
-					// return this instanceof t;
+				// return this instanceof t;
 				// };
 			};
 			fc.Name = tn;
 			//igk extra info
 			fc.__source__ = 'class';
 			fc.__name__ = tn;
-			igk.defineProperty(fc , 'fullname', {
-				get:function(){
-					return  ns.fullname + '.'+tn;
+			igk.defineProperty(fc, 'fullname', {
+				get: function () {
+					return ns.fullname + '.' + tn;
 				}
 			});
-			fc.__fullname__ = ns.fullname + '.'+tn;
+			fc.__fullname__ = ns.fullname + '.' + tn;
 			// [x].data = "base";
-			
-			
-			
-			
-			
-			
-			
+
+
+
+
+
+
+
 			// igk.appendProperties(fc.prototype, {
-				// getTypeFullName: function () {
-					// return ns.fullname + "." + tn;
-				// },
-				// getType:function(){
-					// return tn;
-				// },
-				// isInstanceOf: function (t) {
-					// return this instanceof t;
-				// }
+			// getTypeFullName: function () {
+			// return ns.fullname + "." + tn;
+			// },
+			// getType:function(){
+			// return tn;
+			// },
+			// isInstanceOf: function (t) {
+			// return this instanceof t;
+			// }
 			// });
-			
-			if (typeof(p)=='string'){
+
+			if (typeof (p) == 'string') {
 				var r = igk.system.getNS(p);
-				if (r == null){
-					
-				
+				if (r == null) {
+
+
 					var bfc = fc;
-					
-					fc = function(){
+
+					fc = function () {
 						var k = igk.system.getNS(p);
-						if (k){
+						if (k) {
 							bfc.prototype = k;
 							ns[tn] = bfc;
-						}else{
-							throw ("not found : "+p);
+						} else {
+							throw ("not found : " + p);
 						}
-						p= k;					
+						p = k;
 						return new bfc();
 					};
-				}else{
+				} else {
 					p = r;
 					fc.prototype = p;
 				}
-			}else{
-				if(p){
+			} else {
+				if (p) {
 					//fc.__igk__prototype = p;
 					// fc.prototype = p.prototype;
 					fc.prototype = p;
@@ -8277,7 +8278,7 @@ function createObject (T, t, args){
 			igk.system.createNS(ns.fullname, {
 				tn: fc
 			});
-			igk.defineProperty(fc, 'name', {get:function(){ return tn; }});
+			igk.defineProperty(fc, 'name', { get: function () { return tn; } });
 			ns[tn] = fc;
 			return fc;
 		},
@@ -8321,10 +8322,10 @@ function createObject (T, t, args){
 		},
 		toString: function () { return "igk.system"; },
 		getNS: igk_get_namespace,
-		require: function(n){
+		require: function (n) {
 			var t = igk_get_namespace(n);
 			if (!t)
-				throw new Error('namespace '+n+' not found');
+				throw new Error('namespace ' + n + ' not found');
 			return t;
 		},
 		include: function (u) {
@@ -8350,17 +8351,17 @@ function createObject (T, t, args){
 				console.assert(c, m);
 		}
 	});
-	
-	
-	
+
+
+
 	function _s(t) {
 		if ((t + "").length <= 1)
 			return "0" + t;
 		return t;
 	};
-	
+
 	// igk.system.color management
-	(function(){
+	(function () {
 		var _cnode = 0; //convertter node with css
 		var S = igk.system;
 		igk.appendProperties(igk.system, {
@@ -8369,49 +8370,49 @@ function createObject (T, t, args){
 				this.g = g;
 				this.b = b;
 				this.a = a ? a : 1.0;
-				
-				
+
+
 				igk.appendProperties(this, {
-				toString: function () {
-					var r = this.r;
-					var g = this.g;
-					var b = this.b;
-					var a = this.a;
-					if (a == 1.0)
-						return "rgb(" + r + "," + g + "," + b + ")";
-					return "rgba(" + r + "," + g + "," + b + "," + a + ")";
-				},
-				toHtml: function () {   // var decColor=b +(256 * g) +(65536 * r);
-					var r = this.r;
-					var g = this.g;
-					var b = this.b;
-					var a = this.a;
-					var decColor = (r << 16) + (g << 8) + b;
-					if (decColor == 0)
-						if (this.a == 0)
-							return "#00000000";
-						else
-							return "#000";						
-					return "#" + decColor.toString(16).padStart(6, '0');
-				},
-				toColorf: function(p){
-					var _r = Math.round;
-					p = Math.pow(100, (p || 5));
-					return {
-						a: 1.0,
-						r: _r( (this.r/255.0)*p)/p,
-						g: _r( (this.g/255.0)*p)/p,
-						b: _r( (this.b/255.0)*p)/p
-					};
-				},
-				toInt: function () { return (this.r << 16) + (this.g << 8) + this.b; },
-				getLuminance: function(){
-					var r, g, b, cl=this;
-					r = cl.r;
-					g = cl.g;
-					b = cl.b;  
-					return ((r * 299) + (g * 587) + (b * 114)) / (255 * 1000.0);    
-				}
+					toString: function () {
+						var r = this.r;
+						var g = this.g;
+						var b = this.b;
+						var a = this.a;
+						if (a == 1.0)
+							return "rgb(" + r + "," + g + "," + b + ")";
+						return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+					},
+					toHtml: function () {   // var decColor=b +(256 * g) +(65536 * r);
+						var r = this.r;
+						var g = this.g;
+						var b = this.b;
+						var a = this.a;
+						var decColor = (r << 16) + (g << 8) + b;
+						if (decColor == 0)
+							if (this.a == 0)
+								return "#00000000";
+							else
+								return "#000";
+						return "#" + decColor.toString(16).padStart(6, '0');
+					},
+					toColorf: function (p) {
+						var _r = Math.round;
+						p = Math.pow(100, (p || 5));
+						return {
+							a: 1.0,
+							r: _r((this.r / 255.0) * p) / p,
+							g: _r((this.g / 255.0) * p) / p,
+							b: _r((this.b / 255.0) * p) / p
+						};
+					},
+					toInt: function () { return (this.r << 16) + (this.g << 8) + this.b; },
+					getLuminance: function () {
+						var r, g, b, cl = this;
+						r = cl.r;
+						g = cl.g;
+						b = cl.b;
+						return ((r * 299) + (g * 587) + (b * 114)) / (255 * 1000.0);
+					}
 				});
 
 			},
@@ -8427,7 +8428,7 @@ function createObject (T, t, args){
 						switch (v.length) {
 							case 8:
 								var result = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(v);
-								
+
 								return Math.round(parseInt(result[1], 16) * 100 / 255) / 100;
 								break;
 							case 4:
@@ -8476,7 +8477,7 @@ function createObject (T, t, args){
 							case 8:
 								var result = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(value);
 								//#FF00FF00 = aaRRGGBB
-								a = parseInt(result[1], 16)/255.0;
+								a = parseInt(result[1], 16) / 255.0;
 								r = parseInt(result[2], 16);
 								g = parseInt(result[3], 16);
 								b = parseInt(result[4], 16);
@@ -8484,7 +8485,7 @@ function createObject (T, t, args){
 							case 4:
 								var result = /^([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i.exec(value);
 								//#F000 = aRGB
-								a = parseInt(result[1] + result[1], 16)/255.0;
+								a = parseInt(result[1] + result[1], 16) / 255.0;
 								r = parseInt(result[2] + result[2], 16);
 								g = parseInt(result[3] + result[3], 16);
 								b = parseInt(result[4] + result[4], 16);
@@ -8505,31 +8506,31 @@ function createObject (T, t, args){
 				}
 				return new igk.system.color(r, g, b, a);
 			},
-			colorfFromString: function(value){
+			colorfFromString: function (value) {
 				return igk.system.colorFromString(value).toColorf();
 			},
-			hsl2rgb:function(h, l, v){
-				if (!_cnode){
+			hsl2rgb: function (h, l, v) {
+				if (!_cnode) {
 					_cnode = igk.createNode("div");
 					//chrome require node to be added
 					if (igk.navigator.getProperty('cssDomRequire'))
 						igk.dom.body().add(_cnode);
 				}
-				_cnode.setCss({backgroundColor:'hsl('+h+','+l+'%, '+v+'%)'});
+				_cnode.setCss({ backgroundColor: 'hsl(' + h + ',' + l + '%, ' + v + '%)' });
 				return S.colorFromString(_cnode.getComputedStyle('backgroundColor'));
 			},
-			hsl2rgbf:function(h, l, v){
-				if (!_cnode){
+			hsl2rgbf: function (h, l, v) {
+				if (!_cnode) {
 					_cnode = igk.createNode("div");
 				}
-				_cnode.setCss({backgroundColor:'hsl('+h+','+l+'%, '+v+'%)'});
+				_cnode.setCss({ backgroundColor: 'hsl(' + h + ',' + l + '%, ' + v + '%)' });
 				return S.colorfFromString(_cnode.getComputedStyle('backgroundColor'));
 			},
-			rgb2hsl: function(r,g,b){
+			rgb2hsl: function (r, g, b) {
 				var min;
 				var max;
 				var delta;
-				var r = r/ 255.0;
+				var r = r / 255.0;
 				var g = g / 255.0;
 				var b = b / 255.0;
 				var h;
@@ -8539,29 +8540,24 @@ function createObject (T, t, args){
 				max = Math.max(Math.max(r, g), b);
 				v = max;
 				delta = max - min;
-				if (max == 0 || delta == 0)
-				{
+				if (max == 0 || delta == 0) {
 					// R, G, and B must be 0, or all the same.
 					// In this case, S is 0, and H is undefined.
 					// Using H = 0 is as good as any...
 					s = 0;
 					h = 0;
 				}
-				else
-				{
+				else {
 					s = delta / max;
-					if (r == max)
-					{
+					if (r == max) {
 						// Between Yellow and Magenta
 						h = (g - b) / delta;
 					}
-					else if (g == max)
-					{
+					else if (g == max) {
 						// Between Cyan and Yellow
 						h = 2 + (b - r) / delta;
 					}
-					else
-					{
+					else {
 						// Between Magenta and Cyan
 						h = 4 + (r - g) / delta;
 					}
@@ -8570,57 +8566,56 @@ function createObject (T, t, args){
 				// This may require adding 360, if the value
 				// is negative.
 				h *= 60;
-				if (h < 0)
-				{
+				if (h < 0) {
 					h += 360;
 				}
 				// Scale to the requirements of this 
 				// application. All values are between 0 and 255.
-				return {h:h, s:(s * 100), l:(v * 100)};
+				return { h: h, s: (s * 100), l: (v * 100) };
 			}
-		
-			
-		});		
-		
+
+
+		});
+
 	})();
-	
-	
+
+
 	//date management
 	createNS("igk.system.Date", {
-		format: function(date, format){
-		     var _date = new Date(date);
-			 
-			 var s = format;
-			 
-			 s = s.replace(/(Y|m|d|H|i|s)/g, function(m){
-				 
-				 switch(m){
-					 case "Y":
-						return  _date.getFullYear();
+		format: function (date, format) {
+			var _date = new Date(date);
+
+			var s = format;
+
+			s = s.replace(/(Y|m|d|H|i|s)/g, function (m) {
+
+				switch (m) {
+					case "Y":
+						return _date.getFullYear();
 					case "m":
 						return _s(_date.getMonth() + 1);
 					case "d":
 						return _s(_date.getDate());
 					case "H":
-						return  _s(_date.getHours());
+						return _s(_date.getHours());
 					case "i":
 						return _s(_date.getMinutes());
 					case "s":
 						return _s(_date.getSeconds());
-						
-				 }
-			 });
-			 
-			 return s;
-			 
-				// var _dates =
-					// _date.getFullYear() + "-" + _s(_date.getMonth() + 1) + "-" + _s(_date.getDate()) +
-					// " " + _s(_date.getHours()) + ":" + _s(_date.getMinutes()) + ":" + _s(_date.getSeconds());
+
+				}
+			});
+
+			return s;
+
+			// var _dates =
+			// _date.getFullYear() + "-" + _s(_date.getMonth() + 1) + "-" + _s(_date.getDate()) +
+			// " " + _s(_date.getHours()) + ":" + _s(_date.getMinutes()) + ":" + _s(_date.getSeconds());
 		}
 	});
-	
 
-	
+
+
 
 	// export module loading
 	createNS("igk.system.module", {
@@ -8643,9 +8638,9 @@ function createObject (T, t, args){
 						callback(q);
 					}
 				});
-				
-				
-				
+
+
+
 				q.o.src = _m.dir + n;
 			}
 		},
@@ -8655,7 +8650,7 @@ function createObject (T, t, args){
 			var _m = m_module_info;
 			return _m.dir + f;
 		},
-		getModuleLocation:function(){
+		getModuleLocation: function () {
 			//console.debug(m_module_info);
 			return m_module_info ? m_module_info.dir : null;
 		},
@@ -8670,7 +8665,7 @@ function createObject (T, t, args){
 	var _app_link = null;
 	createNS("igk.system.apps", {// system application manager namespace
 	});
-	igk.defineProperty(igk.system.apps, "link", {get:function(){return _app_link; }});
+	igk.defineProperty(igk.system.apps, "link", { get: function () { return _app_link; } });
 
 	createNS("igk.system.styles", {
 		textShadow: function (x, y, offset, color) {
@@ -8960,13 +8955,13 @@ function createObject (T, t, args){
 				document.head.appendChild(n);
 			}
 			else {// internet explorer 8 no get head property defined for document
-				
+
 				igk.ready(function () {
 					// set the head
 					document.head = document.getElementsByTagName("head")[0];
 					document.head.appendChild(n);
-					
-					
+
+
 				});
 			}
 		}
@@ -8974,12 +8969,12 @@ function createObject (T, t, args){
 
 
 	// animate function
-	createNS("igk.html.canva", { 
+	createNS("igk.html.canva", {
 		animate: igk_animate,
 		cancel: igk_animate_cancel
 	});
 
-	
+
 	function _CustomEvent(event, params) {
 		params = params || { bubbles: false, cancelable: false, detail: undefined };
 		var evt = document.createEvent('CustomEvent');
@@ -9033,10 +9028,10 @@ function createObject (T, t, args){
 			}
 		},
 		createEvent: _CustomEvent,
-		regKeyPress: function(fc){
+		regKeyPress: function (fc) {
 			igk.winui.reg_event(document, "keypress keyup", fc);
 		},
-		unregKeyPress: function(fc){
+		unregKeyPress: function (fc) {
 			igk.winui.unreg_event(document, "keypress keyup", fc);
 		}
 	});
@@ -9190,26 +9185,26 @@ function createObject (T, t, args){
 		}
 	});
 
-	
+
 	//----------------------------------------------------------------
 	//update string proptotype
 	//----------------------------------------------------------------
 	var _str_ = window.String.prototype;
-	if (!_str_.padStart){
-		_str_.padStart = function(n, s){
+	if (!_str_.padStart) {
+		_str_.padStart = function (n, s) {
 			var g = "";
-			while(this.length<n){
+			while (this.length < n) {
 				n--;
-				g+=s;
+				g += s;
 			}
-			return g+this;
+			return g + this;
 		};
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	createNS("igk.system.regex", {
 		item_match_class: igk_item_match_class,
 		item_inherit_class: igk_item_inherit_class,
@@ -9273,10 +9268,10 @@ function createObject (T, t, args){
 
 	// igk.system.convert namespace
 	createNS("igk.system.convert", {
-		parseToInt: function(i){
+		parseToInt: function (i) {
 			var v = parseInt(i);
 			if (Number.isNaN(v))
-				v = 0;			
+				v = 0;
 			return v;
 		},
 		parseToBool: function (i) {
@@ -9376,7 +9371,7 @@ function createObject (T, t, args){
 		insert: function (m, index, pattern) {
 			return m.substring(0, index) + pattern + m.substring(index, m.length);
 		},
-		capitalize:  function (s) {
+		capitalize: function (s) {
 			if (s && s.length > 1)
 				return s[0].toUpperCase() + s.substring(1).toLowerCase();
 			return s;
@@ -9494,8 +9489,8 @@ function createObject (T, t, args){
 	// ------------------------------------------------------------------------------------
 
 	// used to animate . callback must return 1 in oder to continue animation
-	function igk_animate (callback) {
-		
+	function igk_animate(callback) {
+
 		var animFrame = igk.animation.getAnimationFrame();
 		var animObj = {
 			cancel: function () {
@@ -9516,7 +9511,7 @@ function createObject (T, t, args){
 
 		// used to animated rendering scene
 
-		
+
 		if (typeof (animFrame) == "undefined") {
 			__doCall();
 		}
@@ -9527,11 +9522,11 @@ function createObject (T, t, args){
 	};
 
 	// used to cancel 
-	function igk_animate_cancel(id){	
+	function igk_animate_cancel(id) {
 		var _canimFrame = igk.animation.getAnimationCancelFrame();
 		if (_canimFrame) {
 			return _canimFrame(id);
-		}		
+		}
 	};
 
 	function igk_create_event_ojectManager() {
@@ -9565,7 +9560,7 @@ function createObject (T, t, args){
 			register: function (item, method, func) {
 				if (!item || !func || (typeof (func) != IGK_FUNC) || (m_key == item)) // last to avoid recursion
 					return;
-				
+
 				m_key = item;
 				var i = m_obj.indexOf(item);
 				var o = null;
@@ -9583,9 +9578,9 @@ function createObject (T, t, args){
 					var dic = m_value.getItemAt(i);
 					if (dic) {
 						if (dic.containKey(method)) {
-							
+
 							dic.getItem(method).funcs.add(func);
-							
+
 						}
 						else {
 							var o = { target: item, funcs: new igk.system.collections.list(), method: method };
@@ -9597,7 +9592,7 @@ function createObject (T, t, args){
 				m_key = null;
 			},
 			unregister: function (item, method, func) {
-				
+
 				if (m_unreg)
 					return
 				m_unreg = 1;
@@ -9616,8 +9611,8 @@ function createObject (T, t, args){
 					dic = m_value.getItemAt(i);
 					var tab = dic.getValues();
 					if (method) {
-						
-						
+
+
 						// remove all method registrated
 						if (typeof (func) == 'undefined') {
 							for (var t = 0; t < tab.length; t++) {
@@ -9631,7 +9626,7 @@ function createObject (T, t, args){
 								}
 							}
 						} else {
-							
+
 							for (var t = 0; t < tab.length; t++) {
 								if (tab[t].method == method) {
 									var c = tab[t].funcs.toArray();
@@ -9654,7 +9649,7 @@ function createObject (T, t, args){
 					for (var t = 0; t < tab.length; t++) {
 						// 							
 						var c = tab[t].funcs.toArray();
-						
+
 						for (var x = 0; x < c.length; x++) {
 							igk.winui.unreg_event(o, tab[t].method, c[x]);
 						}
@@ -9663,7 +9658,7 @@ function createObject (T, t, args){
 					m_value.removeAt(i);
 				}
 				// else{
-				
+
 				// }
 				m_unreg = 0;
 				m_ukey = null;
@@ -9824,24 +9819,24 @@ function createObject (T, t, args){
 				// note: offsetParent is only available for item with  display not equal to 'none'
 				var q = item.offsetParent;//  || item.parentNode;
 				var cq = 0;
-				
+
 				while ((q != null) && (q.tagName.toLowerCase() != 'body')) {
-						cq = $igk(q);
-					if (q.offsetParent == null){
-						console.debug("no offset parent? "+ (cq.fn.hasVScrollBar() || cq.fn.hasHScrollBar()) );
+					cq = $igk(q);
+					if (q.offsetParent == null) {
+						console.debug("no offset parent? " + (cq.fn.hasVScrollBar() || cq.fn.hasHScrollBar()));
 						break;
 					}
-				
-					
-					if (cq.fn.hasVScrollBar() || cq.fn.hasHScrollBar()){
-						
-						
-						
+
+
+					if (cq.fn.hasVScrollBar() || cq.fn.hasHScrollBar()) {
+
+
+
 						break;
 					}
 					q = q.offsetParent;// || q.parentNode;
 				}
-				
+
 				return q;
 			}
 			return null;
@@ -9872,19 +9867,19 @@ function createObject (T, t, args){
 			if (!evt || !touchv[evt.type])
 				return igk.math.vector2d(0, 0).clone();
 			var i = index || 0;
-			
-			
+
+
 			var s = ((evt.touches.length > 0) && (i < evt.touches.length)) ? evt.touches.item(i) : null;
 
-			
+
 			if (s == null)
 				return igk.math.vector2d(0, 0).clone();
-			
+
 			var loc = igk.winui.GetRealScreenPosition($igk(item).o);
 			loc.x = s.pageX - (isNaN(loc.x) ? 0 : loc.x);
 			loc.y = s.pageY - (isNaN(loc.y) ? 0 : loc.y);
 
-			
+
 			return loc;
 		},
 		// >@@get if the child has a mouse input
@@ -9979,16 +9974,16 @@ function createObject (T, t, args){
 			return igk.winui.unreg_system_event(window, method, func, useCapture);
 		},
 		reg_system_event: function (item, method, func, useCapture) {
-			
+
 			if (item == null)
 				return !1;
 
 
-			
-			
+
+
 			// igk.debug.assert( method=="webkittransitionend","register please handle transitionend");
 			if (typeof (item[method]) == igk.constants.undef) {
-				
+
 				if (item["on" + method] + "" == igk.constants.undef) {
 					var e = igk.winui.events.exceptionEvent;
 					if (e.contain(method)) {
@@ -10008,10 +10003,10 @@ function createObject (T, t, args){
 				if (igk.DEBUG) {
 					console.debug("attachevent " + method);
 				}
-				
+
 				if (igk.navigator.IEVersion() == 7) {
 					// 
-					
+
 					var ftp = function (evt) {
 						evt.preventDefault = function () {
 						};
@@ -10040,7 +10035,7 @@ function createObject (T, t, args){
 				return !0;
 			}
 			else {
-				
+
 				var m = item["on" + method];
 				if (typeof (m) == "function") {
 					item["on" + method] = function () {
@@ -10058,7 +10053,7 @@ function createObject (T, t, args){
 		reg_event: function (item, method, func, useCapture) {// global	
 
 			// if (item == document){
-			
+
 			// }
 			var g = method.split(' ');
 			var s = 0;
@@ -10128,7 +10123,7 @@ function createObject (T, t, args){
 			// >@@ eventContextOwner: the context o
 			// >@@ property used to register 
 			if ((properties == null) || (eventContextOwner == null) || (igk_getRegEventContextByOwner(eventContextOwner) != null)) {
-				
+
 				return null;
 			}
 			function __eventContextObject(eventContextOwner, properties) {
@@ -10203,7 +10198,7 @@ function createObject (T, t, args){
 					}
 					else if (s instanceof eventCibling) {
 						// unregister event cibling
-						
+
 						igk.winui.unreg_event(s.target, s.name, s.func);
 					}
 				};
@@ -10254,7 +10249,7 @@ function createObject (T, t, args){
 						igk.winui.reg_event(v_cibling.target, v_cibling.name, v_cibling.func);
 
 						var key = name + ":" + target;
-						
+
 						if (typeof (m_col[key]) == igk.constants.undef)
 							m_col[key] = v_cibling;
 						else {
@@ -10504,7 +10499,7 @@ function createObject (T, t, args){
 				console.debug("is already a class control " + q.fn.controlName);
 				return;
 			}
-			
+
 			if (!m_rcg)
 				m_rcg = new RegExp("((^| )+)(" + m_rg + ")($| )");
 			var t = this.className;
@@ -10513,9 +10508,9 @@ function createObject (T, t, args){
 
 
 				var m = m_rcg.exec(t);
-				
-				
-				
+
+
+
 				var n = m[3];
 				var g = m_class_control[n];
 				if (!g) {
@@ -10593,8 +10588,8 @@ function createObject (T, t, args){
 					m_rg += n;
 				m_rcg = null;
 				return {
-					init:function(){
-						
+					init: function () {
+
 					}
 				};
 			}
@@ -10608,7 +10603,7 @@ function createObject (T, t, args){
 			var c = this;
 			var b = m_class_control;
 			var fc = null;
-			
+
 			for (var i in b) {
 				fc = b[i].data.func;
 				if (fc) {
@@ -10659,14 +10654,14 @@ function createObject (T, t, args){
 		var m_dlgx = []; // list of opened dialog
 		var m_d = 0; // demand for showing a dialog
 		function __setupview(div) {
-			
+
 			div.setCss({
 				"height": "auto" // auto by default
 			});// .forceview();	
-			
+
 			var _h = div.getHeight();
 			var p = -(_h / 2.0);
-			
+
 			var pn = div.getParentNode();
 			var t = 0;// to get half position
 			var h = div.getHeight() + "px";
@@ -10674,13 +10669,13 @@ function createObject (T, t, args){
 
 			if (pn) {
 				t = pn.getHeight() / 2.0;
-				
+
 			}
 			else {
 				t = div.getTop();
 			}
 			if ((t + p) < 0) {
-				
+
 				// p=-t;
 				if (pn.getHeight() < div.getHeight()) {
 					h = pn.getHeight() + "px";
@@ -10688,7 +10683,7 @@ function createObject (T, t, args){
 				}
 
 			}
-			
+
 			div.setCss({
 				"marginTop": p + "px"
 			});
@@ -10721,7 +10716,7 @@ function createObject (T, t, args){
 			// div.setCss({
 			// "marginTop": p+"px"
 			// });		
-			
+
 			// if(h!=div.getComputedStyle('height'))
 			// {
 			// ========				
@@ -10813,7 +10808,7 @@ function createObject (T, t, args){
 		createNS("igk.winui", {
 			showDialog: function (id) {
 				var s = $igk(id);
-				
+
 				if (s != null) {
 					__show_dialog(s);
 				}
@@ -10867,29 +10862,29 @@ function createObject (T, t, args){
 	// manage keyPress	- keyUp - define usage key code
 	(function () {
 
-		var _keyns = createNS("igk.winui.inputKeys",{
+		var _keyns = createNS("igk.winui.inputKeys", {
 		});
-		var _keys={
-			Enter:13, 
-			Escape:27,
-			Left:37, Up:38, Right:39, Down:40
+		var _keys = {
+			Enter: 13,
+			Escape: 27,
+			Left: 37, Up: 38, Right: 39, Down: 40
 		};
-		function _defkey(k){
-			return function (){
-					return _keys[k];
-				};
+		function _defkey(k) {
+			return function () {
+				return _keys[k];
+			};
 		};
-		function _getCode(event){
+		function _getCode(event) {
 			return event.charCode || event.keyCode;
 		};
-		
-		for(var k in _keys){
-			igk_defineProperty(_keyns, k,  {get:_defkey(k)});
+
+		for (var k in _keys) {
+			igk_defineProperty(_keyns, k, { get: _defkey(k) });
 		}
 		//register key event
 		createNS("igk.winui", {
 			keyPress: function (event, code, callback) {
-				var c = _getCode(event); 
+				var c = _getCode(event);
 				if (c == code) {
 					callback(event);
 					event.preventDefault();
@@ -10923,24 +10918,24 @@ function createObject (T, t, args){
 				var _echain = null;
 				var _tchain = null;
 				var _P = {
-					resolve: function(){
-						
+					resolve: function () {
+
 					},
-					then: function(callback){						
-						if (_tchain==null)
+					then: function (callback) {
+						if (_tchain == null)
 							_tchain = callback;
-						else 
-							_tchain = function(){
+						else
+							_tchain = function () {
 								_tchain.apply(_P);
 								callback.apply(_P);
 							};
 						return this;
 					},
-					error: function(callback){
-						if (_echain==null)
+					error: function (callback) {
+						if (_echain == null)
 							_echain = callback;
-						else 
-							_echain = function(){
+						else
+							_echain = function () {
 								_echain.apply(_P);
 								_echain.apply(_P);
 							};
@@ -11026,7 +11021,7 @@ function createObject (T, t, args){
 		var Right = 2;
 		var Middle = 3;
 		var None = 0;
-		function getButton(t){
+		function getButton(t) {
 			switch (t) {
 				case 0:
 					return Left;
@@ -11037,13 +11032,13 @@ function createObject (T, t, args){
 			}
 			return None;
 		};
-		
-		var tev  ={};
-		tev["mousemove"] = function(e){	
-			if ((e.buttons==e.button) && (e.button == 0)){
+
+		var tev = {};
+		tev["mousemove"] = function (e) {
+			if ((e.buttons == e.button) && (e.button == 0)) {
 				return None;
 			}
-			
+
 			switch (e.buttons) {
 				case 1:
 					return Left;
@@ -11054,25 +11049,25 @@ function createObject (T, t, args){
 			}
 			return getButton(e.button);
 		};
-		tev["mousedown"] = function(e){				
+		tev["mousedown"] = function (e) {
 			return getButton(e.button);
 		};
-		tev["mouseup"] = function(e){	
-			if ((e.buttons==e.button) && (e.button == 0)){
+		tev["mouseup"] = function (e) {
+			if ((e.buttons == e.button) && (e.button == 0)) {
 				return Left;
-			}		
+			}
 			return getButton(e.button);
 		};
-			
+
 		igk.winui.mouseButton = function (evt) {
 			//if (evt.buttons == 0)
-				//return None;
+			//return None;
 			// for most browser
-			
-			
-			
+
+
+
 			if (igk.navigator.isIE() && igk.navigator.IEVersion() < 10) {
-				
+
 				switch (evt.button) {
 					case 1:
 						return Left;
@@ -11083,13 +11078,13 @@ function createObject (T, t, args){
 				}
 			}
 			else {
-				
+
 				if (evt.type in tev)
 					return tev[evt.type].apply(null, [evt]);
-				
+
 				switch (evt.button) {
 					case 0:
-						if (evt.buttons==0 && (evt.type =="mousemove")){
+						if (evt.buttons == 0 && (evt.type == "mousemove")) {
 							return None;
 						}
 						return Left;
@@ -11130,163 +11125,163 @@ function createObject (T, t, args){
 	})();
 
 
-// dialog manager
-(function(){
-	var dialogs = [];
-	var init = 0;
-	
-	function HDialog(d){
-		
-		var self = this;
-		this.closeDialog = function(){
-			var q =0; 
-			while (q = dialogs.pop()){
-				d.unreg_event(q.closeDialog);
-				if (q == d ){
-					return 1;
+	// dialog manager
+	(function () {
+		var dialogs = [];
+		var init = 0;
+
+		function HDialog(d) {
+
+			var self = this;
+			this.closeDialog = function () {
+				var q = 0;
+				while (q = dialogs.pop()) {
+					d.unreg_event(q.closeDialog);
+					if (q == d) {
+						return 1;
+					}
+				}
+				init = 0;
+				igk.winui.events.unregKeyPress(__close_dialog);
+				return 0;
+			};
+		};
+
+		function __close_dialog(e) {
+
+			if ((dialogs.length > 0) && (e.type == 'keyup') && (e.keyCode == igk.winui.inputKeys.Escape)) {
+				dialogs[dialogs.length - 1].close();
+				e.preventDefault();
+				e.stopPropagation();
+			}
+
+		};
+
+		igk.system.createNS("igk.winui.dialogs", {
+			register: function (d) {
+				var _d = new HDialog(d);
+				d.on("close", _d.closeDialog);
+				dialogs.push(d);
+				if (!init) {
+					igk.winui.events.regKeyPress(__close_dialog);
+					init = 1;
 				}
 			}
-			init = 0;
-			igk.winui.events.unregKeyPress(__close_dialog);
-			return 0;
-		};
-	};
 
-	function __close_dialog(e){
-		
-		if ((dialogs.length> 0) && (e.type == 'keyup') && (e.keyCode == igk.winui.inputKeys.Escape)){			
-			dialogs[dialogs.length - 1].close();
-			e.preventDefault();		
-			e.stopPropagation();
-		} 
-		
-	};
-	
-	igk.system.createNS("igk.winui.dialogs", {
-		register: function(d){
-			var _d = new HDialog(d);			
-			d.on("close", _d.closeDialog);
-			dialogs.push(d);
-			if(!init){
-				igk.winui.events.regKeyPress(__close_dialog);
-				init = 1;
+			, getlastDialog: function () {
+				if (dialogs.length > 0) {
+					return dialogs[dialogs.length];
+				}
+				return null;
+			},
+			isOpen: function () {
+				return dialogs.length > 0;
 			}
-		}
-	
-		, getlastDialog: function(){
-			if (dialogs.length>0){
-				return dialogs[dialogs.length];
-			}
-			return null;
-		},
-		isOpen: function(){
-			return dialogs.length > 0;
-		}
-	
-	
-	});
 
 
-})();
+		});
 
 
-// balafon form builder engine
-(function(){
-	var engines = {};
-	var default_e = null;
-	igk.system.createNS("igk.winui.engine", {
-		register: function(n, o){
-			engines[n] = o;
-		},
-		setDefaultEngine: function(n){
-			default_e = n;
-		},
-		getEngine:function(n, t, R){
-			//@R: asset manager for lang support
-			n = n || default_e;
-			var s = null;
-			if (n){
-				if (n in engines){
-					s = engines[n];
-					if(t){
-						s.host = t;
+	})();
+
+
+	// balafon form builder engine
+	(function () {
+		var engines = {};
+		var default_e = null;
+		igk.system.createNS("igk.winui.engine", {
+			register: function (n, o) {
+				engines[n] = o;
+			},
+			setDefaultEngine: function (n) {
+				default_e = n;
+			},
+			getEngine: function (n, t, R) {
+				//@R: asset manager for lang support
+				n = n || default_e;
+				var s = null;
+				if (n) {
+					if (n in engines) {
+						s = engines[n];
+						if (t) {
+							s.host = t;
+						}
+						if (R)
+							s.setAsset(R);
+						return s;
 					}
+				}
+				if (default_e && (n != default_e) && (default_e in engines)) {
+					s = engines[default_e];
+					if (t)
+						s.host = t;
 					if (R)
 						s.setAsset(R);
 					return s;
 				}
-			}
-			if (default_e && (n!= default_e) && (default_e in engines)){
-				s = engines[default_e];
-				if(t)
-					s.host = t;
-				if (R)
-					s.setAsset(R);
-				return s;
-			}
-			return null;
-		},
-		getEngineNameList: function(){
-			var t = [];
-			for(var i in engines)
-				t.push(i);
-			t.sort();
-			return t;
-			
-		},
-		formBuilderEngine: function(){
-			//form builder engine constructor
-			var host;
-			var R=null;
-			igk.defineProperty(this, "host", {
-				get:function(){
+				return null;
+			},
+			getEngineNameList: function () {
+				var t = [];
+				for (var i in engines)
+					t.push(i);
+				t.sort();
+				return t;
+
+			},
+			formBuilderEngine: function () {
+				//form builder engine constructor
+				var host;
+				var R = null;
+				igk.defineProperty(this, "host", {
+					get: function () {
 						return host;
-				},
-				set: function(v){
-					host = $igk(v);
-					if (host.o && !host.engine){
-						host.engine = new hostEngine(this);
+					},
+					set: function (v) {
+						host = $igk(v);
+						if (host.o && !host.engine) {
+							host.engine = new hostEngine(this);
+						}
 					}
-				}
-			});
-	 
-			this.setAsset = function(r){
-				R = r;
+				});
+
+				this.setAsset = function (r) {
+					R = r;
+				};
+
+				function _getRes(id) {
+					return (R ? R[id] : null) || id;
+				};
+				this.getRes = _getRes;
+				this.add = function (t) {
+					this.host.add(t);
+					return this;
+				};
+			}
+
+		});
+
+
+		function hostEngine() {
+			var m_items = {};
+			this.getItem = function (n) {
+				if (n in m_items)
+					return m_items[n];
+				return null;
 			};
-			
-			function _getRes(id){
-				return 	(R? R[id] : null) || id;
+			this.register = function (n, h) {
+				m_items[n] = h;
 			};
-			this.getRes = _getRes;
-			this.add = function(t){
-				this.host.add(t);
-				return this;
+			this.clear = function (n, h) {
+				m_items = {};
 			};
-		}
-		
-	});
-	
-	
-	function hostEngine(){
-		var m_items = {};
-		this.getItem = function(n){
-			if (n in m_items)
-				return m_items[n];
-			return null;
+			this.getFields = function () {
+				return m_items;
+			};
 		};
-		this.register = function(n, h){
-			m_items[n] = h;
-		};
-		this.clear = function(n, h){
-			m_items={};
-		};
-		this.getFields = function(){
-			return m_items;
-		};
-	};
-	
-	
-})();
+
+
+	})();
 
 	(function () {
 		var m_capture;
@@ -11299,7 +11294,7 @@ function createObject (T, t, args){
 				evt.stopPropagation();
 				return;
 			}
-		 
+
 			if (m_capture && m_event_capture) {
 				var t = null;
 				if (typeof (evt.constructor) == 'function') {
@@ -11328,7 +11323,7 @@ function createObject (T, t, args){
 
 		// mouse capture definition : chrome do not implement capture specification
 		igk.system.createNS("igk.winui.mouseCapture", {
-			getCapture:function(){ //return the current capture object reference
+			getCapture: function () { //return the current capture object reference
 				return m_capture;
 			},
 			setCapture: function (n) {// set the current capture reference
@@ -11347,9 +11342,9 @@ function createObject (T, t, args){
 						m_bck["ondrop"] = m_capture["ondrop"];
 						m_capture["ondragstart"] = igk.winui.fn.cancelEventArgs;
 						m_capture["ondrop"] = igk.winui.fn.cancelEventArgs;
-						
-						igk.dom.body().setCss({pointerEvents:'none'});
-						$igk(n).setCss({pointerEvents:'auto'});
+
+						igk.dom.body().setCss({ pointerEvents: 'none' });
+						$igk(n).setCss({ pointerEvents: 'auto' });
 					}
 				}
 			},
@@ -11364,7 +11359,7 @@ function createObject (T, t, args){
 					igk.winui.unreg_event(window, "mouseup", __capturemouse);
 					m_capture["ondragstart"] = m_bck["ondragstart"];
 					m_capture["ondrop"] = m_bck["ondrop"];
-					igk.dom.body().setCss({pointerEvents:'auto'});
+					igk.dom.body().setCss({ pointerEvents: 'auto' });
 				}
 				m_capture = null;
 				m_event_capture = false;
@@ -11374,8 +11369,8 @@ function createObject (T, t, args){
 	(function () {
 		createNS("igk.winui.history", {
 			push: function (uri, data, t) {
-				
-				
+
+
 				if (typeof (window.history.pushState) == "function") {
 					window.history.pushState(data, t, uri);
 				}
@@ -11403,9 +11398,9 @@ function createObject (T, t, args){
 				// u=e.state.uri;
 				// if(u){
 				// igk.ajx.get(u,null,igk.ajx.fn.append_to_body);
-				
+
 				// }else{
-				
+
 				// }
 			}
 
@@ -11414,12 +11409,12 @@ function createObject (T, t, args){
 			// if(u){
 			// u+="/default/goback";
 			// igk.ajx.get(u,null,igk.ajx.fn.append_to_body);
-			
+
 			// }
 
 			// }
 		};
-		if('onpopstate' in window)
+		if ('onpopstate' in window)
 			igk.winui.reg_event(window, "popstate", __popstate);
 
 	})();
@@ -11574,7 +11569,7 @@ function createObject (T, t, args){
 				v = 0;
 			};
 			function __q_click(evt) {
-				
+
 				q.close();
 			};
 			function __q_scroll(evt) {
@@ -11591,7 +11586,7 @@ function createObject (T, t, args){
 			};
 
 			$igk(id).reg_event("click", function (evt) {
-				
+
 				if (v == 0) {
 					q.show();
 					evt.preventDefault();
@@ -11643,7 +11638,7 @@ function createObject (T, t, args){
 				// no preventDefault function found
 			}
 		},
-		cancelBehaviour: function(e){
+		cancelBehaviour: function (e) {
 			e.preventDefault();
 			e.stopPropagation();
 		}
@@ -11660,7 +11655,7 @@ function createObject (T, t, args){
 					switch (evt.keyCode) {
 						case 27: // escape
 							if (igk.winui.framebox.currentFrame == null) {
-								
+
 								var t = m.pop();
 								if (p.complete) {
 									p.complete.apply(this, [evt]);
@@ -11692,14 +11687,14 @@ function createObject (T, t, args){
 			enumerable: true,
 			configurable: true,
 			nopropfunc: function () {
-			this.m_version = m_version;
+				this.m_version = m_version;
 			}
 		});
 	})();
 	// init control device
 	var XBox360 = false;
 	var XBoxOne = false;
-	var m_navprop = {}; 
+	var m_navprop = {};
 	var _nav = igk.navigator;
 
 	if (/Xbox/.test(navigator.userAgent)) {
@@ -11714,7 +11709,7 @@ function createObject (T, t, args){
 		});
 
 	}
-	
+
 	igk_appendProp(_nav,
 		{	// static function
 			getLang: function () {
@@ -11722,7 +11717,7 @@ function createObject (T, t, args){
 					return window.navigator.language + "";
 				return window.navigator.languages + "";
 			},
-			getProperty: function(n){
+			getProperty: function (n) {
 				return m_navprop[n] || false;
 			},
 			isXBoxOne: function () { return XBoxOne; },
@@ -11743,7 +11738,7 @@ function createObject (T, t, args){
 						return e.apply(navigator, arguments);
 					else {
 						// alert("No getUserMedia supported");
-						
+
 					}
 				}
 			})(),
@@ -11758,17 +11753,17 @@ function createObject (T, t, args){
 				igk.dom.body().appendChild(a.o);
 				a.o.click();
 			},
-			logAgent: function(){		
-				var _nav = igk.navigator;			
-				console.debug("IsChrome: "+_nav.isChrome());
-				console.debug("IsFireFox: "+_nav.isFirefox());
-				console.debug("IsSafari: "+_nav.isSafari());
-				console.debug("IsEdge: "+_nav.isIEEdge());
+			logAgent: function () {
+				var _nav = igk.navigator;
+				console.debug("IsChrome: " + _nav.isChrome());
+				console.debug("IsFireFox: " + _nav.isFirefox());
+				console.debug("IsSafari: " + _nav.isSafari());
+				console.debug("IsEdge: " + _nav.isIEEdge());
 			},
-			isSecure: function(){
+			isSecure: function () {
 				// get if this navigator is secure
 				return document.location.protocol == "https:";
-				
+
 			},
 			isChrome: function () {
 				var ua = window.navigator.userAgent + '';
@@ -12460,7 +12455,7 @@ function createObject (T, t, args){
 							continue;
 
 						var h = k.steps[i];
-						if ( (typeof(h.step) == 'undefined') || (h.step==0))						
+						if ((typeof (h.step) == 'undefined') || (h.step == 0))
 							continue;
 
 
@@ -12659,7 +12654,7 @@ function createObject (T, t, args){
 	});
 
 
-	
+
 
 
 	function __ajx_initfunc(func) {// get ajx func request
@@ -12680,39 +12675,38 @@ function createObject (T, t, args){
 	(function () {
 		var m_ajx_monitorListener; // for monitoring
 		var m_hxhr; // store xhr instance for the ready state change
-		var sm_join= {};
+		var sm_join = {};
 		var m_ajxhe = 0; // object of {xhr header}
-		var m_exajxdata=0; // {responseType:'text/plain|blob|arraybuffer'}
+		var m_exajxdata = 0; // {responseType:'text/plain|blob|arraybuffer'}
 
-		
+
 		function __ajx_setExtraData(ajx, extradata) {
 			extradata = extradata || m_exajxdata;
 			if (extradata) {
-				
-				
+
+
 				igk_appendProp(ajx, extradata);
-				if('responseType' in extradata)
-				{
+				if ('responseType' in extradata) {
 					ajx.xhr.responseType = extradata.responseType;
 				}
 			}
-			m_exajxdata=0;
+			m_exajxdata = 0;
 		};
 		createNS("igk.ajx",
-		{
-				bindHeader: function(p){ //bind properties to next ajx header
+			{
+				bindHeader: function (p) { //bind properties to next ajx header
 					m_ajxhe = p;
 				},
-				bindExtraData: function(exdata){ // bind extra data that will be used for ajx request
+				bindExtraData: function (exdata) { // bind extra data that will be used for ajx request
 					//object property or null 
 					m_exajxdata = exdata;
-					
+
 				},
 				setHeader: function (xhr) {
 					// ini ovh must be the minus sign
 					xhr.setRequestHeader("IGK-X-REQUESTED-WITH", "XMLHttpRequest");
-					if (m_ajxhe){
-						for(var m in m_ajxhe){
+					if (m_ajxhe) {
+						for (var m in m_ajxhe) {
 							xhr.setRequestHeader(m, m_ajxhe[m]);
 						}
 						m_ajxhe = 0;
@@ -12743,22 +12737,22 @@ function createObject (T, t, args){
 								}
 								// remove useless
 								if (n.getAttribute("autoremove"))
-									$igk(n).remove();								
+									$igk(n).remove();
 							} catch (ex) {
 								// for chrome disable code extension in some case.
 								console.debug(ex);
 							}
 						}
 						else {
-							
-							
-							
+
+
+
 							igk_preload_image(n); // preload n
 							// igk_eval_all_script(n);					
 							var ct = $igk(n).select("script");
-							
+
 							ct.each(function () {
-								
+
 								var _t = this.getAttribute("type");
 								// var _s=this.getAttribute("src"); 
 								if (_t == 'text/balafonjs') {
@@ -12783,7 +12777,7 @@ function createObject (T, t, args){
 				// replace entire body with the content of text	
 				replaceBody: function (text, unregister) {
 					var c = window.igk.utils.getBodyContent(text);
-					
+
 					try {
 						// igk_freeEventContext();		
 						// igk.ctrl.clearAttribManager();
@@ -12890,7 +12884,7 @@ function createObject (T, t, args){
 				},
 				ajx: function (monitorlistener) {// ajx object
 					var xhr = null;
-					if (igk.isFunc(typeof(window.XMLHttpRequest)))    //  Objet standard
+					if (igk.isFunc(typeof (window.XMLHttpRequest)))    //  Objet standard
 					{
 						xhr = new window.XMLHttpRequest();     //  Firefox,Safari,...
 					}
@@ -12905,18 +12899,18 @@ function createObject (T, t, args){
 							}
 						}
 					}
-					
+
 
 					if ((xhr == null) || (xhr.readyState + "" == igk.constants.undef)) {
 						throw ("No Ajax Support");
 					}
-					
+
 					this.xhr = xhr;
 					this.saveState = false;
 					this.uri = null;
 					this.postargs = null;
 					this.method = "GET";
-					this.synchronize = false;		
+					this.synchronize = false;
 
 					this.setResponseMethod = function (method) { // instructions de traitement de la réponse 
 						var q = this;
@@ -12947,8 +12941,8 @@ function createObject (T, t, args){
 									};
 									break;
 								case 'object':
-									
-									
+
+
 									var fc = method.complete ? function () { method.complete.apply(method, [q.xhr, method]); } : null;
 									q.xhr.onreadystatechange = null;// ,fc;
 									q.xhr.onload = fc;// method.complete? function(){ method.complete.apply(method, [q.xhr, method]);  }; // method.complete;
@@ -12960,11 +12954,11 @@ function createObject (T, t, args){
 					function __initheader() {
 						// migration of apache request that name must not contains underscore or will be ignored
 						igk.ajx.setHeader(this.xhr);
-						if (igk.isFunc(typeof(document.domain)))
+						if (igk.isFunc(typeof (document.domain)))
 							this.xhr.setRequestHeader("IGK-FROM", "gaga"); //document.domain
 						else
 							this.xhr.setRequestHeader("IGK-FROM", "igkdev");
-						
+
 						//this.xhr.setRequestHeader("IGK-FROM-DATA","ONE");
 					};
 
@@ -12981,14 +12975,14 @@ function createObject (T, t, args){
 
 						// this.xhr.setRequestHeader("Content-Type","multipart/form-data");   		
 						// this.xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=iso-8859-1");
-						
+
 						// TODO: help microsoft to create a xml in result
-						
+
 						if (this["ajx.xhr"]) {
 							igk_appendProp(this.xhr, this["ajx.xhr"]);
 						}
 						// this.xhr.responseType="msxml-document";
-						
+
 						// default request header
 						__initheader.apply(this);
 						if (postargs) {
@@ -13007,8 +13001,8 @@ function createObject (T, t, args){
 						}
 						this.xhr.send(postargs);
 					};
-				
-					
+
+
 				},
 				postWebRequest: function (uri, action, param, func, headers, async, savestate, extradata) {// for service 
 					if (typeof (async) == igk.constants.undef)
@@ -13037,9 +13031,9 @@ function createObject (T, t, args){
 					ajx.xhr.setRequestHeader("SOAPACTION", action);
 
 					// if (headers) {
-						// for (var i in headers) {
-							// ajx.xhr.setRequestHeader(i, headers[i]);
-						// }
+					// for (var i in headers) {
+					// ajx.xhr.setRequestHeader(i, headers[i]);
+					// }
 					// }
 
 					var v_params = ""; // params to send 		
@@ -13054,14 +13048,14 @@ function createObject (T, t, args){
 					ajx.xhr.send(packet);
 					return ajx;
 				},
-				post: function (uri, param, func, async, savestate, extradata){			
+				post: function (uri, param, func, async, savestate, extradata) {
 					return igk.ajx.send(uri, 'POST', param, func, async, savestate, extradata);
 				},
 				apost: function (uri, param, func, savestate, extradata) {
 					return this.post(uri, param, func, true);
 				},
 				get: function (uri, param, func, async, savestate, extradata) {
-					
+
 					// extradata used to init ajx object
 					var ajx = new igk.ajx.ajx(m_ajx_monitorListener);
 					if (typeof (async) == igk.constants.undef)
@@ -13075,8 +13069,8 @@ function createObject (T, t, args){
 				aget: function (uri, param, func, extradata) {
 					this.get(uri, param, func, true, extradata);
 				},
-				join: function(n){
-					if (n in sm_join){
+				join: function (n) {
+					if (n in sm_join) {
 						sm_join[n].abort();
 					}
 					sm_join[n] = this;
@@ -13097,26 +13091,26 @@ function createObject (T, t, args){
 
 					}
 					// return null;
-					
+
 
 					var ajx = null;
-					try{
-					
-					
-					ajx = new igk.ajx.ajx(m_ajx_monitorListener);
-					ajx.saveState = (savestate) ? true : false;
-					__ajx_setExtraData(ajx, extradata);
-					ajx.setResponseMethod(__ajx_initfunc(func));
-					ajx.contentType = contentType;
-					
-					ajx.send(method, uri, param, typeof (async) == igk.constants.undef ? !0 : async);
-					
+					try {
+
+
+						ajx = new igk.ajx.ajx(m_ajx_monitorListener);
+						ajx.saveState = (savestate) ? true : false;
+						__ajx_setExtraData(ajx, extradata);
+						ajx.setResponseMethod(__ajx_initfunc(func));
+						ajx.contentType = contentType;
+
+						ajx.send(method, uri, param, typeof (async) == igk.constants.undef ? !0 : async);
+
 					}
-					catch(e){						
+					catch (e) {
 						igk.log.write("ajx log error : Error ::::: ");
 						igk.show_notify_prop_v(e);
 					}
-					
+
 					return ajx;
 				},
 				postform: function (form, uri, func, sync) {
@@ -13163,59 +13157,79 @@ function createObject (T, t, args){
 							if (this.isReady()) {
 								lw.remove();
 								$igk(form).select(".actions").rmClass("dispn");
-							} else if (xhr.readyState ==4){
+							} else if (xhr.readyState == 4) {
 								lw.remove();
 							}
 						};
 					}
 					if (window.FormData) {
+					
 						// if supporting FormData
-						var frmData = null; 
-						if (form.getAttribute("enctype") == "application/json")
-						{
+						var frmData = null;
+						if (form.getAttribute("enctype") == "application/json") {
 							var obj = 0;
 							var data = 0;
-							if (obj = form.getAttribute("form-data")){ 
+							if (obj = form.getAttribute("form-data")) {
 								data = obj;
-								if(typeof(data) =='object')
+								if (typeof (data) == 'object')
 									data = JSON.stringify(data);
-							}else {
+							} else {
 								obj = {};
 								frmData = new FormData(form);
-								frmData.forEach(function(v, k){
-									if (k in obj){
-										if (!Array.isArray(obj[k])){
+								frmData.forEach(function (v, k) {
+									if (k in obj) {
+										if (!Array.isArray(obj[k])) {
 											obj[k] = [obj[k]];
 										}
 										obj[k].push(v);
 										return;
-									}								
-									obj[k]=v;
+									}
+									obj[k] = v;
 								});
 								data = JSON.stringify(obj);
 							}
 							igk.ajx.send({
-							uri: uri,
-							method: 'POST',
-							contentType: 'application/json',
-							func: function (xhr) {
-								if (this.isReady()) {
-									if (func) {
-										func.apply(this, [xhr]);
+								uri: uri,
+								method: 'POST',
+								contentType: 'application/json',
+								func: function (xhr) {
+									if (this.isReady()) {
+										if (func) {
+											func.apply(this, [xhr]);
+										}
 									}
-								}
-							},
-							param: data  // '{requestInformation:[]}'
-						});
-						}else {						
+								},
+								param: data  // '{requestInformation:[]}'
+							});
+						} else {
 							frmData = new FormData(form);
+							if (window.event && window.event.submitter){
+								var i = window.event.submitter;
+								var n = i.getAttribute("name");
+								if (n){
+									frmData.append(n, i.getAttribute("value"));
+								}
+							}else {							
+								form.querySelectorAll("input[type='submit']").forEach(function(i){									
+									var n = i.getAttribute("name");
+									if (n){
+										frmData.append(n, i.getAttribute("value"));
+									}
+								});
+							}
+							// $igk(form).select("^.igk-winui-panel-dialog")
+							// console.debug("send....form data", form.getAttribute("enctype") ,frmData, form );
+							// return;
+							// uri = "http://local.com:8801/data.php";
+
 							igk.ajx.post(uri, frmData, func, (sync == igk.constants.undef) ? sync : true, true, {
 								source: $igk(form) // setting the source of the current definition
 							});
 						}
 					}
 					else {
-						 
+						console.debug("send....");
+						return;
 						for (var i = 0; i < form.length; i++) {
 							e = form.elements[i];
 
@@ -13227,7 +13241,7 @@ function createObject (T, t, args){
 									}
 									break;
 								case "file":
-									if (e.files.length > 0) { 
+									if (e.files.length > 0) {
 										frmData.append(e.id, e.files[0]);
 									}
 									break;
@@ -13263,27 +13277,26 @@ function createObject (T, t, args){
 				asyncget: function (uri, param, mimetype) {
 					var Prom = window.Promise;
 					if (!Prom)
-						return false;					
-							
-					try{
+						return false;
+
+					try {
 						var b = igk.dom.body(); // body document not found
 					}
-					catch(ex)
-					{ 
+					catch (ex) {
 						//used ajx to get data
 						var p = new Promise(function (r, j) {
-							
+
 							var fc = function (o) {
 								r(o);
 							};
 							fc.error = function () {
 								j('[BJS] failed to get : ' + uri);
 							};
-					
-							
-							igk.ajx.get(uri, null, function(xhr){
-								console.debug("for : "+ xhr.status);
-								if (this.isReady()){
+
+
+							igk.ajx.get(uri, null, function (xhr) {
+								console.debug("for : " + xhr.status);
+								if (this.isReady()) {
 									fc(xhr.responseText);
 								}
 							});
@@ -13293,15 +13306,15 @@ function createObject (T, t, args){
 					//use ob to get data
 					mimetype = mimetype || 'text/plain';
 					var p = new Promise(function (r, j) {
-						var fc = function (o) { 
+						var fc = function (o) {
 							r(o.data);
 						};
-						fc.error = function () { 						
-							j(new Error('[BJS] - objdata failed: ' + uri+ ', '+mimetype));
+						fc.error = function () {
+							j(new Error('[BJS] - objdata failed: ' + uri + ', ' + mimetype));
 						};
-						 
+
 						igk.system.io.getData(uri, fc, mimetype);
-					}); 
+					});
 					return p;
 
 				},
@@ -13310,11 +13323,11 @@ function createObject (T, t, args){
 						igk.ajx.uploadFile(null, inputfile.files[0], uri, async, responseCallback, startcallBack, progressCallback, doneCallback);
 				},
 				uploadFile: function (osrc, file, uri, async, responseCallback, startcallBack, progressCallback, doneCallback, method) {
-					if (!file){
+					if (!file) {
 						console.error("!! file not define");
 						return;
 					}
-					
+
 					// method: blob or null
 					var bob = null;
 					var reader = null;
@@ -13341,7 +13354,7 @@ function createObject (T, t, args){
 					// var async=!0;// important to view progression .on chrome
 					xhr.open("POST", uri, async);// async);// devnull.php");
 
-					
+
 					// return;
 					v_ajx.xhr.upload.onerror = function (evt) {
 						igk.winui.notify.showErrorInfo(
@@ -13351,14 +13364,14 @@ function createObject (T, t, args){
 						console.debug("Error : " + v_ajx.xhr.statusText);
 						console.debug(v_ajx.xhr);
 
-						
+
 					};
 
 					// async registration function
 					// v_ajx.xhr.onprogress=function(evt){
 					// };
 					// async registration function
-					
+
 					if (async) {
 						v_ajx.xhr.upload.onprogress = function (evt) {
 							if (progressCallback) {
@@ -13390,14 +13403,14 @@ function createObject (T, t, args){
 					xhr.setRequestHeader("Content-Type", "charset=utf-8; boundary=" + Math.random().toString().substr(2));
 					//"Content-type","multipart/form-data; charset=utf-8; boundary=" + Math.random().toString().substr(2));
 
-					
-					
-					
-					
+
+
+
+
 					var r = file;
 					var filer = false;
 					if (m != 'blob') {
-						
+
 						if (typeof (FileReader) != IGK_UNDEF)
 							filer = new FileReader();
 						if (!filer) {
@@ -13407,7 +13420,7 @@ function createObject (T, t, args){
 						reader = filer;
 						reader.onprogress = function (evt) {
 							console.debug("progress read");
-							
+
 						};
 						reader.onload = function (evt) {
 							// igk.winui.notify.showMsg("<div class=\"igk-notify igk-notify-default\">"+ igk.html.getDefinition(xhr)+"</div>");
@@ -13433,13 +13446,13 @@ function createObject (T, t, args){
 						// xhr.send(data);
 					}
 					else {
-						
+
 						if (r.slice) {
 							bob = r.slice(0, file.size);
 							// important to avoid
 							try {
-								
-								
+
+
 								xhr.send(bob);
 							}
 							catch (ex) {
@@ -13464,37 +13477,37 @@ function createObject (T, t, args){
 						loadstart: function (evt) { igk.publisher.publish('sys://ajx/loadstart', { evt: evt }); },
 						loadend: function (evt) { igk.publisher.publish('sys://ajx/loadend', { evt: evt }); },
 						loadprogress: function (evt) {
-							 igk.publisher.publish('sys://ajx/loadprogress', { evt: evt }); 
+							igk.publisher.publish('sys://ajx/loadprogress', { evt: evt });
 						}
 					});
 				}
-		});
+			});
 
 		createNS("igk.ajx", {
-			fetch: function(uri, data){
-				if (!window.Promise){
+			fetch: function (uri, data) {
+				if (!window.Promise) {
 					throw ("Promise not found - old browser");
-				} 
-				var p = new Promise(function(resolv, reject){
-					igk.ajx.aget(uri, data, function(xhr){
-							if (this.isReady()){						
-								resolv.apply(xhr);
-							}else if (xhr.readyState == 4 ){
-								reject.apply(xhr);
-							}						
+				}
+				var p = new Promise(function (resolv, reject) {
+					igk.ajx.aget(uri, data, function (xhr) {
+						if (this.isReady()) {
+							resolv.apply(xhr);
+						} else if (xhr.readyState == 4) {
+							reject.apply(xhr);
+						}
 					});
 				});
 				return p;
 			},
-			postFormData: function(uri, data){
+			postFormData: function (uri, data) {
 				var f = igk.dom.body().add("form");
 				f.setAttribute("action", uri);
 				f.setAttribute("method", "POST");
-				f.setAttribute("enctype", "multipart/form-data"); 
-				for(var i in data){
+				f.setAttribute("enctype", "multipart/form-data");
+				for (var i in data) {
 					//console.debug(typeof(data[i]));
-					f.add("input").setAttribute("name", i)		 
-					.setAttribute("value", ( typeof(data[i]) =='object') ?  JSON.stringify(data[i]) : data[i] );
+					f.add("input").setAttribute("name", i)
+						.setAttribute("value", (typeof (data[i]) == 'object') ? JSON.stringify(data[i]) : data[i]);
 				}
 				f.o.submit();
 			}
@@ -13502,114 +13515,114 @@ function createObject (T, t, args){
 
 		m_ajx_monitorListener = new igk.ajx.globalMonitorListener();
 
-		igk_appendProp(igk.ajx.ajx.prototype,			
+		igk_appendProp(igk.ajx.ajx.prototype,
 			{
 
-				isReady: function () { 
-						return ( this.xhr.readyState == 4) && (this.xhr.status == 200); 
-							// (
-							// (( this.xhr.readyState == 4) && (this.xhr.status == 200)) 
-							// || // for chrome
-							// ((this.xhr.readyState == 4) && (this.xhr.status == 200) && (/^(OK|No Error)/.test(this.xhr.statusText) ))
-						// );
+				isReady: function () {
+					return (this.xhr.readyState == 4) && (this.xhr.status == 200);
+					// (
+					// (( this.xhr.readyState == 4) && (this.xhr.status == 200)) 
+					// || // for chrome
+					// ((this.xhr.readyState == 4) && (this.xhr.status == 200) && (/^(OK|No Error)/.test(this.xhr.statusText) ))
+					// );
 				},
-				isFailed: function(){
-					if (( this.xhr.readyState == 4))
-						return  (this.xhr.status != 200); 
+				isFailed: function () {
+					if ((this.xhr.readyState == 4))
+						return (this.xhr.status != 200);
 					return true;
 				},
 				toString: function () { return "igk.ajx"; },
 				setResponseTo: function (q, unregister) { // q is node
-						if (q && (typeof (q.innerHTML) != IGK_UNDEF)) { // set response to node
-							if (q == igk.dom.body().o) {
-								
-								this.replaceBody();
-							}
-							else {
-								// unregister childs
-								if (unregister) {
-									igk.winui.getEventObjectManager().unregister_child(q);
-								}
-								q.innerHTML = this.xhr.responseText;
-								igk.ajx.fn.initnode(q);
-							}
+					if (q && (typeof (q.innerHTML) != IGK_UNDEF)) { // set response to node
+						if (q == igk.dom.body().o) {
+
+							this.replaceBody();
 						}
+						else {
+							// unregister childs
+							if (unregister) {
+								igk.winui.getEventObjectManager().unregister_child(q);
+							}
+							q.innerHTML = this.xhr.responseText;
+							igk.ajx.fn.initnode(q);
+						}
+					}
 				},
-				replaceBody:function () { 
-					igk.ajx.replaceBody(this.xhr.responseText, true); 
+				replaceBody: function () {
+					igk.ajx.replaceBody(this.xhr.responseText, true);
 				},
 				replaceResponseNode: function (node, preload) {// replaceNode ,preload document. default is true
-						var i = igk.createNode("dummy");
-						var p = typeof (preload) == igk.constants.undef ? !0 : preload;
-						// this.setResponseTo(i.o);
-						i.setHtml(this.xhr.responseText);
-						if (node && node.parentNode) {
-							// load childs
-							var b = i.firstChild();
-							var g = false;
-							var pt = $igk(node.parentNode);
-							var ol = null;
-							var f = 0;
-							//var marker = node.insertBefore('div');
-							var _ini = [];
-							if ( node.previousSibling == null){
-								while(i.o.lastChild){
-									_ini.push(i.o.lastChild);
-									pt.o.insertBefore(i.o.lastChild, pt.o.firstChild);
-								}								
+					var i = igk.createNode("dummy");
+					var p = typeof (preload) == igk.constants.undef ? !0 : preload;
+					// this.setResponseTo(i.o);
+					i.setHtml(this.xhr.responseText);
+					if (node && node.parentNode) {
+						// load childs
+						var b = i.firstChild();
+						var g = false;
+						var pt = $igk(node.parentNode);
+						var ol = null;
+						var f = 0;
+						//var marker = node.insertBefore('div');
+						var _ini = [];
+						if (node.previousSibling == null) {
+							while (i.o.lastChild) {
+								_ini.push(i.o.lastChild);
+								pt.o.insertBefore(i.o.lastChild, pt.o.firstChild);
 							}
-							else{
-								var c = node.previousSibling;
-								while(i.o.lastChild){
-									_ini.push(i.o.lastChild);
-									pt.o.insertBefore(i.o.lastChild, c);
-								}
-							}
-							
-							$igk(node).remove();
-							for(var i = 0; i < _ini.length; i++){
-								if (_ini[i].nodeType == 1)
-									igk.ajx.fn.initnode(_ini[i]); // .push(i.o.lastChild)
-							}
-						
-							//TODO : replace node
-							
-							
-							// while (b != null) {
-								// if (!g) {
-									// pt.o.replaceChild(b.o, node);
-									// f = b;
-								// }
-								// else {
-									// // pt.o.appendChild(b.o);// b.insertAfter(ol.o);
-									// ol.insertAfter(b.o);
-								// }
-								// igk.ajx.fn.initnode(b.o);
-								// g = !0;
-								// ol = b;
-								// // i.o.removeChild(b.o);
-								// b = $igk(i.o.firstChild); // firstChild();
-							// }
-
-							// if (p && g) {
-								// __applyPreloadDocument(document);
-							// }
-							return f;
 						}
+						else {
+							var c = node.previousSibling;
+							while (i.o.lastChild) {
+								_ini.push(i.o.lastChild);
+								pt.o.insertBefore(i.o.lastChild, c);
+							}
+						}
+
+						$igk(node).remove();
+						for (var i = 0; i < _ini.length; i++) {
+							if (_ini[i].nodeType == 1)
+								igk.ajx.fn.initnode(_ini[i]); // .push(i.o.lastChild)
+						}
+
+						//TODO : replace node
+
+
+						// while (b != null) {
+						// if (!g) {
+						// pt.o.replaceChild(b.o, node);
+						// f = b;
+						// }
+						// else {
+						// // pt.o.appendChild(b.o);// b.insertAfter(ol.o);
+						// ol.insertAfter(b.o);
+						// }
+						// igk.ajx.fn.initnode(b.o);
+						// g = !0;
+						// ol = b;
+						// // i.o.removeChild(b.o);
+						// b = $igk(i.o.firstChild); // firstChild();
+						// }
+
+						// if (p && g) {
+						// __applyPreloadDocument(document);
+						// }
+						return f;
+					}
 				}
-			
-				,appendResponseTo: function (q) {
-								
-								var s = igk.createNode("dummy");
-								s.setHtml(this.xhr.responseText);
-								var f = s.o.firstChild;
-								var h = s.o.firstChild;
-								while (f) {
-									q.appendChild(f);
-									igk.ajx.eval(f);
-									f = f.nextSibling;
-								}
-							},
+
+				, appendResponseTo: function (q) {
+
+					var s = igk.createNode("dummy");
+					s.setHtml(this.xhr.responseText);
+					var f = s.o.firstChild;
+					var h = s.o.firstChild;
+					while (f) {
+						q.appendChild(f);
+						igk.ajx.eval(f);
+						f = f.nextSibling;
+					}
+				},
 				prependResponseTo: function (q) {
 					var s = igk.createNode("dummy");
 					s.o.innerHTML = this.xhr.responseText;
@@ -13639,7 +13652,7 @@ function createObject (T, t, args){
 			var r = '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">';
 
 			var g = igk.createNode("soap:Body", ns);
-			
+
 			// return;
 			var m = data.method;
 			if (m) {
@@ -13655,17 +13668,17 @@ function createObject (T, t, args){
 			// <soap:Body><getCountry><name>abc</name></getCountry></soap:Body></soap:Envelope>
 			r += g.o.outerHTML;
 			r += "</soap:Envelope>";
-			
+
 			igk.ajx.post(data.uri, r, function (xhr) {
 				if (this.isReady()) {
-					
+
 
 					var q = igk.createNode("div");
 					q.setHtml(xhr.responseText);
 					if (xhr.status == 200) {
 						if (m && data.ready) {
 							var g = q.getElementsByTagName(m + "_result")[0];
-							
+
 							data.ready({ data: g.innerHTML });
 						}
 					} else {
@@ -13701,7 +13714,7 @@ function createObject (T, t, args){
 			}
 		};
 		function _initnode(c) {
-			
+
 			_bready(c);
 			// _rootDepth++;		
 			// evaluate all script in this 
@@ -13713,9 +13726,9 @@ function createObject (T, t, args){
 			// call ready on node
 			igk.ajx.fn.nodeReady(c);
 			// _rootDepth = Math.max(0, --_rootDepth);
-			
-			
-			var p= igk.publisher;
+
+
+			var p = igk.publisher;
 			p.publish("sys://node/init", {
 				target: c, rootDepth: 0// _rootDepth 
 			});
@@ -13784,12 +13797,12 @@ function createObject (T, t, args){
 					if (this.isReady()) {
 						if (igk.winui.lineWaiter)
 							igk.winui.lineWaiter.remove(t);
-							igk.ajx.fn.replace_content(t).apply(this, [xhr]);
-					} else if ((xhr.status != 200) && (xhr.readyState == 4)){
+						igk.ajx.fn.replace_content(t).apply(this, [xhr]);
+					} else if ((xhr.status != 200) && (xhr.readyState == 4)) {
 						igk.winui.lineWaiter.remove(t);
 						if (igk.ENVIRONMENT.debug)
 							$igk(t).setHtml(igk.R.gets("AJX - Error"));
-						
+
 					}
 				}
 				if (igk.winui.lineWaiter) {
@@ -13800,7 +13813,7 @@ function createObject (T, t, args){
 			getfortarget: function (u, t) {
 				// u:uri
 				// t:target
-				
+
 				if (!t)
 					return;
 				igk.ajx.get(u, null, function (xhr) { if (this.isReady()) { this.setResponseTo(t); igk.ajx.fn.initnode(t); } });
@@ -13827,9 +13840,9 @@ function createObject (T, t, args){
 							igk.ajx.fn.replace_or_append_to(igk.dom.body().o).apply(this, [xhr]);
 						}
 						else {
-							
-							
-							
+
+
+
 							this.setResponseTo(host, true);
 						}
 					}
@@ -13884,7 +13897,7 @@ function createObject (T, t, args){
 					if (g != null)
 						igk.dom.body().setHtml('');
 					igk.ajx.fn.replace_or_append_to(igk.dom.body().o).apply(this, [xhr]);
-				}			
+				}
 			},
 			append_to_body: function (xhr) {
 				if (this.isReady()) {
@@ -13898,16 +13911,16 @@ function createObject (T, t, args){
 			},
 			ctrl_replacement: function (c) {
 				if (c && c.tagName && (c.tagName.toLowerCase() == 'igk:replace-ctrl')) {
-			
+
 					var q = $igk(c);
 					var st = q.getAttribute("target");
 					var h = q.getAttribute("hash");
-					
+
 					// alert("dkdk : "+st);
 					if (st) {
 						var t = $igk(st).first();
 						if (t) {
-							
+
 							var s = q.select(">>");
 							if (s.getCount() == 1) {
 								s.each(function () {
@@ -13967,7 +13980,7 @@ function createObject (T, t, args){
 
 
 								if (c.tagName && (c.tagName.toLowerCase() == 'igk-body') && ($igk(target).o == igk.dom.body().o)) {
-									
+
 									igk.dom.body().replaceWith(c);
 									igk.ajx.fn.initbody();
 									ct++;
@@ -14073,9 +14086,9 @@ function createObject (T, t, args){
 							// -- -
 							// because of the readyState will initialize all "component" on 'complete' no need to call init node
 							// -- -
-							
+
 							// igk.ajx.fn.initnode(q.c);					
-							
+
 							// igk.ajx.eval(q.c);	
 							// evaluate binding Attrib Data
 							// igk.ctrl.callBindAttribData(q.c);	
@@ -14090,7 +14103,7 @@ function createObject (T, t, args){
 				}
 				_initnode(c);
 
-			
+
 			}
 
 		});
@@ -14487,7 +14500,7 @@ function createObject (T, t, args){
 		var __u = igk.constants.undef;
 
 		// var mut = new MutationObserver(function(e){
-		
+
 		// });
 		// igk.ready(function(){
 		// mut.observe(igk.dom.body().o, {childList:true});
@@ -14495,57 +14508,42 @@ function createObject (T, t, args){
 
 		createNS("igk.tinyMCE",
 			{
-				runOn: function (el, op) {
+				runOn: function (el, op) { 
 					igk.ready(function () {
-					if (typeof (tinyMCE) != __u) {
-						// because of identification. 
-						// remove all editor that's not present on document
-						for (var i in tinyMCE.editors) {
-							if (i == 'length') continue;
+						if (typeof (tinyMCE) != __u) {
+							// because of identification. 
+							// remove all editor that's not present on document
+							for (var i in tinyMCE.editors) {
+								if (i == 'length') continue;
 
-							var m = tinyMCE.editors[i];
-							if (!$igk(m.getElement()).isOnDocument()) {
-								tinyMCE.remove(m);
-							}
-						}
-						setTimeout(function () {
-							var g = { selector: el.elements };
-							var m = null;
-							for(var i in op){
-								if (i == "protect"){
-									m = Array();
-									for(var j = 0; j < op[i].length; j++){
-										m.push(new RegExp(op[i][j], "g"));
-									}
-									g[i] = m;
-									continue;
+								var m = tinyMCE.editors[i];
+								if (!$igk(m.getElement()).isOnDocument()) {
+									tinyMCE.remove(m);
 								}
-								
-								g[i] = op[i];
-							} 
-							tinyMCE.init(g);
-						}, 100);
-						return;
-					}
+							}
+							setTimeout(function () {
+								var g = { selector: el.elements };
+								var m = null;
+								for (var i in op) {
+									if (i == "protect") {
+										m = Array();
+										for (var j = 0; j < op[i].length; j++) {
+											m.push(new RegExp(op[i][j], "g"));
+										}
+										g[i] = m;
+										continue;
+									}
+
+									g[i] = op[i];
+								} 
+								tinyMCE.init(g); 
+							}, 100);
+							return;
+						}
 					});
-					
-					
-					// else {
-						// igk.ready(function () {
-							// tinyMCE.init({ selector: el.elements });
-						// });
-					// }
-					
-					// var s = $igk(el.elements);
-					// if (s.getCount()==1)
-					// {
-					// if (s.first().isOnDocument()){
-					// igk.tinyMCE.init(el);
-					// }else{
-					
-					// }
-					// }
-					
+
+
+				
 				},
 				init: function (elements, op) {
 					// var prop={
@@ -14668,8 +14666,6 @@ function createObject (T, t, args){
 					}
 				}
 			});
-
-
 	})();
 
 
@@ -14805,7 +14801,7 @@ function createObject (T, t, args){
 					}
 					catch (ex) {
 						console.error(ex);
-						igk.winui.notify.showErrorInfo("Exception", "__invoke::Binding ::: "+ key +" <br />" + ex
+						igk.winui.notify.showErrorInfo("Exception", "__invoke::Binding ::: " + key + " <br />" + ex
 							+ "<p>" + ex.stack + "</p>"
 							+ "<div>From : Source Code</div><pre style=\"max-height:200px; overflow-y:auto;\">" + e + "</pre>");
 					}
@@ -14824,7 +14820,7 @@ function createObject (T, t, args){
 				}
 			}
 			// if (igk.BINDING)
-			
+
 			// mark it as binding data
 			q.setConfig("igk:callAttribBindingData", 1);
 		}
@@ -14860,16 +14856,16 @@ function createObject (T, t, args){
 					return t;// m_attribCtrl[k] || null;
 				},
 				bindAttribManager: function (key, callback, setting) {
-					if (setting && !(key in  m_attrib_datas)){
+					if (setting && !(key in m_attrib_datas)) {
 						igk.ctrl.registerAttribManager(key, setting);
 					}
 					if (m_attrib_datas[key] && callback) {
 						__registerAttribManager(key, callback);
 					}
 					else {
-						igk.winui.notify.showMsg("<div class=\"igk-notify igk-notify-danger\">"+
-						"Error No Binding Attrib registrated for \"" + key +
-						"\".<br/><div>You must register it before call the bindAttribManager function. igk.ctrl.registerAttribManager");
+						igk.winui.notify.showMsg("<div class=\"igk-notify igk-notify-danger\">" +
+							"Error No Binding Attrib registrated for \"" + key +
+							"\".<br/><div>You must register it before call the bindAttribManager function. igk.ctrl.registerAttribManager");
 					}
 				},
 				// bind function to call when document page loaded before ready
@@ -15096,7 +15092,7 @@ function createObject (T, t, args){
 				// -------------------------------------------------------------------------
 				$igk(q).reg_event("change", __changez)
 					.reg_event("keyup", function (evt) {
-						
+
 						var kc = evt.keyCode || 0;
 						switch (kc) {
 							case 37:// LEFT
@@ -15114,10 +15110,10 @@ function createObject (T, t, args){
 				// $igk(q).o.setAttribute("onchange","javascript: alert('value chagne'); ");		
 				// igk.data=q;
 				__changez();
-				
-				
-				
-				
+
+
+
+
 				// alert("bad===="+$igk(q).getParentBody());		
 				if (q.o.form) {
 					// restore the default view
@@ -15127,7 +15123,7 @@ function createObject (T, t, args){
 						var i = s.first();
 						if (i) {
 							q.o.value = i.o.value;
-							
+
 							__changez();
 						}
 					});
@@ -15324,14 +15320,14 @@ function createObject (T, t, args){
 					}
 				}
 				else {
-					console.debug('[BJS] -/!\v properties '+item+' not defined');
+					console.debug('[BJS] -/!\v properties ' + item + ' not defined');
 				}
 			}
 			// load dummy css style properties
 			var xdum = igk.createNode("div", igk.namespaces.xhtml);
 			var dum = xdum.o;
 			var l = false;
-			if (dum.style){
+			if (dum.style) {
 				for (var i in dum.style) {
 					if (typeof (dum.style[i]) != IGK_FUNC) {
 						switch (i) {
@@ -15346,7 +15342,7 @@ function createObject (T, t, args){
 						if (i.indexOf('-') != -1)
 							continue;
 						props[(i + '').toLowerCase()] = i;
-						
+
 						l = !0;
 					}
 				}
@@ -15461,8 +15457,8 @@ function createObject (T, t, args){
 								v_t = 1;
 							}
 						}
-						
-						
+
+
 						return v_prop.toString();
 
 						break;
@@ -15478,23 +15474,23 @@ function createObject (T, t, args){
 				getProperties: function () {
 					return props;
 				},
-				getDomStyle: function(){
-					if(domProp == null){
+				getDomStyle: function () {
+					if (domProp == null) {
 						//generate
-						domProp = {};	
+						domProp = {};
 						var rb = igk.createNode("body"); //initialize
-						rb.setCss({"display":"none", "clear":"both", "width":"auto"});
+						rb.setCss({ "display": "none", "clear": "both", "width": "auto" });
 						document.body.appendChild(rb.o);
-						for(var i in props){
-							
+						for (var i in props) {
+
 							domProp[i] = rb.getComputedStyle(props[i]);
-							if(i=="width"){
-								console.debug(i+" x = "+domProp[i] );
+							if (i == "width") {
+								console.debug(i + " x = " + domProp[i]);
 							}
 						}
 						rb.remove();
 					}
-					
+
 					return domProp;
 				},
 				getStyleValue: function (stylelist, n) {
@@ -15502,7 +15498,7 @@ function createObject (T, t, args){
 					// @stylelist: get width getComputedStyle function
 					// @n : the name of the property to get
 
-					
+
 					return __getStyleValue(stylelist, n);
 				},
 				getValue: function (item, name) {
@@ -15524,11 +15520,11 @@ function createObject (T, t, args){
 					return vendors;
 				},
 				isItemSupport: function (names) {
-					if (typeof(names)=='string'){
-						var s = names.toLowerCase() ;
+					if (typeof (names) == 'string') {
+						var s = names.toLowerCase();
 						return s in props;
 					}
-					
+
 					for (var i = 0; i < names.length; i++) {
 						if (typeof (props[names[i].toLowerCase()]) != IGK_UNDEF)
 							return !0;
@@ -15542,7 +15538,7 @@ function createObject (T, t, args){
 						}
 					}
 					return !1;
-				}, 
+				},
 				setProperty: function (item, name, value) {
 					var k = {};
 					var n = null;
@@ -15557,7 +15553,7 @@ function createObject (T, t, args){
 						// that notation work only for firefox
 						// item.setCss({[n]: value});						
 					}
-					
+
 					// setting real value
 
 					__setProperty(item, k);
@@ -15635,13 +15631,13 @@ function createObject (T, t, args){
 	};
 	// utility function 
 	// createNS("igk", {
-		// getQueryOptions: function(){
-			
-		// },	
-		// isInteger: function (n) {
-			// var f = Number.isInteger || _is_integer;
-			// return f(n);
-		// }
+	// getQueryOptions: function(){
+
+	// },	
+	// isInteger: function (n) {
+	// var f = Number.isInteger || _is_integer;
+	// return f(n);
+	// }
 	// });
 
 	// ----------------------------------------------------------------------------------
@@ -15678,7 +15674,7 @@ function createObject (T, t, args){
 
 		// .STATIC notify objcet
 		igk.winui.notify = function () {// notification class .atomic
-			if ( this.type && (this.type == IGK_CLASS)) {
+			if (this.type && (this.type == IGK_CLASS)) {
 
 				if (typeof (this.notify.getInstance) == IGK_UNDEF) {
 					this.notify.getInstance = (function () {
@@ -15814,7 +15810,7 @@ function createObject (T, t, args){
 					}
 					div.setCss({
 						"marginTop": p + "px"
-					});		
+					});
 					if (h != div.getComputedStyle('height')) {
 						// ========				
 						div.animate({ height: h }, {
@@ -15877,7 +15873,7 @@ function createObject (T, t, args){
 				}
 				igk.winui.reg_event(window, "load", __show);
 				if (!nc) {
-					
+
 					if (igk.navigator.isFirefox()) {
 						igk.winui.reg_event(document, "keypress", fc);
 					} else {
@@ -15903,7 +15899,7 @@ function createObject (T, t, args){
 					if (!igk.is_readyRegister(__show)) {
 						_setupview();
 					}
-					
+
 					div.setCss({
 						"zIndex": "800",// set to top index
 						"top": "50%",
@@ -15983,7 +15979,7 @@ function createObject (T, t, args){
 			init: function () {// initialize a notification controler
 				// init this current node as a message box 
 				var q = $igk(igk.getParentScript());
-				
+
 				if (q && (q.o.parentNode != null)) {
 					igk.ready(function () {
 						var t = q.select('.title').first().getHtml();
@@ -16020,8 +16016,8 @@ function createObject (T, t, args){
 				igk_rmScript();
 		}
 	}, {
-			desc: 'balafon utility functions namespace'
-		});
+		desc: 'balafon utility functions namespace'
+	});
 
 	//encapsulate event source for best handling behaviour
 	createNS("igk.winui.eventArgs", {
@@ -16093,21 +16089,21 @@ function createObject (T, t, args){
 				});
 
 				m_eventcontext.reg_event(m_q, "dragenter", function (evt) {
-					
+
 					evt.preventDefault();
 					if (m_properties && m_properties.enter) {
 						m_properties.enter.apply(q, arguments);
 					}
 				});
 				m_eventcontext.reg_event(m_q, "dragleave", function (evt) {
-					
+
 					// m_target.setCss({backgroundColor:"red"});
 					if (m_properties && m_properties.leave) {
 						m_properties.leave.apply(q, arguments);
 					}
 				});
 				m_eventcontext.reg_event(m_q, "dragover", function (evt) {
-					
+
 					// allow drop on item 
 					// evt.dataTransfer.effectAllowed="copy";
 					evt.preventDefault();
@@ -16118,7 +16114,7 @@ function createObject (T, t, args){
 				});
 				// not define on firefox
 				// m_eventcontext.reg_event(m_q,"dragdrop",function(evt){
-				
+
 				// evt.preventDefault();
 
 				// });
@@ -16134,7 +16130,7 @@ function createObject (T, t, args){
 					}
 				});
 				// m_eventcontext.reg_event(m_q,"drag",function(evt){
-				
+
 				// });
 				// set up
 				m_target.setAttribute("draggable", false);
@@ -16214,10 +16210,10 @@ function createObject (T, t, args){
 			return !1;
 		},
 		close_all_frames: function () {
-			
+
 			igk.winui.notify.closeAlls();
 			igk.ready(function () {
-				
+
 				var t = [];
 				igk.dom.body().select(".igk-notify-box").each_all(function () {
 					var q = this;
@@ -16254,7 +16250,7 @@ function createObject (T, t, args){
 			};
 		}
 	});
-	
+
 	(function () {// igk resources manager
 
 		var keys = {};
@@ -16263,55 +16259,54 @@ function createObject (T, t, args){
 			en: ['en', 'en-En', 'en-US']
 		};
 		var _res = {};
-		function init_res(_res, loc){
+		function init_res(_res, loc) {
 
-		igk.appendProperties(_res, {
-			getLang: function () {
-				var s = igk.navigator.getLang().split(',')[0];
-				for (var i in m_lang) {
-					if (igk.system.array.isContain(m_lang[i], s))
-						return i;
+			igk.appendProperties(_res, {
+				getLang: function () {
+					var s = igk.navigator.getLang().split(',')[0];
+					for (var i in m_lang) {
+						if (igk.system.array.isContain(m_lang[i], s))
+							return i;
+					}
+					return s;
+				},
+				gets: function (k) {
+					if (__lang[k]) {
+						return __lang[k];
+					}
+					return k;
+				},
+				format: function (n) {
+					var txt_ = n;
+					if (/(string)/.test(typeof (_res[n])))
+						txt_ = _res[n];
+					if (arguments.length > 1) {
+						var tab = igk.system.array.slice(arguments, 1);
+
+						txt_ = txt_.replace(/\{([0-9]+)\}/g, function (m, s) {
+							return tab[s];
+						});
+					}
+					//format string 
+					return txt_;
+				},
+				getLocation: function () {
+					return loc;
+				},
+				"__": function (n) {
+					if (n in igk.R) {
+						return igk.R[n];
+					}
+					return n;
 				}
-				return s;
-			},
-			gets: function (k) {
-				if (__lang[k]) {
-					return __lang[k];
-				} 
-				return k;
-			},
-			format: function(n){
-				var txt_ = n;
-				if (/(string)/.test(typeof(_res[n])))
-					txt_ = _res[n]; 
-				if (arguments.length>1){
-					var tab = igk.system.array.slice(arguments, 1);
-					
-					txt_ = txt_.replace(/\{([0-9]+)\}/g, function(m, s){						 
-						return tab[s];
-					}); 
-				}
-				//format string 
-				return txt_;
-			},
-			getLocation: function(){
-				return loc;
-			},
-			"__" : function(n){
-			if (n in igk.R)
-			{
-				return igk.R[n];
+			});
+
+		};
+		igk.defineProperty(igk, 'R', {
+			get: function () {
+				return _res;
 			}
-			return n;
-		}
 		});
-
-	};  
-	igk.defineProperty(igk, 'R', {
-		get: function () {
-			return _res;
-		}
-	});
 
 
 		function _loadResource(loc, mime, opts) {
@@ -16320,15 +16315,15 @@ function createObject (T, t, args){
 			mime = mime || "text/plain";
 			var _getRes = 0;
 			var _src = ["_getRes = async function (){",
-					"try{",
-					"var o  = await igk.ajx.asyncget(loc,null, mime);", 
-					"o  = o ? opts.then(o) : null;",
-					"return  o;",
-					"}catch(ex){",
-					" console.error('get resource failed: '+loc+ '\nMessage:'+ex.getMessage());",					
-					"}",
-					"return null;",
-					"};"].join(" ");
+				"try{",
+				"var o  = await igk.ajx.asyncget(loc,null, mime);",
+				"o  = o ? opts.then(o) : null;",
+				"return  o;",
+				"}catch(ex){",
+				" console.error('get resource failed: '+loc+ '\nMessage:'+ex.getMessage());",
+				"}",
+				"return null;",
+				"};"].join(" ");
 			try {
 				if (igk.navigator.isSafari())
 					throw ('safari not handle aync await');
@@ -16339,7 +16334,7 @@ function createObject (T, t, args){
 				_getRes = function () {
 					var _ext = igk.navigator.isIE() ? ".ejson" : ".json";// because of mime type        
 					var e = {
-						"then": function (t) { 
+						"then": function (t) {
 							this.__then__ = t;
 							return this;
 						},
@@ -16348,21 +16343,21 @@ function createObject (T, t, args){
 							return this;
 						}
 					};
-					igk.system.io.getData(loc, function (o) { 
-						if (e.__then__ && o.data && (o.data.length > 0)){ 
+					igk.system.io.getData(loc, function (o) {
+						if (e.__then__ && o.data && (o.data.length > 0)) {
 							e.__then__(opts.then(o.data));
 						}
-						else if (e.__catch__){
-							e.__catch__("/!\\ failed: "+loc);
+						else if (e.__catch__) {
+							e.__catch__("/!\\ failed: " + loc);
 						}
 					}, "application/xml");
-					
+
 					return e;
 				};
 			}
 
 			if (typeof (_getRes) != 'undefined') {
-				_getRes().then(function (o) { 
+				_getRes().then(function (o) {
 					_res = o;
 					init_res();
 				})["catch"](function (e) {
@@ -16376,37 +16371,37 @@ function createObject (T, t, args){
 
 		igk.ready(function () {
 			var _lang = igk.dom.html().getAttribute("lang") || igk.navigator.getLang();
-			
+
 			//if windows application 
 			// var _ext = ".json";
 			var dir = igk.system.io.getlocationdir(igk.getScriptLocation());
 			if (!dir)
 				return;
-			
+
 			var loc = igk.resources.getlang(dir, _lang); // + "/Lang/res." + _lang + _ext; 			
 			// TODO: Load language resources files ::::: in productions
-			
-			
+
+
 			// return;
 			// alert("loading : "+loc);
-			
+
 			var g = null;
 			var _storage = window.localStorage;
-			if (typeof(_storage) != 'undefined')
-			    g = _storage.getItem("lang/"+_lang);//store global language items
-			if (g==null){
-					_loadResource(loc, "text/json", {
-						then: function (o){  
-								if (_storage)
-									_storage.setItem("lang/"+_lang, o);
-								return igk.JSON.parse(o);
-							}
-					});
-			
-			}else{
-				igk.invokeAsync(function(){
-				_res = igk.JSON.parse(g);
-				init_res(_res, loc);
+			if (typeof (_storage) != 'undefined')
+				g = _storage.getItem("lang/" + _lang);//store global language items
+			if (g == null) {
+				_loadResource(loc, "text/json", {
+					then: function (o) {
+						if (_storage)
+							_storage.setItem("lang/" + _lang, o);
+						return igk.JSON.parse(o);
+					}
+				});
+
+			} else {
+				igk.invokeAsync(function () {
+					_res = igk.JSON.parse(g);
+					init_res(_res, loc);
 				});
 			}
 
@@ -16415,29 +16410,29 @@ function createObject (T, t, args){
 	})();
 
 
-	
+
 	(function () {
 		function __sendFile(evt, target, async, update, startCallback, progressCallback, doneCallBack) {
 			var p = target.getProperties();
-			
-			if(p.buzy){
+
+			if (p.buzy) {
 				return;
 			}
-			
+
 			p.buzy = !0;
 			if (evt.dataTransfer && igk.system.array.isContain(evt.dataTransfer.types, "Files")) {
 				var _t = evt.dataTransfer.files.length;
 				var _m = _t;
 				p.total = _t;
 				p.current = 0;
-				var _r =  function (){
+				var _r = function () {
 					_t--;
-					
-					
-					if (_t<=0){
-						p.buzy =  null;
+
+
+					if (_t <= 0) {
+						p.buzy = null;
 						p.current = 0;
-					}else{
+					} else {
 						p.current = _m - _t;
 					}
 					doneCallBack.apply(this, arguments);
@@ -16445,7 +16440,7 @@ function createObject (T, t, args){
 				for (var i = 0; i < _m; i++) {
 					if (target.support(evt.dataTransfer.files[i].type)) {
 						igk.ajx.uploadFile(null, evt.dataTransfer.files[i], target.getUri(), async, update, startCallback, progressCallback, _r /*doneCallBack*/);
-					}else{
+					} else {
 						//not supported to reduce the total of file upload
 						_t--;
 						p.total = _t;
@@ -16464,9 +16459,9 @@ function createObject (T, t, args){
 		createNS("igk.winui.dragdrop.fn", {
 			upload_file: function (evt) { // upload file
 				evt.preventDefault();
-				evt.stopPropagation(); 
+				evt.stopPropagation();
 				// important must stop propagation 
-				
+
 				var target = this;
 				var p = target.getProperties();
 				__sendFile(evt, target, p.async, p.update, p.start, p.progress, p.done);
@@ -16484,7 +16479,7 @@ function createObject (T, t, args){
 	// var m=igk.winui.dragdrop.init(ns_igk.getParentScript(),{
 	// uri: uri,
 	// update:function(evt){
-	
+
 	// avoid default action .. link click
 	// evt.preventDefault();
 
@@ -16531,11 +16526,11 @@ function createObject (T, t, args){
 				// var csv='a,b,c\n1,2,3\n';
 				var data = new Blob([v], { "type": t });
 				igk.dom.body().appendChild(a.o); // not require in IE 
-				
+
 				a.o.download = n || "file.data";// f
 				a.o.href = URL.createObjectURL(data);
 				a.o.type = t;
-				
+
 				a.o.click();
 				a.remove();
 				return 1;
@@ -16546,7 +16541,7 @@ function createObject (T, t, args){
 				var doc = new DOMParser();
 				var xml = doc.parseFromString(txt, type || "text/xml");
 				if (xml.documentElement.nodeName == "parsererror") {
-					
+
 					// document.write("Error in XML<br><br>" + xml.documentElement.childNodes[0].nodeValue);
 					// alert("Error in XML\n\n" + xml.documentElement.childNodes[0].nodeValue);
 					return false;
@@ -16571,56 +16566,56 @@ function createObject (T, t, args){
 		// xml.loadXML(xmltxt);
 		// igk_show_prop(xml);
 		// igk.io.xml.parseString("info");
-		
+
 
 		// var doc =igk.dom.createDocument();// document.implementation.createDocument(null,"root",null);
-		
-		
+
+
 		// doc.async=false;
 		// __igk(doc).reg_event("readystatechange",function(evt){
-		
-		
+
+
 		// if(evt.readyState==4){
-		
+
 		// doc =igk.dom.createDocument();
 		// doc.async=false;
 		// xsl =doc.load("Lib/igk/Scripts/demo.xsl").firstChild;
 
-		
 
-		
+
+
 		// }
-		
+
 		// });
-		
+
 		// igk.ready(function(){
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
 		// document.write(doc.firstChild.outerHTML);
 		// });
 		// doc.load && doc.load("Lib/igk/Scripts/data.xml",function(evt){
 
-		
+
 		// var doc2 =igk.dom.createDocument();
 		// doc2.async=false;
 		// var	xsl=doc2.load("Lib/igk/Scripts/demo.xsl");
 
-		
+
 
 		// var ex=igk.dom.transformXSL(doc,xsl);
 
-		
-		
+
+
 
 		// var ex= doc.firstChild.transformNode(xsl);
-		
-		
+
+
 		// }
-		
+
 
 
 		// );
@@ -16629,7 +16624,7 @@ function createObject (T, t, args){
 
 
 		// doc.open("Lib/igk/Scripts/data.xml");		
-		
+
 
 	})();
 
@@ -16648,9 +16643,9 @@ function createObject (T, t, args){
 
 	function __global_ready(evt) {
 		igk.context = "global_ready";
-		if (document.readyState == "complete") {			
-			
-		    igk.ready(null, "readystatechange");
+		if (document.readyState == "complete") {
+
+			igk.ready(null, "readystatechange");
 		}
 	};
 	igk.winui.reg_event(document, "readystatechange", __global_ready);
@@ -16658,18 +16653,18 @@ function createObject (T, t, args){
 
 	function __bindbalafonjs() { // bind balafon js data type
 		var q = this.o;
-		var src = '"use strict"; (function(){'+q.innerHTML+'}).apply(this);';
+		var src = '"use strict"; (function(){' + q.innerHTML + '}).apply(this);';
 		// igk_eval.apply(q, [q.innerHTML, q]);
-		try{
+		try {
 			//igk_eval.apply(q, [src, q]);
 			var _bck = m_scriptNode;
 			m_scriptNode = this.o;
 			(new Function(src)).apply(this);
 			m_scriptNode = _bck;
-			
-		}catch(e){
+
+		} catch (e) {
 			console.debug(src);
-			console.error(e); 
+			console.error(e);
 		}
 		if (q.getAttribute("autoremove")) {
 			this.remove();
@@ -16679,8 +16674,8 @@ function createObject (T, t, args){
 	// balafon script js
 	igk.ready(function () {
 		var j = 0;
-		igk.dom.body().qselect("script[type='text/balafonjs']").each_all(function (){
-		 
+		igk.dom.body().qselect("script[type='text/balafonjs']").each_all(function () {
+
 			__bindbalafonjs.apply(this);
 			j++;
 		});
@@ -16775,12 +16770,12 @@ igk.ctrl.bindAttribManager("igk-js-fix-loc-scroll-width", function () {
 					return;
 				}
 				var animprop = {};
-				
+
 				if (s == 1) {
 					igk.appendProperties(animprop, { "right": "0px" });
 					if (g.fn.hasVScrollBar()) {
 						animprop.right = g.fn.vscrollWidth() + "px";
-						
+
 					}
 				}
 				if (h == 1) {
@@ -16844,7 +16839,7 @@ igk.ctrl.bindAttribManager("igk-js-fix-loc-scroll-width", function () {
 		var q = this;
 		var k = this.getHtml();
 		__reg_key(k, q);
-		
+
 		// q.reg_context_options("modkeyv",k);
 		// q.reg_context_options("delkeyv",k);
 
@@ -16855,14 +16850,14 @@ igk.ctrl.bindAttribManager("igk-js-fix-loc-scroll-width", function () {
 		q.reg_event("contextmenu", function (evt) {
 			evt.preventDefault();
 
-			
+
 			var langctrl = igk.ctrl.getRegCtrl("c_l");
 			if (langctrl) {
 				var p = q.getParentCtrl();
 				var k = q.getHtml();
 				var pid = p ? p.o.id : '';
 
-				
+
 				igk.ajx.post(langctrl.getUri("mod_key&ajx=1"), "key=" + k + "&ctrl=" + pid,
 					igk.ajx.fn.replace_or_append_to_body,
 					true);
@@ -16942,7 +16937,7 @@ igk.ctrl.bindAttribManager("igk-js-fix-loc-scroll-width", function () {
 		});
 		if (t == null) {
 			// init node key
-			
+
 			__register_lang_key($igk(this));
 		}
 
@@ -16955,7 +16950,7 @@ igk.ctrl.bindAttribManager("igk-js-fix-loc-scroll-width", function () {
 				if (n != v) {
 					$igk('.igk-new-lang-key').each_all(function () {
 						if (this.getHtml() == n) {
-							
+
 							// this.setHtml(v);
 							var idx = this.getAttribute("igk:data") || 0;
 							d && (v = d[idx]);
@@ -16991,7 +16986,7 @@ igk.system.createNS("igk.winui.navlink", {
 				// igk.dom.body()
 				var q = $igk(b).getscrollParent();
 				// igk.show_prop(b.o);					
-				
+
 				if (q) {
 					q.scrollTo(b.o, {
 						duration: 500,
@@ -17127,7 +17122,7 @@ igk.ctrl.bindAttribManager("igk-js-anim-msover", function () {
 	});
 	// mouseenter not supported for safari window
 	// this.reg_event("mouseenter",function(){ 
-	
+
 	// });
 	// mouseout vs mouseleave . safari error
 	this.reg_event("mouseout", function () {
@@ -17231,7 +17226,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 					}
 					// alert("tag is "+tag + " VS  "+r.o.tagName);
 					// if (tag != 'option'){
-						// r.o.tagName = "option";
+					// r.o.tagName = "option";
 					// }
 					q.appendChild(r);
 					// continue execution
@@ -17334,14 +17329,14 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 
 	function __disable_func(evt) {
 		evt.preventDefault();
-	}	
+	}
 
 	// override the click event functions register function for click or touch screen
 	igk.winui.registerEventHandler("click", {
 		reg_event: function (item, func, useCapture) {	// click host handler
 			// if($igk(item).istouchable())
 			// {			
-			
+
 			// igk.winui.reg_system_event(item,"click",__disable_func,useCapture);
 			// igk.winui.reg_system_event(item,"click",func,useCapture);
 			// return igk.winui.reg_system_event(item,"touchend",func,useCapture);
@@ -17362,12 +17357,12 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 		}
 	});
 
-	function _dblevent(item, func){
+	function _dblevent(item, func) {
 		var last = 0;
-		func.badge = function(evt){
-			if ((evt.timeStamp - last)<500){
+		func.badge = function (evt) {
+			if ((evt.timeStamp - last) < 500) {
 				//console.debug("change type");
-				var h = igk.winui.events.createEvent("dbltouch",{});
+				var h = igk.winui.events.createEvent("dbltouch", {});
 				//evt.type ="dbltouch";
 				func.apply($igk(item).o, [h]);
 			}
@@ -17378,13 +17373,13 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 
 	igk.winui.registerEventHandler("dbltouch", {
 		reg_event: function (item, func, useCapture) {
-			if($igk(item).istouchable()){
+			if ($igk(item).istouchable()) {
 				return igk.winui.reg_system_event(item, "touchstart", _dblevent(item, func), useCapture);
 			}
 			return 0;
 		},
-		unreg_event:function(item, func){
-			if($igk(item).istouchable()){
+		unreg_event: function (item, func) {
+			if ($igk(item).istouchable()) {
 				return igk.winui.unreg_system_event(item, "touchstart", func, useCapture);
 			}
 		}
@@ -17434,20 +17429,20 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 		}
 		return !1;
 	};
-	function _unbindEventData(e, n){
+	function _unbindEventData(e, n) {
 		var t = m_eventDatas[n];
 		var r = 0;
 		if (t) {
 			var __t = [];
 			for (var s = 0; s < t.length; s++) {
-				
-				if (t[s]== e){
+
+				if (t[s] == e) {
 					r = 1;
 					continue;
 				}
 				__t.push(t[s]);
 			}
-			m_eventDatas[n]= __t;
+			m_eventDatas[n] = __t;
 		}
 		return r;
 	};
@@ -17456,11 +17451,11 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 
 	igk.winui.registerEventHandler(PN, {
 		reg_event: function (item, func, useCapture, single) {
-			var _dc = 0;			
-			if (typeof(single)=='undefined'){
+			var _dc = 0;
+			if (typeof (single) == 'undefined') {
 				single = 1;
-			}			
-			if (single && (_dc= _getEventData(PN, item, func))){
+			}
+			if (single && (_dc = _getEventData(PN, item, func))) {
 				console.debug("[BJS] - function already binded for .", item, item === _dc.i, _dc);
 				return;
 			}
@@ -17489,7 +17484,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 			return igk.winui.reg_system_event(item, "click", c.bind, useCapture);
 		},
 		unreg_event: function (item, func, useCapture) {
-			var n ="touchOrClick";
+			var n = "touchOrClick";
 			var c = _getEventData(n, item, func);
 			if (c) {
 				if ($igk(item).istouchable()) {
@@ -17498,7 +17493,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 				var o = igk.winui.unreg_system_event(item, "click", c.bind);
 				//console.debug("unbind event : "+ 
 				_unbindEventData(c, n);
-				
+
 				return o;
 			}
 		}
@@ -17509,7 +17504,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 			reg_event: function (item, func, useCapture) {
 				var c = {
 					n: n, index: 0, i: item, h: 0, "func": func, bind: function (evt) {
-						
+
 
 						if (evt.type == mobe) {
 							if (useCapture && !useCapture.passive) {
@@ -17540,7 +17535,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 						o = igk.winui.unreg_system_event(item, mobe, c.bind);
 					}
 					// var o=igk.winui.unreg_system_event(item,"click",c.bind);				
-					
+
 					return o;
 				}
 			}
@@ -17554,7 +17549,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 	// {
 	// reg_event: function(item,func,useCapture){
 	// var c={n:'igkTouchStart',index: 0,i: item,h: 0,"func":func,bind: function(evt){
-	
+
 
 	// if(evt.type=="touchend"){
 	// evt.preventDefault();
@@ -17584,7 +17579,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 	// o = igk.winui.unreg_system_event(item,"touchstart",c.bind);
 	// }		
 	// // var o=igk.winui.unreg_system_event(item,"click",c.bind);				
-	
+
 	// return o;
 	// }
 	// }		
@@ -17671,7 +17666,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 	}
 	// register webkit event
 	function _reg_webkitevent(n) {
-		
+
 		var kn = 'onwebkit' + n;
 		return {
 			reg_event: function (item, func, useCapture) {// trans
@@ -17679,10 +17674,10 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 				if (item == null)
 					return;
 
-				
-				
-				
-				
+
+
+
+
 
 				if ((typeof (item[kn]) != igk.constants.undef)
 					||
@@ -17690,7 +17685,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 				) {
 					// if(kn=="onwebkittransitionend"){
 					// window[kn]=function(){
-					
+
 					// };
 					// return ;
 					// }
@@ -17715,7 +17710,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 				}
 				// register 		
 				if (item.addEventListener) {
-					
+
 					item.addEventListener(n, func, useCapture);
 				}
 			},
@@ -17724,7 +17719,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 				if (item == null)
 					return;
 				if (webkit.contains(func)) {
-					
+
 					if (item != window) {
 						if (!__unreg_item_func(item, func)) {
 							return;
@@ -17757,9 +17752,9 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 })();
 
 
-(function(){
+(function () {
 	//resizing handle
-	function _resizingHandle(){
+	function _resizingHandle() {
 		return {
 			reg_event: function (item, func, useCapture) {// trans
 				igk.winui.reg_event(window, 'resize', func);
@@ -17771,8 +17766,8 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 			}
 		};
 	};
-	
-	igk.winui.registerEventHandler('windowresize',_resizingHandle());
+
+	igk.winui.registerEventHandler('windowresize', _resizingHandle());
 })();
 
 
@@ -17818,10 +17813,10 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 				if (item == null)
 					return;
 
-				
-				
-				
-				
+
+
+
+
 				var kn = __gettabname(item, tab);
 				if (!kn) {
 					if (fallbackitem && (fallbackitem != item)) {
@@ -17887,14 +17882,14 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 		var m_eventContext = igk.winui.RegEventContext(this, $igk(this));
 		if (m_eventContext) {
 			m_eventContext.reg_window("resize", function () {
-				
+
 				q.setCss({ height: r.getHeight() + "px" });
 			});
 		}
 		// r.reg_event('resize',function(){
-		
+
 		// });
-		
+
 		// for(var s in r.o){
 		// if(igk.system.string.startWith(s,'on'))
 		// {
@@ -17915,7 +17910,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 
 		// return;
 		// }
-		
+
 		// };
 
 		// })(s);
@@ -18032,10 +18027,10 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 	// #igk-ajx-form
 	(function () {
 
-		function close(q){
+		function close(q) {
 			var h = q.select("^.igk-js-notify-box").first();
-			if (h){
-				igk.winui.notify.close();				
+			if (h) {
+				igk.winui.notify.close();
 			}
 		}
 		function __init() {
@@ -18045,22 +18040,21 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 			var noa = this.getAttribute("igk-ajx-form-no-autoreset");
 			var no_c = this.getAttribute("igk-ajx-form-no-close");
 			var ajxdata = igk.JSON.parse(this.getAttribute("igk-ajx-form-data"));
-			
-			
+
 			if (((r == 1) || r_obj) && (this.o.tagName.toLowerCase() == "form")) {
 
 				var b = r_obj && r_obj.targetid ? r_obj.targetid : self.getAttribute("igk-ajx-form-target");
-			
+
 				this.reg_event("submit", function (evt) {
 					evt.preventDefault();
 					evt.stopPropagation();
 					igk.ajx.postform(self.o, self.o.action, function (xhr) {
-						 
-						if ((xhr.readyState ==4) &&  (xhr.status != 200)){ 
+
+						if ((xhr.readyState == 4) && (xhr.status != 200)) {
 							close(self);
 							return;
 						}
-						if (this.isReady()) { 
+						if (this.isReady()) {
 							if (b) {
 								var k = null;
 
@@ -18099,7 +18093,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 							var frame = self.o["igk:framebox"];
 							if (!no_c && frame) {
 								frame.close();
-							}else{
+							} else {
 								close(self);
 							}
 							// autoreset
@@ -18161,58 +18155,58 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 	})();
 
 
-function __init_roll_owner(q) {
-			q.reg_event("mouseout", function (evt) { __rmClass.apply(q); });
-			q.reg_event("mouseover", function (evt) { __addClass.apply(q); });
-			q.select(".igk-roll-in").each_all(function () {
-				var g = this.select("^.igk-roll-owner").first();
-				if (g == q) {
-					this.rollparent = q;
-					var self = this;
-					this.reg_event("mouseover", function (evt) {
-						self.addClass("igk-roll-in-hover");
-					});
-					this.reg_event("mouseenter", function (evt) {
-						self.addClass("igk-roll-in-hover");
-					});
-				}
-			});
-};
+	function __init_roll_owner(q) {
+		q.reg_event("mouseout", function (evt) { __rmClass.apply(q); });
+		q.reg_event("mouseover", function (evt) { __addClass.apply(q); });
+		q.select(".igk-roll-in").each_all(function () {
+			var g = this.select("^.igk-roll-owner").first();
+			if (g == q) {
+				this.rollparent = q;
+				var self = this;
+				this.reg_event("mouseover", function (evt) {
+					self.addClass("igk-roll-in-hover");
+				});
+				this.reg_event("mouseenter", function (evt) {
+					self.addClass("igk-roll-in-hover");
+				});
+			}
+		});
+	};
 
-function __addClass() {
-var t = $igk(this);
-$igk(this).qselect(".igk-roll-in").each_all(function () {
-	if (this.rollparent == t)
-		this.addClass("igk-roll-in-hover");
+	function __addClass() {
+		var t = $igk(this);
+		$igk(this).qselect(".igk-roll-in").each_all(function () {
+			if (this.rollparent == t)
+				this.addClass("igk-roll-in-hover");
 
-});
-}
-function __rmClass() {
-var t = $igk(this);
-t.select(".igk-roll-in").each_all(function () {
-	if (this.rollparent == t) {
-		this.rmClass("igk-roll-in-hover");
+		});
 	}
-});
-};
-function __toggleview(v) {
-if (v)
-	__addClass.apply(this);
-else
-	__rmClass.apply(this);
-};
-		
-	
-	function __bind_roll(){
-				// 
+	function __rmClass() {
+		var t = $igk(this);
+		t.select(".igk-roll-in").each_all(function () {
+			if (this.rollparent == t) {
+				this.rmClass("igk-roll-in-hover");
+			}
+		});
+	};
+	function __toggleview(v) {
+		if (v)
+			__addClass.apply(this);
+		else
+			__rmClass.apply(this);
+	};
+
+
+	function __bind_roll() {
+		// 
 		// init system web item class registration 
 		// 
-		
+
 		// (function(){
 		// rollowner manager
 		// igk-roll-in-hover
 		// igk-roll-in
-		
+
 		// roll style 
 		igk.qselect(".igk-roll-owner").each(function () {
 			var q = this;
@@ -18245,124 +18239,43 @@ else
 
 
 
-		
-		
-	// var m_item = new igk.system.collections.list();
-	// var m_size = 0;
-	// function __initview(n, t) {
-		// var h = n.data.offset || n.getHeight();
-		// if (t.o.scrollTop <= h) {
-			// n.rmClass("igk-show");
-		// }
-		// else {
-			// n.addClass("igk-show");
-		// }
-		// // var w = n.data.measure.getWidth() 
-		// // - (-igk.getPixel(n.getComputedStyle("marginLeft"), n.o))
-		// // -igk.getPixel(n.getComputedStyle("marginRight"), n.o);
-		// var w = n.data.measure.getWidth()
-			// - -igk.getPixel(n.getComputedStyle("marginLeft"), n.o)
-			// - igk.getPixel(n.getComputedStyle("marginRight"), n.o);
+
 
 		
-		
-		// n.setCss({ width: w + "px" });
-
-	// };
-
-	// function __register(n) {
-		// if (!m_size) {
-			// igk.winui.reg_event(window, "resize", function () {
-				// var t = m_item.getCount();
-				// var n = 0;
-				// for (var i = 0; i < t; i++) {
-					// n = m_item.getItemAt(i);
-					// __initview(n, n.data.target);
-				// }
-			// });
-			// m_size = 1;
-		// }
-
-		// var id = n.getAttribute("igk-target") || "^.igk-parentscroll";
-		// var offset = n.getAttribute("igk-offset");
-		// if (id) {
-			// m_item.add(n);
-
-			// var me = igk.createNode("div").addClass("posab fitw").setCss({ height: "1px", "visibility": "hidden", "backgroundColor": "Indigo" });
-
-			// n.data.measure = me;
-			// n.data.offset = offset;
-
-			// n.insertAfter(me.o);
-
-
-			// var c = $igk(n.select(id));
-			// if (c) {
-				// if (c.isSr()) {
-
-					// var q = c.first();
-					// q.reg_event("scroll", function () {
-						// __initview(n, q);
-					// });
-					// __initview(n, q);
-					// n.data.target = q;
-				// }
-				// else {
-					// n.data.target = c;
-					// $igk(c).reg_event("scroll", function () {
-						// __initview(n, c);
-					// });
-					// __initview(n, c);
-				// }
-
-
-			// }
-			// else {
-				
-			// }
-		// } else {
-			
-		// }
-	// };
-
-	// igk.qselect(".igk-fixed-action-bar").each(function(){
-	 
-			 // __register(this);
-		// });
 	};
-	
+
 	igk.ready(function () {
 		// roll owner specification
-		
+
 		igk.ctrl.registerReady(function (e) {
 			if (igk.system.regex.item_match_class("igk-roll-owner", this)) {
 				__init_roll_owner($igk(this));
 			}
 		});
-		
+
 		new __bind_roll();
 
 
-		
+
 	});
-	
+
 })();
 
 //----------------------------------------------------------
 // BIND EVENT ATTRIB Management
 //----------------------------------------------------------
-(function(){
+(function () {
 	var _attribs = {};
 	igk.ctrl.registerAttribManager("igk:oninit", {});
-	igk.ctrl.bindAttribManager("igk:oninit", function (m,v) {
+	igk.ctrl.bindAttribManager("igk:oninit", function (m, v) {
 		// alert("bind attrib management: "+v);
-		try{
-		var fc = Function(v);
-		fc.apply(this.o);
-		if (!_attribs["oninit"])
-			_attribs["oninit"] = [];
-		_attribs["oninit"].push(this);
-		} catch(e){
+		try {
+			var fc = Function(v);
+			fc.apply(this.o);
+			if (!_attribs["oninit"])
+				_attribs["oninit"] = [];
+			_attribs["oninit"].push(this);
+		} catch (e) {
 			console.error(e);
 		}
 	});
@@ -18375,11 +18288,11 @@ else
 // when scrollling the target item scroll will then show the action-bar.
 // note action-bar is fixed
 // 
-(function(){
+(function () {
 	var m_size = 0;
 	var m_item = new igk.system.collections.list();
-	
-	
+
+
 	function __initview(n, t) {
 		var h = n.data.offset || n.getHeight();
 		if (t.o.scrollTop <= h) {
@@ -18395,12 +18308,12 @@ else
 			- -igk.getPixel(n.getComputedStyle("marginLeft"), n.o)
 			- igk.getPixel(n.getComputedStyle("marginRight"), n.o);
 
-		
-		
+
+
 		n.setCss({ width: w + "px" });
 
 	};
-	
+
 	function __register(n) {
 		if (!m_size) {
 			igk.winui.reg_event(window, "resize", function () {
@@ -18411,7 +18324,7 @@ else
 					__initview(n, n.data.target);
 				}
 			});
-			n.setCss({top:"0px"});
+			n.setCss({ top: "0px" });
 			m_size = 1;
 		}
 
@@ -18420,23 +18333,23 @@ else
 		if (id) {
 			m_item.add(n);
 
-			var me = igk.createNode("div").addClass("posab fitw").setCss({ height: "1px", "visibility": "hidden", "backgroundColor": "Indigo" });
+			var me = igk.createNode("div").addClass("posab fitw").setCss({ height: "1px", "visibility": "hidden" });
 
 			n.data.measure = me;
 			n.data.offset = offset;
 
 			n.insertAfter(me.o);
- 
+
 			var c = $igk(n.select(id));
 			if (c) {
 				if (c.isSr()) {
 
 					var q = c.first();
-					if (!q && (id!="^.igk-parentscroll")){
-						console.error("fixed-actionbar:  target not found : "+id);
+					if (!q && (id != "^.igk-parentscroll")) {
+						console.error("fixed-actionbar:  target not found : " + id);
 						return;
 						//q = n.select("^.igk-parentscroll").first();
-						
+
 					}
 					q.reg_event("scroll", function () {
 						__initview(n, q);
@@ -18461,16 +18374,16 @@ else
 			console.info("warning: no igk-fixed-action-bar-target attribute found");
 		}
 	};
- 	
-	igk.winui.initClassControl("igk-fixed-action-bar", function(){
+
+	igk.winui.initClassControl("igk-fixed-action-bar", function () {
 		__register(this);
-	
+
 	}, {
-		"desc":"fixed: action-bar"
+		"desc": "fixed: action-bar"
 	});
-	
+
 })();
-		
+
 
 // 
 // igk.winui.framebox
@@ -18530,7 +18443,7 @@ else
 
 	// 
 	igk.system.createNS("igk.winui.framebox",
-	{
+		{
 			// currentFrame: null,// visible frame
 			frames: new Array(),// array of frames
 			reg_frame_close: function (callback) {// call when frame closed on client side	
@@ -18543,12 +18456,12 @@ else
 				var f = frm;
 				$igk(f.parentNode).setCss({ opacity: 1 }).animate(
 					{ opacity: 0 }, {
-						interval: 20,
-						duration: 200,
-						complete: function () {
-							ns_igk.winui.framebox.close(frm);
-						}
-					});
+					interval: 20,
+					duration: 200,
+					complete: function () {
+						ns_igk.winui.framebox.close(frm);
+					}
+				});
 			},
 			getdialog_frame: function (node) {// register dialog for drawing manager
 				var t = null;
@@ -18591,8 +18504,8 @@ else
 				if (m_frame == null)
 					return;
 				if (m_closeBtn == null) {
-					
-					
+
+
 					igk.winui.notify.showErrorInfo("Error", '/!\\ JS: frame init :: No close button found.');
 					return;
 				}
@@ -18607,14 +18520,14 @@ else
 				};
 
 				// center dialog
-				
-				
-				
+
+
+
 				if (igk.system.regex.item_inherit_class("igk-android", p)) {
 					var m = $igk(p).rmClass("resizable").addClass("dispb fit overflow-y-a")
 						.select(".datas");
-					
-					
+
+
 
 					igk.winui.reg_event(window, 'resize', function () {
 						__setSize(m);
@@ -18653,12 +18566,12 @@ else
 					var f = m_frame;
 					$igk(f.parentNode).setCss({ opacity: 1 }).animate(
 						{ opacity: 0 }, {
-							interval: 20,
-							duration: 200,
-							complete: function () {
-								igk.winui.framebox.close(f);
-							}
-						});
+						interval: 20,
+						duration: 200,
+						complete: function () {
+							igk.winui.framebox.close(f);
+						}
+					});
 				}
 				// register event
 				function __a_event(evt) {
@@ -18687,14 +18600,14 @@ else
 							// close frame by animating it
 							$igk(frame).setCss({ opacity: 1 }).animate(
 								{ opacity: 0 }, {
-									interval: 20,
-									duration: 200,
-									complete: function () {
-										frame.parentNode.removeChild(frame);
-										__a_close_ajx();
+								interval: 20,
+								duration: 200,
+								complete: function () {
+									frame.parentNode.removeChild(frame);
+									__a_close_ajx();
 
-									}
-								});
+								}
+							});
 						}
 						return !1;
 					};
@@ -18714,7 +18627,7 @@ else
 					var p = frame.frameDialogOwner;
 					var s = $igk(frame);
 					if (s.unregEventContext) {
-						
+
 						s.unregEventContext();
 					}
 
@@ -18729,7 +18642,7 @@ else
 				if (f) {
 					// unreg event
 					__close_frame(f);
-					
+
 				}
 			},
 			init_confirm_frame: function (p, uri, ajxcontext) {
@@ -18754,10 +18667,10 @@ else
 								frm.submit();
 							}
 							else {
-								
+
 								igk.ajx.post(
 									frm["frame-close-uri"].value + "&id=" + frm["frame-id"].value,
-								 	null, null, false);
+									null, null, false);
 								__closeForm();
 							}
 							igk.winui.events.unregKeyPress(__keypressfunc);
@@ -18780,17 +18693,17 @@ else
 				yes: function (q) {// for yes button message response
 
 					// return !1;			
-					var v_frame = q['igk:framebox']; 
+					var v_frame = q['igk:framebox'];
 					window.igk.ajx.postform(q.form, q.form.action, function (xhr) {
 						if (this.isReady()) {
-							if (v_frame){ 
+							if (v_frame) {
 								v_frame.close();
 								if (v_frame.targetResponse) {
 									this.setResponseTo(v_frame.targetResponse);
-								}else{
+								} else {
 									igk.ajx.fn.replace_or_append_to_body.apply(this, [xhr]);
 								}
-								
+
 							}
 							else {
 								// this.replaceBody(xhr.responseText);	 
@@ -18807,8 +18720,8 @@ else
 
 	var _c_frame = null;
 	igk.defineProperty(igk.winui.framebox, "currentFrame", {
-		get: function(){return _c_frame;},
-		set: function(v){_c_frame = v;}
+		get: function () { return _c_frame; },
+		set: function (v) { _c_frame = v; }
 	});
 })();
 
@@ -18875,43 +18788,43 @@ else
 			self.o.activetab = s;
 		};
 		this.init = !0;
-	}; 
+	};
 
 
 	igk.winui.initClassControl("igk-tabcontrol", __init_tab_control, {
 		desc: "igk-control : tabcontrol"
 	});
 
-igk.system.createNS("igk.winui.controls.tabcontrol", {
-	init: function(uri, q){ 
-		ns_igk.ajx.fn.scriptReplaceContent('GET', uri, q);
-	}
-});
+	igk.system.createNS("igk.winui.controls.tabcontrol", {
+		init: function (uri, q) {
+			ns_igk.ajx.fn.scriptReplaceContent('GET', uri, q);
+		}
+	});
 
 
 	igk.ctrl.registerAttribManager("igk-ajx-tab-lnk", { ns: "ajx", desc: "tabcontrol ajx link" });
 	igk.ctrl.bindAttribManager("igk-ajx-tab-lnk", function (m, s) {
-		if (typeof(this.attribs)=='undefined')
+		if (typeof (this.attribs) == 'undefined')
 			this.attribs = {};
-		
-		if (this.attribs.tabattribs){ 
+
+		if (this.attribs.tabattribs) {
 			return;
 		}
-		
+
 		this.attribs.tabattribs = 1;;
-		
-		
+
+
 		var tab = this.select('^.igk-tabcontrol').first();
 		if (tab == null) { console.error("/!\\ no tabcontrol found"); return; }
 
 		if (typeof (tab.init) == "undefined") {
 			init_tab_control.apply(tab);
 		}
-		
+
 
 		var q = tab.select('.igk-tabcontent').first();
 		var self = this;
-		if (s && q) {			
+		if (s && q) {
 			this.reg_event("click", function (evt) {
 				evt.preventDefault();
 				if (m_ajx) {
@@ -18919,16 +18832,16 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 				}
 				q.addClass("fade-out");// .setHtml('');	
 
-				m_ajx = igk.ajx.get(self.o.href, null, function(xhr){ 
-					if (this.isReady()){
+				m_ajx = igk.ajx.get(self.o.href, null, function (xhr) {
+					if (this.isReady()) {
 						igk.ajx.fn.replace_content(q.o).apply(this, [xhr]);
-					}else {
-						if ((xhr.readyState == 4) && (xhr.readyState!=200)){
+					} else {
+						if ((xhr.readyState == 4) && (xhr.readyState != 200)) {
 							m_ajx.abort();
 							q.setHtml('Error');
 						}
-					} 
-				} , true);
+					}
+				}, true);
 				tab.o.activate(self);
 
 			}).reg_event("focus", function (evt) {
@@ -18969,7 +18882,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 					r = igk.getNumber(q.getComputedStyle("paddingTop")) +
 						igk.getNumber(q.getComputedStyle("paddingBottom"));
 					H -= r;
-					
+
 					var dirup = igk.system.regex.item_match_class("igk-dir-up", q.o);
 					var hv = false;
 					if (dirup) {
@@ -19069,15 +18982,15 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 			var obj = igk.JSON.parse(m, q);
 			var opxhr = null;
 			q.reg_event("click", function (evt) {
-				
-				
-							
-				if (evt.handle || evt.defaultPrevented){
+
+
+
+				if (evt.handle || evt.defaultPrevented) {
 					return;
 				}
 				evt.preventDefault();
 				evt.stopPropagation();
-				
+
 				evt.handle = 1;
 
 				if (obj.execute) {
@@ -19088,25 +19001,25 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 				var rpm = q.getAttribute("igk:replacemode") || 'content'; // content| node
 				var r = null;
 				if (obj.target)
-						r = $igk(obj.target).first();
-				else if (tn){
+					r = $igk(obj.target).first();
+				else if (tn) {
 					r = q.select(tn).first() || $igk(tn).first(); // || q.select(tn).first();
 				}
-				
-				
-				
+
+
+
 
 				if (r != null) {
-					if (rpm == "content"){
+					if (rpm == "content") {
 						fc = igk.ajx.fn.replace_content(r.o);
-					}else 
+					} else
 						fc = igk.ajx.fn.replace_node(r.o);
 					// var t = r.first();
 					// if (t)
-						// fc = igk.ajx.fn.replace_content(t.o);
+					// fc = igk.ajx.fn.replace_content(t.o);
 					// else {
-						
-						// q.select(tn).first();
+
+					// q.select(tn).first();
 					// }
 				}
 				if (opxhr != null) {
@@ -19115,7 +19028,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 				}
 				if (fc == null) {
 					fc = igk.ajx.fn.append_to_body;
-				}				
+				}
 				opxhr = v_meth(v, null, function (xhr) {
 					if (this.isReady()) {
 						m_xhr = xhr;
@@ -19145,7 +19058,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 		}
 	};
 	igk.ctrl.bindAttribManager("igk-callback", function (t, v) {
-		
+
 		var c = igk.JSON.parse(v);
 		var g = {};
 		if (c) {
@@ -19286,7 +19199,7 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 			this.reg_event("click", __click);
 
 		if (co_id) {
-			
+
 			var s = igk.web.getcookies(co_id);
 			if (s) {
 				this.o.click();
@@ -19310,32 +19223,32 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 			t.ondragstart = function () { return !1; };
 			$igk(t).fn.noselection = 1;
 		},
-		enableSelection: function(t){
+		enableSelection: function (t) {
 			t = $igk(t);
-			
-			if (t.fn.noselection){
-				
+
+			if (t.fn.noselection) {
+
 				t.o.onblur = null; //function () { return !1; };
 				t.o.ondragstart = null; //function () { return false };
-				
+
 				if (typeof (t.o.onselectstart) != "undefined")
 					t.o.onselectstart = null; // function () { return !1; };
 				if (typeof (t.o.style.MozUserSelect) != "undefined")
 					t.o.style.MozUserSelect = "";
-			
-				delete(t.fn.noselection);
+
+				delete (t.fn.noselection);
 			}
 		},
-		
-		clearSelection: function(){//clear selction 
-			var sl = window.getSelection();	
-			if(sl.rangeCount > 0) {
-				 for(var i = 0; i < sl.rangeCount; i++) {
-				  sl.removeRange(sl.getRangeAt(i));
-				 }
+
+		clearSelection: function () {//clear selction 
+			var sl = window.getSelection();
+			if (sl.rangeCount > 0) {
+				for (var i = 0; i < sl.rangeCount; i++) {
+					sl.removeRange(sl.getRangeAt(i));
+				}
 			}
 		}
-		,initnode: function () {// init node for selection management
+		, initnode: function () {// init node for selection management
 			var q = this;
 			var source = this.getAttribute("igk-js-anim-over");
 			var store = {};
@@ -19384,16 +19297,16 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 
 // disable context menu attribute
 
-(function(){
-	igk.ctrl.bindAttribManager("igk-no-contextmenu", function(){
-		this.on("contextmenu", function(e){
+(function () {
+	igk.ctrl.bindAttribManager("igk-no-contextmenu", function () {
+		this.on("contextmenu", function (e) {
 			e.preventDefault();
 			e.stopPropagation();
 		});
-	},{
-		desc:'disable context menu on node'
+	}, {
+		desc: 'disable context menu on node'
 	});
-	
+
 })();
 
 // parent scroll marker
@@ -19417,81 +19330,81 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 			return;
 		var o = igk.JSON.parse(n); // 1|{left: length, top: length, offset: }
 		var c = null;
-		var autofixcallback = this.getAttribute("igk:autofixcallback") || function(){};
-		
-		if (o == 1){
-			o = {target:null, style:null, offset: 0};
+		var autofixcallback = this.getAttribute("igk:autofixcallback") || function () { };
+
+		if (o == 1) {
+			o = { target: null, style: null, offset: 0 };
 			var fixs = this.getAttribute("igk-autofix-style");
-			 o.style = igk.JSON.parse(fixs) || null;
-			 
-		}else if (typeof(o)!='object'){
+			o.style = igk.JSON.parse(fixs) || null;
+
+		} else if (typeof (o) != 'object') {
 			return;
 		}
-		
+
 		if (!o.target) c = this.select("^.igk-parentscroll").first();
 		else c = this.select(o.target).first();
 		if (!c)
 			return;
 		if (!o.style)
 			o.style = { left: "0px", top: "0px" };
-				
+
 		var t = this;
 		var tc = igk.createNode("div");
 		tc.setHtml("&nbsp;").addClass("no-visibility");
 		var oldStyle = {};
-		for(var s in o.style){
+		for (var s in o.style) {
 			oldStyle[s] = this.getComputedStyle(s);
 		}
 
 		function __initview() {
 			var g = t.getScreenLocation();
-			
-			
+
+
 			var npos = 0;
-			
-			if (npos == 'fixed'){
+
+			if (npos == 'fixed') {
 				if (c.o.scrollTop <= o.offset) {
 					t.rmClass("posfix");
 					t.setStyle(oldStyle);
 					autofixcallback(1);
 				}
-			}else{
-				if (c.o.scrollTop > o.offset){
+			} else {
+				if (c.o.scrollTop > o.offset) {
 					t.addClass("posfix");
-					if (o.style){
+					if (o.style) {
 						t.setCss(o.style);
 					}
-					 
+
 					autofixcallback(2);
 				}
 			}
 			// alert("top : "+o.style.top);
-			
+
 			// if (c.o.scrollTop > o.offset) {
-				// // $igk(t.o.parentNode).prependChild(
-				// if (!igk.system.regex.item_match_class("posfix", t.o)) {
-					// t.o.parentNode.insertBefore(tc.o, t.o);
-					// tc.setCss({ height: t.getHeight() + "px" });
-					// t.addClass("posfix_i")
-						// .setCss(o.style)
-						// .setCss({'width': tc.getWidth() + "px" });
-				// }
+			// // $igk(t.o.parentNode).prependChild(
+			// if (!igk.system.regex.item_match_class("posfix", t.o)) {
+			// t.o.parentNode.insertBefore(tc.o, t.o);
+			// tc.setCss({ height: t.getHeight() + "px" });
+			// t.addClass("posfix_i")
+			// .setCss(o.style)
+			// .setCss({'width': tc.getWidth() + "px" });
+			// }
 
 			// }
 			// else {
-				// t.rmClass("posfix").setCss({
-					// left: 'auto',
-					// top: 'auto',
-					// width: 'auto'
-				// });
-				// tc.remove();
+			// t.rmClass("posfix").setCss({
+			// left: 'auto',
+			// top: 'auto',
+			// width: 'auto'
+			// });
+			// tc.remove();
 			// }
 		};
 		$igk(c).reg_event("scroll", function (evt) {
 			__initview();
 		});
-		
-		igk.ready(function(){ 
+
+		igk.ready(function () {
 			__initview();
 		});
 
@@ -19504,51 +19417,51 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 //
 //+ attrib : igk-js-autofix-item
 //
-(function(){
-	igk.ctrl.registerAttribManager("igk-js-autofix-item", { 'ns':'js', 'desc': 'start auto fix item to host. item must be added before being initialized'});
-	
-	igk.ctrl.bindAttribManager("igk-js-autofix-item", function(m,n){
+(function () {
+	igk.ctrl.registerAttribManager("igk-js-autofix-item", { 'ns': 'js', 'desc': 'start auto fix item to host. item must be added before being initialized' });
+
+	igk.ctrl.bindAttribManager("igk-js-autofix-item", function (m, n) {
 		var o = igk.JSON.parse(n);
 		var c = null;
 		if (!o.target) c = this.select("^.igk-parentscroll").first();
 		else c = this.select(o.target).first();
-		
+
 		c = c || $igk(document);
-		
+
 		c.reg_event("scroll", __autofix_check_scroll(this, c, o));
 	});
-	
-	function __autofix_check_scroll(q, p, o){
+
+	function __autofix_check_scroll(q, p, o) {
 		var man = new _autofix_manager();
 		man.q = q;
 		man.p = p;
-		man.o = o;	
+		man.o = o;
 
-		function _hostbind(e){
+		function _hostbind(e) {
 			man.check(e);
 		};
 		return _hostbind;
-	};	
-	//create a class
-	function _autofix_manager(){};
-	//add method to class using prototype
-	_autofix_manager.prototype.check = function(e){
-		
-			var g = this.q.getScreenLocation();	
-			var c = this.p;
-			var offset = this.o.offset || 0;
-			
-			if (c.o.scrollTop > offset) {
-				console.debug("bind ...");
-				c.addClass("igk-js-autofix-host");
-				this.q.addClass("fix");
-			}else{
-				console.debug("unbind");
-				c.rmClass("igk-js-autofix-host");
-				this.q.rmClass("fix");
-			}
 	};
-	
+	//create a class
+	function _autofix_manager() { };
+	//add method to class using prototype
+	_autofix_manager.prototype.check = function (e) {
+
+		var g = this.q.getScreenLocation();
+		var c = this.p;
+		var offset = this.o.offset || 0;
+
+		if (c.o.scrollTop > offset) {
+			console.debug("bind ...");
+			c.addClass("igk-js-autofix-host");
+			this.q.addClass("fix");
+		} else {
+			console.debug("unbind");
+			c.rmClass("igk-js-autofix-host");
+			this.q.rmClass("fix");
+		}
+	};
+
 })();
 
 
@@ -19618,133 +19531,6 @@ igk.system.createNS("igk.winui.controls.tabcontrol", {
 
 
 
-// if(i!=-1)	
-// {	
-
-
-
-// }
-
-
-
-// var dic=new igk.system.collections.dictionary();
-// dic.add("test",1);
-// dic.add("test3",14546);
-// dic.add("testd",1);
-// dic.remove("test3");
-
-
-// dic.add("test",1);
-
-
-
-// var d=igk.createNode("div").o;
-
-
-
-
-// function dummyd(){
-
-// }
-
-// d.reg_event("click",dummyd);
-
-
-
-// d.unregister();
-
-// d.setHtml("Plesse ");
-// delete(d);
-
-
-
-
-
-// -------------------------------------------------------------------------------------
-
-// var js=igk.createNode("object")
-// .setAttribute("type",'text/html')
-// dispn cause no loading in safari,chrome
-// .addClass("no-visibility")
-// .setAttribute("data",'../Lib/igk/Scripts/lang/fr.xml')
-// .reg_event("load",function(e){
-// s= igk.system.string.trim(igk.file.get_loaded_text(this));
-
-// this.parentNode.removeChild(this);
-// });
-// window.document.getElementsByTagName('*')[0].appendChild(js.o);
-
-
-
-// var w=window.open();
-
-
-// if(w!=null){
-// $igk(w.document).reg_event("load",function(){
-
-// w.close();
-// });
-
-// w.document.open();
-// w.document.location="../Lib/igk/Scripts/lang/fr.xml";
-// w.document.close();
-// var s=w.igk.dom.body().innerHTML;
-
-
-
-// }
-
-
-
-
-// maintain backyard compatibility with old navigator
-// create a dummy input and check for some properties like placeholder
-// var v_input=igk.createNode("input");
-// if(typeof(v_input.placeholder)==igk.constants.undef)
-// {
-// igk.ctrl.registerAttribManager("placeholder",{desc:"register element to contains placeholder for back compatibility"}); 
-// igk.ctrl.bindAttribManager("placeholder",function(){
-// var b=this.getAttribute("placeholder");
-// if(b){
-// place holder defined.
-// var span=this.add("div");
-// span.setHtml(b);
-// span.addClass("posab dispb loc_l loc_r loc_t loc_b").setCss({zIndex:10,
-// border: "1px solid black",
-// position:"absolute"	,
-// display:"block",
-// backgroundColor: "indigo"
-// });
-// this.setCss({"backgroundColor":"transparent","position":"relative","border":"none"});				
-
-
-// }
-// });
-// }
-
-
-// $igk(document).reg_event("scroll",function(){
-
-// });
-
-// document.onscroll=function(){
-
-// };
-// window.onscroll=function(){
-
-// };
-// igk.ready(function(){
-// igk.qselect(".overflow-y-a").reg_event("scroll",function(evt){
-// evt.preveDefault
-
-// });
-// });
-
-// document.write("test");
-// var img=igk.createNode("img");
-// $igk(img).reg_event("load",function(){
-// igk.dom.body().appendChild(img);});
-
 // img.src="?vimg=warzone";
 
 // Q: javascript get current domain?
@@ -19802,7 +19588,7 @@ igk.ready(function () {
 	}
 	function _slider_click(evt) {
 
-		
+
 		evt.preventDefault();
 		_slide_to.apply(this);
 	}
@@ -19880,13 +19666,13 @@ igk.ready(function () {
 		// TODO: CHECK VALIDITY
 		// ------------------------------------------------------------
 		// alert(this.o.noValidate);
-		
+
 		// var q= this;
 		// this.reg_event("invalid",function(evt){
-		
+
 		// });
 		this.reg_event("submit", function (evt) {
-			
+
 
 			if ((typeof (q.o.checkValidity) != igk.constants.undef) && !q.o.checkValidity()) {
 				console.debug("data ivalie");
@@ -19895,7 +19681,7 @@ igk.ready(function () {
 			}
 			var _o = false;
 			$igk(this).select("input").each(function () {
-				
+
 				if (typeof (this.igkCheckIsInvalid) != igk.constants.undef) {
 					_o |= this.igkCheckIsInvalid();
 				}
@@ -19944,8 +19730,8 @@ igk.ready(function () {
 		igk.dom.body().addClass(mt);
 		var mt = igk.css.getMediaType();
 		igk.publisher.register(igk.publisher.events.mediachanged, function (e) {
-			
-			
+
+
 			igk.dom.body().rmClass(mt).addClass(e.mediaType);
 			mt = e.mediaType;
 		});
@@ -19994,7 +19780,7 @@ igk.ready(function () {
 	function __init_code_area() {
 
 		var q = this;
-		if (!q) { 
+		if (!q) {
 			return;
 		}
 		if (q.hightlight)
@@ -20003,7 +19789,7 @@ igk.ready(function () {
 		m_codes.push(q);
 
 
-		
+
 		// return;
 		// q.addClass("dispib");
 		var c = '';
@@ -20018,13 +19804,13 @@ igk.ready(function () {
 		}
 		q.addClass("code-php");
 		var s = q.o.textContent;// .getHtml().trim();
-		var t = s.split('\n'); 
-		
+		var t = s.split('\n');
+
 		// return;
 		// clear node
 		q.setHtml("");
-		
-		q.getSource = function(){
+
+		q.getSource = function () {
 			return s;
 		};
 
@@ -20038,7 +19824,7 @@ igk.ready(function () {
 		var l = "";
 		for (var i = 0; i < t.length; i++) {
 			l = t[i];
-			
+
 			var d = q.add("div");
 			d.setHtml(m.evals(l));
 			// break;
@@ -20047,11 +19833,11 @@ igk.ready(function () {
 		var w = igk.getNumber(o.getComputedStyle('width'));
 		o.remove();
 		// delete(o);
-		
-		
-		
+
+
+
 		w = (((m.getLines() + '').length * w) + 10) & 0xFFFA;
-		
+
 
 		igk.css.appendRule(q.getCssSelector() + " > div > span.ln {text-align:right; width:" + w + "px;}");
 
@@ -20060,7 +19846,7 @@ igk.ready(function () {
 		// this.setCss({width:w+'px'});
 		// }
 		// );		
-		
+
 
 	}
 	function igk_e() {// evaluator
@@ -20093,10 +19879,10 @@ igk.ready(function () {
 			} else {
 				break;
 			}
-			
+
 			inf.pos++;
 		}
-		
+
 		// delete(c);
 		if (w.length == 0)
 			inf.read = 0;
@@ -20122,7 +19908,7 @@ igk.ready(function () {
 		return w + p;
 	}
 	function igk_php_eval() {// php evaluation code
-		
+
 		igk_e.apply(this);
 		var reserved = /((true|false)|(a(bstract|nd|rray|s))|(c(a(llable|se|tch)|l(ass|one)|on(st|tinue)))|(d(e(clare|fault)|ie|o))|(e(cho|lse(if)?|mpty|nd(declare|for(each)?|if|switch|while)|val|x(it|tends)))|(f(inal|or(each)?|unction))|(g(lobal|oto))|(i(f|mplements|n(clude(_once)?|st(anceof|eadof)|terface)|sset))|(n(amespace|ew))|(p(r(i(nt|vate)|otected)|ublic))|(re(quire(_once)?|turn))|(s(tatic|witch))|(t(hrow|r(ait|y)))|(u(nset|se))|(__halt_compiler|break|list|(x)?or|var|while))$/;
 		var w = 0;
@@ -20191,7 +19977,7 @@ igk.ready(function () {
 								sp.add("span").addClass("v").setHtml("$" + w);
 								inf.pos--;
 								// inf.read = 0;
-								
+
 								break;
 							case "&":
 								if (inf.mode == 0) {
@@ -20213,7 +19999,7 @@ igk.ready(function () {
 							default:
 								if (inf.mode == 0) {
 									if (",.?|()#[]-+{}\\/%*><;:=".indexOf(ch) != -1) { // igk.char.isPonctuation(ch)){
-										
+
 										m = sp.add("span").addClass("pc").setHtml(ch);
 
 									} else {
@@ -20243,7 +20029,7 @@ igk.ready(function () {
 		};
 	}
 
-	function igk_xml_eval(){		
+	function igk_xml_eval() {
 	};
 
 	igk.system.createNS("igk.highlightjs", {
@@ -20262,10 +20048,10 @@ igk.ready(function () {
 	// 		__init_code_area.apply($igk(this));
 	// 	}		
 	// });
-	
+
 	igk.system.createNS("igk.winui.codes", {
-		getCodes: function(){
-			return m_codes ||[];
+		getCodes: function () {
+			return m_codes || [];
 		}
 	});
 
@@ -20276,7 +20062,7 @@ igk.ready(function () {
 // ------------------------------
 
 (function () {
-	var corecss="balafon.css";
+	var corecss = "balafon.css";
 	var r = igk.createNode('div');
 	var dev = igk.createNode('div');
 	var dum = null;
@@ -20286,12 +20072,12 @@ igk.ready(function () {
 	r.addClass('igk-media-type');
 
 	// for chrome navigator require to register
-	
+
 	// if(igk.navigator.isChrome()){
 
 	// igk.ready(function(){
 	// // r.setCss({position:'absolute',zIndex:40});
-	
+
 	// // register media to bottom
 	// igk.dom.body().add("div").setCss({position:'absolute',visibility:'hidden',overflow:'hidden','height':'0px', 'bottom':'0px'})
 	// .addClass("igk-m-i")// media info
@@ -20300,8 +20086,8 @@ igk.ready(function () {
 	// igk.css.appendRule(".igk-media-type:before{position:absolute;}");
 	// igk.css.appendRule(".igk-device:before{position:absolute;}");
 	// igk.publisher.publish("sys://css/info",{});	
-	
-	
+
+
 	// });
 	// }
 
@@ -20309,7 +20095,7 @@ igk.ready(function () {
 		var m = null;
 		var q = new RegExp("/" + f + "(.+)*");
 		for (var i = 0; i < document.styleSheets.length; i++) {
-			m = document.styleSheets[i];		
+			m = document.styleSheets[i];
 			if (m.href && q.test(m.href + ""))
 				return m;
 		}
@@ -20349,17 +20135,17 @@ igk.ready(function () {
 
 				igk.defineProperty(t.o.style, n, {
 					get: function () {
-						
+
 						if (mark)
 							return _os;
 						return t.getComputedStyle(n);
 					},
 					set: function (v) {
-						
+
 						if (v == 'auto') {
 							t.o.style.setProperty(n, 'auto');
 							var r = t.getComputedStyle(n);
-							
+
 							t.o.style.setProperty(n, _os);
 							setTimeout(function () {
 								t.o.style.setProperty(n, r);
@@ -20386,9 +20172,9 @@ igk.ready(function () {
 				// init width default property
 				t.o.style.setProperty(n, v);
 			}
-			
-			
-			
+
+
+
 
 			_initPropertyStyle(t, n);
 
@@ -20409,8 +20195,8 @@ igk.ready(function () {
 
 	igk.system.createNS("igk.css", {
 		initAutoTransitionProperties: _initTransitionProperties,
-		loadLinks: function(t){ 
-			for(var i = 0; i < t.length; i++){
+		loadLinks: function (t) {
+			for (var i = 0; i < t.length; i++) {
 				var c = document.createElement("link");
 				c.setAttribute("href", t[i]);
 				c.setAttribute("rel", "stylesheet");
@@ -20442,18 +20228,18 @@ igk.ready(function () {
 		},
 		appendRule: function (c) { // append rule to balafon.css.php or css definition 
 			rule = rule || __getRule(corecss);
-			
-			try{
+
+			try {
 				if (rule)
 					rule.insertRule(c, rule.cssRules.length);
 			}
-			catch(e){
-				
+			catch (e) {
+
 			}
 		},
 		appendStyle: function (uri) {
 			// plugin style to document
-			if (!uri){
+			if (!uri) {
 				return;
 			}
 			var e = document.createElement("link");
@@ -20476,7 +20262,7 @@ igk.ready(function () {
 			igk.ajx.get(uri + "/" + value, null, function (xhr) {
 				if (this.isReady()) {
 					rule = rule || __getRule(corecss);
-					
+
 					if (rule) {
 						// rule.remove();
 						while (rule.cssRules.length > 0) {
@@ -20491,7 +20277,7 @@ igk.ready(function () {
 						document.head.appendChild(s);
 						m_chtheme = s;
 
-						
+
 						// igk.css.appendRule(xhr.responseText, 0);
 					}
 				}
@@ -20612,13 +20398,13 @@ igk.ready(function () {
 				t.add(dev);
 			igk.css.appendRule(".igk-media-type:before{position:absolute;}");
 			igk.css.appendRule(".igk-device:before{position:absolute;}");
-		} 
+		}
 		var dev = igk.css.getDevice();
 		var m_c = igk.css.getMediaType();// current
 		function __checkMedia() {
-			
+
 			var i = igk.css.getMediaType();
-			
+
 			var d = null;
 			if (i != m_c) {
 				B.rmClass(m_c).addClass(i);
@@ -20652,41 +20438,41 @@ igk.ready(function () {
 
 
 
-(function(){
-function igk_str_padEnd(l, v) {
-	var hl = this.length;
-	var s = this.toString();
-	while (hl < l) {
-		s += '' + v;
-		hl++;
-	}
-	return s;
-}
-function igk_str_startWith(c) {
-	if (typeof (c) == 'undefined')
-		return !1;
-	var l = this.length;
-	var x = c.length;
-	var i = 0;
-
-	if (l == 0)
-		return !1;
-
-	if (typeof (this[0]) == 'undefined') {
-		// ie7 do not suport bracket operator
-		while ((i < x) && (i < l) && (this.charAt(i) == c.charAt(i))) {
-			i++;
+(function () {
+	function igk_str_padEnd(l, v) {
+		var hl = this.length;
+		var s = this.toString();
+		while (hl < l) {
+			s += '' + v;
+			hl++;
 		}
+		return s;
 	}
-	else {
-		while ((i < x) && (i < l) && (this[i] == c[i])) {
-			i++;
+	function igk_str_startWith(c) {
+		if (typeof (c) == 'undefined')
+			return !1;
+		var l = this.length;
+		var x = c.length;
+		var i = 0;
+
+		if (l == 0)
+			return !1;
+
+		if (typeof (this[0]) == 'undefined') {
+			// ie7 do not suport bracket operator
+			while ((i < x) && (i < l) && (this.charAt(i) == c.charAt(i))) {
+				i++;
+			}
 		}
-	}
-	return i == x;
-};
-if (!String.prototype.startsWith)
-	String.prototype.startsWith = igk_str_startWith;
+		else {
+			while ((i < x) && (i < l) && (this[i] == c[i])) {
+				i++;
+			}
+		}
+		return i == x;
+	};
+	if (!String.prototype.startsWith)
+		String.prototype.startsWith = igk_str_startWith;
 
 })();
 
@@ -20695,55 +20481,55 @@ if (!String.prototype.startsWith)
 //
 (function () {
 
-//filter list
-var prop = ['sepia','blur', 'contrast', 'brightness', 'drop-shadow','grayscale','hue-rotate','invert','saturate', 'opacity'];
-		
-function igk_get_filter_exp(f) {
-	if (f == null) return "none";
-	var s = "";
-	var m = "";
-	for (var i in f) {
-		m = i;
-		switch (m) {
-			case "huerotate":
-				m = "hue-rotate";
-				break;
-			case "dropshadow":
-				m = "drop-shadow";
-				break;
-		}
-		if (s.length > 0)
-			s += " ";
-		s += m + "(" + f[i] + ")";
-	}
-	return s;
-};
+	//filter list
+	var prop = ['sepia', 'blur', 'contrast', 'brightness', 'drop-shadow', 'grayscale', 'hue-rotate', 'invert', 'saturate', 'opacity'];
 
-
-
-function igk_getFilterProp(o){
-	var go = igk.JSON.parse(o.getAttribute("igk:filter"));	
-	if (go){		
-		var r ="";
-		for(var i=0; i < prop.length; i++){
-			
-			if (igk_isdefine(go[prop[i]])){
-				if (r.length>0)
-					r+= " ";
-				r+= prop[i]+"("+ go[prop[i]] + ")";
+	function igk_get_filter_exp(f) {
+		if (f == null) return "none";
+		var s = "";
+		var m = "";
+		for (var i in f) {
+			m = i;
+			switch (m) {
+				case "huerotate":
+					m = "hue-rotate";
+					break;
+				case "dropshadow":
+					m = "drop-shadow";
+					break;
 			}
+			if (s.length > 0)
+				s += " ";
+			s += m + "(" + f[i] + ")";
 		}
-		// o.setCss({filter:'progid:DXImageTransform.Microsoft.Blur(PixelRadius="5")'});
-		if (igk.navigator.isIEEdge()){
-			o.setCss({filter:r});
-			
-			//return null;
+		return s;
+	};
+
+
+
+	function igk_getFilterProp(o) {
+		var go = igk.JSON.parse(o.getAttribute("igk:filter"));
+		if (go) {
+			var r = "";
+			for (var i = 0; i < prop.length; i++) {
+
+				if (igk_isdefine(go[prop[i]])) {
+					if (r.length > 0)
+						r += " ";
+					r += prop[i] + "(" + go[prop[i]] + ")";
+				}
+			}
+			// o.setCss({filter:'progid:DXImageTransform.Microsoft.Blur(PixelRadius="5")'});
+			if (igk.navigator.isIEEdge()) {
+				o.setCss({ filter: r });
+
+				//return null;
+			}
+			o.setCss({ filter: r });
+			return r;
 		}
-		o.setCss({filter:r});
-		return r;
-	}
-	return null;
-};
+		return null;
+	};
 
 	var _g_canva = igk.createNode("canvas");
 	var _g_ctx = _g_canva.o.getContext ? _g_canva.o.getContext("2d") : null;
@@ -20785,13 +20571,13 @@ function igk_getFilterProp(o){
 			return igk_get_filter_exp(f);
 		},
 		getFilterString: igk_get_filter_exp,
-		toStringExpression: function(v){
-	
+		toStringExpression: function (v) {
+
 			var r = "";
-			for(var i=0; i < prop.length; i++){
-				var n  = prop[i];
-				if (n in v){					 
-					r+=  igk.system.convert.ToBase( Math.round((v[prop[i]] / 100) *255), 16);
+			for (var i = 0; i < prop.length; i++) {
+				var n = prop[i];
+				if (n in v) {
+					r += igk.system.convert.ToBase(Math.round((v[prop[i]] / 100) * 255), 16);
 				}
 			}
 			return r;
@@ -20799,15 +20585,17 @@ function igk_getFilterProp(o){
 	});
 
 	var hprop = {};
-	for(var i=0; i < prop.length; i++){
+	for (var i = 0; i < prop.length; i++) {
 		hprop[prop[i]] = i;
 	}
-	
+
 	var v_list = igk.defineEnum(null, hprop);
-	igk.defineProperty(igk.canvas, "filters", {get: function(){
-		return v_list;
-	}});
-	
+	igk.defineProperty(igk.canvas, "filters", {
+		get: function () {
+			return v_list;
+		}
+	});
+
 })();
 
 
@@ -20921,30 +20709,30 @@ function igk_getFilterProp(o){
 
 			// reset the value
 			s.o.value = null;
-			if (p.accept){
-				s.o.setAttribute("accept",  p.accept);
-			}  
+			if (p.accept) {
+				s.o.setAttribute("accept", p.accept);
+			}
 			// pick file. 
 			// >uri: uri to send the picked file
 			// >p: property to manage picking file
 			// >osrc: source of the requesting
-			
+
 			igk.dom.body().prepend(s);
 			function __change() {
-				if (uri == null){
-					var complete = (p ?  p.complete : null);
-					if (complete){
+				if (uri == null) {
+					var complete = (p ? p.complete : null);
+					if (complete) {
 						complete(s.o.files[0]);
 					}
-					
-				}else{
+
+				} else {
 					igk.ajx.uploadFile(osrc, s.o.files[0], uri, true,
 						p ? p.complete : null,
 						p ? p.start : null,
 						p ? p.progress : null,
 						p ? p.done : null
 					);
-				
+
 				}
 				s.unreg_event('change', __change);
 				s.remove();
@@ -20959,11 +20747,11 @@ function igk_getFilterProp(o){
 			if (p.accept) {
 				s.o.accept = p.accept;
 			}
-			try{
+			try {
 				//try to set the files
 				s.o.files = null;
 			}
-			catch(e){
+			catch (e) {
 				//
 				re = 1; // need to recreate.
 			}
@@ -21029,18 +20817,18 @@ function igk_getFilterProp(o){
 		var q = this;
 		var tip = null;
 		this.reg_event("mouseover", function (evt) {
-			
+
 			if (tip == null)
 				tip = igk.winui.tooltip.show(q, p.data);
 			else
 				tip.show();
 		});
 		// .reg_event("mouseout",function(evt){
-		
+
 		// if(tip)
 		// tip.hide();
 		// }).reg_event("mouseleave", function(){
-		
+
 		// if(tip)
 		// tip.hide();
 		// });
@@ -21073,9 +20861,9 @@ function igk_getFilterProp(o){
 					.setHtml(this.data);
 				var b = this.owner.getScreenBounds();
 				var loc = this.owner.getScreenLocation();
-				
-				
-				
+
+
+
 				t.setCss({ left: loc.x + "px", top: (loc.y + (b.h / 2)) + "px" });
 				igk.dom.body().appendChild(t.o);
 			},
@@ -21152,7 +20940,7 @@ igk.ready(
 	function () {
 
 		function __load(j) {
-			
+
 			// var loc=j.getBoundingClientRect(); // j.o.getBoundingClientRect ? 
 			// j.o.getBoundingClientRect(): {x:0,y:0};// \{x:j.getscrollLeft(),
 			// y:j.getscrollTop()
@@ -21164,37 +20952,37 @@ igk.ready(
 			// get screen visibility
 			// var vsb=((loc.x>=0) &&(loc.x<=size.width) &&(loc.y>=0) &&(loc.y<=size.height));
 
-			
-			
-			
 
-			
-			
 
-			
+
+
+
+
+
+
 			// firefox : scrollHeight ok ... other not ok
 			// iternet chrome
-			
+
 			// igk.show_prop(j.o);
 
 
-			
+
 			// var s=j.getSize();
-			
 
-			
-			
 
-			
-			
+
+
+
+
+
 
 			if (j.data["img-js.loaded"]) {
-				
+
 				return !1;
 			}
 			if (j.getisVisible()) {
 				j.data["img-js.loaded"] = 1;
-				
+
 				// load image
 				var i = document.createElement("img");
 				$igk(i).reg_event("load", function (evt) {
@@ -21212,15 +21000,15 @@ igk.ready(
 
 
 		// var items=[];
-		
+
 		function __fcScroll(evt) {
-			
-			
+
+
 			var tab = $igk(evt.target).data["img-js"].items;// items;// copy tab
 			var _ctab = [];
 			// view all item
-			
-			
+
+
 			// __load.apply(this,[$igk(evt.target)]);
 			// t
 			for (var i = 0; i < tab.length; i++) {
@@ -21251,7 +21039,7 @@ igk.ready(
 					q.data["img-js"] = {
 						items: []
 					};
-					
+
 				}
 				// store item affected
 				// 	 items.push(this);
@@ -21304,7 +21092,7 @@ igk.ready(
 		}
 	}
 	function __init_doc_scrollloader() {
-		
+
 		igk.dom.body().select("igk-scroll-loader").each(function () {
 			__init_tag(this);
 			return !0;
@@ -21316,15 +21104,15 @@ igk.ready(
 		if (t.data["igk-scroll-loader"])
 			return;
 		// this.o.offsetParent;
-		
+
 		p = t.getscrollParent().o;
 		var sk = "igk-scroll-loader.parentScroll";
-		
-		
+
+
 		if (p != null) {
 			var q = $igk(p);
 			if (!q.data[sk]) {
-				
+
 				q.reg_event("scroll", __load);
 				q.data[sk] = 1;
 				q.data["igk-scroll-loader.items"] = [];
@@ -21354,7 +21142,7 @@ igk.ready(
 
 	// igk.ajx.fn.registerNodeReady(function(){
 	// var q=$igk(this);
-	
+
 	// });
 
 })();
@@ -21398,12 +21186,12 @@ igk.ready(
 			dir: 1,// direction
 			penWidth: 2,// pen width
 			render: function (v, cl, of_set) {
-				
+
 				var w = igk.getNumber(this.canva.getComputedStyle("width"));
 				var h = igk.getNumber(this.canva.getComputedStyle("height"));
 				var v1 = 0;
 				var v2 = 0;
-				
+
 				var cx = w / 2;
 				var cy = h / 2;
 				var penw = this.penWidth || 4;
@@ -21458,9 +21246,9 @@ igk.ready(
 
 		function _getData() {
 			if (_dat == null) {
-				
-				
-				
+
+
+
 				var _s = q.data.storyboard.getComputedStyle('content', ':before');
 				var _t = /^"((.)+)"$/i.exec(_s);
 				_dat = igk.JSON.init_data({ stop: 'width', mode: 1 }, (_t ? _t[1].replace(/\\\"/g, "\"") : null), function (s) {
@@ -21498,8 +21286,8 @@ igk.ready(
 
 			})
 			.reg_event("transitionstart", function (evt) {
-				
-				
+
+
 			})
 			// .addClass("dispn")	
 			.setCss(
@@ -21528,7 +21316,7 @@ igk.ready(
 					var x = igk.getNumber(n.getComputedStyle("width"));
 					var y = igk.getNumber(n.getComputedStyle("height"));
 					var cl = n.getComputedStyle('color');
-					
+
 					q.data.render(
 						Math.round((x / 100.0) * 100) / 100,
 						cl,
@@ -21568,13 +21356,13 @@ igk.ready(
 			var cH = s.o.clientHeight;// .o.parentNode.parentNode.clientHeight;// p.o.clientHeight;
 			var sT = m.o.parentNode.offsetTop;
 
-			
-			
-			
+
+
+
 			if (sT > 0) {
 				if (!(sT < cH)) {
 					y = sT - cH + Math.ceil(igk.getNumber(m.getComputedStyle('height')));
-					
+
 					p.setCss({ 'transform': 'translateY(-' + (y) + 'px)' });
 				}
 			}
@@ -21585,8 +21373,8 @@ igk.ready(
 			// // igk.getNumber(m.getComputedStyle('font-size')));
 			// if (y>0){
 			// // m.setCss({fontSize:"2em"});
-			
-			
+
+
 			// p.setCss({'transform':'translateY(-'+(y)+'px)'});
 			// igk.publisher.publish("sys://doc/changed", {target:p});
 			// }
@@ -21617,34 +21405,34 @@ igk.ready(
 		q.data["igk-scroll-b"] = 1;
 		p.addClass("igk-scroll-host");
 
-		
+
 
 		function init_view() {
-			
-			
+
+
 			var real_size = p.getOffsetBounds();
 			// // {x:0, y:0, w:0, h:0};
 			// // for(var n = 0; n < p.o.childNodes.length; n++){
-				// // var c = $igk( p.o.childNodes[n]);
-				// // var loc = c.getScreenLocation();
-				// // var boc = c.getScreenBounds();
-				// // real_size.x = Math.min(loc.x, real_size.x);
-				// // real_size.y = Math.min(loc.y, real_size.y);
-				// // real_size.w = Math.max(loc.x + boc.w, real_size.w);
-				// // real_size.h = Math.max(loc.y + boc.h, real_size.h);
-				// real_size.x = Math.min(loc.x, real_size.x);
-				
+			// // var c = $igk( p.o.childNodes[n]);
+			// // var loc = c.getScreenLocation();
+			// // var boc = c.getScreenBounds();
+			// // real_size.x = Math.min(loc.x, real_size.x);
+			// // real_size.y = Math.min(loc.y, real_size.y);
+			// // real_size.w = Math.max(loc.x + boc.w, real_size.w);
+			// // real_size.h = Math.max(loc.y + boc.h, real_size.h);
+			// real_size.x = Math.min(loc.x, real_size.x);
+
 			// // }
 			// // loc = p.getScreenLocation();
 			// // real_size.w -= loc.x;
 			// // real_size.h -= loc.y;
-			m_psize  = real_size;
-			
-			
-			
-			
+			m_psize = real_size;
+
+
+
+
 			// igk.winui.transform.getData(p);
-			
+
 			// 1=> p.o.scrollHeight
 			// x=> p.o.offsetHeight;
 			var x = 0;
@@ -21665,8 +21453,8 @@ igk.ready(
 					// s = Math.floor(Math.max(32, (x * p.o.offsetHeight)));
 					s = Math.floor(Math.max(32, (x * p.o.clientHeight))); // p.o.offsetHeight)));
 					// var bh = cur.getHeight();
-					cur.setCss({"Height" : s + "px" });
-					
+					cur.setCss({ "Height": s + "px" });
+
 					// " Height: "+p.getHeight());
 					// p.o.scrollTo(0,200);
 				}
@@ -21675,10 +21463,10 @@ igk.ready(
 				if (!m_init) {
 					// setup marking position
 					// must show the 
-					
-					
-					
-					
+
+
+
+
 					if (orn == 'v') {
 						// t = Math.floor(p.o.offsetHeight * (m_spos / p.o.scrollHeight));
 						t = Math.floor(p.o.offsetHeight * (m_spos / p.o.clientHeight));
@@ -21687,7 +21475,7 @@ igk.ready(
 						t = Math.floor(p.o.offsetWidth * (m_spos / p.o.scrollWidth));
 						cur.setCss({ left: t + 'px' });
 					}
-					
+
 					// __update();
 					m_init = 1;
 				}
@@ -21702,7 +21490,7 @@ igk.ready(
 				e.value = 0;
 				// var dir=evt.deltaY > 0? -1: 1;
 				// step :: heigh scroll by 10
-				
+
 				_u_cur(cur, e, 0);
 			}
 
@@ -21737,26 +21525,26 @@ igk.ready(
 			else
 				t = Math.min(t, maxt);
 			var x = (t / maxt);
-			
+
 			// if (e.value == x){
-				
-				// return;
+
+			// return;
 			// }
 			var d = 0;
 			e.value = x;
-			if (orn=='h'){
+			if (orn == 'h') {
 				cur.setCss({ "left": t + "px" });
 				d = (-p.o.clientWidth + m_psize.w) * e.value;
-			}else{
+			} else {
 				cur.setCss({ "top": t + "px" });
 				d = (-p.o.clientHeight + m_psize.h) * e.value;
 			}
-			
+
 			// maxt==> 1
 			// t==> x
-			
-		// (t / maxt);
-			
+
+			// (t / maxt);
+
 			// p.o.clientHeight==>100%
 			// p.o.offsetHeight==>x
 			// 
@@ -21764,9 +21552,9 @@ igk.ready(
 			// var d = (p.o.scrollHeight -  p.o.offsetHeight) * e.value;
 			// var d = (-p.o.clientHeight + m_psize.h) * e.value;
 			// var d=Math.min(100,(p.o.offsetHeight * 100) /p.o.clientHeight );
-			
-			
-			
+
+
+
 
 			e.childs.each(function () {
 				if ((this != q) && !this.data["igk-scroll-b"]) {
@@ -21792,7 +21580,7 @@ igk.ready(
 			}
 			_u_cur(cur, e, v);
 		}
-		
+
 		// igk.android.log.add('is touchable ' + p.istouchable());
 		if (p.istouchable()) {
 			// support touch
@@ -21827,40 +21615,40 @@ igk.ready(
 		p.reg_event("mouseover", function () {
 			init_view();
 		}).reg_event("mouseleave", function () {
-			
+
 			if (cur.data["s:/msdown"])
 				return;
 			q.rmClass("igk-show");
 		}).reg_event("mouseup", function (evt) {
-			
-			
-			
+
+
+
 			if (!p.getScreenBounds().contains(evt.clientX, evt.clientY)) {
 				q.rmClass("igk-show");
 			}
 		}).reg_event("mousewheel", function (evt) {
-				// if (!igk.features.supportPassive){
-					//console.debug("wheel");
-				evt.stopPropagation();
-				evt.preventDefault();
-				// }
-				if (!m_enable)
-					return;
-				var e = __init_data();
-				e.start = 0;
-				e.end = 0;
-				e.value = 0;
-				var dir = evt.deltaY > 0 ? -1 : 1;
-				// step :: heigh scroll by 10
-				 
-				 
-				_u_cur(cur, e, dir * 10);
+			// if (!igk.features.supportPassive){
+			//console.debug("wheel");
+			evt.stopPropagation();
+			evt.preventDefault();
+			// }
+			if (!m_enable)
+				return;
+			var e = __init_data();
+			e.start = 0;
+			e.end = 0;
+			e.value = 0;
+			var dir = evt.deltaY > 0 ? -1 : 1;
+			// step :: heigh scroll by 10
 
-				
-			}, false).reg_event("scroll", function (evt) {
-				evt.stopPropagation();
-				evt.preventDefault();
-			}, false);
+
+			_u_cur(cur, e, dir * 10);
+
+
+		}, false).reg_event("scroll", function (evt) {
+			evt.stopPropagation();
+			evt.preventDefault();
+		}, false);
 
 		igk.publisher.register("sys://doc/changed", function (o) {
 			if ((o.target == p.o) || igk.dom.isChild(o.target, p.o)) {// __is_parent(o.target, p.o)){
@@ -21890,7 +21678,7 @@ igk.ready(
 
 					if (igk.winui.mouseButton(evt) != igk.winui.mouseButton.Left) {
 						// cause of drag and drop in chrome
-						
+
 						return;
 					}
 					var e = cur.data["s:/msprop_s"];
@@ -21915,13 +21703,13 @@ igk.ready(
 							if ((this != q) && !this.data["igk-scroll-b"]) {
 								// method 1 if transform support for performance
 								var data = igk.winui.transform.getData(this);
-								
+
 								data.setTranslateX(-d);
 								this.setCss({ "transform": data.toString() });
 								// "translateX("+(-d)+"px)"
 								// method 2 in global
 								// this.setCss({"top":(-d)+"px"});						
-								
+
 							}
 							return !0;
 						});
@@ -22010,8 +21798,8 @@ igk.system.createNS("igk.system", {
 		if (/^matrix\(/i.exec(s)) {
 			// matrix pattern;
 			var tb = s.match(/^matrix\((.+)\)$/)[1].split(',');
-			
-			
+
+
 			m0 = parseFloat(tb[0]); m1 = parseFloat(tb[1]); m2 = parseFloat(tb[2]);
 			m3 = parseFloat(tb[3]); tx = parseFloat(tb[4]); ty = parseFloat(tb[5]);
 		}
@@ -22058,7 +21846,7 @@ igk.system.createNS("igk.system", {
 		getData: function (n) {
 			var s = $igk(n).getComputedStyle("transform");
 			// string type
-		    
+
 			return new __transform_data(s || 'none');
 		}
 	});
@@ -22104,11 +21892,11 @@ igk.system.createNS("igk.system", {
 			}
 		}
 	});
-	
-	
+
+
 	igk.defineProperty(NS, "Selection", {
-		get:function(){
-			if (!slfunc){
+		get: function () {
+			if (!slfunc) {
 				slfunc = window.getSelection ? window.getSelection() : document.selection;
 			}
 			return slfunc;
@@ -22134,16 +21922,16 @@ igk.system.createNS("igk.system", {
 		var _src = q.getAttribute('igk:link');
 
 		q.o.removeAttribute('igk:link');
-		
+
 
 		var _data = {
 			img: _src == null ? null : q.add("img").addClass("posab dispn").setAttribute("src", _src).reg_event("load", function (evt) {
 				_data.render();
 				q.o.removeAttribute('igk:link');
-				
+
 			}).reg_event("error", function () {
 				console.error("/!\\ Error on loading image " + _src);
-				
+
 			}),
 			storyline: (function () {
 				var s = q.add("div").addClass("posab dispn story-line");
@@ -22165,7 +21953,7 @@ igk.system.createNS("igk.system", {
 				var v_bdrcl = _data.storyline.bdr.getComputedStyle("color");
 				var v_bg = _data.storyline.bg.getComputedStyle("background-color");
 				var v_bdrs = igk.getNumber(_data.storyline.bdr.getComputedStyle("height")) || 4;
-				
+
 
 				var _ctx = this.ctx;
 				var cx = w / 2;
@@ -22203,7 +21991,7 @@ igk.system.createNS("igk.system", {
 					var zx = _W / this.img.o.width;
 					var zy = _H / this.img.o.height;
 					var zx = Math.min(zx, zy);
-					
+
 					_ctx.drawImage(this.img.o, 4 + ((_W - (this.img.o.width * zx)) / 2), 4, this.img.o.width * zx, this.img.o.height * zx);
 					// igk.drawing.effect.stackBlur(_ctx,0,0,w,h,5);
 				}
@@ -22307,7 +22095,7 @@ igk.system.createNS("igk.system", {
 			}
 			t = m_roles["next"];
 			var s = (def.length > 0) && (v_idx < def.length);
-			
+
 			for (var k = 0; k < t.length; k++) {
 				if (s) {
 
@@ -22347,7 +22135,7 @@ igk.system.createNS("igk.system", {
 						// goTo(def[obj.n]);
 
 						// else if(v_idx<def.length){
-						
+
 						// goTo(def[v_idx]);
 						// v_idx++;
 						// }
@@ -22371,26 +22159,26 @@ igk.system.createNS("igk.system", {
 			v_idx = 1;
 		// scroll to the begining
 		q.scrollTo(def[0]);
-		
-		
+
+
 		// igk.winui.reg_event(window,"transitionend", function(evt){
-		
-		
-		
+
+
+
 		// // goTo(cur);
 		// // }
 		// });
-		
+
 		// because of file
 		igk.winui.reg_event(window, "resize", function () {
 			var b = q.getComputedStyle("transition");
 			if (b) {
 				q.setTransition("none");
 			}
-			
+
 			setTimeout(function () {
 				if (cur) {
-					
+
 					goTo(cur);
 				}
 			}, 2000);
@@ -22458,7 +22246,7 @@ igk.system.createNS("igk.system", {
 				var ns = p.getNS();
 				var stop = 1;
 				while (stop && c.read()) {
-					
+
 					switch (c.type) {
 						case PROCESSOR:
 							throw "not used";
@@ -22491,7 +22279,7 @@ igk.system.createNS("igk.system", {
 								cnode = root;
 							} else {
 								if (cnode == null) {
-									
+
 									cnode = p.createElement("dummy");
 									cnode.appendChild(root);
 									root = cnode;
@@ -22603,11 +22391,11 @@ igk.system.createNS("igk.system", {
 							var h = __readAttributes();
 							if (h.length > 0) {
 								this.hasAttrib = 1;
-								
-								
+
+
 								this.type = ATTRIBUTE;
 								this.attribs = __loadAttribs(h);
-								
+
 								return 1;
 							} else if (this.isEmpty) {
 								this.type = END_ELEMENT;
@@ -22638,7 +22426,7 @@ igk.system.createNS("igk.system", {
 										var c_pos = this.pos++;
 										v_ch = "";// read text
 										v_temp = __readTo("<");
-										
+
 										if (v_temp.length > 0) {
 											this.type = TEXT;
 											this.value = v_temp;
@@ -22686,7 +22474,7 @@ igk.system.createNS("igk.system", {
 										this.type = START_ELEMENT;
 										this.isEmpty = false;
 										this.hasAttrib = false;
-										
+
 										v_enter = 0;
 
 										return true;
@@ -22755,7 +22543,7 @@ igk.system.createNS("igk.system", {
 						}
 						// if (q.read()){
 
-						
+
 						// }
 						var e = 0;
 						while (!e && __canRead()) {
@@ -22806,7 +22594,7 @@ igk.system.createNS("igk.system", {
 												v += __readLine();
 												break;
 											case "*":
-											//TODO :::: RM Comment
+												//TODO :::: RM Comment
 												dx = q.txt.indexOf("*\/", q.pos + 2);
 												v += "\/*" + q.txt.substr(q.pos, dx - q.pos);
 												q.pos = dx + 1;
@@ -22863,7 +22651,7 @@ igk.system.createNS("igk.system", {
 	function __init() {
 		var n = this.getAttribute("igk:svg-name");
 		var g = m_symbols[n];
-		
+
 		if (g) {
 			var c = g.clone();
 			// append attribute to node class
@@ -22882,12 +22670,12 @@ igk.system.createNS("igk.system", {
 	};
 	function __initsymbol() {
 		var n = this.getAttribute("id");
-		
+
 		if (!m_symbols[n]) {
-			
+
 
 			// if egdge for xbox one load outer document
-			
+
 			var ot = this.o.outerHTML;
 			var doc = ot ? $igk(__loadSvg(ot)) : null;
 			if (!doc) {
@@ -22898,48 +22686,48 @@ igk.system.createNS("igk.system", {
 				m_symbols.push(doc);
 				m_symbols[n] = doc;
 			}
-			
+
 			// doc.setAttribute("class",this.getAttribute("class"));
 
 			if (m_keyloads[n]) {
 
-				
-				
-				
+
+
+
 				for (var ii = 0; ii < m_keyloads[n].length; ii++) {
-					
+
 					var t = m_keyloads[n][ii].t;
 					// debug=1;
-					
+
 					__init.apply(t);
 					// debug=0;
-					
+
 				}
-				
+
 				m_keyloads[n] = null;
 				delete (m_keyloads[n]);
-				
-				
+
+
 			}
 
 		}
 	};
 	function __loadSymbols(f) {
-		
+
 		if (igk.getSettings().nosymbol) {
 			// because of no symbol required IE specification 
 			return;
 		}
-		
+
 		igk.io.file.load(f, function (d) {
 
-			
+
 			if (typeof (d.data) != "string") {
 				if (d.error) {
 					return;
 				}
 			}
-			var d =  igk.utils.getBodyContent(d.data);
+			var d = igk.utils.getBodyContent(d.data);
 			var q = igk.createNode("div").setHtml(d);//d.data);
 			var svg_c = 0;
 			var t = q.select(">>").each(function () {
@@ -22949,7 +22737,7 @@ igk.system.createNS("igk.system", {
 							// load multiple svg document
 							var m = this;
 							// select child svg
-							
+
 							m.select(">> svg").each_all(function () {
 								this.fn.svg = f;
 								__initsymbol.apply(this);
@@ -22965,7 +22753,7 @@ igk.system.createNS("igk.system", {
 				return !0;
 			});
 
-			
+
 			igk.publisher.publish("sys://svg/lds", { target: this, file: f, count: svg_c, selector: t }); // loaded symbol
 		});
 	};
@@ -22981,7 +22769,7 @@ igk.system.createNS("igk.system", {
 		getLoadedKey: function () {
 			var t = [];
 			for (var i = 0; i < m_symbols.length; i++) {
-				
+
 				t.push(m_symbols[i].getAttribute("id"));
 			}
 			return t;
@@ -22991,10 +22779,10 @@ igk.system.createNS("igk.system", {
 			q.setAttribute('igk:svg-name', n).addClass("igk-svg-symbol " + n);
 			return q;
 		},
-		newSvgDocument: function(){
+		newSvgDocument: function () {
 			//return a new svg document
 			return $igk(document.createElementNS(igk.namespaces.svg, 'svg')).setAttributes({
-				version:'1.1'
+				version: '1.1'
 			});
 		}
 	});
@@ -23018,9 +22806,9 @@ igk.system.createNS("igk.system", {
 
 		if (h && (h != 'none')) {
 			var lst = h.replace(/"/g, '').split(',');
-			
+
 			for (var i = 0; i < lst.length; i++) {
-				
+
 				igk.svg.loadSymbols(lst[i]);
 			}
 		}
@@ -23035,7 +22823,7 @@ igk.system.createNS("igk.system", {
 (function () {
 	function __init() {
 		igk.initpowered(this.o);
-		
+
 	}
 	igk.winui.initClassControl("igk-powered", __init, {
 		desc: "manage powered message"
@@ -23094,7 +22882,7 @@ igk.system.createNS("igk.system", {
 		var s = igk.winui.screenSize();
 		var w = s.width;
 		var h = s.height;
-		
+
 		for (var i = 0; i < m_pages.length; i++) {
 			var k = m_pages[i];
 			_update_i(k, w, h);
@@ -23105,18 +22893,18 @@ igk.system.createNS("igk.system", {
 		desc: "page management"
 	});
 	igk.winui.reg_event(window, "resize", function () {
-		clearTimeout(tmout );
-		if (m_pages.length > 0) {		
-		
-		tmout = setTimeout(function(){
-			__update();
-		}, 500);
-		
+		clearTimeout(tmout);
+		if (m_pages.length > 0) {
+
+			tmout = setTimeout(function () {
+				__update();
+			}, 500);
+
 		}
 	});
 
-	
-	
+
+
 })();
 
 (function () {
@@ -23132,8 +22920,8 @@ igk.system.createNS("igk.system", {
 			});
 		}
 	}, {
-			desc: "JS Component to show inline ms dialog button"
-		});
+		desc: "JS Component to show inline ms dialog button"
+	});
 })();
 (function () {
 	// 
@@ -23147,10 +22935,10 @@ igk.system.createNS("igk.system", {
 		var q = this;
 		var def = "sys://control/inputregex";
 
-		
-		
+
+
 		if (q.data[def]) {
-			
+
 			return !1;
 		}
 		q.data[def] = 1;
@@ -23189,7 +22977,7 @@ igk.system.createNS("igk.system", {
 					if (_e_id_msg) {
 						var _st = $igk(_e_id_msg);
 						if (_st) {
-							
+
 							_ms_n.setHtml("?????" + _st.getHtml());
 						}
 					} else {
@@ -23209,11 +22997,11 @@ igk.system.createNS("igk.system", {
 		// if(_emsg)
 		// this.o.setCustomValidity(_emsg);
 		_rg = new RegExp(_rg, _rg_opt);
-		
-		
+
+
 
 		this.reg_event("invalid", function () {
-			
+
 			q.o.setCustomValidity(_emsg);
 		});
 
@@ -23225,8 +23013,8 @@ igk.system.createNS("igk.system", {
 			var altKey = evt.altKey;
 			var ch = evt.char || evt.key; // get char expression ie vs modzilla
 			// igk.show_prop(evt);	
-			
-			
+
+
 			// if(!ctrlkey && !altKey &&(c > 31)&&(evt.key.length==1) && !_rg.exec(ch))
 			// evt.preventDefault();
 
@@ -23236,7 +23024,7 @@ igk.system.createNS("igk.system", {
 			return !1;
 		});
 		// this.reg_event("keyup",function(evt){
-		
+
 		// evt.stopPropagation();
 		// evt.preventDefault();
 		// return !1;
@@ -23246,18 +23034,18 @@ igk.system.createNS("igk.system", {
 			q.o.setCustomValidity("");
 		});
 		// this.reg_event("change",function(evt){
-		
+
 		// evt.preventDefault();
 		// });
 		// protect for paste data
 		this.reg_event("paste", function (evt) {
-			
+
 			if (evt.clipboardData.types <= 0)
 				return;
 			// var t=evt.clipboardData.types[0];
 			// igk.show_prop(evt.clipboardData.types);
 			var d = evt.clipboardData.getData("text/plain");
-			
+
 			for (var i = 0; i < d.length; i++) {
 				if (!_rg.exec(d[i])) {
 					evt.stopPropagation();
@@ -23294,8 +23082,8 @@ igk.system.createNS("igk.system", {
 		__init_input_regex.apply(this, ['class']);
 
 	}, {
-			desc: "JS input-regex component"
-		});
+		desc: "JS input-regex component"
+	});
 })();
 
 
@@ -23346,7 +23134,7 @@ igk.system.createNS("igk.system", {
 
 					if (new RegExp(self.options.regex).exec(old))// new RegExp(""+self.options.regex+"","i").exec(old))
 					{
-						
+
 
 						if (old == "-")
 							evt.target.value = "-";
@@ -23499,12 +23287,12 @@ igk.system.createNS("igk.system", {
 		}
 
 		var s = this.getAttribute("igk:data");
-		 
+
 
 		var p = igk.JSON.parse(s, this);
-		if (typeof(p) !='object'){
+		if (typeof (p) != 'object') {
 			p = {};
-		} 
+		}
 		if (q.o.tagName.toLowerCase() == "input") {
 			var n = igk.dom.replaceTagWith(q, "div");
 			var v = q.getAttribute("value");
@@ -23512,7 +23300,7 @@ igk.system.createNS("igk.system", {
 			n.o.removeAttribute("value");
 			n.o.removeAttribute("type");
 			n.o.removeAttribute("igk:uri");
-			n.o.removeAttribute("igk:data"); 
+			n.o.removeAttribute("igk:data");
 			q = n;
 		}
 		q.reg_event('click', function (evt) {
@@ -23556,14 +23344,14 @@ igk.system.createNS("igk.system", {
 			};
 			cp.start = p ? p.start : null;
 			cp.accept = p ? p.accept : null;
-			
+
 			//console.debug(cp);
-			
-			 igk.system.io.pickfile(u, cp);
+
+			igk.system.io.pickfile(u, cp);
 		});
 
 	}, {
-			desc: "Used to pick file in ajx context"
+		desc: "Used to pick file in ajx context"
 	});
 })();
 
@@ -23574,10 +23362,10 @@ igk.system.createNS("igk.system", {
 	igk.winui.initClassControl("igk-xsl-node", function (
 		// 	o,m
 	) {
-		
-		
-		
-		
+
+
+
+
 		// var attr = igk.winui.ClassRequireAttribute.apply(this, "igk:xslt-data");
 
 
@@ -23588,7 +23376,7 @@ igk.system.createNS("igk.system", {
 				igk.dom.transformXSLUri(u.xml, u.xsl, function (d) {
 					if (u.target) {
 						var s = $igk(d).select(u.target);
-						
+
 						var t = s && (s.o.length == 1) && s.first();
 						if (t) {
 							q.setHtml(t.o.innerHTML);
@@ -23604,17 +23392,17 @@ igk.system.createNS("igk.system", {
 			});
 		}
 	}, {
-			desc: 'used no build xsl node',
-			create: function (xml, xsl) {
-				if ((!xml) || (!xsl)) {
-					throw ('Arguments not valid');
-				}
-				var n = igk.createNode('div');
-				n.addClass("igk-xsl-node");
-				n.setAttribute("igk:xslt-data", igk.JSON.convertToString({ xml: xml, xsl: xsl }));
-				return n;
+		desc: 'used no build xsl node',
+		create: function (xml, xsl) {
+			if ((!xml) || (!xsl)) {
+				throw ('Arguments not valid');
 			}
-		});
+			var n = igk.createNode('div');
+			n.addClass("igk-xsl-node");
+			n.setAttribute("igk:xslt-data", igk.JSON.convertToString({ xml: xml, xsl: xsl }));
+			return n;
+		}
+	});
 
 })();
 
@@ -23647,12 +23435,12 @@ igk.system.createNS("igk.system", {
 		});
 		// igk.ready(function(){__update.apply(q,[v])},0);
 		igk.winui.reg_event(window, "resize", g = function () {
-			
+
 			// if(!q.getpresentOnDocument()){
 			// igk.winui.unreg_event(window,"resize",g);
 			// }
-			
-			
+
+
 			__update.apply(q, [v]);
 		});
 		q.fix.update();
@@ -23683,7 +23471,7 @@ igk.system.createNS("igk.system", {
 	});
 	igk.winui.initClassControl("igk-ajx-uri-loader", function () {
 		var u = this.getAttribute("igk:href");
-		var a = this.getAttribute("igk:append"); 
+		var a = this.getAttribute("igk:append");
 		var self = this;
 		if (u) {
 			// var lw = this.add("div").addClass("igk-google-line-waiter");
@@ -23708,12 +23496,12 @@ igk.system.createNS("igk.system", {
 						// lw.remove();
 						self.remove();
 					});
-				} else if (xhr.readyState==4) {
+				} else if (xhr.readyState == 4) {
 					// lw.remove();
 					self.remove();
 				}
 			}, true);
-			
+
 		}
 	},
 		{
@@ -23855,7 +23643,7 @@ igk.system.createNS("igk.system", {
 // --------------------------------------------------------------------------------------------------------
 (function () {
 	igk.system.createNS("igk.html5", {
-		audioContext: window.AudioContext || window.webkitAudioContext,		
+		audioContext: window.AudioContext || window.webkitAudioContext,
 	});
 	var _no_context = "no-audio-context";
 	igk.system.createNS("igk.html5.audioBuilder", {
@@ -23925,7 +23713,7 @@ igk.system.createNS("igk.system", {
 //----------------------------------------------------------------------------------------------------------
 // WEBGLContext
 //----------------------------------------------------------------------------------------------------------
-(function(){
+(function () {
 	igk.system.createNS("igk.html5", {
 		freeWebGLContext: function (gl) { // free webgl context
 			gl = gl || m_gl;
@@ -23935,7 +23723,7 @@ igk.system.createNS("igk.system", {
 			}
 			if (m_gl == gl)
 				m_gl = null;
-		},		
+		},
 		createWebGLContext: function (c) {
 			return c.getContext("webgl") || c.getContext('experimental-webgl');
 		}
@@ -24038,11 +23826,11 @@ igk.system.createNS("igk.system", {
 				},
 				capture: function (u, w, h) {
 					_pause = 1;
-					
-					
+
+
 					var c = $igk(this.canvas).getParent().select(".scene").first();
 					var v_bck = $igk(this.canvas).o.style;
-					
+
 					$igk(this.canvas).setCss({ position: "fixed" });
 					this.updateSize(_def.gl, w, h);
 					this.tick(_def.gl);
@@ -24076,7 +23864,7 @@ igk.system.createNS("igk.system", {
 
 			_currentGame = this;
 		},
-		FreeContext: igk.html5.freeWebGLContext, 
+		FreeContext: igk.html5.freeWebGLContext,
 		CreateContext: function (q, listener) {
 			// init node
 			var canvas = q.o;// document.getElementById("game-surface");
@@ -24087,14 +23875,14 @@ igk.system.createNS("igk.system", {
 			var _mcl = _m.getComputedStyle("backgroundColor");
 
 
-			
-			
+
+
 
 			var _clbg = igk.system.colorFromString(_m.getComputedStyle("backgroundColor")).toInt();// String(); 
-			
+
 			// _m.remove();
 			// 	return 0;
-			
+
 			if (!gl) {
 				if (igk.navigator.isSafari())
 					return 0;
@@ -24136,7 +23924,7 @@ igk.system.createNS("igk.system", {
 				return new fc();
 			};
 
-			
+
 
 			if (_ol) {
 				switch (typeof (_ol)) {
@@ -24172,7 +23960,7 @@ igk.system.createNS("igk.system", {
 				// return 0;
 			}
 
-			
+
 
 			var cl = igk.system.colors.toFloatArray(_clbg);
 			if (!_ol) {
@@ -24181,13 +23969,13 @@ igk.system.createNS("igk.system", {
 				gl.clearColor(cl.r, cl.g, cl.b, cl.a);
 
 				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-				
+
 				return 0;
 			} else {
 				// init _ol
 				gl.TRUE = 1;
 				gl.FALSE = 0;
-				
+
 				_ol.setBgColor(cl);
 				_ol.initGame(gl);// init game environment
 				_ol.updateSize(gl);// 
@@ -24230,15 +24018,15 @@ igk.system.createNS("igk.system", {
 
 
 	}, {
-			desc: 'webgl graphic surface',
-			create: function (listener) {
-				var n = igk.createNode('canvas');
-				n.addClass('igk-webgl-game-surface');
-				if (listener)
-					n.setAttribute("igk-webgl-game-attr-listener", listener);
-				return n;
-			}
+		desc: 'webgl graphic surface',
+		create: function (listener) {
+			var n = igk.createNode('canvas');
+			n.addClass('igk-webgl-game-surface');
+			if (listener)
+				n.setAttribute("igk-webgl-game-attr-listener", listener);
+			return n;
 		}
+	}
 	);
 })();
 
@@ -24246,16 +24034,16 @@ igk.system.createNS("igk.system", {
 //media management
 //--------------------------------------------------------------------------------------------------------
 (function () {
- 
+
 	function __media_setting(q, b) {
 		// q.setCss({display:"none !important"});
 		q.setAttribute("style", "display:none !important");
 		var m_inf = {};
 		function __media_change() {
 			console.debug("media change");
-			
+
 			var c = igk.css.getMediaType();
-			
+
 
 
 			if ((c != 'global') && !(c in m_inf)) {
@@ -24314,41 +24102,41 @@ igk.system.createNS("igk.system", {
 					// return;
 
 					// throw ('data');
-					
-					
-					
+
+
+
 					var of; // off in percent
 					var m_t = $igk(evt.target).getscrollMaxTop();
 					var v_c = q.o;
 					var c_h = q.o.scrollHeight;
 
-					
 
 
 
-					
+
+
 					if (m_t > 0)
 						of = parseInt((evt.target.scrollTop / m_t) * 100.0);
 					else {
 						of = 0;
 					}
-					
+
 					// if (of==0){
-					
+
 					// // q.setCss({backgroundPosition: "center"});	
 					// }else{
-					
+
 					// firefox raise warning for scrolling effect position
 					var p = Math.round((of / 200.0) * 10) * 2;
 					var cl = "igk-pos-" + p;
-					
+
 					if (!(new RegExp(cl + "$")).test(q.o.className)) {
 						q.rmAllClass("^igk-pos-(.)+$")
 							.addClass(cl);
-						
+
 					}
 					// else{
-					
+
 					// }
 					// q.setCss({backgroundPosition: "center "+(-of)+"px"});
 					// }
@@ -24518,7 +24306,7 @@ igk.system.createNS("igk.system", {
 		q.closeBySubmit = 1;
 		igk.appendProperties(this, {
 			mediachanged: function (e) {
-				
+
 				q.initLoc();
 			},
 			close: function (evt) {
@@ -24538,8 +24326,8 @@ igk.system.createNS("igk.system", {
 				var W = igk.getNumber(g.getComputedStyle("width"));
 				var w = -(W / 2);
 				var h = (-igk.getNumber(g.getComputedStyle("height")) / 2);
-				
-				
+
+
 				if (W != igk.winui.screenSize().width) {
 					g.setCss({
 						position: "fixed",
@@ -24561,7 +24349,7 @@ igk.system.createNS("igk.system", {
 			subfunc: function (frm) {
 				return function (evt) {
 					evt.preventDefault();
-					
+
 					igk.ajx.postform(frm.o, frm.getAttribute("action"), function (xhr) {
 						if (this.isReady()) {
 							if (q.closeBySubmit)
@@ -24659,7 +24447,7 @@ igk.system.createNS("igk.system", {
 (function () {
 	// remove all item if item visible
 	function _rm_js_hide() {
-		
+
 		igk.qselect(".igk-js-hide").each_all(function () {
 			this.rmClass("igk-js-hide");
 		});
@@ -24682,8 +24470,8 @@ igk.system.createNS("igk.system", {
 	function __transition_end(evt) {
 		if ((c_toast == null) || (evt.target != c_toast.o) || (evt.propertyName != "opacity"))
 			return;
-		
-		
+
+
 		// c_toast.remove();		
 		igk.winui.unreg_event(c_toast, "transitionend", __transition_end);
 		c_toast.remove();
@@ -24697,7 +24485,7 @@ igk.system.createNS("igk.system", {
 		}
 		var i = this.getHtml();
 
-		if (this.getAttribute("noHide")) 
+		if (this.getAttribute("noHide"))
 			return;
 
 		this.setCss({
@@ -24707,7 +24495,7 @@ igk.system.createNS("igk.system", {
 		var _fo = 0; // fadin out
 		c_toast = q;
 		setTimeout(function () {
-			if (_fo) return;			
+			if (_fo) return;
 			igk.winui.reg_event(q, "transitionend", __transition_end);
 			q.setCss({ opacity: 0.0 });
 			_fo = 1;
@@ -24718,19 +24506,19 @@ igk.system.createNS("igk.system", {
 			//toast constructor
 		}
 	});
-	
-	igk.winui.controls.toast.show = function(m, type){
+
+	igk.winui.controls.toast.show = function (m, type) {
 		var d = igk.createNode("div").addClass("igk-winui-toast");
-		if (type){
+		if (type) {
 			d.addClass(type);
 		};
 		d.setHtml(m);
-		igk.dom.body().add(d);		
+		igk.dom.body().add(d);
 		d.init();
 	};
 
 	igk.winui.controls.toast.initDemo = function () {
-		igk.winui.controls.toast.show("Toast Demonstration");		
+		igk.winui.controls.toast.show("Toast Demonstration");
 	};
 	igk.winui.initClassControl("igk-winui-toast", __init_toast);
 })();
@@ -24799,12 +24587,12 @@ igk.system.createNS("igk.system", {
 					var i = 0;
 					g.each_all(function () {
 						// 
-						
+
 						var _ie = tv; // insert element
 						if (i) {
-							
+
 							_ie = tv.clone();
-							
+
 						}
 						this.o.parentNode.replaceChild(
 							_ie.o,
@@ -24876,7 +24664,7 @@ igk.system.createNS("igk.system", {
 			// replace 
 			var g = $igk(m_item[n]).clone();
 			var p = this.o.parentNode;
-			
+
 			$igk(p).addClass("igk-svg-host");
 			p.replaceChild(g.o, this.o);
 			if (p.getAttribute("title"))
@@ -24887,7 +24675,7 @@ igk.system.createNS("igk.system", {
 		}
 	};
 	function __initlist() {
-		
+
 		for (var i = 0; i < this.o.childNodes.length; i++) {
 			var j = this.o.childNodes[i];
 			m_item[j.tagName.toLowerCase()] = $igk(j).select("svg").first();
@@ -24896,7 +24684,7 @@ igk.system.createNS("igk.system", {
 	};
 	// svg list init svg list
 	function __init_svg_l() {
-		
+
 		igk.dom.body().select(".igk-svg-lst").each_all(__initlist);
 		// var s = igk.dom.body().add("style");
 		// s.o["type"]="text/css";
@@ -24908,7 +24696,7 @@ igk.system.createNS("igk.system", {
 	igk.ready(__init_svg_l);
 
 	igk.winui.initClassControl("igk-svg-lst", function () {
-		
+
 		__initlist.apply(this);
 
 	});
@@ -24917,17 +24705,17 @@ igk.system.createNS("igk.system", {
 		$igk(this).select(".igk-svg-lst").each_all(__initlist);
 	});
 	igk.winui.initClassControl("igk-svg-lst-i", __init_svg_i);
-	
-	igk.winui.createSVGLi = function(n){
+
+	igk.winui.createSVGLi = function (n) {
 		if (m_item[n]) {
 			var g = $igk(m_item[n]).clone();
 			return g;
-		}else{
-			console.error("[igk] - svg-lst-item <<"+n+">> not found");
+		} else {
+			console.error("[igk] - svg-lst-item <<" + n + ">> not found");
 		}
 	};
 	// igk.ajx.fn.registerNodeReady(function(){	
-	
+
 	// $igk(this).select(".igk-svg-lst").each_all(__initlist);
 	// });
 })();
@@ -24938,14 +24726,14 @@ igk.system.createNS("igk.system", {
 	igk.ajx.fn.registerNodeReady(function () {
 		if (!this.tagName || this.tagName.toLowerCase() != "style")
 			return;
-		
+
 		// $igk(this).select("style").each_all(function(){
 		var f = $igk("#" + $igk(this).getAttribute("igk:from")).first();
 		if (f) {
 			f.setHtml(this.innerHTML);
 			$igk(this).remove();
 		}
-		
+
 		// });
 	});
 
@@ -25023,17 +24811,17 @@ igk.system.createNS("igk.system", {
 })();
 
 // (function () {
-	// igk-ajx-replace-ciblibk : used to replace ajx cibling context
-	// igk:data = data used to select the replacing zone
-	// igk.winui.initClassControl('igk-ajx-replace-source', function () {
-		// var o = this.getHtml();
-		// var f = this.o.firstChild;
-		// var d = this.getAttribute("igk:data");
-		// $igk(d).each_all(function(){
-			// this.insetBefore(
-		// });
-		// this.remove();
-	// });
+// igk-ajx-replace-ciblibk : used to replace ajx cibling context
+// igk:data = data used to select the replacing zone
+// igk.winui.initClassControl('igk-ajx-replace-source', function () {
+// var o = this.getHtml();
+// var f = this.o.firstChild;
+// var d = this.getAttribute("igk:data");
+// $igk(d).each_all(function(){
+// this.insetBefore(
+// });
+// this.remove();
+// });
 // })();
 
 
@@ -25105,7 +24893,7 @@ igk.system.createNS("igk.system", {
 
 
 		while ((s = tab.pop())) {
-			
+
 			if (s.e) {
 				console.debug("end");
 				m = igk.createNode("div").addClass("l");
@@ -25152,7 +24940,7 @@ igk.system.createNS("igk.system", {
 					}
 					break;
 				case 3:// text element
-					
+
 					// return;
 					// m = igk.createNode("div");
 					// m.add("span").setHtml("&lt;");
@@ -25193,13 +24981,13 @@ igk.system.createNS("igk.system", {
 // TODO: test extra attribute event - demonstration - hold click with BALAFON javasript 
 (function () {
 	igk.system.createNS("igk.event", {
-		stop: function(e){
+		stop: function (e) {
 			e.preventDefault();
 			e.stopPropagation();
 		}
 	});
-	var list = {"click":"touchOrClick"};
-	
+	var list = { "click": "touchOrClick" };
+
 	igk.ctrl.registerAttribManager("[click]", { desc: "click property event" });
 	igk.ctrl.bindAttribManager("[click]", function (m, n) {
 		if (n == null) {
@@ -25207,16 +24995,16 @@ igk.system.createNS("igk.system", {
 		}
 		var fc = new Function(n);
 		var q = this;
-		this.reg_event("touchOrClick", function (event) {		 
-			igk.event.stop(event);			 
+		this.reg_event("touchOrClick", function (event) {
+			igk.event.stop(event);
 			if (event.handle)
 				return;
-			fc.apply(q, [event]);			
+			fc.apply(q, [event]);
 		});
 	});
-	
-	function _initmethod(ms){
-		return	function (m, n) {
+
+	function _initmethod(ms) {
+		return function (m, n) {
 			if (n == null) {
 				return;
 			}
@@ -25225,17 +25013,17 @@ igk.system.createNS("igk.system", {
 					return;
 				eval(n);
 			});
-			};
+		};
 	};
-	
-	var mouseevents=["mouseover","mousedown","mouseup"];
-	for(var i = 0 ; i < mouseevents.length; i++){
+
+	var mouseevents = ["mouseover", "mousedown", "mouseup"];
+	for (var i = 0; i < mouseevents.length; i++) {
 		var n = mouseevents[i];
-		igk.ctrl.registerAttribManager("["+n+"]", { desc: "click property event" });
-		igk.ctrl.bindAttribManager("["+n+"]",_initmethod(n));
+		igk.ctrl.registerAttribManager("[" + n + "]", { desc: "click property event" });
+		igk.ctrl.bindAttribManager("[" + n + "]", _initmethod(n));
 	}
-	
-	
+
+
 
 })();
 
@@ -25286,13 +25074,13 @@ igk.system.createNS("igk.system", {
 		var t = this;
 		t.on("click", function () {
 			t.toggleClass("igk-hide");
-			if (rem){
+			if (rem) {
 				t.remove();
 			}
 		});
 		return;
 
-		 
+
 	});
 
 })();
@@ -25352,7 +25140,7 @@ igk.system.createNS("igk.system", {
 		write: function (msg) {
 			if (_glogger)
 				_glogger.add("div").setHtml(msg);
-			else 
+			else
 				console.debug(msg);
 		},
 		clear: function () {
@@ -25372,51 +25160,51 @@ igk.system.createNS("igk.system", {
 })();
 
 
- 
 
-(function(){
+
+(function () {
 	//form utility
 	igk.system.createNS("igk.winui.form", {
-		validate: function(t){
-			var q = $igk(igk.getParentScript()).select("^form").first();	
-			q.reg_event("submit", function(e){
-				for(var i = 0; i < t.length; i++){
-				    if (!q.o[t[i]].value){
+		validate: function (t) {
+			var q = $igk(igk.getParentScript()).select("^form").first();
+			q.reg_event("submit", function (e) {
+				for (var i = 0; i < t.length; i++) {
+					if (!q.o[t[i]].value) {
 						e.preventDefault();
 						e.stopPropagation();
 						return;
 					}
 				}
-				
+
 			});
 		}
 	});
 })();
 
-(function(){
-	
+(function () {
+
 	//no scroll item selections
 	igk.ctrl.registerAttribManager("igk-winui-no-scroll", {
-		"desc":"disable scrolling on item"
+		"desc": "disable scrolling on item"
 	});
-	igk.ctrl.bindAttribManager("igk-winui-no-scroll", function(m, v){  
+	igk.ctrl.bindAttribManager("igk-winui-no-scroll", function (m, v) {
 		if (!v || !igk.css.isItemSupport(["scrollBarWidth"]))
-			return;	 
-		this.setCss({"scrollbarWidth":"none"});  
+			return;
+		this.setCss({ "scrollbarWidth": "none" });
 	});
-	
-})();  
 
-(function(){
+})();
+
+(function () {
 	//utility extension html to str
-	var _d=0;
+	var _d = 0;
 	igk.system.createNS("igk", {
-		toStr: function(v){
-			if(!_d){
+		toStr: function (v) {
+			if (!_d) {
 				_d = igk.createNode("div");
 			}
 			return _d.setHtml(v).o.innerText;
 		}
 	});
-	
+
 })();

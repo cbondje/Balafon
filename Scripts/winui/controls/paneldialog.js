@@ -82,6 +82,15 @@ function _panDialogInit(){
 		// console.debug("update size");
 		tm_out = setTimeout(_update_size, 500);
 	};
+	this.select("form").each_all(function(){
+		if (this.getAttribute("igk-ajx-form")){
+			var input = document.createElement("input");
+			input["type"] = "hidden";
+			input["name"] = "igk-ajx-form";
+			input["value"] = 1;
+			this.appendChild(input);
+		}
+	});
 	var tm_out = 0;
 	q.on("windowresize", _updating);
 	_update_size();

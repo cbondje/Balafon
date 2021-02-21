@@ -80,7 +80,7 @@ $ul->addLi()->Content = "Location : ".$ctrl->getDeclaredFileName();
 
  $frm = $row->addCol()->addDiv()->addForm();
  $frm["action"]  = $ctrl->getUri("cachewsl");
- $frm["igk-form-ajx"] = 1;
+ $frm["igk-ajx-form"] = 1;
  $i  = $frm->add("input")->setAttributes(array("id"=>"btnCache", "type"=>"submit",
  "value"=>"Cache WSDL"
  ));

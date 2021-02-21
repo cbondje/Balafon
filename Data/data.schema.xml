@@ -78,11 +78,6 @@
         <Column clName="clName" clType="VARCHAR" clTypeLength="60" clNotNull="True" clIsPrimary="True" />
         <Column clName="clValue" clType="TEXT" />
     </DataDefinition>
-    <DataDefinition TableName="tbigk_mailinglist">
-        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
-        <Column clName="clEmail" clType="VARCHAR" clTypeLength="150" clNotNull="True" clIsUnique="True" />
-        <Column clName="clActive" clType="Int" clTypeLength="11" clDescription="0 non active" clNotNull="True" />
-    </DataDefinition>
     <DataDefinition TableName="tbigk_mailinglists">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clEmail" clType="VARCHAR" clTypeLength="60" clNotNull="True" clIsUnique="True" />
@@ -194,5 +189,11 @@
         <Column clName="clSessCityName" clType="VARCHAR" clTypeLength="60" />
         <Column clName="clSessRegionName" clType="VARCHAR" clTypeLength="30" />
         <Column clName="clSessAgent" clType="Text" />
+    </DataDefinition>
+    <DataDefinition TableName="tbigk_guids" clDescription="Store guid on db for living purpose. link to change password for exemple.">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clGUID" clType="VARCHAR" clTypeLength="50" clIsUnique="true" />
+        <Column clName="clDesc" clType="Text"  />
+        <Column clName="clCreateAt" clType="DATETIME" clNotNull="True" clInsertFunction="NOW()" clDefault="NOW()"/>
     </DataDefinition>
 </data-schemas>

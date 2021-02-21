@@ -8,6 +8,8 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
+use function igk_resources_gets as __;
+
 igk_reg_global_setting('BootStrap.Enabled', '1');
 igk_reg_global_setting('BootStrap.JsEnabled', '1');
 igk_reg_global_setting('JQuery.Enabled', '1');
@@ -18,7 +20,7 @@ igk_reg_global_setting('allow_debugging', '0');
 igk_reg_global_setting('app_default_controller_tag_name', 'div');
 igk_reg_global_setting('cache_file_time', '3600');
 igk_reg_global_setting('company_name', 'igkdev');
-igk_reg_global_setting('copyright', 'IGKDEV &copy; 2011-'.date('Y').' all rights reserved');
+igk_reg_global_setting('copyright', 'IGKDEV &copy; 2011-'.date('Y'). __(' all rights reserved'));
 igk_reg_global_setting('default_dataadapter', 'MYSQL');
 igk_reg_global_setting('db_name', 'igkdev');
 igk_reg_global_setting('db_prefix', 'tbigk');

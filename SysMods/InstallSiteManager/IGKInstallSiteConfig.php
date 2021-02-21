@@ -51,7 +51,7 @@ class IGKInstallSiteConfig extends IGKConfigCtrlBase{
 			symlink(dirname($core) , $lnk);
 		}
 
-		if (!empty($packagefolder) && !is_link($lnk = $src."/application/Packages"))
+		if (!empty($packagefolder) && !is_link($lnk = $src."/application/".IGK_PACKAGES_FOLDER))
 		{
 			symlink($packagefolder , $lnk);
 		}

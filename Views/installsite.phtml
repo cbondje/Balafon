@@ -28,7 +28,7 @@ igk_view_handle_actions($fname, ["install"=>function(){
                 igk_io_createdir($install."/src/public");
                 igk_io_createdir($install."/src/application");
                 igk_io_createdir($install."/src/tmp");
-                $module_path="{$install}/application/Packages/Modules";
+                $module_path="{$install}/application/".IGK_PACKAGES_FOLDER."/Modules";
                 if($module){
                     $module_path=igk_html_uri(igk_get_module_dir());
                 }

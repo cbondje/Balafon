@@ -8,8 +8,10 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
-if(!isset($c))
+if(!isset($c)){
+    return;
     igk_die("variable c not define");
+}
 if(preg_match("/^".IGK_SITEMAP_FUNC."(\.xml)?$/", $c)){
     igk_sys_gen_sitemap($ctrl, igk_getv($p, 0, $ctrl->getAppUri()));
     igk_exit();

@@ -293,7 +293,7 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
     /**
     * check init and init user to this apps
     */
-    protected function checkUser($nav=true, $uri=null){
+    public function checkUser($nav=true, $uri=null){
         $r=true;
         $u= igk_app()->Session->User;
         $ku=$this->getUser();   

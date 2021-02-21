@@ -64,10 +64,13 @@ final class IGKAppModule extends IGKControllerBase{
             }
         }
         $c=realpath($dir."/.module.pinc");
-        if(file_exists($c))
+        if(file_exists($c)){
             $this->_init($c);
+        }
 
         $classLib = $this->getDeclaredDir()."/Lib/Classes";
+       
+
         if (is_dir($classLib)){
             $dir = $this->getDeclaredDir();
             if (!empty($dir) &&  is_link($dir)){
@@ -79,16 +82,18 @@ final class IGKAppModule extends IGKControllerBase{
             $entry_ns = str_replace("/","\\", igk_get_module_name($dir));
             $libdir=$classLib;
             spl_autoload_register(function($n)use($entry_ns, $libdir){
+             
+                $fc = "";
                 if (!empty($entry_ns) && (strpos( $n, $entry_ns)===0)){
-                    $cl = substr($n, strlen($entry_ns));
-                    if (file_exists($fc = $libdir."/".$cl.".php")){
+                    $cl = ltrim(substr($n, strlen($entry_ns)), "\\");
+                    if (file_exists($fc = igk_io_dir($libdir."/".$cl.".php"))){
                         include($fc);
                         if (!class_exists($n, false)){
                             igk_die("file loaded but class $cl does not exists");
                         }
                         return 1;
                     }
-                }
+                } 
             });
         }
     }

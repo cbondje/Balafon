@@ -10,7 +10,7 @@
 
 defined("IGK_FRAMEWORK") || die("REQUIRE FRAMEWORK - No direct access allowed");
 define(basename(__FILE__), 1);
-
+use function igk_resources_gets  as __;
 
 function igk_io_get_script($f, $args=null){
     if (file_exists($f)){
@@ -437,7 +437,7 @@ class IGKLoader {
         if(isset($m[$n])){
             return $m[$n];
         }
-		if (!class_exists($cl, $forceloading))
+		if ( !((!$forceloading && (strpos($name, "\\")!==false) && class_exists($cl, true)) )|| !class_exists($cl, $forceloading))
 		{
 			$meth = "GetModelClassName";
 			if(method_exists($cl_c, $meth)){
@@ -559,6 +559,23 @@ final class IGKServer{
         else
             $this->data[$n]=$v;
     }
+    ///<summary>return if server accept return type</summary>
+    public function accept($type="html"){
+        static $accept_type= null;
+        if ($accept_type===null){
+            $accept_type = [
+                "html"=>"text/html",
+                "json"=>"application/json"
+            ];
+        }
+        $a = explode(",", $this->HTTP_ACCEPT);
+        if (in_array("*/*", $a)){
+            return true;
+        }
+        $mtype = igk_getv($accept_type, $type, null);
+        return $mtype && in_array($mtype, explode(",", $this->HTTP_ACCEPT));
+    }
+
     public function get($name, $default=null){
         return igk_getv($this->data, $name, $default);
     }
@@ -618,7 +635,7 @@ final class IGKServer{
         if(!empty($doc_root=$this->IGK_DOCUMENT_ROOT)){
             $doc_root=str_replace("\\", "/", realpath($doc_root));
             $self=substr($c_script, strlen($doc_root));
-            if($self[0] == "/")
+            if((strlen($self) > 0) && ($self[0] == "/"))
                 $self=substr($self, 1);
             $basedir=str_replace("\\", "/", dirname($doc_root."/".$self));
             $this->IGK_BASEDIR=$basedir;
@@ -678,4 +695,7 @@ function igk_app_is_uri_demand($app, $function){
 ///<summary>encrypt in sha256 </summary>
 function igk_encrypt($data,$prefix=IGK_PWD_PREFIX){
     return hash("sha256", $prefix.$data);
+}
+function igk_sys_copyright(){
+    return "IGKDEV &copy; 2011-".date('Y')." ".__("all rights reserved");
 }

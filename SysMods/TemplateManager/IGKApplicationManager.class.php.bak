@@ -405,7 +405,7 @@ class IGKApplicationManager extends IGKControllerBase{
     */
     public function install_template_package_ajx($f=null){
         igk_flush_data();
-        $f=$f ?? dirname(__FILE__)."/Packages/igkdev.com.rcard.xtbl";
+        $f=$f ?? dirname(__FILE__)."/".IGK_PACKAGES_FOLDER."/igkdev.com.rcard.xtbl";
         $e=igk_zip_unzip_filecontent($f, ".manifest");
         if($e == null){
             igk_ilog("no manisfest file found in the package");
