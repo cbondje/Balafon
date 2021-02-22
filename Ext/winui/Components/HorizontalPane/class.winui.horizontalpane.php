@@ -354,14 +354,7 @@ $pane->RenderAJX();
 		$pane->clearPages();
 		$pane->configure();
 		$pane->flush();
-
-		// igk_createNode("script")->setContent(<<<EOF
-		// throw ("dfdf");
-// EOF
-// )->RenderAJX();
-
 		$pane->RenderAJX();
-
 		igk_exit();
 	}
 	public function getUriSetting(){
@@ -554,14 +547,7 @@ $target->Load( igk_html_databinding_treatresponse($s,null, null,null));
 
 		}
 		return false;
-	}
-	public function Dispose(){
-
-		parent::Dispose();
-		// igk_wln("dispose");
-		// throw new Exception("dikd");
-		
-	}
+	}	
 	public function loadData($data){
 		// igk_ilog("load data");
 		// $data->RenderAJX();

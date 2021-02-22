@@ -70,13 +70,13 @@ if(!igk_requirement()){
     igk_exit();
 }
 
-require_once(dirname(__FILE__)."/igk_framework.php");
+require_once($libfile = dirname(__FILE__)."/igk_framework.php");
 require_once(dirname(__FILE__)."/igk_mysql_db.php");
 $file2 = igk_server()->SCRIPT_FILENAME;
 $is_startup = get_included_files()[0] == __FILE__;
 
 
-$bdir = dirname(dirname(dirname($file2)));//."/../../";
+$bdir = dirname(dirname(dirname($file2)));
 $file = $bdir."/index.php";
 $htaccess=$bdir."/.htaccess";
 
@@ -87,6 +87,7 @@ if(!empty(session_id())){
 }
 $redirect=igk_getr("redirect", 1);
 $wizeinstall=igk_getr("wizeinstall", !file_exists(IGKIO::GetDir($bdir."/Data/configure")));
+ 
 IGKControllerManagerObject::ClearCache($bdir."/".IGK_CACHE_FOLDER);
 if(file_exists($file)){
 
@@ -97,11 +98,14 @@ if(file_exists($file)){
     }
 }
 else{
-    $indexsrc=igk_getbaseindex_src();
+     
+    $indexsrc=igk_getbaseindex_src($libfile);
     if(igk_io_w2file($file, $indexsrc, true)){
+        defined("IGK_APP_DIR") || define("IGK_APP_DIR", dirname($file));
         $file=realpath($file);
         define("IGK_APP_INIT", 1);
         igk_io_w2file($htaccess, igk_getbase_access(), true);
+        //igk_wln("file: ".$file , "**********". IGK_APP_DIR);
         include_once($file);
         if($redirect && is_dir("../../Configs")){
             igk_init_setparam(IGKApp::getInstance(), $wizeinstall);

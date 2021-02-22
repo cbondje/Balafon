@@ -221,7 +221,7 @@ function igk_google_jsmap_acceptrender_callback($n){
 * convert google uri's font to App font resource
 */
 function igk_google_local_uri_callback($uri, $e=null){
-    $s=igk_io_baseuri()."/!@res//getgooglefont?uri=".base64_encode($uri);
+    $s=igk_io_baseuri()."/!@res//getgooglefont?uri=".base64_encode($uri)."&type=css";
     $file="";
     $tab=[];
     parse_str(igk_getv(parse_url($uri), "query"), $tab);
@@ -459,7 +459,7 @@ igk_sys_reg_autoloadLib(dirname(__FILE__)."/Lib/Classes", "IGK\Core\Ext\Google")
 //+ define("GOOGLE_GEO_APPKEY", "");
 
 
-igk_reg_component_package("google", new IGKGooglePackage());
+//igk_reg_component_package("google", new IGKGooglePackage());
 igk_reg_hook("google_init_component", function(){
     if(!igk_get_env("init_globalfont")){
         igk_set_env("init_globalfont", 1);
@@ -492,8 +492,9 @@ igk_sys_reg_uri("^/!@res/(/)?getgooglefont[%q%]", function($c){
     @session_write_close();
     header("Content-Type:text/css");
     $q=array();
-    parse_str($c, $q);
+    parse_str($c["query"], $q);
     $uri=base64_decode($q["uri"]);
+    
     $file="";
     $tab=[];
     parse_str(igk_getv(parse_url($uri), "query"), $tab);

@@ -109,16 +109,11 @@ $frm->addInput("install", "hidden", "1");
 igk_html_form_initfield($frm);
 
 $c=$frm->addDialogBoxContent()->setStyle("background-color:#fdfdfd");
-// $hpage=$c->add($t->addNodeCallback("pageview", function($t){
-    // return $t->addHorizontalPageView()->setId("pageview");
-// }));
+
 
 $hpage=$c->addDiv()->setClass("igk-hpage-view")->setId("pageview");
 
 
-// Component($this, "wize-install-pageview", ($t->addNodeCallback("pageview", function($t){
-    // return $t->addHorizontalPageView()->setId("pageview");
-// }));
 $hpage->clearChilds();
 $hpage->addScript()->Content = file_get_contents(dirname(__FILE__)."/.pageview.js");
 

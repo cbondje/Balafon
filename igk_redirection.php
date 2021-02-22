@@ -149,5 +149,5 @@ if(preg_match("/\.(jpeg|jpg|bmp|png|gkds)$/i", $suri)){
     igk_exit();
 }
 igk_set_header(301);
-igk_show_error_doc(null, $code, $redirect);
+//igk_show_error_doc(null, $code, $redirect);
 igk_exit();

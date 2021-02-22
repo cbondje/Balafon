@@ -969,12 +969,6 @@ Name:balafon.js
 		var _fileSrc = (d && d.fileSrc) || igk_getCurrentScript().src;
 		if ((_fileSrc == "") && (_iswin)) {
 			_fileSrc = "@" + m_LibScript;
-			// try {
-			// throw new Error("script is not in script tag or dynamically call code. " + a+ " is win ?"+_iswin);
-			// }
-			// catch(e){
-			// }
-			// return null;
 		}
 		this.build = function () {
 
@@ -2419,9 +2413,6 @@ Name:balafon.js
 
 				_opts.uri = ruri + '/' + luri;
 				_opts.request = '/' + luri;
-
-
-				// throw new Error("b");
 
 			} else {
 				if (uri.startsWith(_NS.rootUri())) {
@@ -23906,9 +23897,7 @@ igk.system.createNS("igk.system", {
 			igk.winui.reg_event(window, "unload", function () {
 				gl = null;
 				q.remove();
-				// throw ("removed");
-				// throw ("data unloading ....."+gl.dispose()+ "="+gl.getExtension('WEBGL_lose_context').loseContext());
-			});
+				});
 
 			if (!canvas.getAttribute("width"))
 				canvas.width = 200;
@@ -24099,32 +24088,15 @@ igk.system.createNS("igk.system", {
 		var m = new function () {
 			igk.appendProperties(this, {
 				callback: function (evt) {
-					// return;
-
-					// throw ('data');
-
-
-
 					var of; // off in percent
 					var m_t = $igk(evt.target).getscrollMaxTop();
 					var v_c = q.o;
 					var c_h = q.o.scrollHeight;
-
-
-
-
-
-
 					if (m_t > 0)
 						of = parseInt((evt.target.scrollTop / m_t) * 100.0);
 					else {
 						of = 0;
 					}
-
-					// if (of==0){
-
-					// // q.setCss({backgroundPosition: "center"});	
-					// }else{
 
 					// firefox raise warning for scrolling effect position
 					var p = Math.round((of / 200.0) * 10) * 2;
@@ -24174,7 +24146,6 @@ igk.system.createNS("igk.system", {
 // callback:function(evt){
 // // return;
 
-// // throw ('data');
 
 
 

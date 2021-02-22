@@ -10673,17 +10673,16 @@ function igk_getbase_access(){
 ///return the base index.php content
 /**
 */
-function igk_getbaseindex_src(){
+function igk_getbaseindex_src($libfile){
     $showError="";
-    !defined("IGK_APP_DIR") && define("IGK_APP_DIR", igk_realpath(dirname(__FILE__)."/../../"));
     $inf=igk_createobj();
     $inf->date=igk_date_now();
-    $inf->lib= igk_html_uri(substr(__FILE__,strlen(IGK_APP_DIR)+1));
+    $inf->lib= $libfile; 
     $inf->comment=__(<<<EOF
 this file is generate by balafon service. please do not modify until you know what you are doing.
 EOF
     );
-    return <<<EOF
+    $s = <<<EOF
 <?php
 // file: index.php
 // date : {$inf->date}
@@ -10700,6 +10699,9 @@ EOF
 @require_once('{$inf->lib}');
 igk_sys_render_index(__FILE__);
 EOF;
+
+return $s;
+
 }
 ///<summary>Represente igk_getbool function</summary>
 ///<param name="v"></param>
@@ -16632,11 +16634,7 @@ function igk_io_save_file_as_utf8($filename, $content, $override=true, $transfor
 * shortcut to igk_io_save_file_as_utf8
 */
 function igk_io_save_file_as_utf8_wbom($filename, $content, $overwrite=true, $chmod=IGK_DEFAULT_FILE_MASK, $type="w+"){
-    // igk_dev_wln("save file : ".$filename);
-    // if (is_array($content)){
-    //     igk_trace();
-    //     igk_die("data not valid");
-    // }
+    
     if(empty($filename))
         igk_die("filename is empty or null", __FUNCTION__);
     $filename=igk_io_dir($filename);
@@ -16658,16 +16656,14 @@ function igk_io_save_file_as_utf8_wbom($filename, $content, $overwrite=true, $ch
     fclose($hf);
     if($chmod){ 
         if(!@chmod($filename, $chmod)){
+            if (igk_current_context() != IGKAppContext::running){
+                igk_ilog("failed to changed file mode [".$filename."]");
+                return false; 
+            } 
             if(IGKApp::IsInit())
                 igk_notify_error("/!\\ chmod failed ". $filename. " : ".$chmod);
             igk_log_write_i(__FUNCTION__, "chmodfailed");
-        }
-        //  else {
-        //     if (igk_environment()->is("DEV")){
-        //         igk_trace();
-        //         igk_wln_e("failed to change ".$filename, $chmod);
-        //     }
-        // }
+        }        
     }
     return true;
 }
@@ -16899,7 +16895,7 @@ function igk_io_sys_tempnam($prefix){
 /**
 * return the system full path according to BASEDIR.
 */
-function igk_io_syspath($relativepath=null){
+function igk_io_syspath($relativepath=null){ 
     return igk_io_dir(igk_io_applicationdir()."/".$relativepath);
 }
 ///<summary>convert file to uri offline presentation </summary>
@@ -17542,9 +17538,10 @@ function igk_js_init(){
 * bind script to document
 */
 function igk_js_init_doc($doc){
-    if(igk_get_env("loadingscript") === $doc)
+    $key = "loadingscript";
+    if(igk_get_env($key) === $doc)
         return;
-    igk_set_env("loadingscript", $doc);
+    igk_set_env($key, $doc);
     $cache=IGKHtmlScriptAssocInfo::GetCacheFile();
     $r=1;
     if(!(!IGKServerInfo::IsLocal() && file_exists($cache))){
@@ -17553,7 +17550,7 @@ function igk_js_init_doc($doc){
         igk_js_load_found_script($doc, igk_io_dir(IGK_LIB_DIR."/Ext"), 'ext');
         $r=2;
     }
-    igk_set_env("loadingscript", null);
+    igk_set_env($key, null);
     return $r;
 }
 
@@ -21779,6 +21776,21 @@ function igk_show_exception($Ex, $file=null, $line=null, $title=null){
         igk_wl($out);
         return;
     }
+    if ( igk_current_context() != IGKAppContext::running){
+        $o = "";
+        $o .= "<table>";
+        foreach($traces as $k){
+            $o .= "<tr>";
+            $o .= "<td>".$k["line"]."</td>";
+            $o .= "<td>".$k["function"]."</td>";
+            $o .= "<td>".$k["file"]."</td>";
+            $o .= "</tr>";
+        }
+        $o .= "</table>";
+        echo $o;
+        exit;
+    }
+
 
     if (1){
         if (igk_is_class_subclass_of($Ex, IGK\System\Http\RequestException::class)){
@@ -25323,7 +25335,7 @@ function igk_sys_invoke_reg_uri($uri, $u, $callback){
                 $b[$request]=$u;
                 igk_set_env($uri_key, $b);
             }
-            call_user_func_array($callback, $p->getQueryParams());
+            call_user_func_array($callback, [$p->getQueryParams()]);
         }
     }
 }
@@ -25884,9 +25896,9 @@ function igk_sys_render_index($file, $render=1){
     $bdir=dirname($file);
     $srv=igk_server();
     if(!defined('IGK_APP_DIR')){
-        $dir=!empty($dir=$srv->IGK_APP_DIR) && is_dir($dir) ? $dir: $bdir;
+        $dir=!empty($dir=$srv->IGK_APP_DIR) && is_dir($dir) ? $dir: $bdir; 
         define("IGK_APP_DIR", $dir);
-    }
+    } 
     if(!defined('IGK_BASE_DIR')){
         define("IGK_BASE_DIR", $bdir);
     }
@@ -26352,7 +26364,7 @@ function igk_sys_start_engine($file, $render){
         IGKApp::Init($file, $render);
     }
     catch(\Exception $ex){
-        igk_wl_e(igk_show_exception($ex));
+         igk_show_exception($ex);
     }
 }
 ///<summary>store document as cache</summary>
@@ -36548,7 +36560,11 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
         static $sm_session=null;
         if($sm_session === null){
 			$tab = null;
-			$appinfo = igk_app()->settings->appInfo;
+			if (!($appinfo = igk_app()->settings->appInfo)){
+                igk_trace();
+                die("can't create appinfo");
+            }
+            
             if(isset($appinfo->session)){
                 $tab= & $appinfo->session;
             }
@@ -41258,9 +41274,7 @@ EOF;
             $dv["class"]="igk-adm-login-form";
             $frm=$dv->addBMCShape()->addDiv()->addForm()->setClass("dispb");
             $frm["action"]=$this->getUri("connectToConfig");
-            $frm->addObData(function(){igk_html_form_init();
-            }
-            , null);
+            $frm->addObData(function(){igk_html_form_init();}, null);
             $frm->addDiv()->setClass("igk-adm-logo")->Content=  igk_svg_use("balafon_logo");
             $frm->addDiv()->addNotifyHost("connexion:frame", 0);
             $frm->addBMCTextfield("clAdmLogin", array(
@@ -41389,6 +41403,16 @@ EOF;
             $d=$bfrm->addDiv()->setClass("mobilescreen dispn");
             $d->addDiv()->addSectionTitle(4)->Content=__("Login Form");
             $dv=$d->addDiv();
+            $form = $dv->addForm();
+            $form["action"]=$this->getUri("connectToConfig");
+            $form["method"] = "POST";
+            $form->addObData(function(){igk_html_form_init();}, null);
+            $form->addFields([
+                "clAdmLogin"=>["type"=>"text", "label_text"=>__("Login"),  "placeholder"=>__('Admin login'), "attribs"=>[]],
+                "clAdmPwd"=>["type"=>"password", "label_text"=>__("Password"), "placeholder"=>__('Admin password'), "attribs"=>[]]
+            ]);
+            $acbar = $form->addActionBar();
+            $acbar->addSubmit()->Content = __("connect");
             $d->addDiv()->Content=IGK_COPYRIGHT;
         }
         if($c)
@@ -61946,7 +61970,6 @@ abstract class IGKDataAdapter extends IGKObject {
     * @param mixed $params the default value is null
     */
     public static function CreateDataAdapter($ctrl, $throwexception=true, $newAdapter=0, $params=null){
-      
         if(empty($ctrl)){
             igk_wln_e("can't create empty data adapter");
             return null;
@@ -61963,15 +61986,16 @@ abstract class IGKDataAdapter extends IGKObject {
             $n="IGK".$key."DataAdapter";
         } 
         if(!$newAdapter && isset($adapt[$key])){
+            
             return $adapt[$key];
-        }
-        // igk_debug_wln("CreateDataApter: not found .... ".$ctrl. ":".$n. " ::::".$ctrl->getDataAdapterName());
+        } 
         if(class_exists($n) && !igk_reflection_class_isabstract($n)){
             $out=igk_create_adapter_from_classname($n);
             if($out){
                 $adapt[$key]=$out;
                 $out->m_name = $key;
                 return $out;
+
             }
         }
         else{
@@ -74347,14 +74371,8 @@ final class IGKHtmlReader extends IGKObject {
                 $v_sr=$reader->getValue()."";
 				// igk_ilog($v_sr);
                 if(strlen($v_sr) > 0){
-					// igk_wln("loading : ". $v_sr. "  = ".empty(trim($v_sr))." vs ".strlen($v_sr)."\n");
-					if (  empty($v_c = trim($v_sr)) && $v_c!=='0'){
-						$v_sr = "";//preg_replace("/\s/", " ", $v_sr);
-						// igk_wln("B : ".$context. " : ".$reader->m_text."\n");
-						// if (igk_env_count(__FILE__)>2){
-							// igk_trace();
-
-						// }
+				 	if (  empty($v_c = trim($v_sr)) && $v_c!=='0'){
+						$v_sr = ""; 
 						break;
 					}
                     if($cnode){
@@ -83402,10 +83420,10 @@ abstract class IGKSysCache{
         $expire=time() - $t;
         $el=IGK_LF;
         if(!$force && file_exists($f) && (filemtime($f) > $expire)){
-            return;}
+            return;
+        }
         $data=IGK_STR_EMPTY;
-        $dir=IGK_LIB_DIR;
-        //$mdir=igk_html_uri(IGK_LIB_DIR);
+        $dir=IGK_LIB_DIR; 
         if(!empty(self::$LibFiles)){
             foreach(self::$LibFiles as  $v){
                 $data .= 'require_once(\''.$v.'\');'.$el;
@@ -83470,14 +83488,15 @@ EOF;
         $v=false;
         if(!defined("IGK_NO_CACHE_LIB") && file_exists($f)){
             igk_invalidate_opcache($f);
-            try {
+            try { 
                 include_once($f);
                 $v=true;
                 igk_get_env_lib_loaded(true);
             }
             catch(Exception $ex){
-                igk_wln("[ ".__FUNCTION__." ]- can't load files...[".$f."]");
-                igk_wln_e("LoadLibError", $ex);
+                igk_ilog("[ ".__FUNCTION__." ]- can't load files...[".$f."]".$ex->getMessage());
+                igk_show_exception($ex);
+                igk_wln_e("LoadLibError", $ex->getMessage());
             }
         }
         return $v;
@@ -83882,8 +83901,8 @@ igk_register_autoload_class(function($n){
 igk_sys_reg_controller(IGK_COMPONENT_MANAGER_CTRL, IGKComponentManagerCtrl::class);
 igk_sys_reg_controller(IGK_NOTIFICATION_CTRL, IGKNotificationCtrl::class);
 igk_sys_reg_controller(IGK_CSVLANGUAGE_CTRL, IGKCSVLanguageManagerCtrl::class);
-igk_reg_ns("igk", "http://www.igkdev.com");
-igk_reg_ns("gkds", "http://www.igkdev.com/gkds/");
+igk_reg_ns("igk", "https://www.igkdev.com");
+igk_reg_ns("gkds", "https://www.igkdev.com/gkds/");
 igk_reg_component_package("igk", [IGKHtmlItem::class, 'CreateElement']);
 require_once(IGK_LIB_DIR."/igk_wsdl.php");
 require_once(IGK_LIB_DIR.'/igk_html_func_items.php');

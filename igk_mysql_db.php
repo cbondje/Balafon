@@ -4,8 +4,7 @@
 // licence: IGKDEV - Balafon @ 2019
 // desc: mysql data adapter
 // file: igk_mysql_db.php
-
-
+ 
 
 if(!extension_loaded("mysql") && (!extension_loaded("mysqli"))){
     error_log("[BLF] - no extension mysql or mysqli installed. class will not be installed in that case.". extension_loaded("mysqli"));
