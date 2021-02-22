@@ -1,7 +1,7 @@
 <?php
 // @file: IGKVideoStream.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -24,7 +24,7 @@ class IGKVideoStream {
     ///<param name="filePath"></param>
     /**
     * Represente __construct function
-    * @param  $filePath
+    * @param mixed $filePath
     */
     function __construct($filePath){
         $this->path=$filePath;
@@ -33,7 +33,7 @@ class IGKVideoStream {
     ///close curretly opened stream
     ///</summary>
     /**
-    * 
+    *
     * close curretly opened stream
     *
     */
@@ -44,7 +44,7 @@ class IGKVideoStream {
     ///Open stream
     ///</summary>
     /**
-    * 
+    *
     * Open stream
     *
     */
@@ -57,10 +57,10 @@ class IGKVideoStream {
     ///set cache videos callback
     ///<summary>
     /**
-    * 
+    *
     * set cache videos callback
     *
-    * 
+    *
     */
     function setCacheCallback($m){
         $this->m_cache_callback=$m;
@@ -125,7 +125,7 @@ class IGKVideoStream {
     ///Start streaming video content
     ///</summary>
     /**
-    * 
+    *
     * Start streaming video content
     *
     */
@@ -146,7 +146,7 @@ class IGKVideoStream {
     ///perform the streaming of calculated range
     ///</summary>
     /**
-    * 
+    *
     *perform the streaming of calculated range
     *
     */

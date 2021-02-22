@@ -13,10 +13,10 @@
 // ::-moz-placeholder //firefox 19+
 //device orientation :: land-scape
 //filter:blur(4px);";
- 
- 
 
- 
+
+
+
 
 $pad1="8px";
 $pad2="10px";
@@ -43,11 +43,11 @@ $i_state=array("invalid");
 $margin=array("2", "4", "8", "16", "32", "48");
 $def["body div"]="";
 // $prop= & $theme->getProperties();
- 
-$prop["paddingSize"]=$pad2;
- 
 
- 
+$prop["paddingSize"]=$pad2;
+
+
+
 
 $ctn_lg=$theme->get_media(IGKHtmlDocThemeMediaType::CTN_LG_MEDIA);
 $ctn_xlg=$theme->get_media(IGKHtmlDocThemeMediaType::CTN_XLG_MEDIA);
@@ -94,14 +94,11 @@ foreach($screen_resolutions as $scr){
     }
     $$xn[".igk-".$scr.
     "-fitw"]="width:100% !important;";
-    $$xn[".igk-".$scr.
-    "-alignc"]="text-align:center !important;";
-    $$xn[".igk-".$scr.
-    "-dispn"]="display: none !important;";
-    $def[".igk-".$scr.
-    "-show"]="display:none;";
-    $$xn[".igk-".$scr.
-    "-show"]="display: inherit !important;";
+    $$xn[".igk-".$scr."-alignc"]="text-align:center !important;";
+    $$xn[".igk-".$scr."-dispn"]="display: none;"; 
+    $$xn[".igk-".$scr."-show"]="display: inherit !important;";
+    $$xn[".".$scr."-dispn"] = "display:none;";
+
     foreach($ts as $s){
         for($i=1; $i<=$s; $i++){
             $is="$s-$i";
@@ -118,7 +115,8 @@ foreach($screen_resolutions as $scr){
     }
     $$xn[$pn ]="{sys:floatl}";
 }
-$cl["textColor"]="#333";
+
+
 $def["body.igk-body"]="background-color:[syscl:backgroundColor]; color:[syscl:textColor]";
 $def["body.igk-body.xboxone"]="padding:0px !important; background-color:#222";
 $def["body.igk-body.xboxone .igk-powered"]="{sys:dispn}";
@@ -131,8 +129,8 @@ $def[".igk-fs-n"]="font-size:10pt;";
 $def[".igk-fs-l"]="font-size:18.5pt;";
 $def[".igk-padding-a-2"]="padding:{$pad2}";
 $def[".igk-darkbg-40:before"]="content:' '; position:absolute; {sys:fit} background-color:#000; opacity:0.4;";
-$def[".igk-def-c"]="(sys:igk-fs-n) line-height:1.25;";
-$def[".igk-body"]="(sys:igk-def-c) overflow:hidden;";
+$def[".igk-def-c"]="(sys:.igk-fs-n) line-height:1.25;";
+$def[".igk-body"]="(sys:.igk-def-c) overflow:hidden;";
 $def[".igk-body ol, .igk-body ul"]="padding:0px; margin:0px;";
 $def[".igk-page"]="";
 $def[".igk-body-box"]="{sys:fit, overflow-y-a}";
@@ -298,6 +296,9 @@ for($i=0; $i<=10; $i++){
     $def[".igk-progress-". ($i).
     ".igk-pull-top"]="height: ".($i * 10)."%;";
 }
+
+$def[".igk-tool-option div"]="padding: 4px; background-color:white";
+
 igk_css_regcolor("igk-progressbar-bg", "#00CBFF");
 igk_css_regcolor("igk-progressbar-cur-bg", "#ada");
 $def[".igk-shapes"]="{sys:no-border,no-repeat}";
@@ -346,6 +347,14 @@ $def[".igk-hmenu > li  ul.igk-show"]="opacity:1; display:block;";
 $def[".igk-hmenu > li > ul li:hover"]="[sysbgcl:igk-hmenu-si-bg]";
 $def[".igk-hmenu.igk-pull-right"]="{sys:alignr}";
 $def[".igk-hmenu.igk-pull-right:after"]="content:' '; display:table; clear:both;";
+
+//capitalize all input element
+$def["input[type=button]"] =
+$def["input[type=submit]"] =
+$def["input[type=reset]"] = "";
+
+
+
 igk_css_regcolor("submenu-bg", "#444");
 igk_css_regcolor("submenu-fcl", "#444");
 igk_css_regcolor("submenu-hightlight-fcl", "#77d");
@@ -436,14 +445,14 @@ $def[".igk-table.th-right > tbody  th"]="{sys:alignr};";
 $def[".igk-table > tbody > tr.alignl th"]="text-align:left;";
 $def[".igk-table > tbody > tr:first-child > td, .igk-table > tbody > tr:first-child > th"]="padding:8px;";
 $def[".igk-table > tbody > tr:not(:first-child) > td, .igk-table > tbody > tr:not(:first-child) > th"]
-="border-top: 1px solid [syscl:igk-table-cell-border];";
+="border-top: none;";
 $def[".igk-table tr td"]="padding:{$pad1};";
 $def[".igk-table > thead td, .igk-table > thead th"]="border:0;";
 $def[".igk-table-hover > tbody > tr:hover"]
 ="";
 $def[".igk-table .igk-form-control"]="min-width: 150px;";
-$def[".igk-table.igk-table-striped > tbody > tr:nth-child(odd) > td, .igk-table-striped > tbody > tr:nth-child(odd) > th"]="[sysbgcl:igk-table-row-odd-bgcl] [sysfcl:igk-table-row-odd-fcl] ";
-$def[".igk-table.igk-table-striped > tbody > tr:hover > td"]="background-color:transparent !important; color:inherit;";
+$def[".igk-table.igk-table-striped > tbody > tr:nth-child(odd) > td, .igk-table-striped > tbody > tr:nth-child(odd) > th"]="[bgcl:stripTableEventRowBackgroundColor, #0001] [sysfcl:stripTableEventRowForeColor, #222] ";
+$def[".igk-table.igk-table-striped > tbody > tr:hover > td"]="background-color:transparent; color:inherit;";
 $def[".igk-table.igk-table-striped > tbody > tr:nth-child(odd) > th"]="";
 $def[".igk-table.igk-table-striped > tbody > tr:hover"]="[sysbgcl:stripTableHoverBackground];";
 $def[".igk-table.igk-table-striped > tbody > tr:hover:nth-child(odd)"]="[sysfcl:stripTableHoverRowEvenColor]";
@@ -463,7 +472,7 @@ igk_css_regcolor("igk-tabcontrol-c-bg", "#eaeff2");
 $def[".igk-glyph-home"]="font-size:1.4em";
 $def[".igk-gohome-btn"]="opacity: 0.0 !important; position:fixed; right:32px; bottom:32px; overflow:hidden; width:48px; height:48px; z-index:50;";
 $def[".igk-gohome-btn.igk-show"]="opacity:1.0 !important;";
-$m=array(4, 8, 10, 16);
+$m=array(4, 8, 10, 16, 20 , 24, 32);
 for($i=0; $i < igk_count($m); $i++){
     $v_ss=$m[$i];
     for($j=0; $j < igk_count($mt); $j++){
@@ -500,7 +509,7 @@ $def[".igk-panel"]="{sys:dispb} [sysfcl:igk-panel-fcl] [sysbgcl:igk-panel-bcl] m
 $def[".igk-btn"]=
 $def[".igk-btn-lnk"]=
 $def[".clsubmit"]=
-$def[".clbutton"]="display:inline-block; margin:auto; padding: {$pad1}; border:none; cursor:pointer;";
+$def[".clbutton"]="display:inline-block; margin:auto; padding: {$pad2}; border:1px solid [cl:buttonBorderColor, rgb(221,221,221)]; border-radius: 4px; cursor:pointer;";
 $def[".igk-btn.igk-active"]="border-left: solid 4px #FFBF00; color: #683500";
 $def[".igk-btn-connect, input.igk-btn-connect, .igk-btn-connect a"]="[sysbgcl:igk-btn-connect-bg] [sysfcl:igk-btn-connect-fcl]";
 $def[".igk-form-control, .cltext, .clpassword, .clemail, .clnumber, .clsearch, .cltel, .clselect"]="{sys:fitw,dispib} padding:{$pad1}; margin:0px;[trans: 0.1s color ease-in] [sysfcl:igk-input-cl]";
@@ -624,7 +633,7 @@ $def[".igk-configpage-editor select"]="vertical-align:middle; border:none;";
 $def[".igk-configpage-editor .close-bar"]="background-color: #888";
 $def[".igk-configpage-editor .close-bar:hover"]="background-color: #eee";
 $def[".igk-bodypage"]="{sys:fitw,fith,posr} overflow:hidden;";
-$def[".igk-session-block"]="{sys:posfix} [sysbgcl:sessionBlockBackground] [sysfcl:sessionBlockColor]";
+$def["body .igk-session-block"]="{sys:posfix} [sysbgcl:sessionBlockBackground] [sysfcl:sessionBlockColor]";
 igk_css_regcolor('sessionBlockBackground', "indigo", 1);
 $def[".igk-session-block .cllabel"]="{sys:dispb,alignt,alignl}";
 $def[".igk-session-button"]="[res:session_btn]; [trans: all 0.2s] cursor:pointer; z-index:{$ctrl_session_zindex}; top:0px; opacity:0.1";
@@ -700,8 +709,8 @@ $def[".igk-winui-listbox > li.igk-active a"]=" color:#EAEAEA";
 $def[".igk-community-node.inline ul > li"]="{sys:dispib}";
 $def[".igk-centerbox"]="{sys:disptable, fit}";
 $def[".igk-svg-lst"]="{sys:dispn}";
-$def[".igk-winui-toast"]="{sys:posfix} color:[cl:toastForeColor, #eee]; background-color:[cl:toastBackgroundColor, #444]; transform:translate(-50%); left:50%; bottom:2rem; padding:10px; [trans: 1.4s opacity ease-in-out] z-index:300;";
-$def[".igk-winui-toast.igk-success"]="background-color:[syscl:toastSuccessBackground]";
+$def[".igk-winui-toast"]="{sys:posfix} border-radius: 4px; color:[cl:toastForeColor, #eee]; background-color:[cl:toastBackgroundColor, #444]; transform:translate(-50%); left:50%; bottom:2rem; padding:10px; [trans: 1.4s opacity ease-in-out] z-index:300;";
+$def[".igk-winui-toast.igk-success"]="[fcl:toastSuccessForeColor, #ddd] [bgcl:toastSuccessBackground, #222]";
 $def[".igk-body.igk-bgfilter-blur .igk-winui-toast"]="filter:none !important";
 $def[".igk-winui-span-group"]="display:inline-block";
 $def[".igk-winui-span-group > span"]="float:left; padding:0px 10px;";
@@ -795,7 +804,7 @@ $def[".igk-winui-pagination.igk-pull-right:after"]="display:table;content:' '; c
 $PTR[".igk-session-button"]="display: none;";
 $PTR["body.igk-body"]="background-color:transparent ;";
 $PTR[".no-print"]="display:none !important;";
-$def[".igk-action-bar a.igk-btn"]="";
+$def[".igk-action-bar a.igk-btn"]="line-height:normal;";
 $def[".igk-action-bar .igk-btn > svg"]="width:24px; height:24px; padding:4px; fill:#777";
 $def[".igk-action-bar a.igk-btn:hover > svg"]="fill:#54e;";
 $def[".igk-frame-textarea"]="height:200px; resize:vertical;";
@@ -837,6 +846,10 @@ $def[".igk-winui-panel-dialog > .box > .igk-title .close"]="{sys:posab, loc_r, n
 $def[".igk-winui-panel-dialog > .box > .igk-title .close svg"]="{sys:fit}";
 $def[".igk-winui-panel-dialog::after"]="content:' '; display:table;";
 $def[".igk-winui-panel-dialog.igk-hide"]="opacity: 0.0";
+$def[".igk-winui-panel-dialog .igk-title > span"]="margin-right: 32px";
+
+
+
 $def[".svg-16 svg"]="width:16px; height:16px; display: inline-block; line-height:0;";
 $def[".svg-32 svg"]="width:32px; height:32px; display: inline-block; line-height:0;";
 $def[".svg-24 svg"]="width:24px; height:24px; display: inline-block; line-height:0;";
@@ -845,6 +858,10 @@ $def["div.clsearch form a"]="{sys:posab, alignm}";
 $def["div.clsearch"]="padding:0px;";
 $def["div.clsearch div.disptabr"]="padding-left:32px;";
 $def["div.clsearch div.disptabr input"]=" margin-right:-32px; padding-left: 32px;";
+
+$def["ul.debug-panel"] = "";
+$def["ul.debug-panel:after"] = "{sys:clearb, dispb} content:' ';";
+$def["ul.debug-panel > li"] = "float:left;";
 igk_set_env("sys://globalcolor", 1);
 igk_css_regcolor("igk-btn-default-bg", "#eee");
 igk_css_regcolor("igk-btn-default-fcl", "#aaa");
@@ -901,10 +918,10 @@ igk_css_regcolor("igk-warning-bg", "#FF8797");
 igk_css_regcolor("igk-warning-fcl", "#535353");
 igk_css_regcolor("igk-required-mark-fcl", "#a353c3");
 igk_css_regcolor("igk-table-row-odd-bgcl", "#fdfdfd", 1);
-igk_css_regcolor("igk-table-row-odd-fcl", "#aaa", 1);
+igk_css_regcolor("stripTableEventRowForeColor", "#aaa", 1);
 igk_css_regcolor("igk-table-row-odd-hover-bgcl", "#ddf", 1);
 igk_set_env("sys://globalcolor", 0);
- 
+
 foreach([4, 10, 16, 20] as $pad){
 	$def[".pad-".$pad]="padding: {$pad}px;";
 	$def[".marg-".$pad]="margin: {$pad}px;";
@@ -921,12 +938,12 @@ $def[".igk-font-title-1"]="font-family: 'Roboto', 'Helvetica', 'Arial' , sans-se
 $def[".clcheckbox"]="margin-right:10px;";
 $def[".badge"]="padding: 4px; border-radius: 4px; background-color: #eee; ";
 $def[".igk-bg-img"]="{sys:posfix, loc_a, fit, fitc}";
-$cl["pickfileHoverBackground"]="indigo";
-$cl["buttonActiveBackground"]="red";
+
+
 if(igk_sys_env_production()){
     $def[".igk-winui-js-logger"]="{sys:dispn}";
-} 
-$prop["buttonPadding"] = "8px"; 
+}
+$prop["buttonPadding"] = "8px";
 
 
 
@@ -937,3 +954,22 @@ $def[".igk-google-line-waiter:after"] = "{sys:fith,posab, loc_l} width: 70%; con
 // combobox
 $def[".igk-winui-combobox + ul"] = "background-color:#444; color: white";
 $def[".igk-winui-combobox + ul > li"] = "padding:4px;";
+
+
+
+
+
+
+//+default theme color
+$cl["textColor"]="#222";
+$cl["backgroundColor"]="transparent";
+$cl["pickfileHoverBackground"]="indigo";
+$cl["buttonActiveBackground"]="red";
+
+
+//+ igk-img-host
+$def["span.igk-img-host"]= "display:inline-block; line-height: 0;";
+ 
+$def["select.igk-form-control"] = "cursor: pointer;";
+
+// igk_wln("load sys css: " .$doc->getId(), "is array: ". is_array($cl), $cl["stripTableEventRowBackgroundcolor"]);

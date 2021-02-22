@@ -3,7 +3,7 @@
 	<DataDefinition TableName="tb%website_prefix%_blog_topics">
 		<Column clName="clId" clNotNull="True" clType="Int" clTypeLength="11" clAutoIncrement="True" clIsPrimary="True" />
 		<Column clName="clTitle" clNotNull="True" clType="VarChar" clTypeLength="30" clIsUnique="True" clDescription="Description of this topics" />
-		<Column clName="clUser_Id" clType="Int" clTypeLength="11" clDescription="create of this topics" />		
+		<Column clName="clUser_Id" clType="Int" clTypeLength="11" clDescription="create of this topics" />
 		<Column clName="clDescription" clType="Text" />
 	</DataDefinition>
 	<DataDefinition TableName="tb%website_prefix%_blog_comments">

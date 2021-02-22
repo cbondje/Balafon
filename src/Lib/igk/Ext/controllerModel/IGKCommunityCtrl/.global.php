@@ -21,7 +21,7 @@ function igk_community_init_ShareWith_callback($t){
 function igk_html_node_CommunityNode(){
 	$n = igk_createNode("div");
 	$n["class"]="igk-community-node";
-	igk_community_init_node_callback($n);	
+	igk_community_init_node_callback($n);
 	return $n;
 }
 
@@ -32,8 +32,8 @@ function igk_html_node_SharedWithCommunity($tab=null){
 		foreach($tab as $k=>$v){
 				$n->addSpan()->addA('#')->Content = $k;
 		}
-	}else	
-	igk_community_init_ShareWith_callback($n);	
+	}else
+	igk_community_init_ShareWith_callback($n);
 	return $n;
 }
 
@@ -44,7 +44,7 @@ function igk_html_node_FollowUsButton($name, $uid){
 	$srv = igk_community_get_followus_service();
 	$fc = igk_getv($srv, $name);
 	if ($fc){
-		$n = igk_createNode("NoTagNode");
+		$n = igk_createnotagnode();
 		$args = array_merge(array("view", $n, $uid), array_slice(func_get_args(),2));
 		call_user_func_array($fc, $args);//call$fc("googleplus", "view", $t->addDiv(), "110019067739683958923");
 		return $n;
@@ -73,18 +73,19 @@ function igk_community_get_follow_entries($cnf){
 
 
 igk_community_register_followus_service("twitter", function($cmd, $t,$v=null, $name=null){
+	$targs = [];
 	switch($cmd){
 		case "edit":
 			$t->addInput("cl".$name,"text", igk_conf_get($v,'twitter'));
 		break;
 		case "getlink":
 			if (isset($v->twitter))
-			return "https://twitter.com/".$v->twitter;		
-			break;
+			return "https://twitter.com/".$v->twitter;
 		default: //view
 			$t->addTwitterFollowUsButton(igk_getv($targs,0));
 		break;
 	}
+	return null;
 });
 
 

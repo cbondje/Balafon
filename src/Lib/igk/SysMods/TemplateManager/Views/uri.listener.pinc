@@ -1,7 +1,7 @@
 <?php
 // @file: uri.listener.pinc
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -20,7 +20,7 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
     ///<param name="ctrl"></param>
     /**
     * Represente __construct function
-    * @param  $ctrl
+    * @param mixed $ctrl
     */
     public function __construct($ctrl){
         parent::__construct();
@@ -42,9 +42,9 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
     ///<param name="H"></param>
     /**
     * Represente _validatePicture function
-    * @param  $c
-    * @param  $W
-    * @param  $H
+    * @param mixed $c
+    * @param mixed $W
+    * @param mixed $H
     */
     private function _validatePicture($c, $W, $H){
         $dc=imagecreatefromstring($c);
@@ -109,9 +109,9 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
     ///<param name="h"></param>
     /**
     * Represente res function
-    * @param  $n
-    * @param  $w
-    * @param  $h
+    * @param mixed $n
+    * @param mixed $w
+    * @param mixed $h
     */
     public function res($n, $w, $h){
         $d=$this->m_ctrl->getPackageManifestFile($this->m_row->clPackageName);
@@ -125,7 +125,7 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
     ///<param name="man"></param>
     /**
     * Represente setManifest function
-    * @param  $man
+    * @param mixed $man
     */
     public function setManifest($man){
         $this->m_manifest=$man;
@@ -134,7 +134,7 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
     ///<param name="r"></param>
     /**
     * Represente setRow function
-    * @param  $r
+    * @param mixed $r
     */
     public function setRow($r){
         $this->m_row=$r;
@@ -176,7 +176,7 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
     ///<param name="page" default="null"></param>
     /**
     * Represente visualassets function
-    * @param  $page the default value is null
+    * @param mixed $page the default value is null
     */
     public function visualassets($page=null){
         $dv=igk_createNode("div");

@@ -1,12 +1,18 @@
 <?php
 // @file: 404.phtml
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
+
+/** @var string $headers */
+/** @var string $title */
+/** @var string $msg */
+/** @var string $txtoptions */
+/** @var string $trace_data */
 
 ?>
 <!DOCTYPE html>
@@ -26,7 +32,7 @@
 <?= $txtoptions ?>
 <?= $trace_data ?>
 <?php
-igk_wln($_SERVER);
+igk_dev_wln($_SERVER);
 ?></div>
 </div>
 </div>

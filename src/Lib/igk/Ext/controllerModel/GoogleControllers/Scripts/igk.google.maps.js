@@ -158,10 +158,8 @@
 		var STYLE_LENGTH = 2047;
 		var v_ct = JSON.stringify(styles);
 		// json size limitation
-		// console.debug(v_ct.length);
-		
-		// igk.io.file.download("application/json", "data.json", v_ct);
-		
+		// console.debug(v_ct.length);		
+		// igk.io.file.download("application/json", "data.json", v_ct); 
 		// map.mapTypes.set("normal", new google.maps.StyledMapType(styles));
 		// map.setMapTypeId('normal');		
 		//map.setOptions({styles: data.styles});

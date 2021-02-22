@@ -1,12 +1,12 @@
 <?php
 ///<summary>controller code class declaration file is a part of the controller tab list</summary>
 abstract class IGKProductViewCtrl extends IGKCtrlTypeBase
-{	
+{
 	public function getName(){return get_class($this);}
-	
+
 	protected function InitComplete(){
-		parent::InitComplete();		
-		//please enter your controller declaration complete here		
+		parent::InitComplete();
+		//please enter your controller declaration complete here
 	}
 	public static function GetAdditionnalConfigInfo()
 	{
@@ -32,16 +32,16 @@ abstract class IGKProductViewCtrl extends IGKCtrlTypeBase
 		$sl = $frm->add("select");
 		$tb = $igkproducttype->getDbEntries();
 		if ($tb)
-		foreach($tb->Rows as $k=>$v)
+		foreach($tb->Rows as  $v)
 		{
 			$sl->add("options")->Content = $v->clName;
-		}		
-		$t->addDiv();		
-		$div = $t->addDiv();
-		
+		}
+		$t->addDiv();
+		$t->addDiv();
+
 	}
-	
+
 	public function getMoreInfo()
 	{
-	} 
-} 
+	}
+}

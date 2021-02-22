@@ -1,7 +1,7 @@
 <?php
 // @file: IGKBalafonFrameworkManager.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -19,8 +19,8 @@ class IGKBalafonFrameworkManager{
     ///<param name="args"></param>
     /**
     * Represente __call function
-    * @param  $name
-    * @param  $args
+    * @param mixed $name
+    * @param mixed $args
     */
     public function __call($name, $args){
         $f="igk_".$name;

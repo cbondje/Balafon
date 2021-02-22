@@ -32,9 +32,9 @@ function igk_protect_request(& $tab){
 /**
 * represent igk_treat_source function
 * @param mixed: (string|arrayof(string)) source string to treat
-* @param callback callback to call when done
-* @param tab tab information for algorightm
-* @param options optiosn for treatment
+* @param mixed closure callback callback to call when done
+* @param mixed tab tab information for algorightm
+* @param mixed options options for treatment
 */
 function igk_treat_source($source, $callback, $tab=null, & $options=null){
     if(is_string($source)){
@@ -94,14 +94,14 @@ function igk_treat_source($source, $callback, $tab=null, & $options=null){
             }
         }
         $flag=1;
-        $matchFlag=0;
+        //$matchFlag=0;
         $tq=array(rtrim($t));
         $offset=0;
         $auto_reset_list=isset($options->autoResetList) ? $options->autoResetList: array("operatorFlag", "mustPasLineFlag");
         while($t=array_pop($tq)){
             $matches=null;
             $mlist=null;
-            foreach($tab as $k=>$v){
+            foreach($tab as  $v){
                 if(((is_callable($gf=$v->mode) && $gf($options)) || ($v->mode === "*") || ($v->mode === $options->mode)) && preg_match($v->pattern, $t, $matches, PREG_OFFSET_CAPTURE, $offset)){
                     $start=$matches[0][1];
                     if(!$mlist || ($mlist->start > $start)){
@@ -177,7 +177,7 @@ class IGKProtectHtmlField{
     ///<param name="v"></param>
     /**
     * Represente __output function
-    * @param  $v
+    * @param mixed $v
     */
     private function __output($v){
         return $v;
@@ -232,13 +232,6 @@ class IGKProtectHtmlField{
                         igk_wln_e("something wrong ... string litteral", $t);
                     }
                     return $t;
-                    $offset=$lis + 1;
-                    $m->options->reading=$s;
-                    igk_wln("read : ", $s);
-                    if($m->options->context != 'globalConstant'){
-                        $m->options->stringReading[]=(object)array("data"=>$s, "line"=>$m->options->lineNumber);
-                    }
-                    return $t;
                 }
         ));
         array_unshift($tab, (object)array(
@@ -282,7 +275,6 @@ class IGKProtectHtmlField{
             "data"=>"",
             "mode"=>0,
             "offset"=>0,
-            "lineNumber"=>0,
             "endMarkerFlag"=>0,
             "DataLFFlag"=>0,
             "toread"=>null,
@@ -293,7 +285,7 @@ class IGKProtectHtmlField{
     ///<param name="v"></param>
     /**
     * Represente protect function
-    * @param  $v
+    * @param mixed $v
     */
     public function protect($v){
         $this->_initOptions();

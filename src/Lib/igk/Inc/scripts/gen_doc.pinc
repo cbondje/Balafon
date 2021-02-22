@@ -1,7 +1,7 @@
 <?php
 // @file: gen_doc.pinc
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -9,8 +9,8 @@
 // @url: https://www.igkdev.com
 
 if(defined("IGK_FRAMEWORK")){
-    $o="";
-    $re="";
+    $o=[];
+    $re=0;
     $k="\"".IGK_LIB_FILE."\"";
     $cmd=PHP_BINARY." \"".__FILE__."\" {$k}";
     exec($cmd, $o, $re). "\n";

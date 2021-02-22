@@ -13,10 +13,12 @@ $requirements["php7.0+"]=function(){
     if($c){
         return false;
     }
+    return true;
 };
 $requirements["curl"]=function(){
-    if(method_exists("curl_init"))
+    if(function_exists("curl_init"))
         return 1;
+    return false;
 };
 $requirements["mysqli"]=function(){
     return false;

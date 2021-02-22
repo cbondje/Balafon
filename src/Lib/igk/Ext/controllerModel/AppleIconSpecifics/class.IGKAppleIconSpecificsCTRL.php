@@ -1,7 +1,7 @@
 <?php
 // @file: class.IGKAppleIconSpecificsCTRL.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -70,7 +70,7 @@ abstract class IGKAppleIconCtrl extends IGKCtrlTypeBase {
         }
         else{
             $i=0;
-            foreach($tab as $k=>$v){
+            foreach($tab as  $v){
                 $lnk=$this->app->Doc->addLink("apple-touch-icon:".$i);
                 $lnk["rel"]=$this->Configs->clAppleTouchIconType;
                 if(preg_match($regex, $v)){

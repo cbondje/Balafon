@@ -1,6 +1,6 @@
 <?php
 
-// 
+//
 // desc : wize installation view
 // file : wizeinstall.phtml
 
@@ -13,8 +13,8 @@ use function igk_resources_gets as __;
 ///<param name="uri"></param>
 /**
 * Represente igk_use_symbols function
-* @param  $doc
-* @param  $uri
+* @param mixed $doc
+* @param mixed $uri
 */
 function igk_use_symbols($doc, $uri){
     $doc->body->appendScriptNode("script:".__CLASS__)->Content=	<<<EOF
@@ -22,7 +22,7 @@ ns_igk.readyinvoke('igk.gkds.symbolManager.load', '{$uri}','default');
 EOF;
 }
 $app=igk_app();
-$fclist=array("install"=>function(){ 
+$fclist=array("install"=>function(){
             $app=igk_app();
             $o=igk_get_robj();
             $e=0;
@@ -65,11 +65,11 @@ $fclist=array("install"=>function(){
                 igk_notifyctrl("wizeinstall")->addErrorr("e.wizecontains.error");
             }
         });
-		
-		
- 
+
+
+
 $is_install=(igk_getv($params, 1) == "install") || igk_getr("install");
-if($is_install){  
+if($is_install){
 	call_user_func_array($fclist["install"], $params);
 }
 igk_app()->Session->setParam("igk_wizeinstall", 1);
@@ -78,7 +78,7 @@ igk_google_addfont($doc, "Material Icons");
 
 
 igk_css_reg_svg_symbol_files(IGK_LIB_DIR."/Data/R/svg/symbols.svg");
- 
+
 $doc=igk_get_document(__FILE__);
 $doc->Title=R::gets("BALAFON - Setup - [IGKDEV]");
 $doc->Favicon=new IGKHtmlRelativeUriValueAttribute("Lib/igk/Default/R/Img/balafon.ico");
@@ -94,7 +94,7 @@ $conf_ctrl=igk_getctrl(IGK_CONF_CTRL);
 
 // $t->addDiv()->addDialogBox(R::gets("Install Wizard - BALAFON"));
 
-$box=$t->addDiv()->setClass("dispflex flex-a-center fit");  
+$box=$t->addDiv()->setClass("dispflex flex-a-center fit");
 
 $dialog = $box->addDiv()->setClass("dialog");//->Content = "BASICS ";
 
@@ -109,16 +109,11 @@ $frm->addInput("install", "hidden", "1");
 igk_html_form_initfield($frm);
 
 $c=$frm->addDialogBoxContent()->setStyle("background-color:#fdfdfd");
-// $hpage=$c->add($t->addNodeCallback("pageview", function($t){
-    // return $t->addHorizontalPageView()->setId("pageview");
-// }));
+
 
 $hpage=$c->addDiv()->setClass("igk-hpage-view")->setId("pageview");
 
 
-// Component($this, "wize-install-pageview", ($t->addNodeCallback("pageview", function($t){
-    // return $t->addHorizontalPageView()->setId("pageview");
-// }));
 $hpage->clearChilds();
 $hpage->addScript()->Content = file_get_contents(dirname(__FILE__)."/.pageview.js");
 
@@ -189,7 +184,7 @@ igk_html_build_form($cr->addDiv(), array(
         "cladminPassword"=>array("type"=>"password"),
         "cladminrePassword"=>array("type"=>"password")
     ));
-	
+
 	//
 $d=$hpage->addDiv()->setId("mysqldbsetting");
 $g=$d->addDiv();

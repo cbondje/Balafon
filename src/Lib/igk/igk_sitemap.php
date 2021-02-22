@@ -9,7 +9,7 @@ define("IGK_REDIRECTION", 1);
 require_once(dirname(__FILE__)."/igk_framework.php");
 igk_set_timeout(10);
 if(!preg_match("/\/sitemap(\.xml)?/", igk_getv($_SERVER, "REDIRECT_URL"))){
-    header("Status: 404");
+    igk_set_header(404);
     igk_show_error_doc(null, 404, false);
     igk_exit();
 }

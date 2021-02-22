@@ -7,12 +7,12 @@ $n->setCallback("addPicture", "igk_gallery_add");
 return $n;
 }
 
-function igk_gallery_add($gallery, $src, $alt=null){	
+function igk_gallery_add($gallery, $src, $alt=null){
 	$i = $gallery->addDiv()->setClass("bx");
 	$h = $i->addXmlNode("img");
 	$h["src"]=$src;
 	$h["alt"]=$alt;
-	return $i;	
+	return $i;
 }
 
 ?>

@@ -16,18 +16,18 @@ final class IGKWebPageMailCtrl extends IGKConfigCtrlBase
 	public function getMailArticle($n=null)
 	{
 		$n = !$n? igk_getr("n"): $n;
-		
+
 		return $this->getArticleInDir($n, $this->getMailDir());
 	}
 	public function View(){
 		parent::View();
 		if (!$this->IsVisible)return;
-		
+
 		$t = $this->TargetNode;
 		$t->ClearChilds();
 		igk_html_add_title($t, "title.mailsystem");
 		$t->addHSep();
-		
+
 		$frm = $this->TargetNode->addDiv()->addForm();
 		$tab = $frm->addDiv()->addTable();
 		$tab["class"]  = "igk-table igk-table-hover";
@@ -38,9 +38,9 @@ final class IGKWebPageMailCtrl extends IGKConfigCtrlBase
 		$tr->add("th",array("class"=>"tab_btn"))->Content = IGK_HTML_SPACE;
 		$tr->add("th",array("class"=>"tab_btn"))->Content = IGK_HTML_SPACE;
 		$tr->add("th",array("class"=>"tab_btn"))->Content = IGK_HTML_SPACE;
-		
+
 		$ctrl = igk_getctrl(IGK_CA_CTRL);
-		
+
 		$t = $this->getMailAtricles();
 		if ($t)
 		foreach($t as $k=>$v)
@@ -66,12 +66,12 @@ final class IGKWebPageMailCtrl extends IGKConfigCtrlBase
 			$f = $n;
 			$lang = R::GetCurrentLang();
 			$file = igk_io_get_article_file($n, $this->getMailDir(), R::GetCurrentLang());
-			
-		
+
+
 		}
 		else{
 			$frame = igk_add_new_frame($this, __FUNCTION__);
-			$frame->Title = R::ngets("title.addmail");		
+			$frame->Title = R::ngets("title.addmail");
 			$frame->Content->ClearChilds();
 			$frm = $frame->Content->addForm();
 			$frm["action"] = $this->getUri(__FUNCTION__);;
@@ -99,11 +99,11 @@ final class IGKWebPageMailCtrl extends IGKConfigCtrlBase
 	public function showConfig(){
 		parent::showConfig();
 	}
-	
+
 	public function getConfirmationMail(){
 	}
-	
-	public function getIsSystemController(){return true;} 
+
+	public function getIsSystemController(){return true;}
 }
 */
 ?>

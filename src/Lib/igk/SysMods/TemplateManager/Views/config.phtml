@@ -1,7 +1,7 @@
 <?php
 // @file: config.phtml
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -12,7 +12,7 @@
 ///<param name="base"></param>
 /**
 * Represente igk_html_node_mediaimg function
-* @param  $base
+* @param mixed $base
 */
 function igk_html_node_mediaimg($base){
     $n=igk_createNode("div");
@@ -23,16 +23,16 @@ function igk_html_node_mediaimg($base){
 $t->ClearChilds();
 $dv=$t->addDiv();
 $s=$dv->addSpan()->setClass("floatr");
-$s->addForm()->addAJXA($this->getUri("addNewTemplate_ajx"))->setClass("igk-btn")->Content=R::ngets("btn.create");
+$s->addForm()->addAJXA($ctrl->getUri("addNewTemplate_ajx"))->setClass("igk-btn")->Content=R::ngets("btn.create");
 $dv->addSpan()->setClass("floatl")->addSectionTitle("5")->setFont("arial")->Content=R::ngets("title.mytemplates");
 $dv->addClearFloatBox();
-$r=$this->Db->getInstallTemplates();
+$r=$ctrl->Db->getInstallTemplates();
 if(!$r || $r->RowCount == 0){
     $dv->addDiv()->Content="/!\\ No Templates installed";
 }
 else{
     $dv=$t->addDiv();
-    igk_html_binddata($this, $dv, "templateitem.template", $r->Rows);
+    igk_html_binddata($ctrl, $dv, "templateitem.template", $r->Rows);
     $dv->setClass("fitw igk-clear-cell");
     $dv->addDiv()->setClass("igk-clear-cell");
 }

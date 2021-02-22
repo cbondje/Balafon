@@ -19,7 +19,7 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 	protected function initTargetNode(){
 		$node =  parent::initTargetNode();
 		return $node;
-	}	
+	}
 	public function getCanAddChild(){
 		return false;
 	}
@@ -29,11 +29,11 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 	public static function CanDbChangeDataSchema(){
 		return false;
 	}
-	
+
 	public function getUseDataSchema(){
 		return 0;
 	}
-		
+
 	public function getCanEditDataTableInfo(){
 		return false;
 	}
@@ -51,15 +51,15 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 			);
 	}
 	public function initDb(){
-		igk_set_env("sys://db/constraint_key", "igk_com");		
-		if (igk_is_conf_connected())		
+		igk_set_env("sys://db/constraint_key", "igk_com");
+		if (igk_is_conf_connected())
 			$this->initDbFromFunctions();
-		
+
 	}
 	protected function getConfigFile()
 	{
-		$s = dirname(__FILE__)."/".IGK_DATA_FOLDER."/".IGK_CTRL_CONF_FILE;	
-		return igk_io_dir($s);		
+		$s = dirname(__FILE__)."/".IGK_DATA_FOLDER."/".IGK_CTRL_CONF_FILE;
+		return igk_io_dir($s);
 	}
 	protected function getDBConfigFile()
 	{
@@ -72,11 +72,11 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 	public function View(){
 			return;
 			// igk_wln(__METHOD__." is visible?" .$this->IsVisible);
-		
+
 			// $this->TargetNode->ClearChilds();
 			// extract($this->getSystemVars());
-			
-			// $ul = $t->addDiv()->add("ul");			
+
+			// $ul = $t->addDiv()->add("ul");
 			// $ul["class"]= "igk-community-list";
 			// $e = $this->getDbEntries();
 			// if ($e)
@@ -88,13 +88,13 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 					// $src = IGK_STR_EMPTY;
 					// $src .= igk_getv($v, "clImageKey")!=null? $v->clImageKey : "com_".$v->clName;
 					// $b = $ul->add("li")->add("a", array(
-					// "href"=>$v->clLink, 
+					// "href"=>$v->clLink,
 					// "target"=>"_blank",
-					// "class"=>"igk-community-list"));				
-					// $b->add("div", array("class"=>"igk-community-box igk-com-".$v->clName));		
+					// "class"=>"igk-community-list"));
+					// $b->add("div", array("class"=>"igk-community-box igk-com-".$v->clName));
 					// igk_css_regclass("com_".$v->clName, "[res:".$src."]" );
 				// }
-			// }		
+			// }
 	}
 	public function loadCommunityNode($n){
 		$e = $this->getDbEntries();
@@ -103,8 +103,8 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 			$coms = igk_db_select($this, "tbigk_community");
 			$n = "";
 				// igk_wln($coms->Rows);
-				// exit;
-				foreach($e->Rows as $k=>$v)
+				
+				foreach($e->Rows as  $v)
 				{
 							if (!$v || !$v->clAvailable)
 								continue;
@@ -116,16 +116,16 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 							$src = IGK_STR_EMPTY;
 							$src .= igk_getv($v, "clImageKey")!=null? $v->clImageKey : "com_".$n;
 							$b = $ul->add("li")->setClass("igk-community-i")->add("a", array(
-							"href"=>$v->clLink, 
-							"target"=>"_blank"));				
-							$b->add("div", array("class"=>"igk-community-box igk-com-".$n))->addSvgSymbol($n);		
+							"href"=>$v->clLink,
+							"target"=>"_blank"));
+							$b->add("div", array("class"=>"igk-community-box igk-com-".$n))->addSvgSymbol($n);
 							//igk_css_regclass("com_".$v->clName, "[res:".$src."]" );
 				}
 			}else{
 				$ul->addWebMasterNode()->addLi()->add("span")->Content = "No Community";
 			}
 	}
-	
+
 }
 
 

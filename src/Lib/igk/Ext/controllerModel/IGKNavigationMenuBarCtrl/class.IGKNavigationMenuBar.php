@@ -9,7 +9,7 @@ abstract class IGKNavigationMenuBarCtrl extends IGKCtrlTypeBase
 	protected function InitComplete(){
 		parent::InitComplete();
 	}
-	
+
 	public static function GetAdditionalConfigInfo()
 	{
 		return array("clSpeed"=>new IGKAdditionCtrlInfo("text", 1000));
@@ -21,13 +21,13 @@ abstract class IGKNavigationMenuBarCtrl extends IGKCtrlTypeBase
 			extract($this->getSystemVars());
 			$ul =$t->add("ul");
 			$v_dummy =  IGKHtmlItem::CreateWebNode("dummy");
-			$v_output = igk_html_article_w($this, "default", $v_dummy);
-			
-			foreach($v_dummy->getElementsByTagName("a") as $k=>$v)
+			$v_output = igk_html_article($this, "default", $v_dummy);
+
+			foreach($v_dummy->getElementsByTagName("a") as  $v)
 			{
 				$ul->add("li")->add($v);
-			}	
-			if ($v_output)			
+			}
+			if ($v_output)
 			{
 				igk_html_article_options($this, $this->TargetNode, $this->getArticle("default"));
 			}

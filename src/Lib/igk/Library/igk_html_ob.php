@@ -1,7 +1,7 @@
 <?php
 // @file: igk_html_ob.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -12,7 +12,7 @@
 ///<param name="callback"></param>
 /**
 * Represente igk_html_ob function
-* @param  $callback
+* @param mixed $callback
 */
 function igk_html_ob($callback){
     ob_start();
@@ -30,12 +30,12 @@ function igk_html_ob($callback){
 ///<param name="render" default="1"></param>
 /**
 * Represente igk_html_ob_select function
-* @param  $id
-* @param  $options
-* @param  $selected the default value is null
-* @param  $display the default value is null
-* @param  $attribs the default value is null
-* @param  $render the default value is 1
+* @param mixed $id
+* @param mixed $options
+* @param mixed $selected the default value is null
+* @param mixed $display the default value is null
+* @param mixed $attribs the default value is null
+* @param mixed $render the default value is 1
 */
 function igk_html_ob_select($id, $options, $selected=null, $display=null, $attribs=null, $render=1){
     $o="<select name=\"{$id}\" ";
@@ -73,10 +73,10 @@ function igk_html_ob_select($id, $options, $selected=null, $display=null, $attri
 ///<param name="render" default="1"></param>
 /**
 * Represente igk_html_ob_submit function
-* @param  $id
-* @param  $text
-* @param  $attribs the default value is null
-* @param  $render the default value is 1
+* @param mixed $id
+* @param mixed $text
+* @param mixed $attribs the default value is null
+* @param mixed $render the default value is 1
 */
 function igk_html_ob_submit($id, $text, $attribs=null, $render=1){
     $o="<input ";

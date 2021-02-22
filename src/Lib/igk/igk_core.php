@@ -1,12 +1,27 @@
 <?php
 // @file: igk_core.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
+
+defined("IGK_FRAMEWORK") || die("REQUIRE FRAMEWORK - No direct access allowed");
+define(basename(__FILE__), 1);
+use function igk_resources_gets  as __;
+
+function igk_io_get_script($f, $args=null){
+    if (file_exists($f)){
+        return "?>".file_get_contents($f);
+    }
+    return null;
+}
+function & igk_toarray($tab){
+	$t = (array)$tab;
+    return $t;
+}
 
 ///<summary>evalute constant and get the value</summary>
 ///<return>null if constant not defined</return>
@@ -34,9 +49,9 @@ function igk_const_defined($ctname, $defvalue=1){
 ///<param name="callback"></param>
 /**
 * Represente igk_create_instance function
-* @param  $class
+* @param mixed $class
 * @param  * $obj
-* @param  $callback
+* @param mixed $callback
 */
 function igk_create_instance($class, & $obj, $callback){
     if($obj === null){
@@ -64,7 +79,7 @@ function igk_io_basenamewithoutext($file){
 ///<param name="fname"></param>
 /**
 * Represente igk_io_path_ext function
-* @param  $fname
+* @param mixed $fname
 */
 function igk_io_path_ext($fname){
     if(empty($fname))
@@ -96,7 +111,7 @@ function igk_is_cmd(){
 ///<param name="name"></param>
 /**
 * Represente igk_load_library function
-* @param  $name
+* @param mixed $name
 */
 function igk_load_library($name){
     static $inUse=null;
@@ -115,6 +130,14 @@ function igk_load_library($name){
     }
     return 0;
 }
+
+function igk_wl_tag($tag){
+    echo "<$tag>";
+    foreach(array_slice($tab = func_get_args(), 1) as $c){
+        igk_wl($c);
+    }
+    echo "</$tag>";
+}
 ///<summary>shortcut to get server info data</summary>
 /**
 * shortcut to get server info data
@@ -124,7 +147,7 @@ function igk_server(){
 }
 ///<summary>download zip core </summary>
 /**
-* download zip core 
+* download zip core
 */
 function igk_sys_download_core($download=1){
     $tfile=tempnam(sys_get_temp_dir(), "igk");
@@ -149,25 +172,33 @@ function igk_sys_download_core($download=1){
 ///<param name="msg"></param>
 /**
 * Represente igk_wl function
-* @param  $msg
+* @param mixed $msg
 */
 function igk_wl($msg){
     include(IGK_LIB_DIR.'/Inc/igk_trace.pinc');
+    $tab = func_get_args();
+    while($msg = array_shift($tab)){
     if(is_array($msg) || is_object($msg)){
         igk_log_var_dump($msg);
     }
     else
         echo $msg;
+    }
 }
 ///<summary>Represente igk_wl_pre function</summary>
 ///<param name="p"></param>
 /**
 * Represente igk_wl_pre function
-* @param  $p
+* @param mixed $p
 */
 function igk_wl_pre($p){
     echo "<pre>";
     print_r($p);
+    echo "</pre>";
+}
+function igk_dump_pre($p){
+    echo "<pre>";
+    var_dump($p);
     echo "</pre>";
 }
 function igk_dev_wln(){
@@ -175,14 +206,33 @@ function igk_dev_wln(){
         call_user_func_array("igk_wln", func_get_args());
     }
 }
+function igk_dev_wln_e(){
+    if (igk_environment()->is("DEV")){
+        call_user_func_array("igk_wln", func_get_args());
+        igk_exit();
+    }
+}
+// function igk_wln_set($prop, $value){
+//     $s = igk_env_get($k = "sys://igk_wln");
+//     if ($s === null)
+//         $s = [];
+//     if ($value == null){
+//         unset($s[$prop]);
+//     }else
+//         $s[$prop] = $value;
+//     igk_env_set($k, $s);
+// }
+
 ///<summary>Represente igk_wln function</summary>
 ///<param name="msg" default=""></param>
 /**
 * Represente igk_wln function
-* @param  $msg the default value is ""
+* @param string|mixed $msg the default value is ""
 */
 function igk_wln($msg=""){
     include(IGK_LIB_DIR.'/Inc/igk_trace.pinc');
+    // $LF = igk_getv($options =  igk_environment->get("sys://igk_wln"), "lf", "<br />");
+
     if(!($lf=igk_get_env(IGK_LF_KEY))){
         $v_iscmd=igk_is_cmd();
         $lf=$v_iscmd ? IGK_CLF: "<br />";
@@ -201,7 +251,7 @@ function igk_wln($msg=""){
                     var_dump($msg);
                 }
                 else{
-                    igk_log_var_dump($msg);
+                    igk_log_var_dump($msg, $lf);
                 }
                 igk_wl($lf);
             }
@@ -254,28 +304,30 @@ class IGKLoader {
     ///<summary>dispatch call to controller</summary>
     /**
     * dispatch call to controller
+    * @return mixed|void
     */
     public function __call($n, $args){
         if(method_exists($this->_controller, $n)){
             return call_user_func_array(array($this->_controller, $n), $args);
         }
+        return null;
     }
     ///<summary>Represente __construct function</summary>
     ///<param name="ctrl"></param>
     /**
     * Represente __construct function
-    * @param  $ctrl
+    * @param mixed $ctrl
     */
     public function __construct($ctrl, $listener){
         $this->_controller=$ctrl;
         $this->_output="";
-		$this->_listener = $listener; 
+		$this->_listener = $listener;
     }
     ///<summary>Represente __get function</summary>
     ///<param name="n"></param>
     /**
     * Represente __get function
-    * @param  $n
+    * @param mixed $n
     */
     public function __get($n){
         if(method_exists($this, $m="get".$n)){
@@ -290,12 +342,13 @@ class IGKLoader {
     ///<param name="data"></param>
     /**
     * Represente _inc_file function
-    * @param  $file
-    * @param  $data
+    * @param mixed $file
+    * @param mixed $data
     */
     private function _inc_file($file, $data){
         extract($data);
         $ctrl=$this->_controller;
+        $loader = $this;
         include($file);
     }
     ///<summary>Represente article function</summary>
@@ -304,21 +357,21 @@ class IGKLoader {
     ///<param name="render" default="1"></param>
     /**
     * Represente article function
-    * @param  $file
-    * @param  $args the default value is null
-    * @param  $render the default value is 1
+    * @param mixed $file
+    * @param mixed $args the default value is null
+    * @param mixed $render the default value is 1
     */
     public function article($file, $args=null, $render=1){
-	
+
         $f=$this->_controller->getArticle($file);
         if(!file_exists($f)){
             return false;
         }
-        $n=igk_createnode("notagnode");
+        $n=igk_createnotagnode();
         $n->addArticle($this->_controller, $f, $args);
         if($render){
             $n->renderAJX();
-        } 
+        }
         return $n;
     }
     ///<summary>Represente clear function</summary>
@@ -381,12 +434,12 @@ class IGKLoader {
         $cl=$name;
 		$cl_c = get_class($igk_c);
         ($m = igk_get_env($key="sys://instance/model/".$cl_c)) || ($m = array());
-        if(isset($m[$n])){ 
+        if(isset($m[$n])){
             return $m[$n];
         }
-		if (!class_exists($cl, $forceloading))
+		if ( !((!$forceloading && (strpos($name, "\\")!==false) && class_exists($cl, true)) )|| !class_exists($cl, $forceloading))
 		{
-			$meth = "GetModelClassName"; 
+			$meth = "GetModelClassName";
 			if(method_exists($cl_c, $meth)){
 				$cl=call_user_func_array( array($cl_c, $meth), array($name));
 			}else {
@@ -399,19 +452,19 @@ class IGKLoader {
 					$ns = $igk_c->getEntryNamespace();
 				}
 				// igk_wln_e($d);
-				$cl = $ns."\\Models\\".ucfirst($name)."Model";							
-			}		
+				$cl = $ns."\\Models\\".ucfirst($name)."Model";
+			}
 		}
         if(!class_exists($cl)){
             igk_die("model $name not found .".$cl. " = ".$cl_c);
-        } 
+        }
         $m[$n]=new $cl($igk_c);
         igk_set_env($key, $m);
         return $m[$n];
     }
-    ///<summary> load only view file </summary>
+    ///<summary> include view file</summary>
     /**
-    *  load only view file 
+    *  include view file
     */
     public function view($file, $data=array(), $render=0){
         if(file_exists($f=$this->_controller->getViewFile($file))){
@@ -419,19 +472,20 @@ class IGKLoader {
         }
         else{
             if(!file_exists($file)){
-                $file=dirname(__FILE__)."/Views/".$file.".phtml";
+                $file=dirname(__FILE__)."/Views/".$file.".".IGK_DEFAULT_VIEW_EXT;
             }
         }
         if(!file_exists($file))
             return $this;
-        $bck=set_include_path(dirname($file).PATH_SEPARATOR. get_include_path());
+        $bck = set_include_path(dirname($file).PATH_SEPARATOR. get_include_path());
         $data=array_merge($this->_controller->getSystemVars(), array(
             "dir"=>dirname($file),
-            "fname"=>igk_io_getviewname($file,
-            $this->_controller->getViewDir())
+            "fname"=>igk_io_getviewname($file, $this->_controller->getViewDir())
         ), $data);
         ob_start();
+        igk_environment()->viewfile = 1;
         $this->_inc_file($file, $data);
+        igk_environment()->viewfile = null;
         $o=ob_get_contents();
         ob_end_clean();
         set_include_path($bck);
@@ -442,10 +496,23 @@ class IGKLoader {
         }
 		return $this;
     }
+
+    public function bind($file, $data=array(), $render=0){
+        $n = igk_createnode("NoTagNode");
+
+        $n->addArticle($this->_controller, $file, $data);
+        $o = $n->render();
+        if($render)
+            echo $o;
+        else{
+            $this->_controller->_output .= $o;
+        }
+        return $this;
+    }
 }
 ///<summary>represent server management </summary>
 /**
-* represent server management 
+* represent server management
 */
 final class IGKServer{
     private $data;
@@ -461,7 +528,7 @@ final class IGKServer{
     ///<param name="n"></param>
     /**
     * Represente __get function
-    * @param  $n
+    * @param mixed $n
     */
     public function __get($n){
         if(isset($this->data[$n]))
@@ -472,7 +539,7 @@ final class IGKServer{
     ///<param name="n"></param>
     /**
     * Represente __isset function
-    * @param  $n
+    * @param mixed $n
     */
     public function __isset($n){
         return isset($this->data[$n]);
@@ -482,8 +549,8 @@ final class IGKServer{
     ///<param name="v"></param>
     /**
     * Represente __set function
-    * @param  $n
-    * @param  $v
+    * @param mixed $n
+    * @param mixed $v
     */
     public function __set($n, $v){
         if($v === null){
@@ -491,6 +558,26 @@ final class IGKServer{
         }
         else
             $this->data[$n]=$v;
+    }
+    ///<summary>return if server accept return type</summary>
+    public function accept($type="html"){
+        static $accept_type= null;
+        if ($accept_type===null){
+            $accept_type = [
+                "html"=>"text/html",
+                "json"=>"application/json"
+            ];
+        }
+        $a = explode(",", $this->HTTP_ACCEPT);
+        if (in_array("*/*", $a)){
+            return true;
+        }
+        $mtype = igk_getv($accept_type, $type, null);
+        return $mtype && in_array($mtype, explode(",", $this->HTTP_ACCEPT));
+    }
+
+    public function get($name, $default=null){
+        return igk_getv($this->data, $name, $default);
     }
     ///<summary>Represente getInstance function</summary>
     /**
@@ -506,7 +593,7 @@ final class IGKServer{
     ///<param name="file"></param>
     /**
     * Represente IsEntryFile function
-    * @param  $file
+    * @param mixed $file
     */
     public function IsEntryFile($file){
         return $file === realpath($this->SCRIPT_FILENAME);
@@ -527,6 +614,9 @@ final class IGKServer{
 				return $this->REQUEST_METHOD;
         return $this->REQUEST_METHOD == $type;
     }
+    public function isMultipartFormData(){
+        return strpos($this->CONTENT_TYPE, "multipart/form-data") === 0;
+    }
     ///<summary>Represente prepareServerInfo function</summary>
     /**
     * Represente prepareServerInfo function
@@ -545,7 +635,7 @@ final class IGKServer{
         if(!empty($doc_root=$this->IGK_DOCUMENT_ROOT)){
             $doc_root=str_replace("\\", "/", realpath($doc_root));
             $self=substr($c_script, strlen($doc_root));
-            if($self[0] == "/")
+            if((strlen($self) > 0) && ($self[0] == "/"))
                 $self=substr($self, 1);
             $basedir=str_replace("\\", "/", dirname($doc_root."/".$self));
             $this->IGK_BASEDIR=$basedir;
@@ -584,5 +674,28 @@ final class IGKServer{
         return $this->data;
     }
 }
-defined("IGK_FRAMEWORK") || die("REQUIRE FRAMEWORK - No direct access allowed");
-define(basename(__FILE__), 1);
+
+
+///<summary>Represente igk_app_is_appuser function</summary>
+///<param name="ctrl"></param>
+/**
+* Represente igk_app_is_appuser function
+* @param mixed $ctrl
+*/
+function igk_app_is_appuser($ctrl){
+    return ($u=$ctrl->User) && $u->clLogin == $ctrl->Configs->{'app.DefaultUser'};
+}
+///<summary>get if application is on uri demand</summary>
+/**
+* get if application is on uri demand
+*/
+function igk_app_is_uri_demand($app, $function){
+    return (igk_io_currentUri() == $app->getAppUri($function));
+}
+///<summary>encrypt in sha256 </summary>
+function igk_encrypt($data,$prefix=IGK_PWD_PREFIX){
+    return hash("sha256", $prefix.$data);
+}
+function igk_sys_copyright(){
+    return "IGKDEV &copy; 2011-".date('Y')." ".__("all rights reserved");
+}

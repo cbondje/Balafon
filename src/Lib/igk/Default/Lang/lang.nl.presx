@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $l["Back to {0}"] = "Terug naar {0}";
 $l["Password"] = "Watchwoord";

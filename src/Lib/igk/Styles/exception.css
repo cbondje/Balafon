@@ -10,7 +10,7 @@ ul li{
 ul li > span:nth-child(1){
 	display:inline-block;
 	width: 130px;
-	float: left; 
+	float: left;
 }
 ul:after, li:after{
 	display:table;

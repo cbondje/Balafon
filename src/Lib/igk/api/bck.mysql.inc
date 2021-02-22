@@ -202,29 +202,29 @@ function igk_api_mysql_get_data_schema($api, $render=1 , $param=null){
 
 function igk_api_mysql_get_table_definition($api, $row, $table_n, $mysql, $tinfo=null, $entries=null){ // Note can't pass item call by ref in call_array_function callback
 	// igk_wln(func_get_args()); 
-					$tt = $mysql->sendQuery("SELECT Count(*) FROM `".$table_n."`;");
-					$b = $tt->Columns[0]->name;
-					$count = $tt->Rows[0]->$b;
-					$row["Entries"] = $count;
-					
-					//$tt = $mysql->sendQuery("DESCRIBE `".$t->$n."`;");
-					$tt = $mysql->sendQuery("SHOW FULL COLUMNS FROM `".$table_n."`;");
-					
-					foreach($tt->Rows as $m=>$v){
-						$cl = igk_api_get_columninfo($row, $v, $table_n, $mysql);						
-						
-						if ($tinfo)
-						$tinfo[$v->Field] =new IGKDbColumnInfo( $cl->Attributes->ToArray());
-						
-					}
+	$tt = $mysql->sendQuery("SELECT Count(*) FROM `".$table_n."`;");
+	$b = $tt->Columns[0]->name;
+	$count = $tt->Rows[0]->$b;
+	$row["Entries"] = $count;
+	
+	//$tt = $mysql->sendQuery("DESCRIBE `".$t->$n."`;");
+	$tt = $mysql->sendQuery("SHOW FULL COLUMNS FROM `".$table_n."`;");
+	
+	foreach($tt->Rows as $m=>$v){
+		$cl = igk_api_get_columninfo($row, $v, $table_n, $mysql);						
+		
+		if ($tinfo)
+		$tinfo[$v->Field] =new IGKDbColumnInfo( $cl->Attributes->ToArray());
+		
+	}
 
-					if($entries && $count>0){
-						//<Rows For="tbadman_userjobs">
-						$n = $entries->addNode("Rows")->setAttribute("For", $table_n);
-						foreach($mysql->select($table_n)->Rows as $k=>$v){
-							$n->addNode("Row")->setAttributes($v);
-						}
-					}
+	if($entries && $count>0){
+		//<Rows For="tbadman_userjobs">
+		$n = $entries->addNode("Rows")->setAttribute("For", $table_n);
+		foreach($mysql->select($table_n)->Rows as $k=>$v){
+			$n->addNode("Row")->setAttributes($v);
+		}
+	}
 }
 
 function igk_api_mysql_get_sync_definition($api, $row, $table_n, $u, $mysql, $db=null, $entries=null, $tables=null){
@@ -534,8 +534,8 @@ function igk_api_mysql_cmd($api, $cmd=null){
 				// igk_wln($ctrl->getDataAdapterName());
 				$tb = igk_db_get_ctrl_tables($ctrl);
 				$schema = igk_html_node_DataSchema();
-				//$igk_api_mysql_get_table_definition = igk_getctrl("api")->mysql("get_table_definition");
-						// $apt = igk_get_data_adapter($ctrl->getDataAdapterName());
+				// $igk_api_mysql_get_table_definition = igk_getctrl("api")->mysql("get_table_definition");
+				// $apt = igk_get_data_adapter($ctrl->getDataAdapterName());
 				$apt = igk_get_data_adapter($ctrl->getDataAdapterName());
 				//igk_wln($apt);
 				if ($apt->connect()){

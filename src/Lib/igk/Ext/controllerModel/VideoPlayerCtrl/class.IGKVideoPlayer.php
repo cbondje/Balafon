@@ -10,10 +10,10 @@ class IGKHtmlVideoSourceNode extends IGKHtmlItem
 {
 	public 	function getSrc(){return $this["src"];}
 	public 	function setSrc($value){$this["src"] = $value;}
-	
+
 	public 	function getType(){return $this["type"];}
 	public 	function setType($value){$this["type"] = $value;}
-	
+
 	public function __construct($src, $type)
 	{
 		parent::__construct("source");
@@ -31,8 +31,8 @@ final class IGKHtmlVideoNode extends IGKHtmlItem
 	public function addSource($src, $type)
 	{
 		$h = new IGKHtmlVideoSourceNode($src, $type);
-		
-		$this->m_sources[] = $h;		
+
+		$this->m_sources[] = $h;
 		$this->add($h);
 		if (igk_count($this->m_sources) == 1)
 			$this["src"] = $src;
@@ -54,7 +54,7 @@ final class IGKHtmlVideoNode extends IGKHtmlItem
 			$this["controls"]= null;
 		}
 		else{
-			$this["controls"]= new IGKHtmlNoValueAttribute();
+			$this->activate("controls");// = new IGKHtmlNoValueAttribute();
 		}
 	}
 	public function __construct()
@@ -63,19 +63,19 @@ final class IGKHtmlVideoNode extends IGKHtmlItem
 		$this->m_sources = array();
 		$this->m_ObjectNode = new IGKHtmlObjectNode();
 		//auto control or not
-		$this["controls"]= new IGKHtmlNoValueAttribute();
+		$this["controls"]= null;
 		$this["height"] = "300px";
 		$this["width"] = "400px";
 
 	}
-	
+
 	public function ClearChilds(){
 		//no clear childs
 		parent::ClearChilds();
 	}
 	public function innerHTML(& $xmlOptions= null)
 	{
-		$o  = parent::innerHTML($xmloptions);		
+		$o  = parent::innerHTML($xmloptions);
 		$this->_buildObject();
 		$o .= $this->m_ObjectNode->Render();
 		return $o;
@@ -87,7 +87,7 @@ final class IGKHtmlVideoNode extends IGKHtmlItem
 		$t["data"] = igk_count( $this->m_sources)>0 ? $this->m_sources[0]->Src : null;
 		$t["width"] = $this["width"];
 		$t["height"] = $this["height"];
-		
+
 		$r = $t->add("embed");
 		$r["src"] =  igk_count( $this->m_sources)>0 ? $this->m_sources[0]->Src : null;
 		$r["width"] = $this["width"];
@@ -95,37 +95,36 @@ final class IGKHtmlVideoNode extends IGKHtmlItem
 		$r->add("data", array());
 		$t->addDiv()->Content = R::ngets("msg.cantrendervideo");
 		$this->m_ObjectNode = $t;
-		
+
 	}
-	
+
 }
 abstract class IGKVideoPlayerCtrl extends IGKCtrlTypeBase
 {
 	private $m_vidNode;
-	
+
 	public static function GetAdditionalConfigInfo()
 	{
 		return array(
 		"clPrimaryMovie"=>new IGKAdditionCtrlInfo("text", ""),
-		"clPrimaryHeight"=>new IGKAdditionCtrlInfo("bool", true),
 		"clPrimaryWidth"=>new IGKAdditionCtrlInfo("text", "400px"),
-		"clPrimaryHeight"=>new IGKAdditionCtrlInfo("text", "300px")		
+		"clPrimaryHeight"=>new IGKAdditionCtrlInfo("text", "300px")
 		);
 	}
-	
+
 	public function __construct(){//vid player construct
 		parent::__construct();
 	}
 	protected function initTargetNode()
 	{
 		$t  = parent::initTargetNode();
-		
+
 		$n = new IGKHtmlVideoNode();
 		$t->add($n);
 		$this->m_vidNode = $n;
 		return $t;
 	}
-	
+
 	protected function setupCtrlConfigonfigSettings()
 	{
 		parent::setupCtrlConfigonfigSettings();
@@ -147,27 +146,28 @@ abstract class IGKVideoPlayerCtrl extends IGKCtrlTypeBase
 			$this->m_vidNode["height"] = $this->Configs->clPrimarHeight;
 		}
 	}
-	
+
 	public function vidplayer_editsource_ajx()
 	{
-		
+
 	}
 	public function getControllerConfigOptions()
-	{			
+	{
+		/** @var IGKHtmlItem $t*/
 		$t = parent::getControllerConfigOptions();
 		IGKHtmlUtils::AddImgLnk($t->add("li"), igk_js_post_frame($this->getUri("vidplayer_editsource_ajx")), "videos");
 		return $t;
 	}
 	public function setSource($src=null, $type="video/mp4")
-	{		
-		$this->m_vidNode->clearSource();		
+	{
+		$this->m_vidNode->clearSource();
 		$this->addSource($src, $type);
-		
+
 	}
 	public function addSource($src=null, $type="video/mp4")
 	{
 		$src = $src == null? igk_getr("src") : $src;
-		$type = $type == null? igk_getr("type") : $type;		
+		$type = $type == null? igk_getr("type") : $type;
 		$this->m_vidNode->addSource(igk_io_baseuri()."/R/Videos/".$src, $type);
 	}
 	public function noControl(){

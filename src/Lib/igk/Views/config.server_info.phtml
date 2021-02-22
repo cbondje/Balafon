@@ -1,10 +1,9 @@
 <?php
-// config server info 
-$this->setSelectedConfigCtrl(null);
-$box = igk_html_ctrl_view_config($this, $cnf_n, "title.frameworkInfo", null);
+// config server info
+$ctrl->setSelectedConfigCtrl(null);
+$box = igk_html_ctrl_view_config($ctrl, $cnf_n, "title.frameworkInfo", null);
 
-$cnf=$this->getConfigNode()->clearChilds();
-$cnf=$this->getConfigNode()->clearChilds();
+$cnf=$ctrl->getConfigNode()->clearChilds();
 
 $dv=$cnf->addDiv()->addPanelBox();
 $dv->addSectionTitle()->Content="\$_SERVER";

@@ -13,14 +13,14 @@ $s  = igk_io_dir(IGK_LIB_DIR."/Scripts/winui/igk.winui.navigationbar.js");
 	// igk_wln("base dir :  ".IGK_LIB_DIR);
 	// igk_wln( "current working dir : ". getcwd());
 	// igk_wln("files not found : ".$s);
-	
+
 	// return;
 // }
 if (defined("IGK_WINUI_NAVIGATIONBAR"))
 	return;
 
 define("IGK_WINUI_NAVIGATIONBAR",1);
-	
+
 
 class IGKWinUINavigationBar extends  IGKWinUIControl
 {
@@ -28,13 +28,13 @@ class IGKWinUINavigationBar extends  IGKWinUIControl
 	private $m_scripts ;
 	private $m_pages;
 	private $m_ciblingCtrl;
-	
+
 	public function getTarget(){return $this->m_target;}
 	public function setTarget($target) { $this->m_target  = $target;}
-	
+
 	public function getCiblingCtrl(){return $this->m_ciblingCtrl;}
 	public function setCiblingCtrl($value){ $this->m_ciblingCtrl = $value; }
-	
+
 	public function __construct()
 	{
 		parent::__construct("div");
@@ -42,7 +42,7 @@ class IGKWinUINavigationBar extends  IGKWinUIControl
 		$this->m_scripts =  IGKHtmlItem::CreateWebNode("script");
 		$this->m_pages = array();
 
-	
+
 	}
 
 	protected function innerHTML(& $xmloptions=null)
@@ -53,11 +53,11 @@ class IGKWinUINavigationBar extends  IGKWinUIControl
 		$this->m_scripts->Content = <<<EOF
 (function(node, parent){igk.ready(function(){ igk.winui.navigationbar.init(node, parent,  {duration:1000, interval:20, "orientation":"vertical"},false, false);});})(igk.getParentScript(), document.getElementById('{$ctrl}'));
 EOF;
-		$o .= $this->m_scripts->Render();			
+		$o .= $this->m_scripts->Render();
 		}
 		return $o;
 	}
-	
+
 	///<summary>add item buttuon</summary>
 	///@@ $page: the page name
 	///@@ $target : the controller target name
@@ -66,19 +66,19 @@ EOF;
 		$t = $this->add("a", array(
 		   "href"=>"#".strtolower($page),
 		   "igk-navigation-target"=>$target));
-		   
-		$t->Content = R::ngets("btn.".strtolower($page));		
+
+		$t->Content = R::ngets("btn.".strtolower($page));
 		$this->m_pages[] = $t;
 	}
 	public function init()
-	{		
+	{
 
 $p_content = $this->TargetNode->addDiv(array("class"=>"kms-page-content" ));
 
 $v_d =  IGKHtmlItem::CreateWebNode("div");
 $v_d["style"] = "overflow:hidden";
 
-igk_html_article($this , "default.phtml", $v_d); 
+igk_html_article($this , "default.phtml", $v_d);
 $d = $v_d->getElementsByTagName("li");
 $globalmenu = array();
 if ($d)
@@ -94,7 +94,7 @@ if ($d)
 	   {
 			$k->Add("a", array(
 		   "href"=>"#".strtolower($s),
-		   "igk-navigation-target"=>$ctrl_name))->Content=  R::ngets("btn.".strtolower($s));		   
+		   "igk-navigation-target"=>$ctrl_name))->Content=  R::ngets("btn.".strtolower($s));
 		   $globalmenu[]  = $s;
 	   }
 	   else{

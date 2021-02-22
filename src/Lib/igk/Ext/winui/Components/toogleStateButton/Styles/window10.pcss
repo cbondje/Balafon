@@ -10,8 +10,8 @@
   cursor: pointer;
   height:1em;
   border-radius: 0.5em; /* 16px; 2rem;*/
-  width: 3em;/*5rem;*/
-  
+  width: 2em;/*5rem;*/
+
   background: white;
   border: 2px solid black;
   -webkit-user-select: none;
@@ -27,7 +27,7 @@
 .igk-win10-toggle > div:hover { box-shadow: 0 0 6px #005ca4; }
 
 /*circle bullet*/
-.igk-win10-toggle > div:before { 
+.igk-win10-toggle > div:before {
   will-change: translate;
   display: block;
   position: absolute;
@@ -60,12 +60,12 @@
 
 .igk-win10-toggle input:checked + div:before {
   color: #0078d7;
- /* 
+ /*
  -webkit-transform: translateX(280%);
-  transform: translateX(280%);  
+  transform: translateX(280%);
  -webkit-transform: translateX(calc(2.5*100% + 4px));
  */
- transform: translateX(calc(2em - 0.2em)) ;/*calc(2.5*100% + 4px));*/
+ transform: translateX(calc(2em - 1.2em)) ;/*calc(2.5*100% + 4px));*/
   background: white;
 }
 

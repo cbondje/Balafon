@@ -1,21 +1,23 @@
 <?php
 // @file: tab.views.phtml
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
+/** @var IGKControllerBase $s_ctrl */
 
 use function igk_resources_gets as __;
 ($s_ctrl == null) && igk_die("selected controller not found");
 $div=$t;
-igk_html_add_title($div, __("Views for {0}", $s_ctrl->getName()));
-$div->add(new IGKHtmlSearchItem($this->getUri("search_view#frm_ctrl_view"), null, "m_search_view"));
+if (!igk_is_ajx_demand())
+$div->add("h3")->Content = __("Views for {0}", $s_ctrl->getName());
+$div->add(new IGKHtmlSearchItem($ctrl->getUri("search_view#frm_ctrl_view"), null, "m_search_view"));
 $frm=$div->addForm();
 $frm->setId("frm_ctrl_view");
-$frm["action"]=$this->getUri("ca_add_view_frame");
+$frm["action"]=$ctrl->getUri("ca_add_view_frame");
 $frm["igk-ajx-form"]=1;
 $t=array();
 $ln=0;
@@ -37,18 +39,18 @@ if($t && count($t) > 0){
     $tr->add("th", array("style"=>"width:16px"))->Content=IGK_HTML_SPACE;
     $tr->add("th", array("style"=>"width:16px"))->Content=IGK_HTML_SPACE;
     foreach($t as $k){
-        if($this->m_search_view && !strstr(strtolower($k), $this->m_search_view))
+        if($ctrl->m_search_view && !strstr(strtolower($k), $ctrl->m_search_view))
             continue;
         $gf=substr($k, $ln);
         $sfile=((($cdir=dirname($gf)) != ".") ? $cdir."/": "").basename($gf);
         $tr=$table->addTr();
-        $tr->addTd()->add("a", array("href"=>$this->getUri("ca_download_view&n=".$sfile)))->Content=$sfile;
-        IGKHtmlUtils::AddImgLnk($tr->addTd(), igk_js_post_frame($this->getUri("ca_edit_view&n=".$sfile)), "edit_16x16");
+        $tr->addTd()->add("a", array("href"=>$ctrl->getUri("ca_download_view&n=".$sfile)))->Content=$sfile;
+        IGKHtmlUtils::AddImgLnk($tr->addTd(), igk_js_post_frame($ctrl->getUri("ca_edit_view&n=".$sfile)), "edit_16x16");
         if(igk_is_ajx_demand()){
-            $tr->addTd()->addAJXA($this->getUri("ca_drop_view&n=".$sfile))->addImg()->setSrc(R::GetImgUri("drop_16x16"))->setAttributes(["title"=>__("Drop view")]);
+            $tr->addTd()->addAJXA($ctrl->getUri("ca_drop_view&n=".$sfile))->addImg()->setSrc(R::GetImgUri("drop_16x16"))->setAttributes(["title"=>__("Drop view")]);
         }
         else{
-            IGKHtmlUtils::AddImgLnk($tr->addTd(), $this->getUri("ca_drop_view&n=".$sfile), "drop_16x16");
+            IGKHtmlUtils::AddImgLnk($tr->addTd(), $ctrl->getUri("ca_drop_view&n=".$sfile), "drop_16x16");
         }
     }
 }

@@ -13,7 +13,7 @@
 // self::DropTableRelation($adapter, $i, $dbname, $tablelist, $deleted, $node);
 // self::DropTableRelation($adapter, $tbname, $dbname,null,$delete, $node);
 // self::DropTableRelation($d, $v->$i, $dbname, $tablelist, $deleted);
-// IGKSQLManager::Init(function(& $conf){
+// IGKDBQueryDriver::Init(function(& $conf){
 
 // define("IGK_MSQL_DB_Adapter", 1);
 // define("IGK_MSQL_DB_AdapterFunc", extension_loaded("mysql"));

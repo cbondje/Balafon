@@ -2,6 +2,6 @@ usage conditions:
 author : C.A.D  BONDJE DOUE
 -free to used
 -free to modify
--free to update 
--not allowed to change the version 
+-free to update
+-not allowed to change the version
 -not allowed to change the primary source author

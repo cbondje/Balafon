@@ -1,7 +1,7 @@
 <?php
 // @file: sql3lite.config.phtml
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -10,14 +10,18 @@
 
 use function igk_resources_gets as __;
 $t->clearChilds();
-$t->addDiv()->setStyle("padding-bottom: 2em")->addSectionTitle(4)->Content=__("SQL3Lite Management");
-$t->addHR()->setStyle("padding-bottom: 2em; border:none; border-top:1px solid #eee;");
-$frm=$t->addDiv()->addForm();
+$box = $t->addPanelBox();
+$box->addH1()->Content=__("SQL3Lite Management");
+
+$frm= $box->addDiv()->addForm();
 $frm->addNotifyHost();
 igk_html_form_initfield($frm);
 igk_html_form_buildformfield($frm, ["base_datafilename"=>[
     "value"=>igk_sys_getconfig("sqlite3.database"),
-    "label_text"=>__("Filename")
+    "label_text"=>__("Filename"),
+    "attribs"=>[
+        "placeholder"=>__("global sql3lite database file")
+    ]
 ]]);
 $bar=$frm->addActionBar();
-$bar->addButton("btn.confirm", "submit")->setClass("+igk-btn-default")->Content=__("Update");
+$bar->addButton("btn.confirm", "submit")->setClass("igk-btn +igk-btn-default")->Content=__("Update");

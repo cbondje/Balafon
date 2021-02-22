@@ -1,6 +1,6 @@
-> BalafonJS 
+> BalafonJS
 
-Update files: 
+Update files:
 
 
 26/11/2018

@@ -3,15 +3,15 @@
 // licence: IGKDEV - Balafon @ 2019
 // desc: initialize framework
 // file: igk_init.php
- 
+
 define("IGK_INIT_SYSTEM", 1);
 ///<summary>Represente igk_init_cmp_version function</summary>
 ///<param name="v1"></param>
 ///<param name="v2"></param>
 /**
 * Represente igk_init_cmp_version function
-* @param  $v1
-* @param  $v2
+* @param mixed $v1
+* @param mixed $v2
 */
 function igk_init_cmp_version($v1, $v2){
     while(($tb1=explode(".", trim($v1))) && count($tb1) < 4){
@@ -40,8 +40,8 @@ function igk_init_cmp_version($v1, $v2){
 ///<param name="wizeinstall"></param>
 /**
 * Represente igk_init_setparam function
-* @param  $igk
-* @param  $wizeinstall
+* @param mixed $igk
+* @param mixed $wizeinstall
 */
 function igk_init_setparam($igk, $wizeinstall){
     $s=$igk->Session;
@@ -70,38 +70,42 @@ if(!igk_requirement()){
     igk_exit();
 }
 
-require_once(dirname(__FILE__)."/igk_framework.php");
+require_once($libfile = dirname(__FILE__)."/igk_framework.php");
 require_once(dirname(__FILE__)."/igk_mysql_db.php");
 $file2 = igk_server()->SCRIPT_FILENAME;
 $is_startup = get_included_files()[0] == __FILE__;
 
 
-$bdir = dirname(dirname(dirname($file2)));//."/../../";
+$bdir = dirname(dirname(dirname($file2)));
 $file = $bdir."/index.php";
 $htaccess=$bdir."/.htaccess";
 
- 
+
 @session_start();
 if(!empty(session_id())){
 	@session_destroy();
 }
 $redirect=igk_getr("redirect", 1);
 $wizeinstall=igk_getr("wizeinstall", !file_exists(IGKIO::GetDir($bdir."/Data/configure")));
+ 
 IGKControllerManagerObject::ClearCache($bdir."/".IGK_CACHE_FOLDER);
 if(file_exists($file)){
-				
-    include_once($file); 
+
+    include_once($file);
     if($redirect){
-        igk_init_setparam(IGKApp::getInstance(), $wizeinstall); 
-	    header("Location: ../../Configs"); 
-    } 
+        igk_init_setparam(IGKApp::getInstance(), $wizeinstall);
+	    header("Location: ../../Configs");
+    }
 }
-else{ 
-    $indexsrc=igk_getbaseindex_src(); 
+else{
+     
+    $indexsrc=igk_getbaseindex_src($libfile);
     if(igk_io_w2file($file, $indexsrc, true)){
+        defined("IGK_APP_DIR") || define("IGK_APP_DIR", dirname($file));
         $file=realpath($file);
         define("IGK_APP_INIT", 1);
         igk_io_w2file($htaccess, igk_getbase_access(), true);
+        //igk_wln("file: ".$file , "**********". IGK_APP_DIR);
         include_once($file);
         if($redirect && is_dir("../../Configs")){
             igk_init_setparam(IGKApp::getInstance(), $wizeinstall);

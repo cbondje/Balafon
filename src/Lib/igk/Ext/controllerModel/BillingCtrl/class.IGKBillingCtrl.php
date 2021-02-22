@@ -6,7 +6,7 @@ final class IGKBillingEntry
 	var $clUId;
 	var $clDate;
 	var $clTotalAmount;
-	
+
 	public function __toString(){
 		return "BillingEntry";
 	}
@@ -20,7 +20,7 @@ final class IGKBillingDetailsEntry
 	var $clRefId;
 	var $clQte;
 	var $clAmount;
-	
+
 	public function __toString(){
 		return "IGKBillingDetailsEntry";
 	}
@@ -29,7 +29,7 @@ final class IGKBillingDetailsCtrl extends IGKCtrlNonAtomicTypeBase //first non a
 {
 	public function getBilling()
 	{
-		return igk_getregctrl("Billing");
+		throw new Exception("getBilling");
 	}
 	public function __construct()
 	{
@@ -48,8 +48,7 @@ final class IGKBillingDetailsCtrl extends IGKCtrlNonAtomicTypeBase //first non a
 		parent::InitComplete();
 	}
 	public function getDataAdapterName(){
-		$r = $this->getBilling();
-		if ($r!=null)
+		if ($this->getBilling())
 			return igk_getv($this->Billing, "DataAdapterName");
 		return parent::getDataAdapterName();
 	}
@@ -68,19 +67,19 @@ final class IGKBillingDetailsCtrl extends IGKCtrlNonAtomicTypeBase //first non a
 		new IGKdbColumnInfo(array(IGK_FD_NAME=>"clAmount", IGK_FD_TYPE=>"Float", IGK_FD_TYPELEN=>10)),
 		);
 	}
-	
+
 }
 abstract class IGKBillingCtrl extends IGKCtrlTypeBase
 {
 	private $m_billingDetails;
-	
+
 	protected function getDBConfigFile()
 	{
-		return igk_io_getdbconf_file(dirname(__FILE__)); 
+		return igk_io_getdbconf_file(dirname(__FILE__));
 	}
 	protected function getConfigFile()
 	{
-		return igk_io_getconf_file(dirname(__FILE__)); 		
+		return igk_io_getconf_file(dirname(__FILE__));
 	}
 	protected function InitComplete()
 	{
@@ -96,18 +95,18 @@ abstract class IGKBillingCtrl extends IGKCtrlTypeBase
 			return;
 
 		$e = new IGKBillingEntry ();
-	
+
 		$e->clUId = $u->clId;
 		$e->clDate = igk_mysql_datetime_now();
 		$m = 0.0;
 		$d = igk_getctrl("igkbillingdetailsctrl");
 		$tk = array();
-		foreach($caddyInfo as $k=>$v)
+		foreach($caddyInfo as  $v)
 		{
-			
+
 			$m += $v->getAmount();
 			$h = new IGKBillingDetailsEntry();
-			$h->clAmount = $v->getAmount(); 
+			$h->clAmount = $v->getAmount();
 			$h->clQte = $v->clQte;
 			$h->clUId = $u->clId;
 			$h->clRefId = $v->clRef;
@@ -115,23 +114,23 @@ abstract class IGKBillingCtrl extends IGKCtrlTypeBase
 		}
 		$e->clTotalAmount = $m;
 		if ($this->insert($e)){
-			foreach($tk as $k=>$v)
-			{			
+			foreach($tk as $v)
+			{
 				$v->clBillId = $e->clId;
 				$d->insert($v);
 			}
 		}
-		
+
 		$this->getBillingPDF();
 	}
 	public function getBillingPDF(){
 		$u = $this->app->Session->User;
 		if ($u == null)return;
-		
+
 		$pdf = new IGKPDF();
-		
+
 		$pdf->Render();
-		exit;
+		igk_exit();
 	}
 }
 

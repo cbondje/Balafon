@@ -34,9 +34,9 @@ amélioration du service web pour etre pris en charge par visual studio et c#
 
 > check for server response
 8.10.2.0420
-> api sync data from a controller igk_api_syncto_ctrl and igk_api_syncfrom_ctrl 
+> api sync data from a controller igk_api_syncto_ctrl and igk_api_syncfrom_ctrl
 
 textbox with regex data validation
 8.10.2.0310
->adapter mysql support column unique multiple 
+>adapter mysql support column unique multiple
 

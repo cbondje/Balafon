@@ -3,8 +3,8 @@
 //file is a part of the controller tab list
 abstract class IGKMenuHostCtrl extends IGKCtrlTypeBase
 {
-	public function getName(){return get_class($this);}	
-	
+	public function getName(){return get_class($this);}
+
 	public static function GetAdditionalConfigInfo()
 	{
 		return array("clAllowMenuNavigation"=>new IGKAdditionCtrlInfo("bool", true));
@@ -27,22 +27,22 @@ abstract class IGKMenuHostCtrl extends IGKCtrlTypeBase
 		if ($this->Configs->clAllowMenuNavigation)
 		{
 		$v_tabs = $t->getElementsByTagName("a");
-		foreach($v_tabs as $k=>$v)
+		foreach($v_tabs as $v)
 		{
 			$n = igk_regex_get("/p=(?P<name>[^&]+)/i","name", $v["href"] );
 			$v["href"] = "#".$n;
 			$v["igk-nav-link"]= $n;
-		}		
+		}
 		$t->addScript()->Content =<<<EOF
 var node = IGK.getParentScript();
-var parent = document.getElementById("{$this->app->Configs->web_pagectrl}");	
+var parent = document.getElementById("{$this->app->Configs->web_pagectrl}");
 IGK.ready(function(){
 IGK.winui.navigationBar.init(node, parent,  {duration:1000, interval:20, "orientation":"vertical"});
 });
 EOF;
 		}
 	}
-	
-	
+
+
 }
 ?>

@@ -43,11 +43,13 @@ igk.system.createNS("igk.core", {
 		}
 	};
 },
-'progress':function(t){
+'progress':function(t, _s){
+	if (!_s)
+		_s = "Progress:";
 	var q = $igk(t).first();
 	return function(e){
 		// console.debug("start progress");
-		q.setHtml("progress : "+( Math.round((e.loaded / e.total) * 100)) + "%");
+		q.setHtml(_s+( Math.round((e.loaded / e.total) * 100)) + "%");
 	};
 }}); 
 })();

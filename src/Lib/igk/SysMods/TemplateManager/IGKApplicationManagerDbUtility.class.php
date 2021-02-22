@@ -1,7 +1,7 @@
 <?php
 // @file: IGKApplicationManagerDbUtility.class.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -17,7 +17,7 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
     ///<param name="app"></param>
     /**
     * Represente __construct function
-    * @param  $app
+    * @param mixed $app
     */
     public function __construct($app){
         parent::__construct($app);
@@ -27,15 +27,15 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
     ///<param name="outdir"></param>
     /**
     * Represente addInstalledTemplate function
-    * @param  $manifest
-    * @param  $outdir
+    * @param mixed $manifest
+    * @param mixed $outdir
     */
     public function addInstalledTemplate($manifest, $outdir){
         if($this->connect()){
             $tb_a="tbigk_templates";
             if(!$this->selectSingleRow($tb_a, array("clPackageName"=>$manifest->clPackageName))){
                 $row=igk_db_create_row($tb_a, $manifest);
-                $row->clInstallDate=igk_db_createExpression("Now()");
+                $row->clInstallDate=igk_db_create_expression("Now()");
                 $row->clVersion=1;
                 $row->clPath=$outdir;
                 $this->insert($tb_a, $row);
@@ -47,7 +47,7 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
     ///<param name="id"></param>
     /**
     * Represente dropTemplate function
-    * @param  $id
+    * @param mixed $id
     */
     public function dropTemplate($id){
         $this->delete(TBIGK_TEMPLATES, $id);
@@ -69,7 +69,7 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
     ///<param name="id"></param>
     /**
     * Represente getPackageRow function
-    * @param  $id
+    * @param mixed $id
     */
     public function getPackageRow($id){
         $row=null;
@@ -95,7 +95,7 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
     ///<param name="inf"></param>
     /**
     * Represente insertTemplate function
-    * @param  $inf
+    * @param mixed $inf
     */
     public function insertTemplate($inf){
         if($this->connect()){
@@ -114,7 +114,7 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
             $tb_a="tbigk_templates";
             if(!$this->selectSingleRow($tb_a, array("clPackageName"=>$inf->Name))){
                 $row=igk_db_create_row($tb_a);
-                $row->clInstallDate=igk_db_createExpression("Now()");
+                $row->clInstallDate=igk_db_create_expression("Now()");
                 $row->clPackageName=$inf->Name;
                 $row->clVersion=1;
                 $row->clPath="";
@@ -128,7 +128,7 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
     ///<param name="row"></param>
     /**
     * Represente updateTemplate function
-    * @param  $row
+    * @param mixed $row
     */
     public function updateTemplate($row){
         $r=0;

@@ -6,7 +6,7 @@ final class IGKGkdsFile extends IGKObject
 	private $m_source;
 	private $m_gd;
 	private $m_document;
-	
+
 	public function getGD(){return $this->m_gd; }
 	public function getDocument(){return $this->m_document; }
 	private function __construct(){
@@ -14,7 +14,7 @@ final class IGKGkdsFile extends IGKObject
 	public static function ParseToGD($filename, $index=0){
 		if (!defined("IGK_GD_SUPPORT") || !file_exists($filename))
 			return null;
-			
+
 		$doc = IGKHtmlReader::LoadFile($filename);
 		if ($doc == null)
 			return null;
@@ -26,43 +26,43 @@ final class IGKGkdsFile extends IGKObject
 		$f->m_gd = IGKGD::Create($t["Width"], $t["Height"]);
 		$f->m_gd->Clearf("white");
 		$f->_visit();
-		
+
 		return $f;
 	}
 	private function _restore(){
 	}
 	private function _save(){
 	}
-	private function _visit(){		
-		foreach($this->m_document->Childs as $k=>$v){
+	private function _visit(){
+		foreach($this->m_document->Childs as  $v){
 			$m = "Visit".$v->TagName;
 			if (method_exists(__CLASS__, $m))
 				$this->$m($v);
 		}
 	}
-	public function VisitLayer($layer){		
-		foreach($layer->Childs as $k=>$v){
+	public function VisitLayer($layer){
+		foreach($layer->Childs as $v){
 			$m = "Visit".$v->TagName;
 			if (method_exists(__CLASS__, $m))
 				$this->$m($v);
 		}
 	}
-	public function VisitCircle($i){	
-		$c = Vector2f::FromString($i["Center"]);
+	public function VisitCircle($i){
+		$c = IGKVector2f::FromString($i["Center"]);
 		$t = explode(" ", $i["Radius"]);
 		$r = 0;
-		
+
 		if (count($t) == 1)
 		{
-			$r = Vector2f::FromString($i["Radius"]);
+			$r = IGKVector2f::FromString($i["Radius"]);
 		}
 		else {
-			$r = Vector2f::FromString($t[0]);
+			$r = IGKVector2f::FromString($t[0]);
 		}
 		$this->GD->FillEllipse(IGKColorf::FromString("red")->toByte(),  $c, $r);
 		$this->GD->DrawEllipse(IGKColorf::FromString("black"),  $c, $r);
 	}
-	public function RenderPicture(){		
+	public function RenderPicture(){
 		header("Content-Type: image/png");
 		$this->GD->Render();
 	}
@@ -71,4 +71,3 @@ final class IGKGkdsFile extends IGKObject
 		unset($this->m_gd);
 	}
 }
-?>

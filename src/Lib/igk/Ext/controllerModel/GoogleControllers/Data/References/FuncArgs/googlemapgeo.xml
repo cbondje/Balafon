@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GoogleMapGeo><attr name="loc" require="1" 
-fr="Adresse ou geo-location à marquer" 
+<GoogleMapGeo><attr name="loc" require="1"
+fr="Adresse ou geo-location à marquer"
 nl="Adres of geolocatie om te markeren"
 en="Address or geolocation to mark"
 >

@@ -1,7 +1,7 @@
 <?php
 // @file: IGKGkdsFile.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -37,7 +37,7 @@ final class IGKGkdsFile extends IGKObject {
     * Represente _visit function
     */
     private function _visit(){
-        foreach($this->m_document->Childs as $k=>$v){
+        foreach($this->m_document->Childs as  $v){
             $m="Visit".$v->TagName;
             if(method_exists(__CLASS__, $m))
                 $this->$m($v);
@@ -70,8 +70,8 @@ final class IGKGkdsFile extends IGKObject {
     ///<param name="index"></param>
     /**
     * Represente ParseToGD function
-    * @param  $filename
-    * @param  $index the default value is 0
+    * @param mixed $filename
+    * @param mixed $index the default value is 0
     */
     public static function ParseToGD($filename, $index=0){
         if(!defined("IGK_GD_SUPPORT") || !file_exists($filename))
@@ -101,17 +101,17 @@ final class IGKGkdsFile extends IGKObject {
     ///<param name="i"></param>
     /**
     * Represente VisitCircle function
-    * @param  $i
+    * @param mixed $i
     */
     public function VisitCircle($i){
-        $c=Vector2f::FromString($i["Center"]);
+        $c=IGKVector2f::FromString($i["Center"]);
         $t=explode(" ", $i["Radius"]);
         $r=0;
         if(count($t) == 1){
-            $r=Vector2f::FromString($i["Radius"]);
+            $r=IGKVector2f::FromString($i["Radius"]);
         }
         else{
-            $r=Vector2f::FromString($t[0]);
+            $r= IGKVector2f::FromString($t[0]);
         }
         $this->GD->FillEllipse(IGKColorf::FromString("red")->toByte(), $c, $r);
         $this->GD->DrawEllipse(IGKColorf::FromString("black"), $c, $r);
@@ -120,10 +120,10 @@ final class IGKGkdsFile extends IGKObject {
     ///<param name="layer"></param>
     /**
     * Represente VisitLayer function
-    * @param  $layer
+    * @param mixed $layer
     */
     public function VisitLayer($layer){
-        foreach($layer->Childs as $k=>$v){
+        foreach($layer->Childs as  $v){
             $m="Visit".$v->TagName;
             if(method_exists(__CLASS__, $m))
                 $this->$m($v);

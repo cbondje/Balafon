@@ -1,7 +1,7 @@
 <?php
 // @file: UtilityActions.php
 // @author: C.A.D. BONDJE DOUE
-// @description: 
+// @description:
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
@@ -26,8 +26,8 @@ class UtilityActions{
     ///<param name="t"></param>
     /**
     * Represente __construct function
-    * @param  $ctrl
-    * @param  $t
+    * @param mixed $ctrl
+    * @param mixed $t
     */
     public function __construct($ctrl, $t){
         $this->ctrl=$ctrl;
@@ -43,7 +43,7 @@ class UtilityActions{
             $f=igk_io_dir(igk_io_basedir());
             $d=igk_io_basedir()."/__temp_dir";
             rename($f."/".$n, $d);
-            IGKIO::RmDir($d);
+            \IGKIO::RmDir($d);
             igk_wln("ok");
         }
     }

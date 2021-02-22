@@ -7,7 +7,7 @@ class IGKArticleController extends IGKAtriclesCtrlBase
 	{
 		return true;
 	}
-	
+
 	public function __construct(){
 		parent::__construct();
 	}
@@ -20,7 +20,7 @@ class IGKArticleController extends IGKAtriclesCtrlBase
 	public function getConfidentiality(){
 		return $this->getArticle("confidentiality");
 	}
-	
+
 	public function initComplete(){
 		parent::initComplete();
 		igk_reg_ctrl("system/articleviewer", $this);

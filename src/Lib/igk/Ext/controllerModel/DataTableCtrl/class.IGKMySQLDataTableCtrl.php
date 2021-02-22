@@ -1,5 +1,5 @@
 <?php
-/*datatable controller 
+/*datatable controller
 */
 abstract class IGKMySqlDataTableCtrl extends IGKCtrlTypeBase
 {
@@ -21,9 +21,9 @@ abstract class IGKMySqlDataTableCtrl extends IGKCtrlTypeBase
 	public function getIsVisible(){
 		return false;
 	}
-	
+
 	public function getDataAdapterName(){
-		return IGK_MYSQL_DATAADAPTER;		
+		return IGK_MYSQL_DATAADAPTER;
 	}
 	public function getName(){
 		return parent::getName();

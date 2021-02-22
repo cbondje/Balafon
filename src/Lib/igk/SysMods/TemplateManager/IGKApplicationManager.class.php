@@ -36,10 +36,10 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="fname"></param>
     /**
     * Represente _get_manifest_obj function
-    * @param  $fname
+    * @param mixed $fname
     */
     private function _get_manifest_obj($fname){
-        $e=igk_zip_unzip_file_content($fname, ".manifest");
+        $e=igk_zip_unzip_filecontent($fname, ".manifest");
         if($e == null){
             igk_ilog("no manisfest file found in the package {$fname}");
             return null;
@@ -48,7 +48,7 @@ class IGKApplicationManager extends IGKControllerBase{
         $d->load($e);
         $t=igk_html_select($d, IGKApplicationManager::MANIFEST_TAGNAME);
         if(igk_count($t) != 1){
-            igk_ilog("invalid manifest .".$f);
+            igk_ilog("invalid manifest .");
             return;
         }
         $manifest=$t[0];
@@ -102,7 +102,7 @@ class IGKApplicationManager extends IGKControllerBase{
                 case "clInstallDate":
                 case "clPath":
                 case "clDescription":
-                return 1;default: 
+                return 1;default:
                 break;
             }
             return false;
@@ -159,11 +159,12 @@ class IGKApplicationManager extends IGKControllerBase{
         $v=igk_createNode("d");
         $v->add(IGKHtmlReader::LoadXML($r));
         $tobj=array();
-        foreach($v->getElementsByTagName("item") as $k=>$v){
+        foreach($v->getElementsByTagName("item") as $v){
             $obj=igk_xml_to_obj($v);
             $tobj[]=$obj;
         }
-        $d->addDiv()->load($r);
+        if (count($tobj)>0)
+            $d->addDiv()->load($r);
         $n->RenderAJX();
     }
     ///<summary>Represente back function</summary>
@@ -189,7 +190,7 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="n"></param>
     /**
     * Represente created function
-    * @param  $n
+    * @param mixed $n
     */
     public function created($n){
         return isset($this->m_createdCtrls[$n]);
@@ -224,8 +225,8 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="renderxml"></param>
     /**
     * Represente genTemplates function
-    * @param  $obj the default value is null
-    * @param  $renderxml the default value is 0
+    * @param mixed $obj the default value is null
+    * @param mixed $renderxml the default value is 0
     */
     public function genTemplates($obj=null, $renderxml=0){
         $m=igk_createNode(IGKApplicationManager::MANIFEST_TAGNAME);
@@ -265,7 +266,7 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="row"></param>
     /**
     * Represente getAssetsUri function
-    * @param  $row
+    * @param mixed $row
     */
     public function getAssetsUri($row){
         return $this->getUri("assets&q={$row->clPackageName}");
@@ -284,7 +285,7 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="n"></param>
     /**
     * Represente getCreatedCtrl function
-    * @param  $n
+    * @param mixed $n
     */
     public function getCreatedCtrl($n){
         return $this->created($n) ? $this->m_createdCtrls[$n]: null;
@@ -325,7 +326,7 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="packagename"></param>
     /**
     * Represente getPackageManifest function
-    * @param  $packagename
+    * @param mixed $packagename
     */
     public function getPackageManifest($packagename){
         $v_fname=$this->getPackageManifestFile($packagename);
@@ -339,7 +340,7 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="packagename"></param>
     /**
     * Represente getPackageManifestFile function
-    * @param  $packagename
+    * @param mixed $packagename
     */
     public function getPackageManifestFile($packagename){
         return IGKIO::GetDir($this->getPackageStoreDir()."/{$packagename}.xtbl");
@@ -400,12 +401,12 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="f" default="null"></param>
     /**
     * Represente install_template_package_ajx function
-    * @param  $f the default value is null
+    * @param mixed $f the default value is null
     */
     public function install_template_package_ajx($f=null){
         igk_flush_data();
-        $f=$f ?? dirname(__FILE__)."/Packages/igkdev.com.rcard.xtbl";
-        $e=igk_zip_unzip_file_content($f, ".manifest");
+        $f=$f ?? dirname(__FILE__)."/".IGK_PACKAGES_FOLDER."/igkdev.com.rcard.xtbl";
+        $e=igk_zip_unzip_filecontent($f, ".manifest");
         if($e == null){
             igk_ilog("no manisfest file found in the package");
             return;
@@ -438,7 +439,7 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="p"></param>
     /**
     * Represente is_set_as_default function
-    * @param  $p
+    * @param mixed $p
     */
     public function is_set_as_default($p){
         if($p){
@@ -455,7 +456,7 @@ class IGKApplicationManager extends IGKControllerBase{
         if(igk_getv($hb, "UPLOADFILE")){
             $n=$hb->FILE_NAME;
             $s=$hb->UP_FILE_SIZE;
-            $v_c=file_get_contents("php://input", 0, null, -1, $s);
+            $v_c=file_get_contents("php://input", false, null, -1, $s);
             if((igk_io_path_ext($n) == 'xtbl') && substr($v_c, 0, 2) === "PK"){
                 $usr=$this->getUser();
                 $u=$usr ? $usr->clLogin."/": "";
@@ -479,7 +480,7 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="id" default="null"></param>
     /**
     * Represente make_default_ajx function
-    * @param  $id the default value is null
+    * @param mixed $id the default value is null
     */
     public function make_default_ajx($id=null){
         $id=$id ?? igk_getr("id");
@@ -529,7 +530,7 @@ class IGKApplicationManager extends IGKControllerBase{
         $zip->addFromString(".data.json", "");
         $bpath=igk_io_getdir(igk_io_basedir()."/".$row->clPath);
         $tf=igk_io_getfiles($bpath);
-        foreach($tf as $k=>$v){
+        foreach($tf as  $v){
             $p=igk_io_unix_path(substr($v, strlen($bpath) + 1));
             if($p == ".manifest")
                 continue;
@@ -546,8 +547,8 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="n">name of the global namespace uri</summary>
     /**
     * register template controller
-    * @param obj controller template application
-    * @param n name of the global namespace uri
+    * @param mixed $obj controller template application
+    * @param mixed $n name of the global namespace uri
     */
     public function register($obj, $n){
         if($obj === null){
@@ -569,7 +570,7 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="t"></param>
     /**
     * Represente showConfig function
-    * @param  $t
+    * @param mixed $t
     */
     public function showConfig($t){
         igk_ctrl_view($this, $t, $this->ConfigView);
@@ -578,7 +579,7 @@ class IGKApplicationManager extends IGKControllerBase{
     ///<param name="id" default="null"></param>
     /**
     * Represente uninstall_ajx function
-    * @param  $id the default value is null
+    * @param mixed $id the default value is null
     */
     public function uninstall_ajx($id=null){
         $id=$id ?? igk_getr("id");
@@ -627,6 +628,6 @@ EOF;
     * Represente visit function
     */
     public function visit(){
-        igk_navtobase(IGK_STR_EMPTY); 
+        igk_navtobase(IGK_STR_EMPTY);
     }
 }
