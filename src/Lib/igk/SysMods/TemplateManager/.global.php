@@ -279,11 +279,13 @@ function igk_template_view_btn_loadandinstall($t, $ctrl){
 function igk_view_render_if_visible($ctrl){
     if($ctrl->IsVisible)
         $ctrl->View();
-}
+} 
+
+
 include_once(dirname(__FILE__)."/Views/uri.listener.pinc");
 igk_reg_initenv_callback("igk_template_init_env");
 spl_autoload_register(function($n){
-    if(preg_match(IGK_IS_NS_IDENTIFIER_REGEX, $n)){
+    if(preg_match(IGK_IS_NS_IDENTIFIER_REGEX, $n)){        
         igk_template_load_ns(str_replace("\\", ".", dirname($n)));
     }
 });

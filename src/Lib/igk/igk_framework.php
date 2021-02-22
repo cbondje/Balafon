@@ -41294,14 +41294,14 @@ EOF;
             $bar->addABtn(igk_io_baseuri())->setClass("igk-pull-right")->Content=__("Back to {0}", igk_sys_domain_name());
             $root->addDiv()->setAttribute("style", "font-size:0.8em; text-align:center")->addDiv()->Content="{$igk_framename} - ( ".IGK_PLATEFORM_NAME." ) - {$igk_version}<br />Configuration";
             $root->addDiv()->setClass("alignc")->addIGKCopyright();
-            return $bfrm;
+            return $bfrm; 
         }
-        else if(!igk_environment()->is("production")){
-            $d=$bfrm->addObData(function(){
-                echo "<div >/!\\bmc not found</div>";
-            });
-            $d["class"]="posab";
-        }
+        // else if(!igk_environment()->is("production")){
+        //     $d=$bfrm->addObData(function(){
+        //         echo "<div >/!\\bmc not found</div>";
+        //     });
+        //     $d["class"]="posab";
+        // }
         $frm=$bfrm->addForm()->AppendAttributes(array("class"=>"connexion_frame"));
         $frm->ClearChilds();
         $frm->addObData(function(){igk_html_form_init();

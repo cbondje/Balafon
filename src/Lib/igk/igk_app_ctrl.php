@@ -5,12 +5,13 @@
 // @copyright: igkdev © 2020
 // @license: Microsoft MIT License. For more information read license.txt
 // @company: IGKDEV
-// @mail: bondje.doue@igkdev.com
+// @mail: bondje.doue@igkdev.com 
 // @url: https://www.igkdev.com
 
 define("IGK_INC_APP_INITDB", IGK_LIB_DIR."/".IGK_INC_FOLDER."/igk_initapp_db.pinc");
 
 use function igk_resources_gets as __; 
+
 
 ///<summary>Represente igk_app_ctrl_dropped_callback function</summary>
 ///<param name="ctrl"></param>
