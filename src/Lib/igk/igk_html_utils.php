@@ -33,7 +33,7 @@ function igk_html_reg_method($name, $funcName, $callable){
     return $B;
 }
 function igk_html_get_method($name, $method){
-    $c = igk_get_env("html://methods");//IGKEnvironment::HTML_METHOD);
+    $c = igk_get_env("html://methods"); 
     if (isset($c[$name])){
         return igk_getv($c[$name], $method);
     }
@@ -41,7 +41,7 @@ function igk_html_get_method($name, $method){
 }
 function igk_html_get_class_callable($name, $method){
  
-    $c = igk_get_env("html://class");//IGKEnvironment::HTML_METHOD);
+    $c = igk_get_env("html://class"); 
     if (isset($c[$name])){
 
         $c = igk_getv($c, $name);//, $method);

@@ -113,30 +113,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                     $sync->RenderXML();
                     return;
                 },
-            "backupdb"=>function($cmd, $args){
-                    if(!igk_is_conf_connected()){
-                        igk_wln_e("/!\\ not allowed");
-                    }
-                    $n=igk_getv($args, 0);
-                    $ctrl=igk_getctrl($n);
-                    if($ctrl){
-                        $tb=igk_db_get_ctrl_tables($ctrl);
-                        $schema=igk_html_node_DataSchema();
-                        $apt=igk_get_data_adapter($ctrl->getDataAdapterName());
-                        if($apt->connect()){
-                            $entries=$schema->addNode("Entries");
-                            foreach($tb as  $v){
-                                $rep=$schema->addNode("DataDefinition")->setAttributes(array("TableName"=>$v));
-                                igk_getctrl(IGK_API_CTRL)->mysql("get_table_definition", $rep, $v, $apt, null, $entries);
-                            }
-                            $apt->close();
-                        }
-                        $schema->RenderXML();
-                        return $schema;
-                    }
-                    igk_wln("No Ctrl {$n} found ");
-                    return null;
-                },
+            
             "loadsyncdata"=>function($cmd, $args) use ($_api){
                     igk_debuggerview()->ClearChilds();
                     $rep=igk_createNode("reponse");

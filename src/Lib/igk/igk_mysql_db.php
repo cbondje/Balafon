@@ -57,9 +57,7 @@ function igk_db_escape_string($v, $r=null){
         if($b){
 			if (is_array($v)){
                 if (!igk_environment()->is("production")){
-                    igk_wln($v);
-                    igk_trace();
-                    igk_exit();
+                    igk_wln("Passing Array not allowed", $v);
                 }
 				igk_die("escape failed");
 			}
@@ -525,7 +523,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     public function deleteAll($tablename, $condition=null){
         $r = null;
         if($this->m_dbManager != null)
-            $r= $this->m_dbManager->deleteAll($tablename);
+            $r= $this->m_dbManager->deleteAll($tablename, $condition);
         return $r;
     }
     ///<summary>Represente dropAllRelations function</summary>
@@ -1110,13 +1108,13 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
     }
     ///<summary>Represente sendQuery function</summary>
     ///<param name="query"></param>
-    ///<param name="throwex" default="true"></param>
-    ///<param name="options" default="null"></param>
+    ///<param name="throwex" default="true">throw exception</param>
+    ///<param name="options" default="null">use to filter the query result. the default value is null</param>
     /**
     * Represente sendQuery function
     * @param mixed $query
     * @param mixed $throwex the default value is true
-    * @param mixed $options the default value is null
+    * @param mixed $options use to filter the query result. the default value is null
     */
     public function sendQuery($query, $throwex=true, $options=null){
         $sendquery=$this->queryListener ?? $this->m_dbManager;
@@ -1498,6 +1496,9 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
     private $m_type;
     private $m_value;
     private $m_multitable; 
+    public function success(){
+        return $this->m_rows !== null;
+    }
     ///<summary>Represente __construct function</summary>
     /**
     * Represente __construct function

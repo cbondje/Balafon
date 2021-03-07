@@ -164,6 +164,33 @@ function igk_html_create_container_section($t){
     return $r;
 }
 
+function igk_html_node_walk($tagname, $items, $callback){
+    $p = igk_html_parent_node();
+    if (is_array($items)){
+
+        array_walk($items, function($v)use($p, $callback, $tagname){
+            $callback($p->add($tagname), $v);
+        }); 
+    }
+    return $p;
+}
+
+function igk_html_node_list($items, $callback=null, $ordered=0){
+    if ($callback==null){
+        $callback = function($i, $v){
+            $i->Content = $v;
+        };
+    }
+    $n = igk_createnode($ordered ? "ol": "ul");
+    if (is_array($items)){
+        foreach($items as $v){
+            $callback($n->li(), $v);
+        }
+    }
+    return $n;
+}
+
+
 
 function igk_html_node_usesvg($name){
     $s = igk_createnode("span");

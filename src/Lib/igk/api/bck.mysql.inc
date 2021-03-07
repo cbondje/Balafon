@@ -350,7 +350,7 @@ function igk_api_mysql_get_config_data_schema($api, $render=1, $param=null){
 			else{	
 				
 			
-				$tschema =igk_db_load_data_schemas($v->getDataDir()."/data.schema.xml");	
+				$tschema =igk_db_load_data_schemas($v->getDataDir()."/".IGK_SCHEMA_FILENAME);	
 				if ($tschema){
 				// igk_wln($tschema); 
 				foreach($tschema as $ck=>$cv){
@@ -443,13 +443,7 @@ function igk_api_mysql_check_data_structure($api){
 			continue;
 		}
 		$v_b = $v->info;
-		$v_testb  = $tdb[$k]->tinfo;
-		// igk_wln($v_b);
-		//check structure
-		// igk_wln("config");
-		// igk_wln($tconfig[$k]);
-		//igk_wln("base");
-		// igk_wln($tdb[$k]); 
+		$v_testb  = $tdb[$k]->tinfo; 
 		$v_err = 1;
 		foreach($v_b as $kk=>$vv){		
 			if (!isset($v_testb[$vv->clName])){
@@ -482,85 +476,6 @@ function igk_api_mysql_check_data_structure($api){
 	if ($err->ChildCount>0)
 		$rep["HasError"] = 1;
 	
-	igk_wl($rep->RenderXML());
-	//igk_wl($rep->RenderXML());
+	igk_wl($rep->RenderXML());	 
 }
-
-
-/*
-///<summary>execute a mysql command</summary>
-function igk_api_mysql_cmd($api, $cmd=null){
-	$args = array_slice(func_get_args(), 2);
-	// igk_wln($cmd);
-	// igk_wln($args); 
-	switch($cmd){
-			case "syncdata":
-					//2 agrs requires
-					//0 : ctrl name
-					//1 : user id
-					$sync = igk_createNode("igk-sync");
-					$ctrl = igk_getctrl(igk_getv($args, 0));
-					$uid = igk_get_user(igk_getv($args, 1));
-					if ($ctrl && $uid){
-						$api->setParam("syncdata:info", array());
-						$u = $uid;
-						$tb = igk_db_get_ctrl_tables($ctrl);
-						$apt = igk_get_data_adapter($ctrl->getDataAdapterName());
-						//igk_wln($apt);
-						if ($apt->connect()){
-							 $entries = $sync->addNode("Entries");
-							foreach($tb as $k=>$v){
-						$rep = $sync->addNode("DataDefinition")->setAttributes(array(
-							"TableName"=>$v
-						));
-						$api->mysql("get_sync_definition", $rep, $v, $u, $apt, $ctrl->Db, $entries);
-						
-					
-					}
-							$apt->close();
-							
-							$api->setParam("syncdata:info", null);
-						}
-					}else{
-						igk_wln("args don't match");
-					}
-				$sync->RenderXML();
-				return;
-			break;
-			case "backupdb":
-			$ctrl = igk_getctrl(igk_getv($args, 1));
-			if ($ctrl){
-				// igk_wln("backup controller for : ".$ctrl->Name);
-				// igk_wln($ctrl->getDataAdapterName());
-				$tb = igk_db_get_ctrl_tables($ctrl);
-				$schema = igk_html_node_DataSchema();
-				// $igk_api_mysql_get_table_definition = igk_getctrl("api")->mysql("get_table_definition");
-				// $apt = igk_get_data_adapter($ctrl->getDataAdapterName());
-				$apt = igk_get_data_adapter($ctrl->getDataAdapterName());
-				//igk_wln($apt);
-				if ($apt->connect()){
-					 $entries = $schema->addNode("Entries");
-					// igk_wln("ok");
-					foreach($tb as $k=>$v){
-						$rep = $schema->addNode("DataDefinition")->setAttributes(array(
-							"TableName"=>$v
-						));
-						igk_getctrl("app_api")->mysql("get_table_definition", $rep, $v, $apt, null, $entries);
-						
-					
-					}
-					$apt->close();
-				}
-				
-				$schema->RenderXML();
-				
-				return $schema;
-				
-				
-			}
-				break;
-		}
-}
-*/
-
-?>
+ 

@@ -1,8 +1,9 @@
 <?php
-/** DESC: Generated Display Name of Component functions
-* file : names.pinc
-* date : 2020-13-07_18:58:01
+/** DESC: Generated Display Name of Component functions 
+* file : names.pinc 
+* date : 2021-07-03_02:30:14 
 */
+$htab["NoTagNode"]="NoTagNode";
 $htab["Style"]="Style";
 $htab["TextEdit"]="TextEdit";
 $htab["a"]="A";
@@ -143,7 +144,6 @@ $htab["mstitle"]="MsTitle";
 $htab["mvetloginform"]="MvetLoginForm";
 $htab["navigationlink"]="NavigationLink";
 $htab["newsletterregistration"]="NewsLetterRegistration";
-$htab[IGK_HTML_NOTAG_ELEMENT]=IGK_HTML_NOTAG_ELEMENT;
 $htab["notification"]="Notification";
 $htab["notifyhost"]="NotifyHost";
 $htab["notifyhostbind"]="NotifyHostbind";

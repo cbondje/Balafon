@@ -106,8 +106,8 @@ $uri=igk_getv($tab, 0);
 $params=igk_getv($tab, 1);
 $page=$uri;
 $lang=null;
-$actionctrl=igk_getctrl(IGK_SYSACTION_CTRL);
-if(igk_io_handle_redirection_uri($actionctrl, $page, $params, 1))
+ 
+if( ($actionctrl=igk_getctrl(IGK_SYSACTION_CTRL)) && igk_io_handle_redirection_uri($actionctrl, $page, $params, 1))
     return;
 try {
     if(igk_sys_ispagesupported($page)){

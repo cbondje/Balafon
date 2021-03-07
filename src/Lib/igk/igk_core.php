@@ -12,6 +12,30 @@ defined("IGK_FRAMEWORK") || die("REQUIRE FRAMEWORK - No direct access allowed");
 define(basename(__FILE__), 1);
 use function igk_resources_gets  as __;
 
+///<summary>autoload class function</summary>
+function igk_auto_load_class($name, $entryNS, $classdir, & $refile=null ){
+    static $bindfile = null;
+    if ($bindfile === null){
+        $bindfile = function(){
+            include_once(func_get_arg(0));
+        };
+    }
+    if(empty($entryNS) || (strpos($name, $entryNS) === 0)){
+        $n = $name;
+        if(!empty($entryNS)){
+            $n=substr($name, strlen($entryNS));
+            while((strlen($n) > 0) && ($n[0] == "\\")){
+                $n=substr($n, 1);
+            }
+        }
+        if(file_exists($file=igk_io_dir($classdir.$n.".php"))){            
+            $bindfile($file);            
+            $refile = $file;
+            return 1;
+        } 
+    }
+    return 0;
+}
 function igk_io_get_script($f, $args=null){
     if (file_exists($f)){
         return "?>".file_get_contents($f);
@@ -456,7 +480,7 @@ class IGKLoader {
 			}
 		}
         if(!class_exists($cl)){
-            igk_die("model $name not found .".$cl. " = ".$cl_c);
+            throw new IGKException("model [$name] not found.");
         }
         $m[$n]=new $cl($igk_c);
         igk_set_env($key, $m);
@@ -627,7 +651,7 @@ final class IGKServer{
             $this->data[$k]=$v;
         }
         $this->IGK_SCRIPT_FILENAME=igk_html_uri(realpath($this->SCRIPT_FILENAME));
-        $this->IGK_DOCUMENT_ROOT=igk_html_uri(realpath($this->DOCUMENT_ROOT))."/";
+        $this->IGK_DOCUMENT_ROOT= igk_html_uri(realpath($this->DOCUMENT_ROOT))."/";
         $sym_root=$this->IGK_DOCUMENT_ROOT !== $this->DOCUMENT_ROOT;
         $c_script=$this->IGK_SCRIPT_FILENAME;
         if(!$sym_root)

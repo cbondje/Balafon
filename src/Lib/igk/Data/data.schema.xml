@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <data-schemas>
 	<Entries>
 		<Rows For="tbigk_user_info_types">
@@ -14,7 +15,6 @@
 			<Row clName="igkdev"  clCategory="framework" clWebSite="//igkdev.com" clDescription="web site creator" />
 		</Rows>
 	</Entries>
-
 	<DataDefinition TableName="tbigk_apps" >
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clName" clType="VARCHAR" clTypeLength="50" clNotNull="True" clIsUnique="True" />
@@ -152,8 +152,8 @@
         <Column clName="clPicture" clType="VARCHAR" clTypeLength="255" clDescription="uri of 255 max length" />
         <Column clName="clLevel" clType="Int" clTypeLength="11" clNotNull="True" />
         <Column clName="clStatus" clType="Int" clTypeLength="11" clDefault="-1" clDescription="state of the account, -1 = not activated, 1=activated, 0or2=blocked" clNotNull="True" />
-        <Column clName="clDate" clType="DATETIME" clDescription="registration date" clNotNull="True" />
-        <Column clName="clLastLogin" clType="DATETIME" clDescription="last login" clNotNull="True" />
+        <Column clName="clDate" clType="DATETIME" clDescription="registration date" clNotNull="True" clDefault="CURRRENT_TIMESTAMP" />
+        <Column clName="clLastLogin" clType="DATETIME" clDescription="last login" clNotNull="True" clDefault="CURRRENT_TIMESTAMP"/>
         <Column clName="clParent_Id" clType="Int" clTypeLength="11" clDescription="Parent of this account" clLinkType="tbigk_users" />
         <Column clName="clClassName" clType="VARCHAR" clTypeLength="255" clDescription="if clParent_Id then object refer to class name that initialize the sub user" />
     </DataDefinition>

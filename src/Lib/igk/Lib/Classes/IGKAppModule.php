@@ -2,7 +2,7 @@
 // author: C.A.D. BONDJE DOUE
 // licence: IGKDEV - Balafon @ 2019
 // Description: Use to add extra module to system. that module include function declared on .module.pinc file with the $reg array
-
+ 
 ///<summary>represent application module class </summary>
 /**
 * represent application module class
@@ -14,7 +14,10 @@ final class IGKAppModule extends IGKControllerBase{
     private $m_listener;
     private $m_src;
     private $m_initializer; // used to extend modul class properties
-
+    private $m_configs;
+    public function config($name, $default=null){
+        return igk_conf_get($this->m_configs, $name, $default, 1);
+    }
 
     public function initClass($classname){
         if (class_exists($classname)){
@@ -79,7 +82,7 @@ final class IGKAppModule extends IGKControllerBase{
             if (!is_dir($dir)){
                 $dir = "";
             } 
-            $entry_ns = str_replace("/","\\", igk_get_module_name($dir));
+            $entry_ns = $this->config("entry_NS", str_replace("/","\\", igk_get_module_name($dir)));
             $libdir=$classLib;
             spl_autoload_register(function($n)use($entry_ns, $libdir){
              
@@ -124,9 +127,11 @@ final class IGKAppModule extends IGKControllerBase{
         $reg=function($name, $callback){
             $this->reg_function($name, $callback);
         };
-        eval("?>".$s);
+        $data = eval("?>".$s);
         $this->m_src=$s;
-
+        if ($data){
+            $this->m_configs = $data; 
+        }
     }
     ///<summary>Represente _initconfig function</summary>
     ///<param name="configs" ref="true"></param>
@@ -328,7 +333,7 @@ final class IGKAppModule extends IGKControllerBase{
         }
     }
     public function set($name, $value){
-        return $this->setEnvParam($name, $default);
+        return $this->setEnvParam($name, $value);
     }
     public function get($name, $default=null){
         return $this->getEnvParam($name, $default);

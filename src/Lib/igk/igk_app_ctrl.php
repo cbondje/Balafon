@@ -500,7 +500,7 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
             igk_wln("user not allowed to");
             igk_exit();
         }
-        $f=$this->getDataDir()."/data.schema.xml";
+        $f=$this->getDataDir()."/".IGK_SCHEMA_FILENAME;
         if(file_exists($f)){
             $s=IGKHtmlReader::LoadFile($f);
             $s->RenderXML();
@@ -821,6 +821,7 @@ EOF;
             extract(igk_pattern_view_extract($this, $p, 1)); 
             igk_ctrl_change_lang($this, $p);
         }
+        $ctrl = $this;
         include(IGK_LIB_DIR."/Inc/igk_sitemap.pinc");
         $tn=$this->TargetNode;
 
@@ -1082,7 +1083,7 @@ EOF;
     */
     public function load_data_files(){
         if(isset($_FILES["clFileName"])){
-            $f=$this->getDataDir()."/data.schema.xml";
+            $f=$this->getDataDir()."/".IGK_SCHEMA_FILENAME;
             $dom=IGKHtmlItem::CreateWebNode("dummy");
             $dom->Load(IGKIO::ReadAllText($_FILES["clFileName"]["tmp_name"]));
             $d=$this->getAppDocument();
@@ -1357,9 +1358,9 @@ EOF;
                 igk_html_add($this->TargetNode, $doc->body->addBodyBox()->ClearChilds());
             }
             else{
-                igk_wln("Session probably destroyed. Document is null");
-                igk_wln("session time out ". ini_get('session.gc_maxlifetime'));
-                igk_die("//!\\ Session kill");
+                igk_ilog(implode(",", ["Session probably destroyed. Document is null",
+                "session time out ". ini_get('session.gc_maxlifetime')]));
+                igk_die("/!\\ Session kill");
             }
         }
         $this->setEnvParam(IGK_CTRL_VIEW_CONTEXT_PARAM_KEY, $v_context);

@@ -48,15 +48,13 @@ RewriteCond "%{REQUEST_FILENAME}" /{$config}$
 #RewriteRule ^(/)?(.)*$  "/{$config}/?__c=613" [QSA,R=301,L]
 RewriteRule ^(/)?(.)*$  "/{$config}/" [QSA,L]
 
+# require sitemap
+# default favicon
 
-#site map redirection
-RewriteCond "%{REQUEST_FILENAME}" /sitemap(\.xml)?$
-RewriteRule ^(/)?(.)*$  "Lib/igk/igk_sitemap.php" [QSA,L]
-
-#default favicon file requested by browser but not present
-RewriteCond "%{REQUEST_FILENAME}" /favicon.ico$
-RewriteCond "%{REQUEST_FILENAME}" !-f
-RewriteRule ^(/)?(.)*$  "Lib/igk/igk_favicon.php" [QSA,L]
+# default favicon file requested by browser but not present
+# RewriteCond "%{REQUEST_FILENAME}" /favicon.ico$
+# RewriteCond "%{REQUEST_FILENAME}" !-f
+# RewriteRule ^(/)?(.)*$  "Lib/igk/igk_favicon.php" [QSA,L]
 
 
 # force for single point access 
@@ -65,9 +63,9 @@ RewriteCond "%{REQUEST_FILENAME}" !-d
 RewriteRule ^(/)?(.+)(/)?$  "index.php?__c=906" [QSA,L]
 
 
-RewriteCond "%{REQUEST_FILENAME}" !^redirect:
-RewriteCond "%{REQUEST_FILENAME}" !-f
-RewriteRule ^(/)?(.+)(/)?$  "{$berror_901}&rwc=01&rwf=%{REQUEST_FILENAME}" [QSA,L]
+# RewriteCond "%{REQUEST_FILENAME}" !^redirect:
+# RewriteCond "%{REQUEST_FILENAME}" !-f
+# RewriteRule ^(/)?(.+)(/)?$  "{$berror_901}&rwc=01&rwf=%{REQUEST_FILENAME}" [QSA,L]
  
 
 #subdomain detection
@@ -84,14 +82,14 @@ RewriteRule ^(/)?(.)*$  "index.php?rwc=2" [QSA,L]
 
  
 #rewrite global
-RewriteCond "%{REQUEST_FILENAME}" !^redirect:
-RewriteCond "%{SERVER_ADDR}" "%{HTTP_HOST}"
-RewriteCond "%{REQUEST_FILENAME}" !-f
-RewriteCond "%{REQUEST_FILENAME}" !-d
-RewriteRule ^(/)?(.+)(/)?$  "{$berror_901}&rwc=3&rwd=%{HTTP_HOST}&rwip=%{SERVER_ADDR}&rwn=%{SERVER_ADDR}" [QSA,L]
+# RewriteCond "%{REQUEST_FILENAME}" !^redirect:
+# RewriteCond "%{SERVER_ADDR}" "%{HTTP_HOST}"
+# RewriteCond "%{REQUEST_FILENAME}" !-f
+# RewriteCond "%{REQUEST_FILENAME}" !-d
+# RewriteRule ^(/)?(.+)(/)?$  "{$berror_901}&rwc=3&rwd=%{HTTP_HOST}&rwip=%{SERVER_ADDR}&rwn=%{SERVER_ADDR}" [QSA,L]
 
 #not found at all. never reach
-RewriteCond "%{REQUEST_FILENAME}" !-f
-RewriteRule ^(/)?(.+)(/)?$  "{$berror_901}&rwc=notfound&f=%{REQUEST_FILENAME}" [QSD,L]
+# RewriteCond "%{REQUEST_FILENAME}" !-f
+# RewriteRule ^(/)?(.+)(/)?$  "{$berror_901}&rwc=notfound&f=%{REQUEST_FILENAME}" [QSD,L]
 </IfModule>
 EOF;

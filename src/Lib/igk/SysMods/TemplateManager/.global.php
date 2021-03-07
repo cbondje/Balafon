@@ -124,7 +124,7 @@ function igk_template_default_script_content(){
 */
 function igk_template_get_ctrls(){
     $t=array();
-    if($g=igk_getctrl(igk_template_class_uri())){
+    if($g=igk_getctrl(igk_template_class_uri(), false)){
         $db=$g->Db;
         if($db){
             $q=$g->Db->getTemplateNames();

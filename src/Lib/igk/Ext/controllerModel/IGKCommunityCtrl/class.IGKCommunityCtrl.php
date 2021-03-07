@@ -30,7 +30,7 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 		return false;
 	}
 
-	public function getUseDataSchema(){
+	protected function getUseDataSchema(){
 		return 0;
 	}
 

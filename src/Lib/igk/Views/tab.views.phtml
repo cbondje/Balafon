@@ -9,7 +9,10 @@
 // @url: https://www.igkdev.com
 /** @var IGKControllerBase $s_ctrl */
 
+
 use function igk_resources_gets as __;
+use IGK\Helper\IGKControllerHelper;
+
 ($s_ctrl == null) && igk_die("selected controller not found");
 $div=$t;
 if (!igk_is_ajx_demand())
@@ -25,9 +28,9 @@ if(method_exists($ctrl, "ListViewFile")){
     $t=$s_ctrl->ListViewFile();
 }
 else{
-    $dir=$s_ctrl->getViewDir();
-    $t=igk_io_getfiles($dir, "/\.phtml$/", true);
-    $ln=strlen($dir) + 1;
+    list($t, $ln) = IGKControllerHelper::GetViewFiles($s_ctrl);
+
+
 }
 if($t && count($t) > 0){
     sort($t);

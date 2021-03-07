@@ -366,7 +366,7 @@ class IGKApplicationManager extends IGKControllerBase{
     /**
     * Represente getUseDataSchema function
     */
-    public function getUseDataSchema(){
+    protected function getUseDataSchema(){
         return true;
     }
     ///<summary>Represente getUser function</summary>
