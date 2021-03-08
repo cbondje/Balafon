@@ -34570,7 +34570,7 @@ final class IGKIO{
     /**
     * REMOVE FOLDER
     */
-    public static function RmDir($dir, $recursive=true){
+    public static function RmDir($dir, $recursive=true, $callback=null){
         if(!is_dir($dir))
             return false;
         $pdir=array($dir);
@@ -34584,6 +34584,9 @@ final class IGKIO{
                 if(($f == ".") || ($f == ".."))
                     continue;
                 $v=igk_io_dir($dir."/".$f);
+                if ($callback && !$callback($v)){
+                    continue;
+                }
                 if(is_dir($v)){
                     if($recursive){
                         array_push($pdir, $v);
