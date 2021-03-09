@@ -425,14 +425,17 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
     */
     public function connect($dbnamemix=null, $selectdb=true){
         $this->makeCurrent();
+        
         if(($this->m_dbManager == null) || (!$this->m_dbManager->connect())){
             igk_ilog_assert(!igk_sys_env_production(), $this->m_dbManager ? "can't connect with DBManager: ".get_class($this->m_dbManager): "dbManager is null");
             return false;
         }
         $dbs=igk_get_env("sys://Db/NODBSELECT");
-        $dbname=null;
+        $dbname = $this->m_dbname;
+
         if(is_string($dbnamemix))
             $dbname=$dbnamemix;
+
         if(!$dbs && $selectdb){
             $dbname=$dbname == null ? $this->app->Configs->db_name: $dbname;
             if(!$this->selectdb($dbname)){

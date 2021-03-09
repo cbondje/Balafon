@@ -651,7 +651,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         switch($fmt){
             case 'xml':
             default:
-            $rep=igk_createNode("data-schemas");
+            $rep=igk_createxmlnode("data-schemas");
             $rep["Date"]=date('Y-m-d');
             $rep["Version"]=$this->getDatabaseVersion();
             $rep["Name"]=basename($this->getDatabaseFileName());
