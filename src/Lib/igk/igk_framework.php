@@ -62166,134 +62166,6 @@ final class IGKDbCacheData extends IGKObject{
         return true;
     }
 }
-///<summary>Represente class: IGKDbColumnInfo</summary>
-/**
-* Represente IGKDbColumnInfo class
-*/
-final class IGKDbColumnInfo extends IGKObject {
-    var $clAutoIncrement;
-	var $clAutoIncrementStartIndex;
-    var $clColumnMemberIndex;
-    var $clDefault;
-    var $clDescription;
-    var $clFormRefKey;
-    var $clInputType;
-    var $clInsertFunction;
-    var $clIsIndex;
-    var $clIsNotInQueryInsert;
-    var $clIsPrimary;
-    var $clIsUnique;
-    var $clIsUniqueColumnMember;
-    var $clLinkColumn; // link column name
-    var $clLinkTableDisplay;
-    var $clLinkType;
-    var $clName;
-    var $clNotNull;
-    var $clPattern;
-    var $clType;
-    var $clTypeLength;
-    var $clUpdateFunction;
-    ///<summary>Represente __construct function</summary>
-    ///<param name="array" default="null"></param>
-    /**
-    * Represente __construct function
-    * @param mixed $array the default value is null
-    */
-    public function __construct($array=null){
-        $this->clType="Int";
-        $this->clTypeLength=11;
-        $this->clNotNull=false;
-        $this->clInputType="text";
-        if(is_array($array)){
-            $t=get_class_vars(get_class($this));
-            foreach($array as $k=>$v){
-                if(!array_key_exists($k, $t)){
-                    continue;
-                }
-                if(preg_match("/^(false|true)$/i", $v)){
-                    $v=igk_getbool($v);
-                }
-                $this->$k=$v;
-            }
-        }
-        if(!igk_db_is_typelength($this->clType))
-            $this->clTypeLength=null;
-        if(!$this->clNotNull && empty($this->clDefault) && preg_match("/(int|float)/i", $this->clType)){
-            $this->clDefault=0;
-        }
-    }
-    ///<summary>Represente __get function</summary>
-    ///<param name="key"></param>
-    /**
-    * Represente __get function
-    * @param mixed $key
-    */
-    public function __get($key){
-        $d=get_class_vars(get_class($this));
-        if(array_key_exists($key, $d)){
-            return $this->$key;
-        }
-        igk_die("__get Not implements : ".$key. " ".get_class($this));
-    }
-    ///<summary>Represente __set function</summary>
-    ///<param name="key"></param>
-    ///<param name="value"></param>
-    /**
-    * Represente __set function
-    * @param mixed $key
-    * @param mixed $value
-    */
-    public function __set($key, $value){
-        igk_die("variable : [". $key. "] Not Implements");
-    }
-    ///<summary>Represente __toString function</summary>
-    /**
-    * Represente __toString function
-    */
-    public function __toString(){
-        return "IGKdbColumnInfo[".$this->clName."]";
-    }
-    ///get association info array
-    /**
-    */
-    public static function AssocInfo($array, $tablename=null){
-        if(!is_array($array))
-            igk_die("array is not an array");
-        $t=array();
-        foreach($array as $k=>$v){
-            if(is_object($v)){
-                if($k !== $v->clName){
-                    $t[$v->clName]=$v;
-                }
-                else{
-                    $t[$k]=$v;
-                }
-            }
-            else{
-                igk_debug_wln("v is not an object : ".igk_count($array));
-            }
-        }
-        return $t;
-    }
-    ///<summary>Represente GetColumnInfo function</summary>
-    /**
-    * Represente GetColumnInfo function
-    */
-    public static function GetColumnInfo(){
-        return get_class_vars("IGKDbColumnInfo");
-    }
-    ///<summary>Represente NewEntryInfo function</summary>
-    /**
-    * Represente NewEntryInfo function
-    */
-    public static function NewEntryInfo(){
-        return new IGKDbColumnInfo(array(
-            IGK_FD_NAME=>IGK_FD_ID,
-            IGK_FD_TYPE=>"Int",
-            "clAutoIncrement"=>true
-        ));
-    }
-}
 ///<summary> represent IGKDbEntiry object </summary>
 /**
 *  represent IGKDbEntiry object
@@ -76924,7 +76796,7 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
 						"`{$dbname}`.`{$tbname}`", $nk, $v->clName, IGKString::Format("`{0}`.`{1}`(`{2}`)",
 						$dbname,
 						$v->clLinkType,
-						igk_getv($v, "clLinkColumn", "clId")
+						igk_getv($v, "clLinkColumn", IGK_FD_ID)
 					));
                     $sender=$this->getSender();
                     if($this->tableExists($v->clLinkType)){
@@ -81056,7 +80928,18 @@ class IGKResourceUriResolver{
 */
 class IGKSQLQueryUtils {
     const AVAIL_FUNC=['AES_ENCRYPT', 'BIN', 'CHAR', 'COMPRESS', 'CURRENT_USER', 'AES_DECRYPTDATABASE', 'DAYNAME', 'DES_DECRYPT', 'DES_ENCRYPT', 'ENCRYPT', 'HEX', 'INET6_NTOA', 'INET_NTOA', 'LOAD_FILE', 'LOWER', 'LTRIM', 'MD5', 'MONTHNAME', 'OLD_PASSWORD', 'PASSWORD', 'QUOTE', 'REVERSE', 'RTRIM', 'SHA1', 'SOUNDEX', 'SPACE', 'TRIM', 'UNCOMPRESS', 'UNHEX', 'UPPER', 'USER', 'UUID', 'VERSION', 'ABS', 'ACOS', 'ASCII', 'ASIN', 'ATAN', 'BIT_COUNT', 'BIT_LENGTH', 'CEILING', 'CHAR_LENGTH', 'CONNECTION_ID', 'COS', 'COT', 'CRC32', 'CURRENT_DATE', 'CURRENT_TIME', 'DATE', 'DAYOFMONTH', 'DAYOFWEEK', 'DAYOFYEAR', 'DEGREES', 'EXP', 'FLOOR', 'FROM_DAYS', 'FROM_UNIXTIME', 'HOUR', 'INET6_ATON', 'INET_ATON', 'LAST_DAY', 'LENGTH', 'LN', 'LOG', 'LOG10', 'LOG2', 'MICROSECOND', 'MINUTE', 'MONTH', 'NOW', 'OCT', 'ORD', 'PI', 'QUARTER', 'RADIANS', 'RAND', 'ROUND', 'SECOND', 'SEC_TO_TIME', 'SIGN', 'SIN', 'SQRT', 'SYSDATE', 'TAN', 'TIME', 'TIMESTAMP', 'TIME_TO_SEC', 'TO_DAYS', 'TO_SECONDS', 'UNCOMPRESSED_LENGTH', 'UNIX_TIMESTAMP', 'UTC_DATE', 'UTC_TIME', 'UTC_TIMESTAMP', 'UUID_SHORT', 'WEEK', 'WEEKDAY', 'WEEKOFYEAR', 'YEAR', 'YEARWEEK'];
-    private static $LENGTHDATA=array("int"=>"Int", "varchar"=>"VarChar");
+    private static $LENGTHDATA=array(        
+        "varchar"=>"VarChar"
+    );
+    protected static function ResolvType($t){
+        return igk_getv([
+            "int"=>"Int",
+            "uint"=>"Int",
+            "udouble"=>"Double",
+            "bigint"=>"BIGINT",
+            "ubigint"=>"BIGINT"
+        ], $t = strtolower($t), $t);    
+    }
     ///<summary>Represente CreateTableQuery function</summary>
     ///<param name="tbname"></param>
     ///<param name="columninfo"></param>
@@ -81103,20 +80986,24 @@ class IGKSQLQueryUtils {
                 $query .= ",";
             $v_name=igk_db_escape_string($v->clName);
             $query .= "`".$v_name."` ";
-            $type=igk_getev($v->clType, "Int");
+            $type=igk_getev(self::ResolvType($v->clType), "Int");
             $query .= igk_db_escape_string($type);
             $s=strtolower($type);
             $number=false;
             if(isset(self::$LENGTHDATA[$s])){
                 if($v->clTypeLength > 0){
                     $number=true;
-                    $query .= "(".igk_db_escape_string($v->clTypeLength).") ";
+                    $query .= "(".igk_db_escape_string($v->clTypeLength).") ";                   
                 }
                 else
                     $query .= " ";
             }
             else
                 $query .= " ";
+            if ($v->IsUnsigned()){
+                $query .= "unsigned ";
+            }
+
             if(!$number){
                 if(($v->clNotNull) || ($v->clAutoIncrement))
                     $query .= "NOT NULL ";
