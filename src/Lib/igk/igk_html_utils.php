@@ -946,6 +946,10 @@ function igk_html_form_init(){
     $o["value"]=1;
     $o["type"]="hidden";
     $o->renderAJX();
+    igk_html_form_cref();
+   
+}
+function igk_html_form_cref(){
     $o=igk_createnode("input");
     $o["name"]=base64_encode(igk_app()->Session->getCRef());
     $o["value"]=1;

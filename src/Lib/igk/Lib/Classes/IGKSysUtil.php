@@ -1,6 +1,19 @@
 <?php
-
-class IGKSysUtil{
+///<summary> System utility class </summary>
+/**
+ * 
+ * @package 
+ */
+final class IGKSysUtil{
+    private function __construct(){
+        
+    }
+    /**
+     * Retreive all managed data information
+     * @param string $dataadapter 
+     * @return array 
+     * @throws Exception 
+     */
     public static function GetConfigDataInfo($dataadapter = IGK_MYSQL_DATAADAPTER){
         $ctrl= igk_app()->getControllerManager()->getControllers();
         $tables = [];
@@ -10,6 +23,13 @@ class IGKSysUtil{
         return $tables;
     }
 
+    /**
+     * retriceve all data info form controller
+     * @param mixed $controller 
+     * @param string $dataadapter 
+     * @return null|array 
+     * @throws Exception 
+     */
     public static function GetControllerConfigDataInfo($controller, $dataadapter=IGK_MYSQL_DATAADAPTER){
         $tables =[];
         $v = $controller;

@@ -2,66 +2,69 @@
 
 namespace IGK\System\Installers;
 
-class InstallSite{
-    public static function Install($folder, $packagefolder=null){
+class InstallSite
+{
+    public static function Install($folder, $packagefolder = null)
+    {
         $installer = new InstallSite;
         return $installer->installSite($folder, $packagefolder);
     }
-    public function installSite($folder, $packagefolder=null){
-        
-$core = IGK_LIB_FILE;
-$src = rtrim($folder, "/")."/src";
+    public function installSite($folder, $packagefolder = null)
+    {
 
-if (file_exists($src)){
-    return false;
-}
+        $core = IGK_LIB_FILE;
+        $src = rtrim($folder, "/") . "/src";
 
-if (!igk_io_createdir($src)){
-    return false;
-}
-igk_io_createdir($src."/application");
-igk_io_createdir($src."/public");
-igk_io_createdir($src."/temp");
-igk_io_createdir($src."/logs");
-igk_io_createdir($src."/crons");
-igk_io_createdir($src."/test");
-// generate git ingore
-igk_io_w2file($folder."/.gitignore", implode("\n", [
-    "*/.vscode/**",
-    ".gitignore",
-    "phpunit.xml.dist",
-    "phpunit-watcher.yml",
-    "src/application/Packages/vendor/*"
-]));
-// generate phpunit-watcher file
-igk_io_w2file($folder."/phpunit-watcher.yml", implode("\n", []));
+        if (file_exists($src)) {
+            return false;
+        }
 
-// generate phpunit.xml.dist distribution
-$php_xml = igk_createxmlnode("phpunit");
-$php_xml["xmlns:xsi"]="http://www.w3.org/2001/XMLSchema-instance";
-$php_xml["xsi:noNamespaceSchemaLocation"]="./src/application/Packages/vendor/phpunit/phpunit/phpunit.xsd";
-$php_xml["bootstrap"]= "./src/application/Packages/vendor/autoload.php";
-$php_xml["colors"]="true";
-ob_start();
+        if (!igk_io_createdir($src)) {
+            return false;
+        }
+        igk_io_createdir($src . "/application");
+        igk_io_createdir($src . "/public");
+        igk_io_createdir($src . "/temp");
+        igk_io_createdir($src . "/logs");
+        igk_io_createdir($src . "/crons");
+        igk_io_createdir($src . "/test");
+        // generate git ingore
+        igk_io_w2file($folder . "/.gitignore", implode("\n", [
+            "*/.vscode/**",
+            ".gitignore",
+            "phpunit.xml.dist",
+            "phpunit-watcher.yml",
+            "src/application/Packages/vendor/*"
+        ]));
+        // generate phpunit-watcher file
+        igk_io_w2file($folder . "/phpunit-watcher.yml", implode("\n", []));
 
-$php_xml->renderXML((object)["xmldefinition"=>1, "noheader"=>1]);
-$ob = ob_get_clean();
-igk_io_w2file($folder."/phpunit.xml.dist", $ob);
+        // generate phpunit.xml.dist distribution
+        $php_xml = igk_createxmlnode("phpunit");
+        $php_xml["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance";
+        $php_xml["xsi:noNamespaceSchemaLocation"] = "./src/application/Packages/vendor/phpunit/phpunit/phpunit.xsd";
+        $php_xml["bootstrap"] = "./src/application/Packages/vendor/autoload.php";
+        $php_xml["colors"] = "true";
+        ob_start();
+
+        $php_xml->renderXML((object)["xmldefinition" => 1, "noheader" => 1]);
+        $ob = ob_get_clean();
+        igk_io_w2file($folder . "/phpunit.xml.dist", $ob);
 
 
-if (!is_link($lnk = $src."/application/Lib/igk"))
-{
-    igk_io_createdir(dirname($lnk));
-    symlink(dirname($core) , $lnk);
-}
+        if (!is_link($lnk = $src . "/application/Lib/igk")) {
+            igk_io_createdir(dirname($lnk));
+            symlink(dirname($core), $lnk);
+        }
 
-if (!empty($packagefolder) && !is_link($lnk = $src."/application/".IGK_PACKAGES_FOLDER))
-{
-    symlink($packagefolder , $lnk);
-}
+        if (!empty($packagefolder) && !is_link($lnk = $src . "/application/" . IGK_PACKAGES_FOLDER)) {
+            symlink($packagefolder, $lnk);
+        }
 
-$index = $src."/public/index.php"; 
-igk_io_w2file($index, <<<EOF
+        $index = $src . "/public/index.php";
+        igk_io_w2file(
+            $index,
+            <<<EOF
 <?php 
 // 
 // @description: Balafon entry point
@@ -78,21 +81,23 @@ catch(Exception \$ex){
 igk_ilog("Error: ".\$ex->getMessage()); 
 }
 EOF
-);
-$listen = igk_getr("listen");
-$environment = igk_getr("environment", "development");
-if (empty($environment)){
-$environment = "development";
-}
-$tport = "80";
-if (is_numeric($listen) && (strlen($listen)>=4)){
-$tport = $listen;
-$listen = "Listen ".$tport."\n";
-} else 
-$listen = "";
-$root = $src."/public";
+        );
+        $listen = igk_getr("listen");
+        $environment = igk_getr("environment", "development");
+        if (empty($environment)) {
+            $environment = "development";
+        }
+        $tport = "80";
+        if (is_numeric($listen) && (strlen($listen) >= 4)) {
+            $tport = $listen;
+            $listen = "Listen " . $tport . "\n";
+        } else
+            $listen = "";
+        $root = $src . "/public";
 
-igk_io_w2file($src."/vhost.conf", <<<EOF
+        igk_io_w2file(
+            $src . "/vhost.conf",
+            <<<EOF
 {$listen}<VirtualHost *:$tport>
 SetEnv ENVIRONMENT {$environment}
 SetEnv IGK_LIB_DIR {$src}/application/Lib/igk
@@ -118,15 +123,12 @@ AddEncoding deflate js
 </Directory>
 </VirtualHost>
 EOF
-);
-// create vhost link on apache
-$vhost_dir = "/private/etc/apache2/other";
-if (is_dir($vhost_dir)){
-$conf_file = $vhost_dir."/vhost.".basename($folder).".conf";
-igk_io_symlink($conf_file, $src."/vhost.conf");
-}
-
-
-
-}
+        );
+        // create vhost link on apache
+        $vhost_dir = "/private/etc/apache2/other";
+        if (is_dir($vhost_dir)) {
+            $conf_file = $vhost_dir . "/vhost." . basename($folder) . ".conf";
+            igk_io_symlink($conf_file, $src . "/vhost.conf");
+        }
+    }
 }

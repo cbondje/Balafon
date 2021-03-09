@@ -49,25 +49,25 @@
         <Column clName="clName" clType="VARCHAR" clTypeLength="30" clNotNull="True" />
         <Column clName="clDateTime" clType="DATETIME" />
     </DataDefinition>
-    <DataDefinition TableName="tbigk_data_types" >
+    <DataDefinition TableName="tbigk_data_types" Description="Store framework data types">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clName" clType="VARCHAR" clTypeLength="170" clNotNull="True" clIsUnique="True" />
         <Column clName="clDescription" clType="TEXT" clDescription="data description" />
         <Column clName="clRegex" clType="TEXT" clDescription="Regex used to validate data" />
     </DataDefinition>
-    <DataDefinition TableName="tbigk_groupauthorizations" >
+    <DataDefinition TableName="tbigk_groupauthorizations" Description="Store framework group authorisation">
         <Column clName="clId" clType="Int" clTypeLength="10" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clGroup_Id" clType="Int" clTypeLength="10" clNotNull="True" clLinkType="tbigk_groups" />
         <Column clName="clAuth_Id" clType="Int" clTypeLength="10" clNotNull="True" clLinkType="tbigk_authorizations" />
         <Column clName="clGrant" clType="Int" clTypeLength="10" clDescription="Grant access depending on the authorization usage"
             clNotNull="True" />
     </DataDefinition>
-    <DataDefinition TableName="tbigk_groups" >
+    <DataDefinition TableName="tbigk_groups" Description="Store framework groups" >
         <Column clName="clId" clType="Int" clTypeLength="10" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clName" clType="VARCHAR" clTypeLength="170" clNotNull="True" clIsUnique="True" />
         <Column clName="clDescription" clType="VARCHAR" clTypeLength="150" />
     </DataDefinition>
-    <DataDefinition TableName="tbigk_humans">
+    <DataDefinition TableName="tbigk_humans" Description="Store human list">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clGender" clType="VARCHAR" clTypeLength="1" clDescription="m or f for male or female" clNotNull="True" />
         <Column clName="clFirstName" clType="VARCHAR" clTypeLength="100" />
@@ -97,12 +97,12 @@
         <Column clName="clRelease" clType="DATETIME" />
         <Column clName="clVersion" clType="TEXT" clDescription="plugin version " />
     </DataDefinition>
-    <DataDefinition TableName="tbigk_reference_models">
+    <DataDefinition TableName="tbigk_reference_models" Description="Store reference domain">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clModel" clType="VARCHAR" clTypeLength="170" clNotNull="True" clIsPrimary="True" />
         <Column clName="clNextValue" clType="Int" clTypeLength="11" clNotNull="True" />
     </DataDefinition>
-    <DataDefinition TableName="tbigk_subdomains">
+    <DataDefinition TableName="tbigk_subdomains" Description="store sub domain">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clName" clType="VARCHAR" clTypeLength="100"
 			clDescription="Subdomain name. exemple. 'mail'  in the .domain.com will be mail.domain.dom"
@@ -141,7 +141,7 @@
         <Column clName="clUser_Id" clType="Int" clTypeLength="10" clLinkType="tbigk_users" />
         <Column clName="clGroup_Id" clType="Int" clTypeLength="10" clLinkType="tbigk_groups" />
     </DataDefinition>
-    <DataDefinition TableName="tbigk_users" >
+    <DataDefinition TableName="tbigk_users" Description="User's tables">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clLogin" clType="VARCHAR" clTypeLength="60" clIsUnique="True" />
         <Column clName="clPwd" clType="VARCHAR" clTypeLength="60" clNotNull="True" clInsertFunction="MD5" clUpdateFunction="MD5" />
@@ -152,8 +152,8 @@
         <Column clName="clPicture" clType="VARCHAR" clTypeLength="255" clDescription="uri of 255 max length" />
         <Column clName="clLevel" clType="Int" clTypeLength="11" clNotNull="True" />
         <Column clName="clStatus" clType="Int" clTypeLength="11" clDefault="-1" clDescription="state of the account, -1 = not activated, 1=activated, 0or2=blocked" clNotNull="True" />
-        <Column clName="clDate" clType="DATETIME" clDescription="registration date" clNotNull="True" clDefault="CURRRENT_TIMESTAMP" />
-        <Column clName="clLastLogin" clType="DATETIME" clDescription="last login" clNotNull="True" clDefault="CURRRENT_TIMESTAMP"/>
+        <Column clName="clDate" clType="DATETIME" clDescription="registration date" clNotNull="True" clDefault="CURRENT_TIMESTAMP" />
+        <Column clName="clLastLogin" clType="DATETIME" clDescription="last login" clNotNull="True" clDefault="CURRENT_TIMESTAMP"/>
         <Column clName="clParent_Id" clType="Int" clTypeLength="11" clDescription="Parent of this account" clLinkType="tbigk_users" />
         <Column clName="clClassName" clType="VARCHAR" clTypeLength="255" clDescription="if clParent_Id then object refer to class name that initialize the sub user" />
     </DataDefinition>
@@ -163,7 +163,7 @@
         <Column clName="clModel" clType="VARCHAR" clTypeLength="170" clNotNull="True" clIsPrimary="True" />
         <Column clName="clNextValue" clType="Int" clTypeLength="11" clNotNull="True" />
     </DataDefinition>
-    <DataDefinition TableName="tbigk_who_uses">
+    <DataDefinition TableName="tbigk_who_uses" Description="Track who use the framework">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clWebSite" clType="VARCHAR" clTypeLength="100" clNotNull="True" clIsUnique="True" />
         <Column clName="clState" clType="Int" clTypeLength="11" />
@@ -171,7 +171,7 @@
         <Column clName="clIP" clType="VARCHAR" clTypeLength="15" />
     </DataDefinition>
 
-	 <DataDefinition TableName="tbigk_connexions">
+	 <DataDefinition TableName="tbigk_connexions" Definition="Store started connexions">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clUser_Id" clType="Int" clNotNull="true" clLinkType="tbigk_users" />
         <Column clName="clDateTime" clType="DATETIME" clNotNull="True" />
@@ -190,7 +190,7 @@
         <Column clName="clSessRegionName" clType="VARCHAR" clTypeLength="30" />
         <Column clName="clSessAgent" clType="Text" />
     </DataDefinition>
-    <DataDefinition TableName="tbigk_guids" clDescription="Store guid on db for living purpose. link to change password for exemple.">
+    <DataDefinition TableName="tbigk_guids" Description="Store guid on db for living purpose. link to change password for exemple.">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clGUID" clType="VARCHAR" clTypeLength="50" clIsUnique="true" />
         <Column clName="clDesc" clType="Text"  />

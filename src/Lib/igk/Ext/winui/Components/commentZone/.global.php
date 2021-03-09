@@ -90,7 +90,7 @@ function igk_comment_init($a,$b,$c){
 	igk_js_bind_wuiscript($c->Document, $CF, ".commentZone.js", $a);
 	return 1;
 }
-function comment_zone_callback($n, $callback, $params=null){
+function igk_comment_zone_callback($n, $callback, $params=null){
 	$c = $n->addDiv();
 	$c["class"]  = "i";
 	$c["style"] = "margin: 2em 0px; padding:10px; ";

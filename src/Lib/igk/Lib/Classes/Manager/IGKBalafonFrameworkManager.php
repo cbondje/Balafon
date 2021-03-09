@@ -8,9 +8,11 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
-///<summary>Represente class: IGKBalafonFrameworkManager</summary>
+namespace IGK\Manager;
+
+///<summary>Framework manager</summary>
 /**
-* Represente IGKBalafonFrameworkManager class
+* Framework manager
 */
 class IGKBalafonFrameworkManager{
     var $handleAllAction;

@@ -9,7 +9,8 @@
 // basi
 
 use function igk_resources_gets as __;
- 
+use IGK\System\Html\Dom\IGKHtmlMeta;
+
 ///<summary>Represente igk_agent_androidversion function</summary>
 /**
 * Represente igk_agent_androidversion function
@@ -52,12 +53,15 @@ function igk_agent_ieversion(){
 * Represente igk_valid_cref function
 * @param mixed $regenerate the default value is 0
 */
-function igk_valid_cref($regenerate=0){
+function igk_valid_cref($regenerate=0, $throwex = 0){
     $sess=igk_app()->Session;
     $cref=base64_encode($sess->getCRef());
     $result=(igk_getr($cref) == 1);
     if($regenerate){
         $sess->generateCref();
+    }
+    if (!$result && $throwex){
+        throw new IGK\System\Security\CrefNotValidException();
     }
     return $result;
 }
@@ -1195,8 +1199,9 @@ function igk_cmp_refobj($o, $i){
     return $r;
 }
 ///<summary>compare two version</summary>
+///<exemple> 1.0.1 vs 1.0.5</exemple>
 /**
-* compare two version
+* compare two version 
 */
 function igk_cmp_version($v1, $v2){
     while(($tb1=explode(".", trim($v1))) && count($tb1) < 4){
@@ -27640,6 +27645,13 @@ function igk_view_handle_action($fname, $params, $redirectfailed=1){
     if($fc){
         igk_set_env(IGKEnvKeys::VIEW_CURRENT_ACTION, $action);
         $ht=array_slice($params, 1);
+        $g = new ReflectionFunction($fc);
+        if (($g->getNumberOfRequiredParameters() == 1) && 
+            ($cl = $g->getParameters()[0]->getClass()) && 
+            ($cl->getName() === IGK\System\Http\Request::class)){
+            $ht = [IGK\System\Http\Request::getInstance()];
+        }
+        // igk_wln_e(__FILE__.":".__LINE__,  $g->getNumberOfRequiredParameters());
         if(igk_count($ht) > 0){
             $fc_result=call_user_func_array($fc, $ht);
         }
@@ -31647,162 +31659,7 @@ abstract class IGKErrors{
     const ConfigMisConfiguration=0x102;
     const NoAPPDIRDEFINED=0x101;
 }
-///<summary>represent a base IGK Framework exception</summary>
-/**
-* represent a base IGK Framework exception
-*/
-class IGKException extends Exception {
-   
-    ///<summary>Represente __construct function</summary>
-    ///<param name="msg"></param>
-    ///<param name="status" default="404"></param>
-    /**
-    * Represente __construct function
-    * @param mixed $msg
-    * @param mixed $status the default value is 404
-    */
-    public function __construct($msg, $code=404, ?\Throwable $throwable=null){
-        parent::__construct($msg, $code, $throwable);        
-    }
-    ///<summary>Represente __toString function</summary>
-    /**
-    * Represente __toString function
-    */
-    public function __toString(){
-        return get_class($this);
-    }
-    ///<summary>Represente GetCallingFunction function</summary>
-    ///<param name="level" default="1"></param>
-    /**
-    * Represente GetCallingFunction function
-    * @param mixed $level the default value is 1
-    */
-    public static function GetCallingFunction($level=1){
-        $e=new Exception();
-        $trace=$e->getTrace();
-        $last_call=$trace[$level];
-        return (object)$last_call;
-    }
-}
-///<summary>Represente class: IGKInvalidXmlReadException</summary>
-/**
-* Represente IGKInvalidXmlReadException class
-*/
-class IGKInvalidXmlReadException extends IGKException{
-    var $offset;
-    ///<summary>Represente __construct function</summary>
-    ///<param name="msg"></param>
-    ///<param name="offset"></param>
-    /**
-    * Represente __construct function
-    * @param mixed $msg
-    * @param mixed $offset the default value is 0
-    */
-    public function __construct($msg, $offset=0){
-        parent::__construct($msg);
-        $this->offset=$offset;
-    }
-}
-///<summary>represent a igk not implement exception</summary>
-/**
-* represent a igk not implement exception
-*/
-class IGKNotImplementException extends IGKException{
-    ///<summary>Represente __construct function</summary>
-    ///<param name="func"></param>
-    /**
-    * Represente __construct function
-    * @param mixed $func
-    */
-    public function __construct($func){
-        parent::__construct(__("Not Implement [0]", $func));
-    }
-}
-///<summary>Represente class: IGKNotImplementMethodException</summary>
-/**
-* Represente IGKNotImplementMethodException class
-*/
-class IGKNotImplementMethodException extends IGKException{
-    ///<summary>Represente __construct function</summary>
-    ///<param name="method"></param>
-    /**
-    * Represente __construct function
-    * @param mixed $method
-    */
-    public function __construct($method){
-        parent::__construct($method);
-    }
-}
-///<summary>Represente class: IGKOperationNotValidException</summary>
-/**
-* Represente IGKOperationNotValidException class
-*/
-final class IGKOperationNotValidException extends IGKException{
-    ///<summary>Represente __construct function</summary>
-    ///<param name="msg"></param>
-    /**
-    * Represente __construct function
-    * @param mixed $msg
-    */
-    public function __construct($msg){
-        parent::__construct($msg);
-    }
-}
-///<summary>Represente class: IGKResourceNotFoundException</summary>
-/**
-* Represente IGKResourceNotFoundException class
-*/
-class IGKResourceNotFoundException extends IGKException {
-    private $m_file;
-    ///<summary>Represente __construct function</summary>
-    ///<param name="message"></param>
-    ///<param name="file"></param>
-    /**
-    * Represente __construct function
-    * @param mixed $message
-    * @param mixed $file
-    */
-    public function __construct($message, $file){
-        parent::__construct($message);
-        $this->m_file=$file;
-    }
-    ///<summary>Represente getResourceFile function</summary>
-    /**
-    * Represente getResourceFile function
-    */
-    public function getResourceFile(){
-        return $this->m_file;
-    }
-}
-///<summary>represent uri action exception</summary>
-///<remark>raised when can't handle uri. </remark>
-/**
-* represent uri action exception
-*/
-class IGKUriActionException extends IGKException{
-    private $m_uri;
-    ///<summary>Represente __construct function</summary>
-    ///<param name="msg"></param>
-    ///<param name="uri" default="null"></param>
-    ///<param name="code"></param>
-    /**
-    * Represente __construct function
-    * @param mixed $msg
-    * @param mixed $uri the default value is null
-    * @param mixed $code the default value is 0
-    */
-    public function __construct($msg, $uri=null, $code=0){
-        parent::__construct($msg);
-        $this->m_uri=$uri;
-    }
-    ///<summary>Represente getUri function</summary>
-    /**
-    * Represente getUri function
-    */
-    public function getUri(){
-        return $this->m_uri;
-    }
-}
+
 ///<summary>Represente class: IGKFormBuilderEngine</summary>
 /**
 * Represente IGKFormBuilderEngine class
@@ -65732,6 +65589,7 @@ abstract class IGKHtmlItemBase extends IGKObject implements ArrayAccess, IIGKHtm
             $o=call_user_func_array(array($this, "iscallback"), $arguments);
             return $o;
         }
+        $tgname = $this->getTagName();
         $v_is_callb=$this->iscallback($name);
         $o=null;
         if(!$v_is_callb){
@@ -65780,9 +65638,9 @@ abstract class IGKHtmlItemBase extends IGKObject implements ArrayAccess, IIGKHtm
         } 
         else {
             //igk_wln_e("the name : ".$this->getTagName());
-            if(!($callable = igk_html_get_method($this->getTagName(), $name)))
+            if(!($callable = igk_html_get_method($tgname, $name)))
             {
-                $callable = igk_html_get_class_callable($this->getTagName(), $name);
+                $callable = igk_html_get_class_callable($tgname, $name);
             }
             if ($callable)
                 array_unshift($arguments, $this);
@@ -65790,6 +65648,15 @@ abstract class IGKHtmlItemBase extends IGKObject implements ArrayAccess, IIGKHtm
         
         if ($callable)
             return call_user_func_array($callable, $arguments);
+
+        $instance = IGK\System\Html\Dom\Factory::getInstance();
+        if ($instance->handle($tgname, $name)){
+            igk_html_push_node_parent($this);
+            $r = $instance->Invoke($tgname, $name, $arguments );
+            igk_html_pop_node_parent();
+            return $r;
+        }
+
         // update to fallback on item controller
         $tab=array(strtolower($name), null, $arguments);
         return call_user_func_array(array($this, IGK_ADD_PREFIX), $tab);
@@ -68599,8 +68466,6 @@ class IGKHtmlItem extends IGKXmlNode implements ArrayAccess {
     * @param mixed $attributes the default value is null
     */
     public function addInput($id, $type="text", $value=null, $attributes=null){
-
-
         $i=$this->add("input");
         if($i){
             $i["type"]=$type;
@@ -68617,7 +68482,6 @@ class IGKHtmlItem extends IGKXmlNode implements ArrayAccess {
             }
             $i->AppendAttributes($attributes);
         }
-
         return $i;
     }
     ///<summary>Represente addNothing function</summary>
@@ -68821,10 +68685,7 @@ class IGKHtmlItem extends IGKXmlNode implements ArrayAccess {
                 break;
                 case "meta":
                 $c=new IGKHtmlMeta();
-                break;
-                case "input":
-                $c=new IGKHtmlInput();
-                break;
+                break; 
                 case "igk-html-image":
                 case "igk-img":
                 case "image":
@@ -71738,31 +71599,7 @@ class IGKHtmlHookNode extends IGKHtmlItem{
         ob_end_clean();
         return $s;
     }
-}
-///<summary>Represente class: IGKHtmlInput</summary>
-/**
-* Represente IGKHtmlInput class
-*/
-class IGKHtmlInput extends IGKHtmlItem {
-    ///<summary>Represente __construct function</summary>
-    /**
-    * Represente __construct function
-    */
-    public function __construct(){
-        parent::__construct("input");
-    }
-    ///<summary>Represente _AddChild function</summary>
-    ///<param name="item"></param>
-    ///<param name="index" default="null"></param>
-    /**
-    * Represente _AddChild function
-    * @param mixed $item
-    * @param mixed $index the default value is null
-    */
-    protected function _AddChild($item, $index=null){
-        return false;
-    }
-}
+} 
 ///<summary>Represente class: IGKHtmlJSSessionBlockInitItem</summary>
 /**
 * Represente IGKHtmlJSSessionBlockInitItem class
@@ -71966,53 +71803,7 @@ final class IGKHtmlMailDoc extends IGKHtmlItem {
         return $g;
     }
 }
-///<summary>Represente class: IGKHtmlMeta</summary>
-/**
-* Represente IGKHtmlMeta class
-*/
-class IGKHtmlMeta extends IGKHtmlItem implements Serializable {
-    ///<summary>Represente __construct function</summary>
-    /**
-    * Represente __construct function
-    */
-    public function __construct(){
-        parent::__construct("meta");
-    }
-    ///<summary>Represente _AddChild function</summary>
-    ///<param name="item"></param>
-    ///<param name="index" default="null"></param>
-    /**
-    * Represente _AddChild function
-    * @param mixed $item
-    * @param mixed $index the default value is null
-    */
-    protected function _AddChild($item, $index=null){
-        return false;
-    }
-    ///<summary>Represente serialize function</summary>
-    /**
-    * Represente serialize function
-    */
-    public function serialize(){
-        return "{'a>>>>>>>>':'b>>>>>>>>>>>>}";
-    }
-    ///<summary>Represente setContent function</summary>
-    ///<param name="v"></param>
-    /**
-    * Represente setContent function
-    * @param mixed $v
-    */
-    public function setContent($v){
-        return $this;
-    }
-    ///<summary>Represente unserialize function</summary>
-    ///<param name="v"></param>
-    /**
-    * Represente unserialize function
-    * @param mixed $v
-    */
-    public function unserialize($v){}
-}
+
 ///<summary>Represente class: IGKHtmlMetaViewNode</summary>
 /**
 * Represente IGKHtmlMetaViewNode class

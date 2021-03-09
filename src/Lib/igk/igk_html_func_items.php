@@ -4,7 +4,7 @@
 // licence: IGKDEV - Balafon @ 2019
 // description: Balafon's html functional components
 // TODO: parallax not implement
-
+use IGK\System\Html\Dom\Factory;
 use function igk_resources_gets as __;
 ///<summary>function igk_css_link_callback</summary>
 ///<param name="p"></param>
@@ -28,15 +28,45 @@ function igk_css_link_callback($p, $key, $href){
     }
     $p->setParam($key, $g);
 }
-///<summary>function igk_file_content</summary>
+///<summary>encapsulate file_get_contents</summary>
 ///<param name="file"></param>
 /**
-* function igk_file_content
+* encapsulate file_get_contents
 * @param mixed $file
 */
 function igk_file_content($file){
     return file_get_contents($file);
 }
+
+/**
+ * 
+ * @param mixed $hook 
+ * @param mixed $args 
+ * @return IGKHtmlNoTagNodeItem 
+ */
+function igk_html_node_yield($hook, ...$args){
+    $n = igk_html_node_notagnode();
+    $n->addObData(fn() => igk_hook($hook, ...$args), null);
+    return $n; 
+}
+/**
+ * call hook to render content on node 
+ * @param mixed $hook 
+ * @param mixed $args 
+ * @return IGKHtmlNoTagNodeItem 
+ */
+function igk_html_node_hook($hook, ...$args){
+    $n = igk_html_node_notagnode();
+    $n->addObData(fn() => igk_hook($hook, ...$args), null);
+    return $n; 
+}
+function igk_html_node_extends($parentview){
+    $p = igk_html_parent_node() ?? die("parent required");
+    throw new Exception("Not implemnts");
+}
+
+
+
 ///<summary>function igk_html__tabbutton_add</summary>
 ///<param name="q"></param>
 /**
@@ -325,19 +355,24 @@ function igk_html_node_aclearsandreload(){
     $n->Content=R::ngets("btn.clearSAndReload");
     return $n;
 }
-///<summary>function igk_html_node_actionbar</summary>
+///<summary>build action bar</summary>
 ///<param name="actions"></param>
 /**
 * function igk_html_node_actionbar
-* @param mixed $actions
+* @param array|callable $actions array or 
 */
 function igk_html_node_actionbar($actions=null){
-    $n=igk_createnode();
+    $n=igk_createnode("div");
     $n->setClass("igk-action-bar");
     if($actions){
-        foreach($actions as $l=>$v){
-            $n->addABtn(igk_getv($v, "uri"))->setClass("igk-btn-default")->Content=__(igk_getv($v, "k"));
+        if (is_array($actions)){
+            foreach($actions as $l=>$v){
+                $n->addABtn(igk_getv($v, "uri"))->setClass("igk-btn-default")->Content=__(igk_getv($v, "k"));
+            }
         }
+        if (is_callable(($actions))){
+            $actions($n);
+        } 
     }
     return $n;
 }
@@ -3618,4 +3653,22 @@ function igk_html_node_expression_node($raw, $ctrl=null){
     $n=new IGKHtmlExpressionNodeItem($raw, $ctrl);
     return $n;
 }
+
+//---------------------------------------------------------------------------------
+// form tag extension
+//
+
+Factory::form("cref", function(){
+    if ($f = igk_html_parent_node()){
+        $f->addObData("igk_html_form_cref", null);
+    }    
+    return $f;
+});
+Factory::form("initfield", function(){
+    if ($f = igk_html_parent_node()){        
+        igk_html_form_initfield($f);
+    }    
+    return $f;
+});
+
 
