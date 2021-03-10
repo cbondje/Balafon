@@ -500,7 +500,7 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
             igk_wln("user not allowed to");
             igk_exit();
         }
-        $f=$this->getDataDir()."/".IGK_SCHEMA_FILENAME;
+        $f=$this->getDataSchema(); // Dir()."/".IGK_SCHEMA_FILENAME;
         if(file_exists($f)){
             $s=IGKHtmlReader::LoadFile($f);
             $s->RenderXML();
@@ -1083,7 +1083,7 @@ EOF;
     */
     public function load_data_files(){
         if(isset($_FILES["clFileName"])){
-            $f=$this->getDataDir()."/".IGK_SCHEMA_FILENAME;
+            $f=$this->getDataSchema();
             $dom=IGKHtmlItem::CreateWebNode("dummy");
             $dom->Load(IGKIO::ReadAllText($_FILES["clFileName"]["tmp_name"]));
             $d=$this->getAppDocument();

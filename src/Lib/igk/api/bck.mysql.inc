@@ -350,7 +350,7 @@ function igk_api_mysql_get_config_data_schema($api, $render=1, $param=null){
 			else{	
 				
 			
-				$tschema =igk_db_load_data_schemas($v->getDataDir()."/".IGK_SCHEMA_FILENAME);	
+				$tschema =igk_db_load_data_schemas($v->getDataSchema());
 				if ($tschema){
 				// igk_wln($tschema); 
 				foreach($tschema as $ck=>$cv){

@@ -5574,7 +5574,7 @@ function igk_db_get_error(){
 * @param mixed $ctrl
 */
 function igk_db_get_schema_filename($ctrl){
-    return $ctrl->getDataDir()."/".IGK_SCHEMA_FILENAME;
+    return $ctrl->getDataSchema();
 }
 ///<summary>Represente igk_db_get_sync_row_data function</summary>
 ///<param name="ad"></param>
@@ -6180,8 +6180,7 @@ function igk_db_load_data_and_entries_schemas_node($d){
 */
 function igk_db_load_data_entries_schemas($file){
     $tab=array();
-    if(file_exists($file)){
-        igk_debug_wln(__FUNCTION__.":::load files");
+    if(file_exists($file)){ 
         $d=IGKHtmlReader::LoadXMLFile($file);
         $n=igk_getv($d->getElementsByTagName(IGK_SCHEMA_TAGNAME), 0);
         $n=$n ? igk_getv($n->getElementsByTagName(IGK_ENTRIES_TAGNAME), 0): null;
@@ -6196,6 +6195,25 @@ function igk_db_load_data_entries_schemas($file){
 * load data schema in array
 */
 function igk_db_load_data_schema_array($n, & $tab, & $tbrelation=null){
+    $entries=$n->getElementsByTagName(IGKDbSchemas::ENTRIES_TAG);
+    $tentries = [];
+    if ($entries){
+        foreach($n->getElementsByTagName(IGKDbSchemas::ROWS_TAG) as $v){
+            if ($tb = $v["For"]){
+                $rtab = [];
+                foreach($v->getElementsByTagName("Row") as $item){
+                    array_push($rtab, $item->getAttributes()->ToArray());
+                }
+
+                if (isset($tentries[$tb])){
+                    $tentries[$tb] = array_merge($tentries[$tb], $rtab);
+                }else {
+                    $tentries[$tb] = $rtab;
+                }
+            }
+        }
+    }
+
     foreach($n->getElementsByTagName(IGK_DATA_DEF_TAGNAME) as $v){
         $c=array();
         $tb=$v["TableName"];
@@ -6208,10 +6226,12 @@ function igk_db_load_data_schema_array($n, & $tab, & $tbrelation=null){
             }
             $c[]=$cl;
         }
-        $tb=$v["TableName"];
+     
+       
         $tab[$tb]=array(
                 "ColumnInfo"=>$c,
-                "Description"=>igk_getv($v,"Description")
+                "Description"=>igk_getv($v,"Description"),
+                "Entries"=>igk_getv($tentries, $tb)
             );
     }
 }
@@ -37373,6 +37393,13 @@ abstract class IGKControllerBase extends IGKObject implements IIGKController, II
             igk_wln("[IGK] Notice : construct controller on initializing environment not allowed. App::INITENV ".get_class($this));
             return;
         }
+    }
+    ///<summary>get the data schema filename</summary>
+    /**
+     * get the data schema filename
+     */
+    public function getDataSchema(){
+        return $this->getDataDir()."/".IGK_SCHEMA_FILENAME;
     }
     ///
     public static function CreateAutoLoadCallback(IGKControllerBase $controller){
@@ -80968,7 +80995,10 @@ class IGKSQLQueryUtils {
 		static $defvalue = null;
 		if ($defvalue === null){
 			$defvalue = [
-				"TIMESTAMP"=>["CURRENT_TIMESTAMP"=>1],
+				"TIMESTAMP"=>[
+                    "CURRENT_TIMESTAMP"=>1,
+                    "NOW()"=>"CURRENT_TIMESTAMP"
+                ],
 				"DATETIME"=>[
 					"CURRENT_TIMESTAMP"=>1,
 					"NOW()"=>1,
@@ -81022,7 +81052,9 @@ class IGKSQLQueryUtils {
             $tb=true;
             if($v->clDefault || $v->clDefault === '0'){
 				$_ktype = strtoupper($type);
-				$_def = $r_v = isset($defvalue[$_ktype][$v->clDefault]) ? $v->clDefault:
+				$_def = $r_v = isset($defvalue[$_ktype][$v->clDefault]) ?
+                (is_int($defvalue[$_ktype][$v->clDefault])?
+                $v->clDefault : $defvalue[$_ktype][$v->clDefault] ):
 				"'".igk_db_escape_string($v->clDefault)."'";
                 $query .= "DEFAULT {$_def}";
 
