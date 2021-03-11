@@ -24,7 +24,31 @@ final class IGKSysUtil
         }
         return $tables;
     }
+    /**
+     * 
+     * @param mixed $file 
+     * @return void 
+     */
+    public static function GetDataDefinitionFromFile($file, $v=null, & $tables=null){
+        if ($tables ===null)
+            $tables = [];
+        $tschema = igk_db_load_data_schemas($file);
+        if ($tschema) {
+            $entries = [];
+            foreach ($tschema as $ck => $cv) {
+                if (isset($tables[$ck])) {
+                    igk_ilog("Table $ck already found. [" . $v->Name . "] get from " . $tables[$ck]->ctrl->Name . " with schema");
+                    return null;
+                }
 
+                $cinfo = igk_getv($cv, "ColumnInfo");
+                $desc = igk_getv($cv, "Description");
+                $entries = igk_getv($cv, "Entries");
+                $tables[$ck] = (object)array("info" => $cinfo, "ctrl" => $v, "desc" => $desc, "entries" => $entries);
+            }
+        }
+        return $tables;
+    }
     /**
      * retriceve all data info form controller
      * @param mixed $controller 
@@ -50,23 +74,7 @@ final class IGKSysUtil
                     $tables[$tname] = (object)array("info" => $tinfo, "ctrl" => $v, "desc" => null, "entries" => null);
                 }
             } else {
-                $tschema = igk_db_load_data_schemas($v->getDataSchema());
-                if ($tschema) {
-                    $entries = [];
-
-
-                    foreach ($tschema as $ck => $cv) {
-                        if (isset($tables[$ck])) {
-                            igk_ilog("Table $ck already found. [" . $v->Name . "] get from " . $tables[$ck]->ctrl->Name . " with schema");
-                            return null;
-                        }
-
-                        $cinfo = igk_getv($cv, "ColumnInfo");
-                        $desc = igk_getv($cv, "Description");
-                        $entries = igk_getv($cv, "Entries");
-                        $tables[$ck] = (object)array("info" => $cinfo, "ctrl" => $v, "desc" => $desc, "entries" => $entries);
-                    }
-                }
+                self::GetDataDefinitionFromFile($v->getDataSchemaFile(), $v, $tables);
             }
         }
         return $tables;

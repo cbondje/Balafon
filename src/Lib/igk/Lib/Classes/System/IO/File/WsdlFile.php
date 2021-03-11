@@ -1,4 +1,12 @@
 <?php
+namespace IGK\System\IO\File;
+
+use IGKHtmlItem;
+use IGKIO;
+use IGKObject;
+use ReflectionClass;
+use ReflectionMethod;
+
 // author: C.A.D. BONDJE DOUE
 // licence: IGKDEV - Balafon @ 2019
 // desc: wsdl utility class
@@ -7,7 +15,7 @@
 /**
 * used to generate file
 */
-class IGKWsdlFile extends IGKObject {
+class WsdlFile extends IGKObject {
     private $m_attributes;
     private $m_binding;
     private $m_cservice;
@@ -318,4 +326,3 @@ EOF;
         igk_set_env(IGK_ENV_NO_TRACE_KEY, null);
     }
 }
-?>

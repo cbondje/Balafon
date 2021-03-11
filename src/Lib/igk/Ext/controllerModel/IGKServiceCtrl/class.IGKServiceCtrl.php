@@ -1,4 +1,7 @@
 <?php
+
+use IGK\System\IO\File\WsdlFile;
+
 use function igk_resources_gets as __;
 
 define("IGK_SERVICE_BASE_URI", "services");
@@ -227,7 +230,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 
 		$b = $this->getWsdlFile();
 		$n = $this->getServiceName();
-		$g = new IGKWsdlFile($n,
+		$g = new WsdlFile($n,
 			igk_io_baseUri()."/".IGK_SERVICE_BASE_URI."/".$n,
 			array(
 				"nsprefix"=>"igkns",

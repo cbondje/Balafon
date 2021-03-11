@@ -3671,4 +3671,10 @@ Factory::form("initfield", function(){
     return $f;
 });
 
+Factory::form("multipart", function(){
+    if ($f = igk_html_parent_node()){
+        $f["enctype"] = "multipart/form-data";
+    }
+    return $f;
+});
 

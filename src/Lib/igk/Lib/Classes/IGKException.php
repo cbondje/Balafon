@@ -14,7 +14,7 @@ class IGKException extends Exception {
     * @param mixed $msg
     * @param mixed $status the default value is 404
     */
-    public function __construct($msg, $code=404, ?\Throwable $throwable=null){
+    public function __construct($msg, $code=500, ?\Throwable $throwable=null){
         parent::__construct($msg, $code, $throwable);        
     }
     ///<summary>Represente __toString function</summary>

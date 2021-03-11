@@ -5574,7 +5574,7 @@ function igk_db_get_error(){
 * @param mixed $ctrl
 */
 function igk_db_get_schema_filename($ctrl){
-    return $ctrl->getDataSchema();
+    return $ctrl->getDataSchemaFile();
 }
 ///<summary>Represente igk_db_get_sync_row_data function</summary>
 ///<param name="ad"></param>
@@ -15244,10 +15244,11 @@ function igk_io_createdir($dirname, $mode=IGK_DEFAULT_FOLDER_MASK){
         if(empty($p))
             continue;
         if(is_dir($p)){
-            if (@mkdir($dirname)){
+            if (!is_dir($dirname) && @mkdir($dirname)){
                 chmod($dirname, $mode);
             }else{
-                igk_ilog("failed to create : ".$dirname);
+                igk_ilog("failed to create : ".$dirname. " parent : ".$p);
+
                 // igk_dev_wln("failed to create ".$dirname);
                 // igk_trace();
                 // igk_exit();
@@ -27663,11 +27664,10 @@ function igk_view_handle_action($fname, $params, $redirectfailed=1){
         $ht=array_slice($params, 1);
         $g = new ReflectionFunction($fc);
         if (($g->getNumberOfRequiredParameters() == 1) && 
-            ($cl = $g->getParameters()[0]->getClass()) && 
+            ($cl = $g->getParameters()[0]->getType()) && 
             ($cl->getName() === IGK\System\Http\Request::class)){
             $ht = [IGK\System\Http\Request::getInstance()];
         }
-        // igk_wln_e(__FILE__.":".__LINE__,  $g->getNumberOfRequiredParameters());
         if(igk_count($ht) > 0){
             $fc_result=call_user_func_array($fc, $ht);
         }
@@ -30401,39 +30401,6 @@ interface IIGKWebPageController extends IIGKWebController {
     * @param mixed $uri
     */
     function manageErrorUriRequest($uri);
-}
-///<summary>Represente class: IGKActions</summary>
-/**
-* Represente IGKActions class
-*/
-abstract class IGKActionBase{
-    protected $ctrl;
-    protected $context;
-	var $handleAllAction;
-    ///<summary>Represente Initialize function</summary>
-    ///<param name="ctrl"></param>
-    /**
-    * Represente Initialize function
-    * @param mixed $ctrl
-    */
-    public function Initialize($ctrl){
-        $this->ctrl=$ctrl;
-        return $this;
-    }
-	///<summary>for action return the current user id</summary>
-	public function getUserId(){
-		return igk_sys_current_user_id();
-    }
-    public static function Init($ctrl, $context=null){
-        $cl = static::class;
-        if ($cl == __CLASS__){
-            igk_die("Operation not allowed");
-        } 
-        $o = new $cl();
-        $o->ctrl = $ctrl; 
-        $o->context = $context;
-        return $o;
-    }
 }
 ///<summary>represent application context
 /**
@@ -37398,7 +37365,7 @@ abstract class IGKControllerBase extends IGKObject implements IIGKController, II
     /**
      * get the data schema filename
      */
-    public function getDataSchema(){
+    public function getDataSchemaFile(){
         return $this->getDataDir()."/".IGK_SCHEMA_FILENAME;
     }
     ///
@@ -37622,8 +37589,6 @@ abstract class IGKControllerBase extends IGKObject implements IIGKController, II
 
         extract($this->utilityViewArgs($fname, $file));
         extract($this->getSystemVars());
-
-
         $this->setEnvParam("fulluri", $furi);
         $params=isset($params) ? $params: array();
         $gx=strtolower((isset($css_def) ? " ".$css_def: null));
@@ -38757,7 +38722,7 @@ abstract class IGKControllerBase extends IGKObject implements IIGKController, II
             $t["viewcontext"]=$viewctx;
         }
         if(igk_count($_REQUEST) > 0)
-            $t=array_merge($t, array("request"=>$_REQUEST));
+            $t=array_merge($t, array("request"=>IGK\System\Http\Request::getInstance()));
         $tab=$this->getApp()->getControllerManager()->getControllers();
         if(is_array($tab)){
             $t["igk_controllers"]=$tab;
@@ -82887,7 +82852,7 @@ igk_sys_reg_controller(IGK_CSVLANGUAGE_CTRL, IGKCSVLanguageManagerCtrl::class);
 igk_reg_ns("igk", "https://www.igkdev.com");
 igk_reg_ns("gkds", "https://www.igkdev.com/gkds/");
 igk_reg_component_package("igk", [IGKHtmlItem::class, 'CreateElement']);
-require_once(IGK_LIB_DIR."/igk_wsdl.php");
+ 
 require_once(IGK_LIB_DIR.'/igk_html_func_items.php');
 require_once(IGK_LIB_DIR.'/igk_html_items.php');
 require_once(IGK_LIB_DIR.'/igk_html_utils.php');

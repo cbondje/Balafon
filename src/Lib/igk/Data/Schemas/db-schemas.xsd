@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:attribute name="clType" type="xs:string"></xs:attribute>
+    <xs:complexType name="Entries">
+        <xs:sequence>
+            <xs:element name="Rows" type="Rows" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DataDefinition">
+        <xs:sequence>
+            <xs:element name="Column" type="DataColumn" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        </xs:sequence>
+        <xs:attribute name="TableName" type="xs:string" use="required"></xs:attribute>
+        <xs:attribute name="Description" type="xs:string"></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="DataColumn">
+        <xs:attribute name="clName" type="xs:string" use="required"></xs:attribute>
+        <xs:attribute name="clIsPrimary" type="xs:string"></xs:attribute>
+        <xs:attribute name="clDefault" type="xs:string"></xs:attribute>
+        <xs:attribute name="clTypeLength" type="xs:string"></xs:attribute>
+        <xs:attribute name="clLinkType" type="xs:string"></xs:attribute>
+        <xs:attribute name="clType" type="xs:string"></xs:attribute>
+        <xs:attribute name="clNotNull" type="xs:string"></xs:attribute>
+        <xs:attribute name="clLinkColumn" type="xs:string"></xs:attribute>
+        <xs:attribute name="clInsertFunction" type="xs:string"></xs:attribute>
+        <xs:attribute name="clUpdateFunction" type="xs:string"></xs:attribute>
+        <xs:attribute name="clAutoIncrement" type="xs:string"></xs:attribute>
+        <xs:attribute name="clIsUnique" type="xs:string"></xs:attribute>
+        <xs:attribute name="clDescription" type="xs:string"></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="Migrations"></xs:complexType>
+    <xs:complexType name="Rows">
+        <xs:sequence>
+            <xs:element name="Row" type="Row" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        </xs:sequence>
+        <xs:attribute name="For" type="xs:string"></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="Row">
+        <xs:anyAttribute processContents="skip"></xs:anyAttribute>
+    </xs:complexType>
+    <xs:element name="data-schemas">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Entries" type="Entries" maxOccurs="1" minOccurs="0"></xs:element>
+                <xs:element name="DataDefinition" type="DataDefinition" maxOccurs="unbounded"></xs:element>
+                <xs:element name="Migrations" type="Migrations" maxOccurs="1" minOccurs="0"></xs:element>
+            </xs:sequence>
+            <xs:attribute name="app" type="xs:string"></xs:attribute>
+            <xs:attribute name="version" type="xs:string"></xs:attribute>
+            <xs:attribute name="author" type="xs:string"></xs:attribute>
+            <xs:attribute name="date" type="xs:string"></xs:attribute>
+            <xs:attribute name="migration" type="xs:string"></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
