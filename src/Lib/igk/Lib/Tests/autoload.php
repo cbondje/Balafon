@@ -1,7 +1,12 @@
 <?php
 
-if (defined("IGK_TEST_INIT"))
-{
+use SebastianBergmann\CodeCoverage\Report\PHP;
+
+
+if (!version_compare(PHP_VERSION, "7.2", ">")){
+    die ("php require version must be greather that 7.2");
+}
+if (defined("IGK_TEST_INIT")){
     return;
 }
 if (!defined("PHPUNIT_COMPOSER_INSTALL")){
@@ -10,7 +15,7 @@ if (!defined("PHPUNIT_COMPOSER_INSTALL")){
 define("IGK_TEST_INIT", __FILE__);
 if (!defined("IGK_LIB_DIR")){
     require_once(__DIR__."/../../igk_framework.php");
-}
+} 
 
 spl_autoload_register(function($n){    
     $fix_path = function($p, $sep=DIRECTORY_SEPARATOR){
@@ -55,6 +60,4 @@ defined("IGK_PROJECT_DIR") || define("IGK_PROJECT_DIR", IGK_APP_DIR."/Projects")
 include(IGK_LIB_DIR."/igk_extensions.phtml");
 
 //.session start for testing
-$s = session_start();
- 
- 
+$s = session_start(); 

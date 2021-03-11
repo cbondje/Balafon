@@ -54,6 +54,15 @@ class XsdBuilder extends XsdElement implements ArrayAccess{
         }
         return $this;
     }
+    public function addEnumType($name, $items){
+        $e = $this->m_node->add("xs:simpleType")->setAttribute("name", $name);
+        $res = $e->add("xs:restriction");
+        $res->setAttribute("base", XsdTypes::TSTRING);
+        foreach($items as $k){
+            $res->add("xs:enumeration")->setAttribute("value", $k);
+        }
+        return $this;
+    }
     public function addPatternElement($name, $pattern){
         $e = $this->m_node->add("xs:element")->setAttribute("name", $name);
         $res = $e->add("xs:simpleType")->add("xs:restriction");

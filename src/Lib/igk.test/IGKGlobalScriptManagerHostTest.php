@@ -2,4 +2,7 @@
 namespace IGK\Test;
 use PHPUnit\Framework\TestCase;
 class IGKGlobalScriptManagerHostTest extends TestCase{
+	function test_check_class(){
+		$this->assertTrue(class_exists(\IGKGlobalScriptManagerHost::class));
+	}
 }

@@ -987,14 +987,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         array_unshift(self::$sm_list, $l);
     }
 }
-///<summary>Represente class: IGKSQLiteConnectionManager</summary>
-/**
-* Represente IGKSQLiteConnectionManager class
-*/
-class IGKSQLiteConnectionManager{
-    var $Sql;
-    var $count;
-}
+
 ///<summary>Represente class: IGKSQl3DbConfigCtrl</summary>
 /**
 * Represente IGKSQl3DbConfigCtrl class

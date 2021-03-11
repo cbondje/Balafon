@@ -15243,11 +15243,11 @@ function igk_io_createdir($dirname, $mode=IGK_DEFAULT_FOLDER_MASK){
         $p=dirname($dirname);
         if(empty($p))
             continue;
-        if(is_dir($p)){
-            if (!is_dir($dirname) && @mkdir($dirname)){
+        if(is_dir($p) && !is_dir($dirname) ){ 
+            if (@mkdir($dirname)){
                 chmod($dirname, $mode);
             }else{
-                igk_ilog("failed to create : ".$dirname. " parent : ".$p);
+                igk_ilog("failed to create : ".$dirname);
 
                 // igk_dev_wln("failed to create ".$dirname);
                 // igk_trace();

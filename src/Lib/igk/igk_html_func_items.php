@@ -46,7 +46,10 @@ function igk_file_content($file){
  */
 function igk_html_node_yield($hook, ...$args){
     $n = igk_html_node_notagnode();
-    $n->addObData(fn() => igk_hook($hook, ...$args), null);
+    $n->addObData(function()use($hook, $args){ 
+        igk_hook($hook, ...$args);
+    }, null
+    );
     return $n; 
 }
 /**
@@ -57,7 +60,9 @@ function igk_html_node_yield($hook, ...$args){
  */
 function igk_html_node_hook($hook, ...$args){
     $n = igk_html_node_notagnode();
-    $n->addObData(fn() => igk_hook($hook, ...$args), null);
+    $n->addObData(function()use($hook, $args){
+        igk_hook($hook, ...$args);
+    }, null);
     return $n; 
 }
 function igk_html_node_extends($parentview){

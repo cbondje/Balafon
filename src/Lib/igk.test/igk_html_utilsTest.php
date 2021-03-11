@@ -111,6 +111,10 @@ class igk_html_utilsTest extends TestCase{
 	$this->assertTrue(function_exists('igk_html_form_buildformfield'), 'function igk_html_form_buildformfield not exists'); 
 	}
 	/** @test */
+	public function testigk_html_form_cref(){ 
+	$this->assertTrue(function_exists('igk_html_form_cref'), 'function igk_html_form_cref not exists'); 
+	}
+	/** @test */
 	public function testigk_html_form_fields(){ 
 	$this->assertTrue(function_exists('igk_html_form_fields'), 'function igk_html_form_fields not exists'); 
 	}

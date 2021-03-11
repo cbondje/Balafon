@@ -15,6 +15,10 @@ class igk_coreTest extends TestCase{
 	$this->assertTrue(function_exists('igk_app_is_uri_demand'), 'function igk_app_is_uri_demand not exists'); 
 	}
 	/** @test */
+	public function testigk_auto_load_class(){ 
+	$this->assertTrue(function_exists('igk_auto_load_class'), 'function igk_auto_load_class not exists'); 
+	}
+	/** @test */
 	public function testigk_const(){ 
 	$this->assertTrue(function_exists('igk_const'), 'function igk_const not exists'); 
 	}

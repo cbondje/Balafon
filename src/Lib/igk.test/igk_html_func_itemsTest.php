@@ -371,6 +371,10 @@ class igk_html_func_itemsTest extends TestCase{
 	$this->assertTrue(function_exists('igk_html_node_expression_node'), 'function igk_html_node_expression_node not exists'); 
 	}
 	/** @test */
+	public function testigk_html_node_extends(){ 
+	$this->assertTrue(function_exists('igk_html_node_extends'), 'function igk_html_node_extends not exists'); 
+	}
+	/** @test */
 	public function testigk_html_node_fields(){ 
 	$this->assertTrue(function_exists('igk_html_node_fields'), 'function igk_html_node_fields not exists'); 
 	}
@@ -421,6 +425,10 @@ class igk_html_func_itemsTest extends TestCase{
 	/** @test */
 	public function testigk_html_node_hlineseparator(){ 
 	$this->assertTrue(function_exists('igk_html_node_hlineseparator'), 'function igk_html_node_hlineseparator not exists'); 
+	}
+	/** @test */
+	public function testigk_html_node_hook(){ 
+	$this->assertTrue(function_exists('igk_html_node_hook'), 'function igk_html_node_hook not exists'); 
 	}
 	/** @test */
 	public function testigk_html_node_horizontalpageview(){ 
@@ -545,6 +553,10 @@ class igk_html_func_itemsTest extends TestCase{
 	/** @test */
 	public function testigk_html_node_linkbtn(){ 
 	$this->assertTrue(function_exists('igk_html_node_linkbtn'), 'function igk_html_node_linkbtn not exists'); 
+	}
+	/** @test */
+	public function testigk_html_node_list(){ 
+	$this->assertTrue(function_exists('igk_html_node_list'), 'function igk_html_node_list not exists'); 
 	}
 	/** @test */
 	public function testigk_html_node_livenodecallback(){ 
@@ -895,6 +907,10 @@ class igk_html_func_itemsTest extends TestCase{
 	$this->assertTrue(function_exists('igk_html_node_vsep'), 'function igk_html_node_vsep not exists'); 
 	}
 	/** @test */
+	public function testigk_html_node_walk(){ 
+	$this->assertTrue(function_exists('igk_html_node_walk'), 'function igk_html_node_walk not exists'); 
+	}
+	/** @test */
 	public function testigk_html_node_webglgamesurface(){ 
 	$this->assertTrue(function_exists('igk_html_node_webglgamesurface'), 'function igk_html_node_webglgamesurface not exists'); 
 	}
@@ -925,6 +941,10 @@ class igk_html_func_itemsTest extends TestCase{
 	/** @test */
 	public function testigk_html_node_xsltranform(){ 
 	$this->assertTrue(function_exists('igk_html_node_xsltranform'), 'function igk_html_node_xsltranform not exists'); 
+	}
+	/** @test */
+	public function testigk_html_node_yield(){ 
+	$this->assertTrue(function_exists('igk_html_node_yield'), 'function igk_html_node_yield not exists'); 
 	}
 	/** @test */
 	public function testigk_html_set_tooltip(){ 

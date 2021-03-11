@@ -2,4 +2,7 @@
 namespace IGK\Test;
 use PHPUnit\Framework\TestCase;
 class IGKHtmlReaderTest extends TestCase{
+	function test_check_class(){
+		$this->assertTrue(class_exists(\IGKHtmlReader::class));
+	}
 }

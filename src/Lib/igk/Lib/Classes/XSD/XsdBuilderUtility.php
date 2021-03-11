@@ -27,7 +27,8 @@ abstract class XsdBuilderUtility{
         if (is_array($value)){
             $o = igk_createobj_filter($value, ["type"=>XsdTypes::TSTRING, "maxOccurs"=>null,
              "minOccurs"=>null,
-             "require"=>null]);
+             "require"=>null,
+             "default"=>null]);
             $e->setAttribute("type",$o->type);
             if ($o->maxOccurs !==null){
                 $e->setAttribute("maxOccurs", $o->maxOccurs);
@@ -37,6 +38,9 @@ abstract class XsdBuilderUtility{
             }
             if ($o->require!==null){
                 $e->setAttribute("use", "required");
+            }
+            if ($o->default!==null){
+                $e->setAttribute("default", $o->default);
             }
         } else{
             $e->setAttribute("type", $value);

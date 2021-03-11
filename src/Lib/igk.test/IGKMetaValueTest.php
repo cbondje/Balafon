@@ -2,4 +2,7 @@
 namespace IGK\Test;
 use PHPUnit\Framework\TestCase;
 class IGKMetaValueTest extends TestCase{
+	function test_check_class(){
+		$this->assertTrue(class_exists(\IGKMetaValue::class));
+	}
 }
