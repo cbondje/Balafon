@@ -32,17 +32,17 @@ abstract class IGKUserRegistrationCtrl extends IGKCtrlTypeBase
 
 	public function InitEnvironment()
 	{
-		igk_io_save_file_as_utf8($this->_getViewfile("registration_mail"), <<<EOF
+		igk_io_save_file_as_utf8($this->_getViewFile("registration_mail"), <<<EOF
 <?php
 ?>
 EOF
 );
-igk_io_save_file_as_utf8($this->_getViewfile("confirmation_mail"), <<<EOF
+igk_io_save_file_as_utf8($this->_getViewFile("confirmation_mail"), <<<EOF
 <?php
 ?>
 EOF
 );
-		igk_io_save_file_as_utf8($this->_getViewfile("subscribeform"), <<<EOF
+		igk_io_save_file_as_utf8($this->_getViewFile("subscribeform"), <<<EOF
 		\$this->TargetNode->ClearChilds();
  igk_html_article(\$this , "default", \$this->TargetNode);
 

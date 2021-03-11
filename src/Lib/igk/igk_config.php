@@ -578,7 +578,7 @@ define("IGK_CTRL_CONF_FILE", "config.xml");
 define("IGK_CTRL_DBCONF_FILE", "data.xml");
 define("IGK_CTRL_BASE", "IGKControllerBase");
 define("IGK_HTML_BINDING_EVAL_CONTEXT", "igk:evaluation_context");
-// define("IGK_VIEW_ARGS", 0xa001);
+ 
 // define("IGK_VIEW_OPTIONS", 0xa002);
 //    define("IGK_CTRL_VIEW_CONTEXT_PARAM_KEY", "sys://view/context");
 //    define("IGK_XML_CREATOR_PARENT_KEY", "sys://xml/create_node/parent");

@@ -821,12 +821,16 @@ EOF;
             extract(igk_pattern_view_extract($this, $p, 1)); 
             igk_ctrl_change_lang($this, $p);
         }
+        // igk_wln(__FILE__.":".__LINE__, $u, $param);
+        //passing ctrl to view for sitepam
         $ctrl = $this;
         include(IGK_LIB_DIR."/Inc/igk_sitemap.pinc");
         $tn=$this->TargetNode;
 
-        if($this->_handle_uri_param($c, $param, $query_options))
+ 
+        if($this->_handle_uri_param($c, $param, $query_options)){
             igk_exit();
+        }
 
         $this->regSystemVars(null);
         if(empty($param))
@@ -840,7 +844,8 @@ EOF;
         $fnc="";
         $handle=0; 
    
-        if(!($handle=$this->handle_func($c, $param, $doc, 0, null)) && (file_exists($fnc=$this->getViewfile($c)) && preg_match(IGK_VIEW_FILE_END_REGEX, $fnc))){
+        if(!($handle=$this->handle_func($c, $param, $doc, 0, null)) && (file_exists($fnc=$this->getViewFile($c)) && preg_match(IGK_VIEW_FILE_END_REGEX, $fnc))){
+            
             $actionctrl=igk_getctrl(IGK_SYSACTION_CTRL, true);
             $m=$actionctrl->matche($page[0]);
             $ck=$this->getEnvParam("appkeys");

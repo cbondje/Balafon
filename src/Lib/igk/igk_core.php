@@ -415,7 +415,7 @@ class IGKLoader {
             return $f;
         if(file_exists($view))
             return realpath($view);
-        if(!empty($c=$this->_controller->getViewfile($view))){
+        if(!empty($c=$this->_controller->getViewFile($view))){
             return $c;
         }
         return false;
