@@ -3,13 +3,27 @@
 
 
 ///<summary>Represente view's action definition</summary>
+
+use IGK\Actions\IActionProcessor;
+use IGK\System\Exceptions\ActionNotFoundException;
+
 /**
 * Represente view's action definition
 */
-abstract class IGKActionBase{
+abstract class IGKActionBase implements IActionProcessor{
     protected $ctrl;
     protected $context;
 	var $handleAllAction;
+    static $macro;
+    /**
+     * extends default faction with macro function
+     * @param mixed $name 
+     * @param mixed $callback 
+     * @return void 
+     */
+    public static function Register($name, $callback){
+        self::$macro[$name] = $callback;
+    }
     ///<summary>Represente Initialize function</summary>
     ///<param name="ctrl"></param>
     /**
@@ -46,7 +60,61 @@ abstract class IGKActionBase{
         $o->context = $context;
         return $o;
     }
-    public static function Handle($fname, $actions, $params, $exit=1, $flag=0){
-        return igk_view_handle_actions($fname, $actions, $params, $exit, $flag);
+    public static function __callStatic($name, $arguments)
+    { 
+        
+        return (new static)->$name(...$arguments);
+    }
+    /**
+     * 
+     * @param mixed $fname 
+     * @param mixed $args 
+     * @param int $exit 
+     * @param int $flag 
+     * @return mixed 
+     * @throws Exception 
+     */
+    private function Handle($fname, $args, $exit=1, $flag=0){ 
+        $ctrl = null;
+        
+        if ($fname instanceof IGKControllerBase){           
+            if (func_num_args()<3){
+                throw new IGKArgumentException("Require 3 argument in that case");
+            }
+            $ctrl = $fname;
+            $c = func_get_args();
+            array_shift($c);
+
+            extract([
+                "fname"=>$c[0],
+                "args"=>$c[1],
+                "exit"=>igk_getv($c, 2, 1),
+                "flag"=>igk_getv($c, 3, 0)
+            ], EXTR_OVERWRITE); 
+        }
+ 
+        $this->ctrl = $ctrl ? $ctrl : igk_ctrl_current_view_ctrl();
+        $b = $this->getActionProcessor();
+        if (is_string($b)){
+            if (!class_exists($b)){
+                return false;
+            }
+            $cargs = [$this];
+            $b = new $b(...$cargs); 
+        }
+        return igk_view_handle_actions($fname, $b, $args, $exit, $flag );
+    }
+    public function __call($name, $arguments){
+        if ($fc = igk_getv(self::$macro, $name)){
+            return $fc(...$arguments);
+        }
+        throw new ActionNotFoundException($name);   
+    }
+    /**
+     * 
+     * @return string|object classname or IActionProcessor Object 
+     */
+    protected function getActionProcessor(){
+        return IGK\Actions\Dispatcher::class;
     }
 }

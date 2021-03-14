@@ -6,28 +6,105 @@
 * Represente IGKDbColumnInfo class
 */
 final class IGKDbColumnInfo extends IGKObject {
+    /**
+     * set if the column is auto increment
+     * @var mixed
+     */
     var $clAutoIncrement;
+    /**
+     * default increment start index
+     * @var mixed
+     */
 	var $clAutoIncrementStartIndex;
+    /**
+     * column member index
+     * @var mixed
+     */
     var $clColumnMemberIndex;
+    /**
+     * set the default value
+     * @var int
+     */
     var $clDefault;
+    /**
+     * set the column description
+     * @var mixed
+     */
     var $clDescription;
     var $clFormRefKey;
     var $clInputType;
     var $clInsertFunction;
+    /**
+     * set if the column is index
+     * @var mixed
+     */
     var $clIsIndex;
     var $clIsNotInQueryInsert;
+    /**
+     * set if this column is primary key
+     * @var mixed
+     */
     var $clIsPrimary;
+    /**
+     * set if column is unique
+     * @var mixed
+     */
     var $clIsUnique;
+    /**
+     * unique column member list
+     * @var mixed
+     */
     var $clIsUniqueColumnMember;
-    var $clLinkColumn; // link column name
+    /**
+     * link column name
+     * @var mixed
+     */
+    var $clLinkColumn; 
+    /**
+     * the link table default display
+     * @var mixed
+     */
     var $clLinkTableDisplay;
+    /**
+     * link to table for foreing key
+     * @var mixed
+     */
     var $clLinkType;
+    /**
+     * the name of the column
+     * @var mixed
+     */
     var $clName;
+    /**
+     * define if the column require a value. default is false
+     * @var false
+     */
     var $clNotNull;
+    /**
+     * pattern to validate the column value
+     * @var mixed
+     */
     var $clPattern;
+    /**
+     * type of the column
+     * @var string
+     */
     var $clType;
+    /**
+     * column type length
+     * @var null
+     */
     var $clTypeLength;
+    /**
+     * function to call on update
+     * @var mixed
+     */
     var $clUpdateFunction;
+    /**
+     * check constraint expression
+     * @var mixed
+     */
+    var $clCheckConstraint; 
     ///<summary>Represente __construct function</summary>
     ///<param name="array" default="null"></param>
     /**
@@ -128,7 +205,11 @@ final class IGKDbColumnInfo extends IGKObject {
             "clAutoIncrement"=>true
         ));
     }
-
+    ///<summary>get if this is unsigned type</summary>
+    /**
+     * get if this is unsigned type
+     * @return int|false 
+     */
     public function IsUnsigned(){
         return preg_match("/u((big)?int)/i", $this->clType);
     }

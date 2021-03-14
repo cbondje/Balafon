@@ -4,8 +4,7 @@
 // desc: redirection handler
 // file: igk_redirection.php
 // description: redirection handler
-//TODO : BASE :
-
+//TODO : BASE : 
 
 if(defined("IGK_REDIRECTION") && (IGK_REDIRECTION == 1))
     return;
@@ -95,8 +94,7 @@ switch($code){
 $args=igk_getquery_args($server_info->{'REDIRECT_QUERY_STRING'});
 $_REQUEST=array_merge($_REQUEST, $args);
 if($r == "POST" && ($code < 900)){
-    ///DEBUG: Posted data are lost
-
+    //DEBUG: Posted data are lost
     igk_wln_e($_POST);
 }
 $app=igk_app();
@@ -107,6 +105,7 @@ $params=igk_getv($tab, 1);
 $page=$uri;
 $lang=null;
  
+
 if( ($actionctrl=igk_getctrl(IGK_SYSACTION_CTRL)) && igk_io_handle_redirection_uri($actionctrl, $page, $params, 1))
     return;
 try {

@@ -161,6 +161,10 @@ define('IGK_CONNEXION_FRAME', 193);
 
 define("IGK_ENV_SESS_DOM_LIST", 0x201);
 define("IGK_CUSTOM_CTRL_PARAM", 0x400);
+//-------------------------------------------------------
+// | start environment constant key
+define("IGK_ENV_KEY", 0xE0);
+
 
 define("IGK_ENV_REQUIREMENT_KEY", 194);
 define('IGK_DOCUMENT_CLASS', 195);

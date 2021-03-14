@@ -172,9 +172,8 @@ $def[".igk-form .igk-row"]="margin-top:auto !important;";
 $def[".igk-white-border"]="{sys:bdr-1}; border-color:white";
 $def[".igk-black-border"]="{sys:bdr-1}";
 for($i=0; $i < 5; $i++){
-    $t=4 * (1 << $i);
-    $def[".igk-pad-".$t.
-    ""]="padding:".$t."px;";
+    $t= 4 * (1 << $i);
+    $def[".igk-pad-".$t]="padding:".$t."px;";
 }
 for($i=2; $i < 6; $i++){
     $def[".fitw-".

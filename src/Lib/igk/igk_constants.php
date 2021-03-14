@@ -30,6 +30,7 @@ final class IGKEnvKeys{
     const VIEW_CURRENT_ACTION=self::CURRENT_CTRL+3;
     const VIEW_HANDLE_ACTIONS=self::CURRENT_CTRL+4;
     const VIEW_INC_VIEW= self::CURRENT_CTRL+5;
+    const VIEW_CURRENT_VIEW_NAME= self::CURRENT_CTRL+6;
 }
 ///<summary>Represente class: IGKFieldConstants</summary>
 /**

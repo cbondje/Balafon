@@ -3669,6 +3669,26 @@ Factory::form("cref", function(){
     }    
     return $f;
 });
+
+
+
+///<summary>Represente igk_html_node_apploginform function</summary>
+///<param name="app"></param>
+///<param name="baduri" default="null"></param>
+///<param name="goodUri" default="null"></param>
+/**
+* Represente igk_html_node_apploginform function
+* @param mixed $app
+* @param mixed $baduri the default value is null
+* @param mixed $goodUri the default value is null
+*/
+function igk_html_node_apploginform($app, $baduri=null, $goodUri=null){
+    $n=igk_createNode("div");
+    igk_app_login_form($app, $n, $baduri, $goodUri);
+    return $n;
+}
+
+
 Factory::form("initfield", function(){
     if ($f = igk_html_parent_node()){        
         igk_html_form_initfield($f);

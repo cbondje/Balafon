@@ -39,7 +39,7 @@ final class Utils{
         }
     
         $s.=")";
-        if ($t = $v->getReturnType()){
+        if ($v->hasReturnType() && ($t = $v->getReturnType())){
             if ($filter) $t = $filter("return", $t->getName());
             $s .=": ".$t;
         }

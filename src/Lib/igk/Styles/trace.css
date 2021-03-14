@@ -1,7 +1,4 @@
-.igk-btn{
-	background-color:blue;
-}
-
+ 
 .igk-js-notify-box{
 	position:fixed;
 	width:100%;
@@ -43,8 +40,7 @@
 #tracelist{
 	height:3.6em;
 	padding:4px;
-	margin-bottom:1.1em;
-	max-height: 300px;
+	margin-bottom:1.1em; 
 }
 #tracelist.igk-active{
 	height:auto;
@@ -65,8 +61,8 @@
 	font-weight:200;
 }
 body{
-	padding-top:2em;
 	height:auto;
+	background-color: #302640;
 }
 .igk-container{
 

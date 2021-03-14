@@ -1616,3 +1616,4 @@ $l["Sign in"] = "Connexion";
 $l["email or login"] = "Email ou identifiant";
 $l["all rights reserved"] = "tous droits reservés";
 
+$l["Action [%s] not found"] = "Action impossible à exécuter: %s";
