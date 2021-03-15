@@ -2,6 +2,8 @@
 
 namespace IGK\Resources;
 
+use IGKHtmlUtils;
+use IGKViewMode;
 use IIGKHtmlGetValue;
 use function igk_resources_gets as __;
 

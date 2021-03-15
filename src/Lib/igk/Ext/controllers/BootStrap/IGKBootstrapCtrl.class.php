@@ -1,5 +1,7 @@
 <?php
 
+use IGK\Resources\R;
+
 use function igk_resources_gets as __;
 /*
 boot strap structure controller

@@ -42200,7 +42200,7 @@ final class IGKLangCtrl extends IGKConfigCtrlBase {
     public function View(){
         igk_google_addfont(igk_app()->Doc, "Roboto");
         $this->setEnvParam("lang:onview", true);
-        igk_app()->Doc->lang=R::GetCurrentLang();
+        igk_app()->Doc->getLang( R::GetCurrentLang());
         $c=$this->TargetNode;
         $c["class"]="google-Roboto";
         $c->ClearChilds();

@@ -11,6 +11,8 @@
 /** @var BaseController $s_ctrl */
 
 use function igk_resources_gets as __;
+use IGK\Resources\R;
+
 ($s_ctrl == null) && igk_die("selected controller not found");
 $div=$t;
 $v_divarticle=$div->addDiv();
@@ -21,7 +23,7 @@ __("Article for {0}", $s_ctrl->getName());
 
 $frm=$v_divarticle->addForm();
 $frm["action"]=$ctrl->getUri("ca_add_article_frame");
-$frm->addLabel()->Content=R::ngets("lb.Language");
+$frm->addLabel()->Content= __("Lang");
 $l=explode("|", igk_getctrl(IGK_CSVLANGUAGE_CTRL)->Languages);
 $tab=array(IGK_ALL_LANG);
 if(count($l) > 0)

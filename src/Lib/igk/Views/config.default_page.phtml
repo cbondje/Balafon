@@ -3,6 +3,8 @@
 // :domain info
 //TODO: CACHE TOOL
 
+use IGK\Resources\R;
+
 use function igk_resources_gets as __;
 
 
@@ -85,7 +87,7 @@ $frm=$box->addPanelBox()->addForm();
 $frm["action"]=$ctrl->getUri("update_defaultlang");
 $frm->addHSep();
 if(!$app->Configs->default_lang){
-    $app->Configs->default_lang=R::GetCurrentLang();
+    $app->Configs->default_lang= R::GetCurrentLang();
 }
 $v_csvc=igk_getctrl(IGK_CSVLANGUAGE_CTRL);
 igk_assert_die($v_csvc == null, "The controller 'IGK_CSVLANGUAGE_CTRL' is null");

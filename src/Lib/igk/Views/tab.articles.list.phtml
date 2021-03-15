@@ -9,6 +9,9 @@
 // @url: https://www.igkdev.com
 
 use function igk_resources_gets as __;
+use IGK\Resources\R;
+
+
 ($s_ctrl == null) && igk_die("selected controller not found");
 $div=$t;
 $div->add(new IGKHtmlSearchItem($ctrl->getUri("search_article"), null, "m_search_article"));

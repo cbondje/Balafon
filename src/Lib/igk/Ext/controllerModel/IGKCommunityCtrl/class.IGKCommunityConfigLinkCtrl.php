@@ -1,4 +1,8 @@
 <?php
+
+use function igk_resources_gets as __; 
+use IGK\Resources\R;
+
 //-------------------------------------------------
 ///community default manager
 //-------------------------------------------------
@@ -29,7 +33,7 @@ final class IGKCommunityLink extends IGKConfigCtrlBase
 		}
 		else{
 			$frame = igk_frame_add_confirm($this,"confirm_rm_frame", $this->getUri("comm_rm&clId=".$id));
-			$frame->Form->Div->Content = R::ngets("msg.confirmsuppression");
+			$frame->Form->Div->Content = __("msg.confirmsuppression");
 			$frame->Form->Div->addInput("clId", "hidden", $id);
 		}
 		$this->View();
@@ -304,7 +308,5 @@ final class IGKCommunityLink extends IGKConfigCtrlBase
 		$src = $this->App->Doc->addScript("https://apis.google.com/js/plusone.js");
 		$gdiv = $target->add("span");
 		$gdiv->add("g:plusone")->addNothing();
-	}
-
-}
-?>
+	} 
+} 

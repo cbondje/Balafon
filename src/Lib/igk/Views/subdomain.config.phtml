@@ -9,9 +9,11 @@
 // @url: https://www.igkdev.com
 
 use function igk_resources_gets as __;
+use IGK\Resources\R;
+
 $t->clearChilds();
 $t->addDiv()->setStyle("display:none")->Content="Subdomain Manager";
-$t->addDiv()->addTitleLevel(4)->Content=R::ngets("title.SubdomainManager");
+$t->addDiv()->addTitleLevel(4)->Content= __("Sub-Domain");
 $t->addHSep();
 $dom=IGKSubDomainManager::GetBaseDomain();
 $dv=$t->addDiv();
