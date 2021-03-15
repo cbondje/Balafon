@@ -1,8 +1,9 @@
 <?php
 namespace IGK\Test;
 use PHPUnit\Framework\TestCase;
+use IGK\System\Configuration\ControllerConfigData;
 class ControllerConfigDataTest extends TestCase{
 	function test_check_class(){
-		$this->assertTrue(class_exists(\ControllerConfigData::class));
+		$this->assertTrue(class_exists(ControllerConfigData::class));
 	}
 }
