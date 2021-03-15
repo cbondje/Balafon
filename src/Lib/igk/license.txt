@@ -5,7 +5,7 @@ IGKDEV web framework (BALAFON)
 author: C.A.D BONDJE DOUE
 mail: bondje.doue@igkdev.com
 release : 17/10/2014
-copyright : IGKDEV &copy 2008-2021
+copyright : IGKDEV &copy 2008-2014
 
   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007

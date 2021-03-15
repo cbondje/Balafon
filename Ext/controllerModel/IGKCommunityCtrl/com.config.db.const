@@ -1,5 +1,0 @@
-<?php
-// Balafon : generated db constants file
-// date: 2021-01-15 17:01:21
-abstract class IGKCommunityLinkDbConstants{
-}
