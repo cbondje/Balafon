@@ -9,10 +9,13 @@
 // @url: https://www.igkdev.com
 
 ///<summary>Use to edit a template</summary>
+
+use IGK\Controllers\BaseController;
+
 /**
 * Use to edit a template
 */
-final class IGKTemplateEditor extends IGKControllerBase{
+final class IGKTemplateEditor extends BaseController{
     ///<summary>Represente __construct function</summary>
     /**
     * Represente __construct function

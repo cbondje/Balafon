@@ -990,4 +990,9 @@ class igk_html_func_itemsTest extends TestCase{
 	public function testigk_site_map_add_uri(){ 
 	$this->assertTrue(function_exists('igk_site_map_add_uri'), 'function igk_site_map_add_uri not exists'); 
 	}
+
+	/** @test */
+	public function testigk_html_node_host(){ 
+		$this->assertTrue(function_exists('igk_html_node_host'), 'function igk_html_node_host not exists'); 
+	}
 }

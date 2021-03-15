@@ -6,6 +6,8 @@
 // TODO: parallax not implement
 use IGK\System\Html\Dom\Factory;
 use function igk_resources_gets as __;
+use IGK\Resources\R;
+
 ///<summary>function igk_css_link_callback</summary>
 ///<param name="p"></param>
 ///<param name="key"></param>
@@ -357,7 +359,7 @@ function igk_html_node_aclearsandreload(){
     $n=igk_createXmlNode('a');
     $n["class"]="igk-btn";
     $n["href"]=$ctrl ? $ctrl->getUri("ClearS")."&r=".base64_encode(igk_io_currentUri()): null;
-    $n->Content=R::ngets("btn.clearSAndReload");
+    $n->Content= __("Clear session and reload");
     return $n;
 }
 ///<summary>build action bar</summary>
@@ -1969,7 +1971,6 @@ function igk_html_node_label($for=null, $key=null){
 * @param mixed $description
 */
 function igk_html_node_labelinput($id, $text, $type="text", $value=null, $attributes=null, $require=false, $description=null){
-    // $o=igk_html_parent_node();
     $o=igk_createnotagnode();//igk:label-input");
     $o->setCallback("getIsRenderTagName", "return false;");
     $o->setCallback("getinput", "return \$this->input;");
@@ -1985,7 +1986,7 @@ function igk_html_node_labelinput($id, $text, $type="text", $value=null, $attrib
     }
 
     $h=$o->addInput($id, $type, $value, $attributes);
-    //igk_wln_e($attributes);
+    $h["class"] = "+igk-form-control";
 
 	switch($type){
         case "checkbox":
@@ -2770,7 +2771,7 @@ function igk_html_node_slabelcheckbox($id, $value=false, $attributes=null, $requ
 * @param mixed $description
 */
 function igk_html_node_slabelinput($id, $type="text", $value=null, $attributes=null, $require=false, $description=null){
-    return igk_html_node_LabelInput($id, R::ngets("lb.".$id), $type, $value, $attributes, $require, $description);
+    return igk_html_node_labelinput($id, R::ngets("lb.".$id), $type, $value, $attributes, $require, $description);
 }
 ///<summary>function igk_html_node_slabelselect</summary>
 ///<param name="id"></param>
@@ -3686,6 +3687,13 @@ function igk_html_node_apploginform($app, $baduri=null, $goodUri=null){
     $n=igk_createNode("div");
     igk_app_login_form($app, $n, $baduri, $goodUri);
     return $n;
+}
+
+function igk_html_node_host(callable $callback){
+    if (!($p = igk_html_parent_node()))
+        throw new IGKException("Parent Node not found");
+    $callback($p);
+    return $p;
 }
 
 

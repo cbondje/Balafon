@@ -424,7 +424,7 @@ function igk_api_mysql_get_config_data_schema($api, $render=1, $param=null){
     $count=0; 
     foreach($ctrl as $v){
         if($v->getDataAdapterName() == IGK_MYSQL_DATAADAPTER){
-            $b = IGKControllerBase::Invoke($v, "getUseDataSchema");
+            $b = BaseController::Invoke($v, "getUseDataSchema");
 // igk_wln_e("data : ", $b);
             if(!$b){ // $v->getUseDataSchema()){
                 $tname=$v->getDataTableName();

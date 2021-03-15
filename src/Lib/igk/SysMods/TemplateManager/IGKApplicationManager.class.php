@@ -4,10 +4,13 @@
 //desc: controller of template
 
 ///<summary>Represente class: IGKApplicationManager</summary>
+
+use IGK\Controllers\BaseController;
+
 /**
 * Represente IGKApplicationManager class
 */
-class IGKApplicationManager extends IGKControllerBase{
+class IGKApplicationManager extends BaseController{
     const IDENTIFIER=IGK_CTRL_IDENTIFIER + 11;
     const MAIN_FILE="Application.php";
     const MANIFEST_TAGNAME="balafon_manifest";
@@ -560,7 +563,7 @@ class IGKApplicationManager extends IGKControllerBase{
         else{
             if(igk_reflection_class_extends(get_class($obj), "IGKTemplateBase")){
                 $this->m_createdCtrls[$n]=$obj;
-                IGKControllerBase::InvokeInitCompleteOn($obj);
+                BaseController::InvokeInitCompleteOn($obj);
                 return 1;
             }
         }

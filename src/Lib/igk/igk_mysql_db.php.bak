@@ -1167,7 +1167,7 @@ class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
 /**
 * Represente IGKMySQLDataCtrl class
 */
-class IGKMySQLDataCtrl extends IGKControllerBase{
+class IGKMySQLDataCtrl extends BaseController{
     ///<summary>Represente __construct function</summary>
     /**
     * Represente __construct function

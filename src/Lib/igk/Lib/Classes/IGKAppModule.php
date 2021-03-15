@@ -7,7 +7,7 @@
 /**
 * represent application module class
 */
-final class IGKAppModule extends IGKControllerBase{
+final class IGKAppModule extends BaseController{
     private $m_dir;
     private $m_doc;
     private $m_fclist;

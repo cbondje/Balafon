@@ -82,6 +82,9 @@ final class ConfigData {
     public function getConfig($name, $default=null){
         return igk_getv($this->m_configEntries, $name, $default);
     }
+    public function get($xpath, $default= null){
+        return igk_conf_get($this->m_configEntries, $xpath, $default);
+    }
     ///<summary>Represente getEntries function</summary>
     /**
     * Represente getEntries function

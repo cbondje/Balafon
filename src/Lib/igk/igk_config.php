@@ -567,7 +567,8 @@ define("IGK_FD_GROUP_ID", IGK_FIELD_PREFIX . "Group_Id");
 define("IGK_FD_AUTH_ID", IGK_FIELD_PREFIX . "Auth_Id");
 define("IGK_DEFAULT_DB_PREFIX", "tbigk");
 define("IGK_UINFO_TOKENID", "TOKENID");
-define("IGK_CTRLBASECLASS", "IGKControllerBase");
+define("IGK_CTRLBASECLASS", IGK\Controllers\BaseController::class);
+define("IGK_ROOT_CTRLBASECLASS", IGK\Controllers\RootControllerBase::class);
 define("IGK_CTRLNONATOMICTYPEBASECLASS", "IGKCtrlNonAtomicTypeBase");
 define("IGK_CTRLWEBPAGEBASECLASS", "IGKDefaultPageController");
 define("IGK_CSV_SEPARATOR", "IGK_CSV_SEPARATOR");
@@ -580,7 +581,7 @@ define("IGK_MYSQL_DATAADAPTER", "MYSQL");
 define("IGK_CSV_DATAADAPTER", "CSV");
 define("IGK_CTRL_CONF_FILE", "config.xml");
 define("IGK_CTRL_DBCONF_FILE", "data.xml");
-define("IGK_CTRL_BASE", "IGKControllerBase");
+define("IGK_CTRL_BASE", "BaseController");
 define("IGK_HTML_BINDING_EVAL_CONTEXT", "igk:evaluation_context");
  
 // define("IGK_VIEW_OPTIONS", 0xa002);

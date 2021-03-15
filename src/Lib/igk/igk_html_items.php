@@ -1,6 +1,8 @@
 <?php
 // author: C.A.D. BONDJE DOUE
 // licence: IGKDEV - Balafon @ 2019
+use IGK\Resources\R;
+use function igk_resources_gets as __;
 
 
 
@@ -1142,7 +1144,7 @@ final class IGKHtmlConnectFormItem extends IGKHtmlCtrlComponentNodeItemBase {
 	/** @var IGKHtmlItem */
     private $m_frm;
     private $m_goodUri;
-    /** @var IGKControllerBase */
+    /** @var BaseController */
     private $Ctrl;
     ///<summary>Represente __construct function</summary>
     ///<param name="type" default="email"></param>

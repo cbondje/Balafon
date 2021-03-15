@@ -1,11 +1,13 @@
 <?php
 namespace IGK\Actions;
 
+use ArgumentCountError;
 use Closure;
 use IGK\Actions\IActionProcessor;
 use IGK\System\Exceptions\ActionNotFoundException;
 use IGK\System\Exceptions\ArgumentTypeNotValidException;
 use IGK\System\Exceptions\NotInjectableTypeException;
+use IGK\System\Exceptions\RequireArgumentException;
 use IGK\System\Http\Request;
 use IGKActionBase;
 use ReflectionFunction;
@@ -25,15 +27,20 @@ class Dispatcher implements IActionProcessor{
         $this->host = $host;
     } 
     public static function __callStatic($name, $args){
+
+
+      
        
         if (self::$sm_macro===null){
             self::$sm_macro = [];
             self::$sm_macro["Dispatch"]= function($fc, ...$args){
                
                 $g = new ReflectionFunction($fc); 
-                $cl = null;
+                $cl = null; 
+                $required =  $g->getNumberOfRequiredParameters();
+ 
                 // | try to inject parameter
-                if (($g->getNumberOfRequiredParameters() >= 1) && 
+                if (( $required >= 1) && 
                 ($parameters = $g->getParameters()) && 
                 ($cl = $parameters[0]->getType()) && 
                 ($cl->getName() ===  Request::class)){
@@ -50,13 +57,20 @@ class Dispatcher implements IActionProcessor{
                         throw new NotInjectableTypeException($i);
                     }
                 } elseif (isset($parameters)){
+                   
+
                     for($i = 0; $i < count($parameters); $i++){
+                        if (!$parameters[$i]->isOptional()){
+                            if ($i >= count($args)){
+                                throw new RequireArgumentException($required, count($args));
+                            }                             
+                        }
                         if (($p = $parameters[$i]->getType()) && (class_exists( $type = $p->getName()))){
                             
                             $c = new $type();
-                            $args[] = $c;
+                            $args[$i] = $c;
                             continue;
-                        } else {
+                        } else { 
                             if ($p){
                                 $tname =$p->getName();
                                 $v = igk_getv($args, $i);
@@ -68,15 +82,15 @@ class Dispatcher implements IActionProcessor{
                                     if ($v && !preg_match_all("#^".$pattern."$#", $v)){
                                         throw new ArgumentTypeNotValidException($i);
                                     }
-                                }
+                                } 
                             }
                         } 
                     }
-                }
+                }  
                 return $fc(...$args);
             }; 
         }
-        if (is_callable($fc = igk_getv(self::$sm_macro, $name))){
+        if (is_callable($fc = igk_getv(self::$sm_macro, $name))){       
             return $fc(...$args);
         } 
         return (new static(null))->$name(...$args);
@@ -85,9 +99,9 @@ class Dispatcher implements IActionProcessor{
     {     
         if (is_callable($g =  [$this->host, $name]) 
         &&  ($fc = Closure::fromCallable($g)->bindTo($this->host))
-        ){ 
-            $args = array_slice($arguments,1);       
-            return self::__callStatic("Dispatch", [$fc, $args]);   
+        ){             
+            $targs = array_merge([$fc] , array_slice($arguments,1));       
+            return self::__callStatic("Dispatch", $targs);   
         }     
         throw new ActionNotFoundException($name);   
     }

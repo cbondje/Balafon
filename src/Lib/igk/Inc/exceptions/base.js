@@ -18,5 +18,6 @@
         });
         _tab++;
     });
-    show_tab(_index);
+    if (_a.length> 0)
+        show_tab(_index);
 })();

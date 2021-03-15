@@ -2,6 +2,7 @@
 // ^/Configs
 // css configuration page
 $page = ".igk-cnf-page";
+$areasize = "420px";
 // $def->clear(); 
 // because of clear on theme make errors
 // reg file type color
@@ -432,8 +433,10 @@ $def[".igk-cnf-content form"] = "width:100%;";
 
 
 
-$def[$page." .cltext, .igk-cnf-page .clpassword, .igk-cnf-page .clemail"] = "padding:4px; width:180px;";
-$def[$page." .cltextarea"] = "width:420px; height : 300px; white-space: nowrap; ";
+$def[$page." .cltext, .igk-cnf-page .clpassword, .igk-cnf-page .clemail, .igk-cnf-page select"] = "padding:4px; width:180px; margin-bottom:0.5em";
+
+
+$def[$page." .cltextarea"] = "width: {$areasize}; height : 300px; white-space: nowrap; ";
 $def[$page." .cllabel"] = "display:inline-block; width: 150px; min-height: 32px; vertical-align:top;  line-height:normal;";
 $def[$page." table input[type=text]"] = "width:100% !important;";
 $def[$page." .clreset"]=
@@ -587,3 +590,36 @@ $def[$page ." h1"] =
 $def[$page ." div.igk-title"] = 
 $def[$page ." .igk-section-title.igk-title-4"] = 
 "padding-bottom:1.6em; font-weight: 200; margin-bottom:0 !important;";
+
+
+
+// ----------------------------------------------------------------------
+// + MAIL SERVER STYLES
+// +
+// ----------------------------------------------------------------------
+$def[".igk-cnf-content div#c_ml .igk-form-control"] = "border-radius: 4px; width: {$areasize};";
+$def[".igk-cnf-content div#c_ml input[type=checkbox].igk-form-control"] = "width: auto;";
+$def[".igk-cnf-content div#c_ml select"] = "border: 1px solid #999; padding: 4px; width: 180px";
+$def[".igk-cnf-content  div#c_ml label"] = "{sys:alignr, alignt}  padding-right: 10px;";
+
+$sm_screen[".igk-cnf-content  div#c_ml label"] = 
+$xsm_screen[".igk-cnf-content div#c_ml label"] = "display:none !important;";
+
+$sm_screen[".igk-cnf-content div#c_ml select"] = 
+$xsm_screen[".igk-cnf-content div#c_ml select"] = 
+$sm_screen[".igk-cnf-content  div#c_ml .igk-form-control"] = 
+$xsm_screen[".igk-cnf-content div#c_ml .igk-form-control"] = "display:block; width:100%";
+// | CONFIGURATION MAIL SENDING
+//
+
+$def["form.send-mail-form .igk-form-control"] = "width: {$areasize}; border-radius: 4px;";
+$def["form.send-mail-form label"] = "{sys:alignr, alignt} padding-right: 10px;";
+
+
+$sm_screen["form.send-mail-form .igk-form-control"] = 
+$xsm_screen["form.send-mail-form .igk-form-control"] = "width:100%";
+
+
+
+$sm_screen["form.send-mail-form label"] = 
+$xsm_screen["form.send-mail-form label"] = "display:none !important;";

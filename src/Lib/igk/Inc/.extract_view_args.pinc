@@ -8,7 +8,7 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
-/** @var IGKControllerBase $ctrl */
+/** @var BaseController $ctrl */
 
 
 foreach($ctrl->getSystemVars() as $k=>$v){

@@ -5,6 +5,7 @@
 ///<summary>Represente view's action definition</summary>
 
 use IGK\Actions\IActionProcessor;
+use IGK\Controllers\BaseController;
 use IGK\System\Exceptions\ActionNotFoundException;
 
 /**
@@ -61,8 +62,7 @@ abstract class IGKActionBase implements IActionProcessor{
         return $o;
     }
     public static function __callStatic($name, $arguments)
-    { 
-        
+    {  
         return (new static)->$name(...$arguments);
     }
     /**
@@ -75,11 +75,11 @@ abstract class IGKActionBase implements IActionProcessor{
      * @throws Exception 
      */
     private function Handle($fname, $args, $exit=1, $flag=0){ 
-        $ctrl = null;
-        
-        if ($fname instanceof IGKControllerBase){           
+        $ctrl = null; 
+
+        if ($fname instanceof BaseController){           
             if (func_num_args()<3){
-                throw new IGKArgumentException("Require 3 argument in that case");
+                throw new \Exception("Require 3 argument in that case");
             }
             $ctrl = $fname;
             $c = func_get_args();
@@ -101,7 +101,7 @@ abstract class IGKActionBase implements IActionProcessor{
             }
             $cargs = [$this];
             $b = new $b(...$cargs); 
-        }
+        }  
         return igk_view_handle_actions($fname, $b, $args, $exit, $flag );
     }
     public function __call($name, $arguments){

@@ -8,6 +8,21 @@ namespace IGK;
 final class IGKEnvironment implements \ArrayAccess{
     private $m_envs;
     static $sm_instance;
+    // | default FOUR ENVIRONMENT TYPE
+    private static $env_keys = [
+        "DEV"=>"development",
+        "TST"=>"testing",
+        "ACC"=>"acceptance",
+        "OPS"=>"production"
+    ];
+
+    public static function ResolvEnvironment($n){        
+        if (($index = array_search(strtolower($n), self::$env_keys))===false){
+            return "DEV";
+        }
+        return $index;
+    }
+
     public function setArray($name, $key, $value){
         $tab = $this->get($name);
         if (!is_array($tab)){
@@ -124,18 +139,9 @@ final class IGKEnvironment implements \ArrayAccess{
     /**
     * check wether environment is on environment mode
     */
-    public function is($env_mode){
-        static $env_keys;
-        if ($env_keys === null){
-            $env_keys = [
-                "DEV"=>"development",
-                "TST"=>"testing",
-                "ACC"=>"acceptance",
-                "OPS"=>"production"
-            ];
-        }
-        if(array_key_exists($env_mode, $env_keys)){
-            $env_mode = $env_keys[$env_mode];
+    public function is($env_mode){         
+        if(array_key_exists($env_mode, self::$env_keys)){
+            $env_mode = self::$env_keys[$env_mode];
         }
         return igk_server()->ENVIRONMENT == $env_mode;
     }

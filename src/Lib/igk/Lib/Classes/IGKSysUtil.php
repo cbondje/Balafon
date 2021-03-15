@@ -61,7 +61,7 @@ final class IGKSysUtil
         $tables = [];
         $v = $controller;
         if ($v->getDataAdapterName() == $dataadapter) {
-            $b = IGKControllerBase::Invoke($v, "getUseDataSchema");
+            $b = BaseController::Invoke($v, "getUseDataSchema");
             // 
             if (!$b) {
                 $tname = $v->getDataTableName();
@@ -82,10 +82,10 @@ final class IGKSysUtil
 
     /**
      * 
-     * @param IGKControllerBase $controller 
+     * @param BaseController $controller 
      * @return string 
      */
-    public static function GetControllerSqlQueryData(IGKControllerBase $controller): string
+    public static function GetControllerSqlQueryData(BaseController $controller): string
     {
         $s = "";
         if ($tables = self::GetControllerConfigDataInfo($controller)) {
