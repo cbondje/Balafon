@@ -1,4 +1,6 @@
 <?php
+use IGK\Controllers\BaseController;
+
 // author: C.A.D. BONDJE DOUE
 // licence: IGKDEV - Balafon @ 2019
 // Description: Use to add extra module to system. that module include function declared on .module.pinc file with the $reg array
