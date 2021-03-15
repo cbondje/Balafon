@@ -43,11 +43,11 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 	public function getDataTableInfo()
 	{
 		return array(
-			new IGKdbColumnInfo(array(IGK_FD_NAME=>IGK_FD_ID, IGK_FD_TYPE=>"Int","clAutoIncrement"=>true,IGK_FD_TYPELEN=>10, "clIsUnique"=>true, "clIsPrimary"=>true)),
-			new IGKdbColumnInfo(array(IGK_FD_NAME=>"clCommunity_Id", IGK_FD_TYPE=>"Int", "clIsUnique"=>true, "clLinkType"=>"tbigk_community"  )),
-			new IGKdbColumnInfo(array(IGK_FD_NAME=>"clLink", IGK_FD_TYPE=>"Text", "clDescription"=>"Url to community")),
-			new IGKdbColumnInfo(array(IGK_FD_NAME=>"clImageKey", IGK_FD_TYPE=>"VarChar", IGK_FD_TYPELEN=>30)),
-			new IGKdbColumnInfo(array(IGK_FD_NAME=>"clAvailable", IGK_FD_TYPE=>"Int", "clNotNull"=>1))
+			new IGKDbColumnInfo(array(IGK_FD_NAME=>IGK_FD_ID, IGK_FD_TYPE=>"Int","clAutoIncrement"=>true,IGK_FD_TYPELEN=>10, "clIsUnique"=>true, "clIsPrimary"=>true)),
+			new IGKDbColumnInfo(array(IGK_FD_NAME=>"clCommunity_Id", IGK_FD_TYPE=>"Int", "clIsUnique"=>true, "clLinkType"=>"tbigk_community"  )),
+			new IGKDbColumnInfo(array(IGK_FD_NAME=>"clLink", IGK_FD_TYPE=>"Text", "clDescription"=>"Url to community")),
+			new IGKDbColumnInfo(array(IGK_FD_NAME=>"clImageKey", IGK_FD_TYPE=>"VarChar", IGK_FD_TYPELEN=>30)),
+			new IGKDbColumnInfo(array(IGK_FD_NAME=>"clAvailable", IGK_FD_TYPE=>"Int", "clNotNull"=>1))
 			);
 	}
 	public function initDb(){

@@ -5637,7 +5637,7 @@ function igk_db_get_table_def($adaptername=IGK_MYSQL_DATAADAPTER){
                     continue;
                 $info=(object)array(
                         "tableName"=>$table,
-                        "tableInfo"=>IGKdbColumnInfo::AssocInfo($rinfo,
+                        "tableInfo"=>IGKDbColumnInfo::AssocInfo($rinfo,
                         $table),
                         "Ctrl"=>$k,
                         IGK_ENTRIES_TAGNAME=>$te,
@@ -5649,7 +5649,7 @@ function igk_db_get_table_def($adaptername=IGK_MYSQL_DATAADAPTER){
         else{
             $info=(object)array(
                     "tableName"=>$v_name,
-                    "tableInfo"=>IGKdbColumnInfo::AssocInfo($v_info,
+                    "tableInfo"=>IGKDbColumnInfo::AssocInfo($v_info,
                     $v_name),
                     "Ctrl"=>$k,
                     IGK_ENTRIES_TAGNAME=>$te,
@@ -6221,7 +6221,7 @@ function igk_db_load_data_schema_array($n, & $tab, & $tbrelation=null){
         $c=array();
         $tb=$v["TableName"];
         foreach($v->getElementsByTagName(IGK_COLUMN_TAGNAME) as $vv){
-            $cl=new IGKdbColumnInfo(igk_to_array($vv->Attributes));
+            $cl=new IGKDbColumnInfo(igk_to_array($vv->Attributes));
             if(($tbrelation !== null) && !empty($cl->clLinkType)){
                 if(!isset($tbrelation[$tb]))
                     $tbrelation[$tb]=array();
@@ -38943,7 +38943,7 @@ EOF;
     * Represente ca_addfield_ajx function
     */
     public function ca_addfield_ajx(){
-        $c=$this->ca_getFieldInfo(IGKdbColumnInfo::NewEntryInfo());
+        $c=$this->ca_getFieldInfo(IGKDbColumnInfo::NewEntryInfo());
         if($table=$this->getParam("ctrl:ca_tabInfo")){
             igk_html_add($c, $table);
         }
@@ -39707,7 +39707,7 @@ EOF;
             $tb=igk_createnode("table");
         $ctrl=$ctrl == null ? igk_getctrl($this->SelectedController): $ctrl;
         $tr=$tb->addTr();
-        $t=IGKdbColumnInfo::GetColumnInfo();
+        $t=IGKDbColumnInfo::GetColumnInfo();
         $tr->add("th")->Content=IGK_HTML_SPACE;
         foreach($t as $v=>$k){
             $tr->add("th")->Content=__("lb.".$v);
@@ -39721,7 +39721,7 @@ EOF;
                 }
             }
             else{
-                $info=IGKdbColumnInfo::NewEntryInfo();
+                $info=IGKDbColumnInfo::NewEntryInfo();
                 $info->clIsPrimary=true;
                 $tb->add($this->ca_getFieldInfo($info));
             }
@@ -45232,30 +45232,30 @@ EOF;
     */
     public function getDataTableInfo(){
         return array(
-            new IGKdbColumnInfo(array(
+            new IGKDbColumnInfo(array(
                 IGK_FD_NAME=>IGK_FD_NAME,
                 IGK_FD_TYPE=>"VARCHAR",
                 IGK_FD_TYPELEN=>255,
                 "clIsUnique"=>true,
                 "clIsPrimary"=>true
             )),
-            new IGKdbColumnInfo(array(IGK_FD_NAME=>"clIndex", IGK_FD_TYPE=>"Int")),
-            new IGKdbColumnInfo(array(
+            new IGKDbColumnInfo(array(IGK_FD_NAME=>"clIndex", IGK_FD_TYPE=>"Int")),
+            new IGKDbColumnInfo(array(
                 IGK_FD_NAME=>"clController",
                 IGK_FD_TYPE=>"VARCHAR",
                 IGK_FD_TYPELEN=>255
             )),
-            new IGKdbColumnInfo(array(
+            new IGKDbColumnInfo(array(
                 IGK_FD_NAME=>"clMethod",
                 IGK_FD_TYPE=>"VARCHAR",
                 IGK_FD_TYPELEN=>255
             )),
-            new IGKdbColumnInfo(array(
+            new IGKDbColumnInfo(array(
                 IGK_FD_NAME=>"clPage",
                 IGK_FD_TYPE=>"VARCHAR",
                 IGK_FD_TYPELEN=>255
             )),
-            new IGKdbColumnInfo(array(
+            new IGKDbColumnInfo(array(
                 IGK_FD_NAME=>"clAvailable",
                 IGK_FD_TYPE=>"VARCHAR",
                 IGK_FD_TYPELEN=>1,

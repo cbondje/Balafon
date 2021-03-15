@@ -163,7 +163,7 @@ final class IGKDbColumnInfo extends IGKObject {
     * Represente __toString function
     */
     public function __toString(){
-        return "IGKdbColumnInfo[".$this->clName."]";
+        return "IGKDbColumnInfo[".$this->clName."]";
     }
     ///get association info array
     /**
