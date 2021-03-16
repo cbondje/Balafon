@@ -7,6 +7,10 @@ use ArrayAccess;
 abstract class XsdElement implements ArrayAccess{
     protected $m_node;
 
+    public function getNode(){
+        return $this->m_node;
+    }
+
     public function offsetExists($offset)
     {
         return $this->m_node->offsetExists($offset);

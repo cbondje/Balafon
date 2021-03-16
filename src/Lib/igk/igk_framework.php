@@ -854,13 +854,13 @@ function igk_assert_die($cond, $msg){
 * return the base uri name of a file
 */
 function igk_base_uri_name($f, $basedir=null){
-    $s=$basedir ?? igk_io_basedir();
-    $k=igk_io_dir($f);
-    $k=str_replace($s, "", $k);
+    $s=$basedir ?? igk_io_basedir(); 
+    $k= igk_io_basedir(igk_io_dir($f));
+    $k=str_replace($s, "", $k); 
     $k=str_replace(".", "_", $k);
     $k=str_replace(DIRECTORY_SEPARATOR, ".", $k);
     if((strlen($k) > 0) && ($k[0] == "."))
-        $k=substr($k, 1);
+    $k=substr($k, 1); 
     return $k;
 }
 ///<summary>used to bind attribuyte to type</summary>
@@ -1197,11 +1197,8 @@ function igk_cmp_refobj($o, $i){
         return true;
     if((($o == null) && ($i != null)) || (($o != null) && ($i == null)))
         return false;
-    $cmp=igk_new_id();
-    igk_debug_wln($cmp);
-    $o->$cmp=true;
-    igk_debug_wln(" : ". $o->$cmp);
-    igk_debug_wln(" : ". $i->$cmp);
+    $cmp=igk_new_id(); 
+    $o->$cmp=true; 
     $r=(!empty($i->$cmp));
     unset($o->$cmp);
     return $r;
@@ -13499,7 +13496,7 @@ function igk_html_render_node($n, & $options, $tab=null, $textonly=false, $chain
 
 	if (!isset($options->Context)){
 		igk_die("no context");
-	}
+	} 
 
     while($q && !$options->Stop){
         $closep=false;
@@ -13566,7 +13563,7 @@ function igk_html_render_node($n, & $options, $tab=null, $textonly=false, $chain
             $inner=IGK_STR_EMPTY;
             $c_childs=$q->GetRenderingChildren($options);
             $c_tchild=igk_count($c_childs);
-            $c=IGKHtmlUtils::GetContentValue($q, $options);
+            $c = IGKHtmlUtils::GetContentValue($q, $options); 
             $inner .= $c;
             if($c_tchild > 0){
                 if($updatedepth){
@@ -14914,10 +14911,10 @@ function igk_io_base_request_uri_info(){
 function igk_io_basedatadir($dir=null){
     return igk_io_dir(igk_io_basedir()."/".IGK_DATA_FOLDER.$dir);
 }
-///<summary>get base directory</summary>
+///<summary>get path to base directory</summary>
 ///<remark>return the directory full path according to base directory</remark>
 /**
-* get base directory
+* get path from base directory
 */
 function igk_io_basedir($dir=null){
     if(!defined("IGK_BASE_DIR"))
@@ -16259,7 +16256,7 @@ function igk_io_moveuploadedfiletodatafolder($name, $dir, $pattern="pics_%d%"){
 * return where global project are stored
 */
 function igk_io_projectdir(){
-    $key="sys://configs/projectdir";
+    $key="IGK_PROJECT_DIR";
     $pdir=igk_get_env($key);
     if($pdir == null){
         if(defined("IGK_PROJECT_DIR")){
@@ -32367,7 +32364,7 @@ final class IGKHtmlUtils {
             $o=$c->Render($options);
             self::$gRendering=null;
             return $o;
-        }
+        } 
         return self::GetValue($c, $options);
     }
     ///<summary>Represente GetTableFromSingleArray function</summary>
@@ -32407,6 +32404,8 @@ final class IGKHtmlUtils {
             if(empty($c))
                 return null;
             $out .= $c;
+        } else{
+            $out = $c; 
         }
         return $out;
     }
@@ -52397,7 +52396,7 @@ abstract class IGKPageControllerBase extends IGKCtrlTypeBase{
     * Represente register_autoload function
     */
     protected final function register_autoload(){
-        $k="sys://autoloading/".$this->getDeclaredDir();
+        $k="sys://autoloading/".igk_base_uri_name($this->getDeclaredDir());
         if(igk_get_env($k))
             return;
         igk_set_env($k, 1);
@@ -69466,9 +69465,7 @@ final class IGKHtmlReader extends IGKObject {
                     }
                     $pargs=igk_engine_get_attr_arg(igk_getv($cattr, "igk:args"), $reader->m_context);
 					$v_tn=self::_BuildNode($reader, $cnode, $name, $tab_doc, $pargs);
-
-				 
-					// igk_debug_wln($name . ":???". ($cnode === null));
+ 
 					if($v_tn){
                         if($v_tn->tagName && ($v_tn->tagName != $name) && !$reader->IsEmpty()){
                             array_unshift($v_tags, (object)array(IGK_FD_NAME=>$name, "item"=>$v_tn));

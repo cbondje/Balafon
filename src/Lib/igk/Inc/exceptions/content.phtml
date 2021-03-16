@@ -1,4 +1,7 @@
 <?php
+
+use IGK\IGKEnvironment;
+
 $cl1 = "#ddd";
 $w_padding = "20px";
 $content .= ("<div class=\"igk-contair\" > ");
@@ -115,6 +118,21 @@ $content .= ("<div class=\"igk-contair\" > ");
                     $content.= "</tr>";
                 }
                 $content .= "</table>";
+            },
+            "Environment" => function(& $content){
+                $c = IGKEnvironment::getInstance()->getEnvironments();
+                ksort($c);
+                $content .= "<table>";
+                foreach($c as $k=>$v){
+                    $content.= "<tr>";
+                    $content.= "<td>".$k;
+                    $content.= "</td>";
+                    $content.= "<td>";
+                    $content.= is_string($v) ? $v : "ARRAY";// implode("\n<br />", $v);
+                    $content.= "</td>";
+                    $content.= "</tr>";
+                }
+                $content .= "</table>";
             }
         ];
 
@@ -147,8 +165,7 @@ $content .= ("<div class=\"igk-contair\" > ");
     }
     else{
         $content .= "</ul>";
-    } 
-    $content .= "</div>";
+    }  
 //no script rendergin
 $content .= "<noscript>";
 $content .= "Please activate javascript";

@@ -204,7 +204,11 @@ class igk_frameworkTest extends TestCase{
 	}
 	/** @test */
 	public function testigk_base_uri_name(){ 
-	$this->assertTrue(function_exists('igk_base_uri_name'), 'function igk_base_uri_name not exists'); 
+		$this->assertTrue(function_exists('igk_base_uri_name'), 'function igk_base_uri_name not exists'); 
+		$this->assertEquals("__.information", igk_base_uri_name("../information"));
+		$this->assertEquals("inf", igk_base_uri_name("inf"));
+		$this->assertEquals("inf.A.B.C", igk_base_uri_name("inf/A/B/C"));		
+		$this->assertEquals("__.inf.A.B.C", igk_base_uri_name("../inf/A/B/C"));		
 	}
 	/** @test */
 	public function testigk_bind_attribute(){ 

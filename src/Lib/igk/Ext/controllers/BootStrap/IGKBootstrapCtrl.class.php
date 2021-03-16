@@ -9,7 +9,7 @@ boot strap structure controller
 final class IGKBootstrapCtrl extends IGKConfigCtrlBase
 {
 	public function getName(){
-		return igk_base_uri_name(__FILE__."/".__CLASS__);//bootstrap";
+		return __CLASS__;
 	}
 	public function getIsSystemController()
 	{

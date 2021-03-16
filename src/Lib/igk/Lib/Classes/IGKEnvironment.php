@@ -7,7 +7,7 @@ namespace IGK;
 */
 final class IGKEnvironment implements \ArrayAccess{
     private $m_envs;
-    static $sm_instance;
+    private static $sm_instance;
     // | default FOUR ENVIRONMENT TYPE
     private static $env_keys = [
         "DEV"=>"development",
@@ -15,7 +15,9 @@ final class IGKEnvironment implements \ArrayAccess{
         "ACC"=>"acceptance",
         "OPS"=>"production"
     ];
-
+    public function getEnvironments(){
+        return $this->m_envs;
+    }
     public static function ResolvEnvironment($n){        
         if (($index = array_search(strtolower($n), self::$env_keys))===false){
             return "DEV";
@@ -44,6 +46,10 @@ final class IGKEnvironment implements \ArrayAccess{
             }
         }
         $this->m_envs=$t;
+    }
+    public function __debugInfo()
+    {
+        return null;
     }
     ///<summary>Represente __get function</summary>
     ///<param name="n"></param>
