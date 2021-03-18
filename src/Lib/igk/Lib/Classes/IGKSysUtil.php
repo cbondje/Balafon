@@ -160,4 +160,14 @@ final class IGKSysUtil
         }
         return $s;
     }
+
+    /**
+     * resolv the table name
+     */
+    public static function GetTableName($table){
+        if (strpos($table, "%prefix%") !== false){
+            $table = str_replace("%prefix%", igk_app()->Configs->db_prefix, $table);
+        }
+        return $table;
+    }
 }

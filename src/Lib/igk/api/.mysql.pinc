@@ -8,6 +8,8 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
+use IGK\Controllers\BaseController;
+
 use function igk_resources_gets as __;
 ///used to get relation </summary>
 /**

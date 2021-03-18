@@ -1,16 +1,16 @@
 <?php
 namespace IGK\Tests;
 
-use BaseController;
+use IGK\Controllers\BaseController;
 
 class Utils{
     public static function CreateController($classname){
     
-        if (class_exists($classname) && is_subclass_of($classname , \BaseController::class) && !igk_reflection_class_isabstract($classname)){
+        if (class_exists($classname) && is_subclass_of($classname , BaseController::class) && !igk_reflection_class_isabstract($classname)){
         
             $o = new $classname();
             if (!isset(igk_environment()->AutoLoad[$classname])){ 
-                spl_autoload_register(\BaseController::CreateAutoloadCallback($o));
+                spl_autoload_register(BaseController::CreateAutoloadCallback($o));
                 igk_environment()->setArray("AutoLoad", $classname, 1); 
             }            
             return $o;
@@ -26,8 +26,10 @@ class Utils{
 
     public static function CheckControllerDataBase($test, $controllerClass, $model=null){        
         $controller = $controllerClass;
-        if (is_string($controllerClass) && !($controller = self::CreateController($controllerClass)))
+        if (is_string($controllerClass) && !($controller = self::CreateController($controllerClass))){
+            $test->fail("controller not created");
             return false;
+        }
         $model = $model ?? $controller->getDb(); 
         if ($tb=igk_db_get_ctrl_tables($controller)){
             foreach($tb as $k){                
@@ -35,7 +37,10 @@ class Utils{
                         $model->select_count(null,$k) !== -1                        
                         , "Table $k not present");
             } 
+        }else {
+            $test->fail("no tables : ".get_class($controller));
         }
+
     }
     public static function PostView(BaseController $controller, $view="default", $params=null){
         self::SendView($controller, $view, $params, "POST");

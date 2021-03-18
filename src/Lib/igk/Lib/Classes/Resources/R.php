@@ -5,7 +5,7 @@ use IGKObject;
 use IGKAppContext;
 use IGK\Resources\IGKLangKey;
 use IGKControllerManagerObject;
-
+use function igk_resources_gets as __;
 
 
 ///<summary>IGKResource Class. represent resource / lang / resource management </summary>

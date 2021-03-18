@@ -323,11 +323,11 @@ function igk_mysql_result_table($resource){
 function igk_mysql_time_span($date){
     return igk_time_span(IGK_MYSQL_DATETIME_FORMAT, $date);
 }
-///<summary>Represente class: IGKMySQLDataAdapterBase</summary>
+///<summary>Represente class: DataAdapterBase</summary>
 /**
-* Represente IGKMySQLDataAdapterBase class
+* Represente DataAdapterBase class
 */
-abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
+abstract class DataAdapterBase extends IGKSQLDataAdapter{
     private $m_controller;
     private $m_dbname;
     private $m_error;
@@ -845,7 +845,7 @@ abstract class IGKMySQLDataAdapterBase extends IGKSQLDataAdapter{
 /**
 * Represente IGKMYSQLDataAdapter class
 */
-class IGKMYSQLDataAdapter extends IGKMySQLDataAdapterBase {
+class IGKMYSQLDataAdapter extends DataAdapterBase {
     private $queryListener;
     ///<summary>Represente __construct function</summary>
     ///<param name="ctrl" default="null"></param>

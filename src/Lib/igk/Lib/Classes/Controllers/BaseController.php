@@ -280,9 +280,8 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         $fname=igk_io_getviewname($file, $this->getViewDir());
         $rname=igk_io_view_root_entry_uri($this, $fname);// ."/".$fname;
 
-
         extract($this->utilityViewArgs($fname, $file));
-        extract($this->getSystemVars()); 
+        extract($this->getSystemVars());  
         $this->setEnvParam("fulluri", $furi);
         $params=isset($params) ? $params: array();
  
@@ -295,7 +294,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         try {
             $viewargs=get_defined_vars();
             igk_set_env(IGKEnvKeys::CURRENT_CTRL, $this);
-            igk_set_env(IGKEnvKeys::CTRL_CONTEXT_VIEW_ARGS, $viewargs);            
+            igk_set_env(IGKEnvKeys::CTRL_CONTEXT_VIEW_ARGS, $viewargs); 
+            
+        
+
             extract($this->_get_extra_args($file));
 
             //+ | ----------------------------------------------------------------
@@ -303,9 +305,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             //+ | ----------------------------------------------------------------
             if ((igk_count($params)>0) && ($handler = $this->getActionHandler($fname, $params[0]))){                
                 
-                igk_do_response($r = $handler::Handle($this, $fname, $params));
-       
+                igk_do_response($r = $handler::Handle($this, $fname, $params));       
             }
+      
 
 
 
@@ -1790,23 +1792,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
 		$s.="}".IGK_LF;
 
 		igk_io_w2file($f, $s, true);
-		include_once($f);
-		// return;
-
-        // if($tb != null){
-        //     $tb=array_keys($tb);
-        //     sort($tb);
-        //     foreach($tb as $k){
-        //         $n=strtoupper($k);
-        //         $n=preg_replace_callback("/^%prefix%/i", function(){
-        //             return IGK_DB_PREFIX_TABLE_NAME;
-        //         }
-        //         , $n);
-        //         $s .= "define(\"". $n."\", \"".$k."\");".IGK_LF;
-        //     }
-        // }
-        // IGKIO::WriteToFile($f, $s, true);
-        // include_once($f);
+		include_once($f);		 
     }
     ///<summary> initialize db from internal functions</summary>
     /**

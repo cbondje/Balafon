@@ -9,13 +9,16 @@
 if (defined('IGK_SYS_CONFIG_FILE'))
     return;
 
+use IGK\Controllers\BaseController;
+
+
 //+Configuration data
 define('IGK_ENV_DB_INIT_CTRL', 1);
 define('IGK_LOCAL_DEBUGGING', 1);
 define('IGK_NODESTROY_ON_FATAL', 1);
 define('IGK_NO_TRACELOG', 1);
 define('IGK_SYS_CONFIG_FILE', 1);
-// define("IGK_TRACE", 1); //+
+//  define("IGK_TRACE", 1); //+
 define('IGK_TRACE_LOG', 1);
 
 
@@ -565,7 +568,7 @@ define("IGK_FD_USER_ID", IGK_FIELD_PREFIX . "User_Id");
 define("IGK_FD_PRODUCT_ID", IGK_FIELD_PREFIX . "Product_Id");
 define("IGK_FD_GROUP_ID", IGK_FIELD_PREFIX . "Group_Id");
 define("IGK_FD_AUTH_ID", IGK_FIELD_PREFIX . "Auth_Id");
-define("IGK_DEFAULT_DB_PREFIX", "tbigk");
+define("IGK_DEFAULT_DB_PREFIX", "tbigk_");
 define("IGK_UINFO_TOKENID", "TOKENID");
 define("IGK_CTRLBASECLASS", IGK\Controllers\BaseController::class);
 define("IGK_ROOT_CTRLBASECLASS", IGK\Controllers\RootControllerBase::class);
@@ -581,7 +584,7 @@ define("IGK_MYSQL_DATAADAPTER", "MYSQL");
 define("IGK_CSV_DATAADAPTER", "CSV");
 define("IGK_CTRL_CONF_FILE", "config.xml");
 define("IGK_CTRL_DBCONF_FILE", "data.xml");
-define("IGK_CTRL_BASE", "BaseController");
+define("IGK_CTRL_BASE", BaseController::class);
 define("IGK_HTML_BINDING_EVAL_CONTEXT", "igk:evaluation_context");
  
 // define("IGK_VIEW_OPTIONS", 0xa002);

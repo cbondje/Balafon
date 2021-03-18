@@ -694,30 +694,30 @@ EOF;
             extract(igk_pattern_view_extract($this, $p, 1)); 
             igk_ctrl_change_lang($this, $p);
         }
-        // igk_wln(__FILE__.":".__LINE__, $u, $param);
         //passing ctrl to view for sitepam
         $ctrl = $this;
         include(IGK_LIB_DIR."/Inc/igk_sitemap.pinc");
         $tn=$this->TargetNode;
-
- 
+        
+        
         if($this->_handle_uri_param($c, $param, $query_options)){
             igk_exit();
         }
-
+        
         $this->regSystemVars(null);
         if(empty($param))
-            $param=array();
+        $param=array();
         if(empty($c) && ($this->RegisterToViewMecanism || $viewdefault)){
-		    $this->renderDefaultDoc(igk_conf_get($this->Configs, "/default/document", 'default'));
+            $this->renderDefaultDoc(igk_conf_get($this->Configs, "/default/document", 'default'));
             igk_exit();
         }
         $doc=$this->AppDocument;
         $this->setEnvParam(IGK_CURRENT_DOC_PARAM_KEY, $doc);
         $fnc="";
         $handle=0;  
+        //igk_wln_e(__FILE__.":".__LINE__, $u, $c, $param, $query_options, $this->getViewFile($c));
         if(!($handle=$this->handle_func($c, $param, $doc, 0, null)) && (file_exists($fnc=$this->getViewFile($c)) && preg_match(IGK_VIEW_FILE_END_REGEX, $fnc))){
-            
+     
             $actionctrl=igk_getctrl(IGK_SYSACTION_CTRL, true);
             $m=$actionctrl->matche($page[0]);
             $ck=$this->getEnvParam("appkeys");
@@ -735,12 +735,12 @@ EOF;
                     igk_exit();
                 }
             } 
-            igk_view_dispatch_args($this, $c, $fnc, $param);
+            
+            igk_view_dispatch_args($this, $c, $fnc, $param);          
             $this->setCurrentView($c, true, null, $param, $query_options);
             $ctx=$this->getEnvParam(IGK_CTRL_VIEW_CONTEXT_PARAM_KEY);
             if(igk_is_ajx_demand()){
-                igk_ajx_replace_node($tn, "#".$tn["id"]);
-				// igk_hook("sys://replace_doc",[$this]);
+                igk_ajx_replace_node($tn, "#".$tn["id"]); 
             }
             else{
                 if($ctx == "docview"){

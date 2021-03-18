@@ -100,7 +100,7 @@ class ControllerConfigData extends IGKObject implements ArrayAccess{
             // | ----------------------------------------------------------
             // | UPDATE the configuration file to match allowed environment
             // | ----------------------------------------------------------
-            if ($m = $t->{"env.".$def}){ 
+            if ($m = igk_getv($t, "env.".$def)){  
                 foreach($m as $c=>$p){
                     if (strpos($c, "env.")===0){
                         die("invalid xml configuration file");

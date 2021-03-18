@@ -23,7 +23,7 @@ igk_reg_global_setting('company_name', 'igkdev');
 igk_reg_global_setting('copyright', 'IGKDEV &copy; 2011-'.date('Y'). __(' all rights reserved'));
 igk_reg_global_setting('default_dataadapter', 'MYSQL');
 igk_reg_global_setting('db_name', 'igkdev');
-igk_reg_global_setting('db_prefix', 'tbigk');
+igk_reg_global_setting('db_prefix', IGK_DEFAULT_DB_PREFIX);
 igk_reg_global_setting('db_server', 'localhost');
 igk_reg_global_setting('db_user', 'root');
 igk_reg_global_setting('db_driver', 'nodb');

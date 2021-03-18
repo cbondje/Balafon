@@ -59,5 +59,9 @@ foreach(["IGK_NO_DBCACHE"] as $k){
 defined("IGK_PROJECT_DIR") || define("IGK_PROJECT_DIR", IGK_APP_DIR."/Projects");           
 include(IGK_LIB_DIR."/igk_extensions.phtml");
 
+//
+igk_loadlib(IGK_PROJECT_DIR);
 //.session start for testing
-$s = session_start(); 
+$s = session_start();
+// initialize application static folder 
+IGKApp::InitAtomic();

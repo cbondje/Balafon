@@ -25,11 +25,21 @@ final class Utils{
                 if ($filter && method_exists($t, "getName")) $t = $filter("type", $t->getName());
                 $s.= $t." ";
             }
+            if ($p->isPassedByReference()){
+                $s .= " & ";
+            }
+            if ($p->isVariadic()){
+                $s .= "...";
+            }
             $s.= "\$".$p->getName();
             try{
                 
-                if ($t = $p->getDefaultValue()){
+                if ( $p->isOptional()){
+                     $t = $p->getDefaultValue();
                     if ($filter) $t = $filter("default", $t);
+                    if ($t===null)
+                        $t = 'null';
+                  
                     $s.= " = ".$t;
                 }
             } catch(Exception $ex) {

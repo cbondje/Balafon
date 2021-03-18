@@ -18964,10 +18964,14 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 			return;
 		var q = this;
 		var v = this.getAttribute("href");
+		var meth = this.getAttribute("igk-ajx-lnk-method") ?? "GET";
 
 		if (m && v) {
 			q.addClass("igk-ajx-lnk");
 			var v_meth = m.method || igk.ajx.get;
+			if (meth== "POST"){
+				v_meth = igk.ajx.post;
+			}
 			v = igk.html.appendQuery(v, "ajx-lnk=1");
 			var fc = m.update;
 			var obj = igk.JSON.parse(m, q);

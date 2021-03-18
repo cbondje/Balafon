@@ -1,6 +1,8 @@
 <?php
 namespace IGK;
 
+use Exception;
+
 ///<summary>use to manage Server Environment</summary>
 /**
 * use to manage Server Environment
@@ -17,6 +19,22 @@ final class IGKEnvironment implements \ArrayAccess{
     ];
     public function getEnvironments(){
         return $this->m_envs;
+    }
+    /**
+     * create an environment class instance
+     * @param mixed $classname class name declaration
+     * @return mixed 
+     * @throws Exception 
+     */
+    public function createClassInstance($classname){
+        $b = $this->instances;
+        if ($b===null){
+            $b = [];
+        }
+        if (!isset($b[$classname])){
+            $b[$classname] = new $classname();
+        }
+        return igk_getv($b, $classname);
     }
     public static function ResolvEnvironment($n){        
         if (($index = array_search(strtolower($n), self::$env_keys))===false){

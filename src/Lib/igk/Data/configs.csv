@@ -20,7 +20,7 @@ db_server,localhost
 db_user,igkdev
 db_name,igkdev
 db_pwd,
-db_prefix, tbigk
+db_prefix, tbigk_
 web_pagectrl,defaultpagectrl
 powered_message,
 meta_description,default page description
