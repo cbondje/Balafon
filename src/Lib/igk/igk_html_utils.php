@@ -2,6 +2,9 @@
 // author: C.A.D. BONDJE DOUE
 // licence: IGKDEV - Balafon @ 2019
 
+use IGK\Resources\IGKLangKey;
+use IGK\Resources\R;
+
 use function igk_resources_gets as __;
 
 ///<summary>pre render argument</summary>

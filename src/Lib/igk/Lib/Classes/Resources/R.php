@@ -5,6 +5,8 @@ use IGKObject;
 use IGKAppContext;
 use IGK\Resources\IGKLangKey;
 use IGKControllerManagerObject;
+use IGKHtmlReader;
+
 use function igk_resources_gets as __;
 
 

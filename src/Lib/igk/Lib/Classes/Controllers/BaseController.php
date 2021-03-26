@@ -3,6 +3,7 @@
 
 namespace IGK\Controllers;
 
+use Exception;
 use IGKApp; 
 use IGKFv;
 use IGKHtmlSingleNodeViewer;
@@ -17,9 +18,12 @@ use IGKEvents;
 use IGK\System\Http\Request;
 use IGK\Resources\R as R;
 use IGK\System\Configuration\ControllerConfigData;
-use IGKEnvKeys; 
-
-
+use IGKControllerManagerObject;
+use IGKDbColumnInfo;
+use IGKEnvKeys;
+use IGKResourceNotFoundException;
+use IGKServerInfo;
+use IGKString;
 
 ///<summary>Framework base Controller implementation</summary>
 /**
@@ -52,7 +56,17 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             return;
         }
     }
-    protected function getActionHandler($name, $params){
+    protected function getActionHandler($name, $params=null){
+        $ns = $this->getEntryNameSpace();
+        $c = [];
+        if (!empty($ns)){
+            $c[] = $ns;
+        }
+        $c[] = "Actions\\".$name."Action";
+        $cl = implode("\\", $c);
+        if (class_exists($cl)){
+            return $cl;
+        }
         return null;
     }
     ///<summary>get the data schema filename</summary>
@@ -73,9 +87,17 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     //    return call_user_func_array([$controller, $methodname], $args);
     // }
 
+     ///<summary> registered entry namespace . for auto load class </summary>
+    /**
+    *  registered entry namespace . for auto load class
+    */
     protected function getEntryNameSpace(){
-        return dirname(get_class($this));
-    }
+        $ns = dirname(igk_io_dir(get_class($this)));
+        if ($ns != "."){
+            return str_replace("/", "\\", $ns);
+        }
+        return null;
+    } 
     ///delete entries in database
     ///@adapt : adapter
     ///@entries : array or object of entries to delete

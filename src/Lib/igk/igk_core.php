@@ -124,7 +124,7 @@ function igk_io_remove_ext($name){
     }
     return $name;
 }
-///<summary>detect that the environment in on command line mode</summary>
+///<summary>detect that the environment in on mand line mode</summary>
 /**
 * detect that the environment in on command line mode
 */

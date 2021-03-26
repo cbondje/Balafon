@@ -28,7 +28,7 @@ if(method_exists($s_ctrl, "getAppUri")){
         $dv->addABtn($appuri)->Content="Visit";
 }
 $table=$p->addDiv()->setClass("fitw")->setStyle("overflow-x:auto")->addTable();
-$v_parent=igk_getctrl($s_ctrl->Configs->clParentCtrl);
+$v_parent=igk_getctrl($s_ctrl->Configs->clParentCtrl, false);
 if($v_parent != null){
     $t=$table->addTr();
     $t->add("th")->Content=R::ngets("title.Parent");

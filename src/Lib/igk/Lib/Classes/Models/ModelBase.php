@@ -21,7 +21,7 @@ abstract class ModelBase{
      * raw data
      * @var mixed
      */
-    private $raw;
+    protected $raw;
 
     /**
      * 
@@ -42,14 +42,15 @@ abstract class ModelBase{
                 if (key_exists($k, $this->raw)){
                     $this->raw->$k = $v;
                 }
-            } 
+            }   
         }
     }
     public function __set($name, $value){
         if (key_exists($name, $this->raw)){
             $this->raw->$name = $value;
+            return;
         }
-        throw new Exception("Failed to acces ".$name);
+        throw new Exception("Failed to access ".$name);
     }
     public function __get($name){
         return igk_getv($this->raw, $name);
@@ -88,41 +89,83 @@ abstract class ModelBase{
     public function __callStatic($name, $arguments)
     {
         if (self::$macros === null){
+            // 
+            // + initialize macro definition
+            //
             self::$macros = [
                 "create"=>function($raw=null){                     
-                    return new static($raw);
+                    $c= new static($raw); 
+                    if ($c->raw){
+                        if ($g = $c->insert($c->raw)){
+                            $c->raw = $g->raw;;
+                        }
+                    }
+                    return $c;
                 },
                 "registerMacro"=>function($name, Callable $callback){
+                    
                     if (is_callable($callback)){
                         $callback = Closure::fromCallable($callback);
                     }
-                    self::$macros[static::class."/".$name] = $callback; 
+                    if (__CLASS__ == static::class){
+                        self::$macros[$name] = $callback;     
+                    }else {
+                        self::$macros[static::class."/".$name] = $callback; 
+                    }
                 },
                 "unregisterMacro"=>function($name){
                     unset(self::$macros[static::class."/".$name]);
+                },
+                "registerExtension"=>function($classname){ 
+                    $f = new ReflectionClass($classname);
+                    foreach($f->getMethods() as $k){
+                        if ($k->isStatic()){
+                            self::$macros[$k->getName()] = [$classname, $k->getName()];
+                        }
+                    }
+                },
+                "getMacroKeys"=>function(){
+                    return array_keys(self::$macros);
+                },
+                "getInstance"=>function($name){
+                    return igk_environment()->createClassInstance(static::class);
                 }
             ];
-
-
-                // self::$macros["__instance"]
-                $f = new ReflectionClass(ModelEntryExtension::class);
-                foreach($f->getMethods() as $k){
-                    if ($k->isStatic()){
-                        self::$macros[$k->getName()] = [ModelEntryExtension::class, $k->getName()];
-                    }
+            // register call extension
+            $f = new ReflectionClass(ModelEntryExtension::class);
+            foreach($f->getMethods() as $k){
+                if ($k->isStatic()){
+                    self::$macros[$k->getName()] = [ModelEntryExtension::class, $k->getName()];
                 }
+            }
         }   
         if ($fc = igk_getv(self::$macros, $name)){
+            $bind = 1;
             if (is_array($fc)){
                 array_unshift($arguments, igk_environment()->createClassInstance(static::class));
-            }
+                $bind = 0;
+            } 
+            if ($bind && (static::class !== __CLASS__)){
+                $fc = Closure::bind($fc, null, static::class); 
+                if (!$fc){
+                    igk_die("Can't bind : ", $name);
+                }
+            }            
             return $fc(...$arguments);
         } 
         if ($fc = igk_getv(self::$macros, static::class."/".$name)){
             $fc->bindTo(new static);
             return $fc(...$arguments);
+        }
+        if (static::class === __CLASS__){
+            return;
         }   
-        die("failed to call: ".$name);
+        $c = new static;
+        if (method_exists($c, $name)){
+            return $c->$name(...$arguments);
+        }
+        igk_wln(array_keys(self::$macros));
+        die("ModelBase: failed to call [".$name."]");
     }
 
     /**
@@ -143,7 +186,17 @@ abstract class ModelBase{
         if ($fc = igk_getv(self::$macros, static::class."/".$name)){
             $fc = $fc->bindTo($this); 
             return $fc(...$arguments);
+        } 
+        
+        if ($fc = igk_getv(self::$macros, $name)){
+            if (is_callable($fc)){
+                $fc = Closure::fromCallable($fc);
+            }
+            array_unshift($arguments, $this);            
+            //$fc = $fc->bindTo($this); 
+            return $fc(...$arguments);
         }   
+        igk_wln_e("failed", $name );
     }
 
     /**
@@ -158,12 +211,9 @@ abstract class ModelBase{
     public function to_array(){
         return $this->raw;
     }
-    public function save(){
-     
-            $r = $this->getDataAdapter()->update($this->getTable(), $this->raw);
-       
-            return $r->success(); 
+    public function save(){     
+        $pkey = $this->primaryKey;
+        $r = $this->getDataAdapter()->update($this->getTable(), $this->raw, [$this->primaryKey=>$this->$pkey]);    
+        return $r && $r->success(); 
     }
-
-
 }

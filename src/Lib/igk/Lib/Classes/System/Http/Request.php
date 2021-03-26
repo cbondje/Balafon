@@ -7,10 +7,24 @@ class Request
 {
     static $sm_instance;
     private $m_params;
-
+    private $js_data;
+    /**
+     * prepared request information
+     * @var mixed
+     */
+    private $prepared;
     public function __debugInfo()
     {
         return null;
+    }
+    public function getJsonData(){
+        if (!$this->prepared){
+            $this->js_data = igk_io_get_uploaded_data();
+        }
+        if ($this->js_data !== null){
+            return json_decode($this->js_data);
+        }
+        
     }
     /**
      * set the request parameters

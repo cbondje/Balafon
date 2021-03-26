@@ -15,7 +15,7 @@ use IGK\Actions\Dispatcher;
 use IGK\Controllers\BaseController;
 use IGK\System\Configuration\ConfigData;
 use IGK\System\Html\Dom\IGKHtmlMeta;
-use IGK\Resources\R;
+use IGK\Resources\R; 
 
 
 
@@ -5199,8 +5199,7 @@ function igk_db_ctrl_datatable_info_key($ctrl, $table){
         return $h;
     }
     $c=$ctrl->getDataTableInfo();
-    if(!$c){
-        igk_wln("data:", $tc);
+    if(!$c){ 
         igk_die("getDataTableInfo  null for : ".$table. " class : ".get_class($ctrl));
     }
     if($ctrl->UseDataSchema){
@@ -8143,6 +8142,7 @@ function igk_eval_in_context($src, $ctrl, $raw){
     }  
     ($raw) && is_array($raw) && extract($raw, EXTR_OVERWRITE, "__scope");
     extract(igk_get_context_args()); 
+    igk_ilog($src);
     $__result =  @eval($src);     
 	return $__result;
 }
@@ -10802,6 +10802,9 @@ function igk_getctrl($ctrlname, $throwex=true){
     $app=igk_app();
     if(is_string($ctrlname)){
         $ctrlname=trim($ctrlname);
+        if (empty($ctrlname)){
+            return null;
+        }
         $cc=$app->getControllerManager();
         if($cc === null || !is_object($cc)){
             if($throwex){
@@ -10813,8 +10816,8 @@ function igk_getctrl($ctrlname, $throwex=true){
         if($v == null){
             $v=igk_init_ctrl($ctrlname);
         }
-        if($throwex && ($v == null)){            
-            igk_die("controller [".$ctrlname."] not found");
+        if($throwex && ($v === null)){            
+            igk_die(__("Controller [{0}] not found", $ctrlname));
         }
         return $v;
     }
@@ -21972,6 +21975,7 @@ EOF;
         }
         igk_set_header($s);
     }
+    ob_end_clean();
     header("Content-Type: text/html");
     header("Cache-Control: no-cache");
     igk_wl($doc);
@@ -24763,6 +24767,9 @@ function igk_sys_gen_sitemap($ctrl, $domain="", $render=1){
     $n->RenderXML();
 }
 function igk_sys_zip_core($tfile){
+    if (!class_exists(ZipArchive::class, false))
+        return false;
+
 	$zip = new ZipArchive();
 	if ($zip->open($tfile, ZIPARCHIVE::CREATE))
 	{ 
@@ -27676,18 +27683,20 @@ function igk_view_action_path(){
 function igk_do_response($r){
     $e = 0;
     // igk_wln_e("instance ". ($r instanceof IGK\IResponse));
-
     if (is_object($r) &&  (($r instanceof IGK\IResponse) || ($r instanceof IGK\System\Http\RequestResponse))){
         $r->output();
         $e = 1;
+    }elseif  ($r instanceof IGKHtmlItemBase){
+        $b = new IGK\System\Http\WebResponse($r);
+        $b->output();
+        $e = 1;
     }
-    
-    
-    if (is_array($r)){
+    elseif (is_array($r)){
         igk_json(json_encode($r));
         $e = 1;
     }
-    if ($e) igk_exit();
+    if ($e) 
+        igk_exit();
     return $r;
 }
 ///<summary>handle object action.</summary>
@@ -29540,6 +29549,7 @@ function igk_zip_unzip_to($file, $outdir, $zipentry=null){
 //+ | mandatory file
 //+ | ----------------------------------------------------------------------------------------------
 require_once(dirname(__FILE__)."/Lib/Classes/interfaces.php");
+require_once(dirname(__FILE__)."/Lib/Classes/IGKObject.php");
 require_once(dirname(__FILE__)."/Lib/Classes/System/Configuration/ControllerConfigurationData.php");
 require_once(dirname(__FILE__)."/Lib/Classes/Controllers/RootControllerBase.php");
 require_once(dirname(__FILE__)."/Lib/Classes/Controllers/BaseController.php");
@@ -34331,131 +34341,7 @@ final class IGKObjStorage{
         return __CLASS__;
     }
 }
-///+-------------------------------------------------------------------------------------------------------
-///SUMMARY: CLASS DEFINITION
-///<summary>Represent the base IGK object class </summary>
-/**
-* Represent the base IGK object class
-*/
-class IGKObject {
-    ///<summary>Represente __get function</summary>
-    ///<param name="key"></param>
-    /**
-    * Represente __get function
-    * @param mixed $key
-    */
-    public function __get($key){
-        if(method_exists($this, "get".$key)){ 
-            return call_user_func(array($this, "get".$key), array_slice(func_get_args(), 1));
-        }
-        return null;
-    }
-    // public function __isset($key){
-    //     igk_trace(); 
-    //     return method_exists($this, "get".$key);
-    // }
-    ///<summary>Represente __set function</summary>
-    ///<param name="name"></param>
-    ///<param name="value"></param>
-    /**
-    * Represente __set function
-    * @param mixed $name
-    * @param mixed $value
-    */
-    public function __set($name, $value){
-        $this->_setIn($name, $value);
-    }
-    ///<summary>Represente __toString function</summary>
-    /**
-    * Represente __toString function
-    */
-    public function __toString(){
-        return get_class($this);
-    }
-    ///get object osed to compare
-    /**
-    */
-    public function __wakeup(){
-        if(method_exists($this, 'registerHook')){
-            $this->registerHook();
-        }
-    }
-    ///<summary>Represente _setIn function</summary>
-    ///<param name="name"></param>
-    ///<param name="value" ref="true"></param>
-    /**
-    * Represente _setIn function
-    * @param mixed $name
-    * @param mixed * $value
-    */
-    protected function _setIn($name, & $value){
-        if(method_exists($this, "set".$name)){
-            call_user_func(array($this, "set".$name), $value);
-            return true;
-        }
-        return false;
-    }
-    ///<summary>Represente callEvent function</summary>
-    ///<param name="event"></param>
-    ///<param name="method"></param>
-    /**
-    * Represente callEvent function
-    * @param mixed $event
-    * @param mixed $method
-    */
-    public function callEvent($event, $method){
-        throw new Exception(__METHOD__." Not implement");
-    }
-    ///<summary>Represente CompareTo function</summary>
-    ///<param name="obj"></param>
-    /**
-    * Represente CompareTo function
-    * @param mixed $obj
-    */
-    public function CompareTo($obj){
-        $g=$this->getCmpObj();
-        $s=$obj->getCmpObj();
-        $r=($g == $s);
-        return $r;
-    }
-    ///<summary>used to dispose and release element</summary>
-    /**
-    * used to dispose and release element
-    */
-    public function Dispose(){}
-    ///<summary>Represente getCmpObj function</summary>
-    /**
-    * Represente getCmpObj function
-    */
-    protected function getCmpObj(){}
-    ///<summary>override this method to filter call of global method used to call internal function (protected)</summary>
-    /**
-    * override this method to filter call of global method used to call internal function (protected)
-    */
-    public static function Invoke($ctrl, $method, $args=null){
-        if(method_exists($ctrl, $method)){
-            if(($args == null) || (is_array($args))){
-                return $ctrl->$method($args);
-            }
-            else{
-                $r=call_user_func_array(array($ctrl, $method), is_array($args) ? $args: array($args));
-                return $r;
-            }
-        }
-        return null;
-    }
-    ///<summary>Represente regEvent function</summary>
-    ///<param name="name"></param>
-    ///<param name="value"></param>
-    /**
-    * Represente regEvent function
-    * @param mixed $name
-    * @param mixed $value
-    */
-    public function regEvent($name, $value){
-        throw new Exception(__METHOD__." not implement");
-    }
-}
+
 ///<summary>Represente class: IGKAdditionCtrlInfo</summary>
 /**
 * Represente IGKAdditionCtrlInfo class
@@ -38004,8 +37890,7 @@ EOF;
                 else{
                     if(igk_get_env("sys://config/selectedview") !== $v_cctrl){
                         $tab=$this->getEnvParam("cnf_query_options");
-                        $g=igk_pattern_view_extract($v_cctrl, $tab, 1);
-                        igk_wln("ok");
+                        $g=igk_pattern_view_extract($v_cctrl, $tab, 1); 
                         $v_cctrl->regSystemVars(array_merge(isset($g["c"]) ? [$g["c"]]: [], is_array($v_t=igk_getv($g, "param")) ? $v_t: []), igk_getv($g, "query_options"));
                         $v_cctrl->showConfig();
                     }
@@ -52245,13 +52130,7 @@ abstract class IGKPageControllerBase extends IGKCtrlTypeBase{
         $s=$this->getEnvParam("_output");
         return $s;
     }
-    ///<summary> registered entry namespace . for auto load class </summary>
-    /**
-    *  registered entry namespace . for auto load class
-    */
-    protected function getEntryNameSpace(){
-        return null;
-    }
+   
     protected function getClassesDir(){
         return $this->getDeclaredDir()."/Lib/Classes/";
     }
@@ -62035,6 +61914,7 @@ abstract class IGKHtmlItemBase extends IGKObject implements ArrayAccess, IIGKHtm
         $s=igk_html_render_node($this, $options, array($this));
         if($options->Context == "xml")
             $s=str_replace("&", "&amp;", $s);
+       
         igk_wl($s);
     }
     ///<summary> call after node is rendering. call after item render</summary>
@@ -72746,6 +72626,18 @@ class IGKDBSingleValueResult{
     public function getValue(){
         return $this->value;
     }
+    public function getRows(){
+        return [];
+    }
+    public function sortBy(){
+        
+    }
+    public function getRowCount(){
+        return 0;
+    }
+    public function getRowAtIndex(int $index){
+        return null;
+    }
 }
 ///<summary>Represente class: IGKDBQueryDriver</summary>
 /**
@@ -76670,20 +76562,20 @@ class IGKSQLQueryUtils {
 			$defvalue = [
 				"TIMESTAMP"=>[
                     "CURRENT_TIMESTAMP"=>1,
-                    "NOW()"=>"CURRENT_TIMESTAMP"
+                    "NOW()"=>"CURRENT_TIMESTAMP",
+                    "NULL"=>1
                 ],
 				"DATETIME"=>[
 					"CURRENT_TIMESTAMP"=>1,
 					"NOW()"=>1,
 					"CURDATE"=>1,
-					"CURTIME()"=>1
+					"CURTIME()"=>1,
+                    "NULL"=>1
 				],
                 "JSON"=>[
                     "{}"=>"(JSON_OBJECT())",
                     "[]"=>"((JSON_ARRAY())"
-                ]
-
-                
+                ]  
 			];
 		}
         foreach($columninfo as $v){
@@ -77142,6 +77034,13 @@ class IGKSQLQueryUtils {
                             }
                             if (is_string($s)) {
                                 $columns.= $ad->escape_string($s);
+                            } elseif (is_object($s)){
+                                // object of db expression;
+                                if ($s instanceof IGKDbExpression){
+                                    $columns.= $s->getValue();
+                                } else {
+                                    throw new IGKException(__("objet not a DB Expression"));
+                                }
                             }
                             elseif(isset($s["key"])){
                                 $columns.= $ad->escape_string($s["key"]);
@@ -77437,22 +77336,19 @@ class IGKSQLQueryUtils {
             if(!$tinf->clNotNull || ($tinf->clAutoIncrement && strtolower($tinf->clType) == 'int'))
                 return 'NULL';
         }
-        if($tinf){
-            $of=$type == "i" ? $tinf->clInsertFunction: $tinf->clUpdateFunction;
-            if(preg_match("/date(time)?/i", $tinf->clType)){
-                return "'".igk_db_escape_string($value)."'";
-            }
-            if(!empty($of)){
-                $gt=explode("(", $of);
-                $pos=strtoupper(array_shift($gt)); 
-                return self::GetFCN($pos)."('".igk_db_escape_string($value)."')";
-            }
-        }
         if(is_object($value)){
             if(igk_reflection_class_implement($value, 'IIGKHtmlGetValue')){
                 return igk_db_escape_string($value->getValue());
             }
         }
+        if($tinf){
+            $of=$type == "i" ? $tinf->clInsertFunction: $tinf->clUpdateFunction;
+            if(!preg_match("/date(time)?/i", $tinf->clType) && !empty($of)){
+                $gt=explode("(", $of);
+                $pos=strtoupper(array_shift($gt)); 
+                return self::GetFCN($pos)."('".igk_db_escape_string($value)."')";
+            }
+        }       
         return "'".igk_db_escape_string($value)."'";
     }
     ///<summary>Represente GetValues function</summary>

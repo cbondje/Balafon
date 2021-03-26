@@ -13080,6 +13080,11 @@ Name:balafon.js
 						contentType = uri.contentType || contentType;
 						uri = uri.uri || uri;
 
+					} else if (method=="POST"){
+						if (typeof(param)== "object"){
+							param = JSON.stringify(param);
+							contentType="application/json";
+						}
 					}
 					// return null;
 
@@ -13101,7 +13106,6 @@ Name:balafon.js
 						igk.log.write("ajx log error : Error ::::: ");
 						igk.show_notify_prop_v(e);
 					}
-
 					return ajx;
 				},
 				postform: function (form, uri, func, sync) {
@@ -19798,7 +19802,7 @@ igk.ready(function () {
 			}
 		}
 		q.addClass("code-php");
-		var s = q.o.textContent;// .getHtml().trim();
+		var s = q.o.textContent.trim();// .getHtml().trim();
 		var t = s.split('\n');
 
 		// return;
@@ -19836,14 +19840,7 @@ igk.ready(function () {
 
 		igk.css.appendRule(q.getCssSelector() + " > div > span.ln {text-align:right; width:" + w + "px;}");
 
-		// var sl = this.qselect('div > span').each_all(
-		// function(){
-		// this.setCss({width:w+'px'});
-		// }
-		// );		
-
-
-	}
+	};
 	function igk_e() {// evaluator
 		var l = 0;
 		igk.appendProperties(this, {
@@ -19853,7 +19850,7 @@ igk.ready(function () {
 			},
 			getLines: function () { return l; }
 		});
-	}
+	};
 	var inf = {
 		ln: 0,
 		mode: 0,
@@ -19909,10 +19906,9 @@ igk.ready(function () {
 		var w = 0;
 		var l = 1;// line count
 		var mode = 0;
-		this.evals = function (s) {// read line
-			s = s.replace('<!--?php', '<span class="proc">&lt;?php</span>').replace('?-->', '<span class="proc">?&gt;</span>');
-
-
+		this.evals = function (s) {
+			// read line
+			s = s.trim().replace('<!--?php', '<span class="proc">&lt;?php</span>').replace('?-->', '<span class="proc">?&gt;</span>');
 			var o = '';
 			var m = 0;
 			var tr = '';// tempory read		
@@ -20019,12 +20015,13 @@ igk.ready(function () {
 			l++;
 			return o;
 		};
-		this.getLines = function () {
+		this.getLines = function(){
 			return l;
 		};
 	}
 
 	function igk_xml_eval() {
+		throw new Error("Not implement");
 	};
 
 	igk.system.createNS("igk.highlightjs", {

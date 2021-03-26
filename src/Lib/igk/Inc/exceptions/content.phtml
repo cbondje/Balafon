@@ -113,7 +113,7 @@ $content .= ("<div class=\"igk-contair\" > ");
                     $content.= "<td>".$k;
                     $content.= "</td>";
                     $content.= "<td>";
-                    $content.= is_string($v) ? $v : implode("\n<br />", $v);
+                    $content.= is_string($v) ? $v :  (is_array($v) ? implode("\n<br />", $v) : "object");
                     $content.= "</td>";
                     $content.= "</tr>";
                 }
