@@ -13,6 +13,9 @@
 ///<param name="t"></param>
 ///<param name="data" default="null"></param>
 ///<param name="mode" default="1"></param>
+
+use IGK\Resources\R;
+
 /**
 * Represente igk_subdomain_fc_inflate function
 * @param mixed $tab
@@ -60,5 +63,4 @@ function igk_subdomain_fc_inflate($tab, $t, $data=null, $mode=1){
     else{
         $dv->addInput("btn_edit", "submit", R::ngets("btn.edit"))->setClass("igk-btn");
     }
-}
-?>
+} 

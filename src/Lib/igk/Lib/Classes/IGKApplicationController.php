@@ -480,6 +480,9 @@ EOF;
 		if (!empty($function)){
 			$function = igk_str_rm_start($function, "/");
         }
+        if ($function == IGK_DEFAULT_VIEW){
+            $function = "";
+        }
 
         // igk_wln_e(__METHOD__,
         //     [
@@ -840,7 +843,7 @@ EOF;
             igk_navto($this->getAppUri());
         }
         if(igk_uri_is_match(igk_io_currentUri(), $this->getAppUri(__FUNCTION__))){
-            igk_is_debug() && igk_ilog("notify message :  ".IGK_HOOK_DB_CHANGED);
+            igk_is_debug() && igk_ilog("notify message :  IGK_HOOK_DB_CHANGED" );
             igk_notification_push_event(IGK_HOOK_DB_CHANGED, $this, null);
             igk_navto($this->getAppUri());
         }
@@ -1057,7 +1060,7 @@ EOF;
                 igk_navto($this->getAppUri());
             }
             return;
-        }
+        }  
         $this->dropdb();
         $ad=igk_get_data_adapter($this);
         $ad->initForInitDb();
@@ -1066,7 +1069,8 @@ EOF;
         $ad->flushForInitDb();
         igk_hook(IGKEvents::HOOK_DB_INIT_ENTRIES, array($this));
         igk_hook(IGKEvents::HOOK_DB_INIT_COMPLETE); 
-        $this->logout(0);
+    
+        $this->logout(0); 
         if(igk_uri_is_match(igk_io_currentUri(), $this->getAppUri(__FUNCTION__))){
             igk_notification_push_event(IGK_HOOK_DB_CHANGED, $this, null);
             if($navigate){

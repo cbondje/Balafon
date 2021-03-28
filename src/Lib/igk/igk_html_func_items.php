@@ -2241,7 +2241,12 @@ function igk_html_node_notification($nodeType="div", $notifyName=null){
 function igk_html_node_notifyhost($name="::global", $autohide=1){
     $n=igk_createnode("div");
     $n["class"]="igk-notify-host";
-    $n["title"]=$name;
+    if ($autohide){
+        $n["class"] = "+anim-autohide";
+    }
+    if (igk_environment()->is("DEV")){
+        $n["title"]=$name;
+    }
     $c=igk_notifyctrl();
     $g=$c->setNotifyHost($n, $name);
     if($g){

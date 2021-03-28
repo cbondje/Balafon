@@ -15,7 +15,14 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
         }
         return strtoupper($t);
     }
-    protected static function GetRelation($adapter){
+    /**
+     * get relation attached to table
+     * @param mixed $adapter 
+     * @param mixed $tname 
+     * @return mixed 
+     * @throws Exception 
+     */
+    protected static function GetRelation($adapter, $tname, $clname){
         $r = $adapter->getDbname();        
         $adapter->selectdb("information_schema");
         $h=$adapter->sendQuery("SELECT * FROM `KEY_COLUMN_USAGE` WHERE `TABLE_NAME`='".igk_db_escape_string($tname)."' AND `TABLE_SCHEMA`='".igk_db_escape_string($r)."' AND `COLUMN_NAME`='".igk_db_escape_string($clname)."' AND `REFERENCED_TABLE_NAME`!=''");
@@ -142,7 +149,7 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
     */
     public function select($tbname, $where=null, $options=null){
         if(empty($tbname))
-            igk_die("table is empty");
+            igk_die("table name is empty");
         $q=IGKSQLQueryUtils::GetSelectQuery($this, $tbname, $where, $options);
         return $this->sendQuery($q, $tbname, $options);
     }
@@ -189,7 +196,7 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
             }
             $tlist = $q;
             $q = "";
-        }
+        } 
         if($condition){
             if(is_object($condition) || (is_array($condition) && (igk_count($condition) > 0))){
                 if ($c = IGKSQLQueryUtils::GetCondString($condition, "AND", $this))

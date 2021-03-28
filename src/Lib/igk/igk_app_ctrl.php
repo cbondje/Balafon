@@ -8,6 +8,8 @@
 // @mail: bondje.doue@igkdev.com 
 // @url: https://www.igkdev.com
 
+use IGK\Resources\R;
+
 define("IGK_INC_APP_INITDB", IGK_LIB_DIR."/".IGK_INC_FOLDER."/igk_initapp_db.pinc");
 
 use function igk_resources_gets as __; 

@@ -1654,8 +1654,6 @@ Name:balafon.js
 		function __preload() {
 			var v_timg = node.getElementsByTagName("igk-img");
 			if (!v_timg || (v_timg.length <= 0)) {
-
-
 				return;
 			}
 			var v_tab = new Array();
@@ -1673,6 +1671,7 @@ Name:balafon.js
 				init: function (img, source) {
 					// source.parentNode.replaceChild(img,source);
 					$igk(img).reg_event("load", function (evt) {
+					 
 						if (source.parentNode)
 							source.parentNode.replaceChild(img, source);
 					});
@@ -1710,20 +1709,26 @@ Name:balafon.js
 					v_cimg.src = src;
 					v_host.appendChild(v_cimg);
 					if (/^data:/.test(src)) {
+						console.debug("data source");
 						v_preload.copyAttribute(v_tab[i], v_cimg);
 						v_preload.replace(v_host, v_tab[i]);
 					} else {
-						if (v_cimg.complete && ((v_cimg.width + v_cimg.height) > 0)) {
-							// cached			
-							v_preload.copyAttribute(v_tab[i], v_cimg);
-							v_preload.replace(v_host, v_tab[i]);
+						if (v_cimg.complete && ((v_cimg.width + v_cimg.height) > 0)) { 
+							// console.debug("loding access");
+							// directly loaded
+							v_preload.copyAttribute(v_tab[i], v_cimg); 
+							v_preload.replace(v_cimg, v_tab[i]);
 						}
 						else {
+							// console.debug("loding access 2" + v_cimg.complete);
+							// loading from 
 							v_img = v_cimg;
 							v_preload.init(v_img, v_tab[i]);
-							v_preload.copyAttribute(v_tab[i], v_img);
+							v_preload.copyAttribute(v_tab[i], v_img); 
 						}
 					}
+
+					
 				}
 			}
 		}
@@ -13080,15 +13085,7 @@ Name:balafon.js
 						contentType = uri.contentType || contentType;
 						uri = uri.uri || uri;
 
-					} else if (method=="POST"){
-						if (typeof(param)== "object"){
-							param = JSON.stringify(param);
-							contentType="application/json";
-						}
-					}
-					// return null;
-
-
+					}    
 					var ajx = null;
 					try {
 
@@ -25177,6 +25174,20 @@ igk.system.createNS("igk.system", {
 			}
 			return _d.setHtml(v).o.innerText;
 		}
+	});
+
+})();
+
+
+(function (){
+	// auto hide core component
+	igk.winui.initClassControl("anim-autohide", function (c) {
+		var q = this;
+		q.reg_event("animationend", function (e) {
+			if (e.animationName == "anim-autohide") {
+				this.remove();
+			}
+		});
 	});
 
 })();

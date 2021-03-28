@@ -300,7 +300,7 @@ define("IGK_CSS_DEFAULT_STYLE_FUNC_KEY", 'sys://css/function/defaultStyle');
 // define("IGK_NAMED_NODE_PARAM", 0x002B);
 // define("IGK_NODE_DISPOSED_EVENT", 0x0029);
 // define("IGK_NOTIFICATION_APP_DOWNLOADED", 0x0033);
-// define("IGK_HOOK_DB_CHANGED", 0x0030);
+ 
 // define("IGK_HOOK_DB_TABLECREATED", 0x0031);
 // define("IGK_NOTIFICATION_DB_TABLEDROPPED", 0x0032);
 // define("IGK_NOTIFICATION_INITTABLE", 0x0035);
@@ -455,6 +455,7 @@ define("IGK_DEFAULT_FILE_MASK", 0775);
 define("IGK_LF", "\n");
 define("IGK_CLF", "\r\n");
 define("IGK_DATA_FOLDER", "Data");
+define("IGK_CONF_FOLDER", "Configs");
 define("IGK_CONF_DATA", IGK_DATA_FOLDER . "/configs.csv");
 define("IGK_CHANGE_CONF_DATA", IGK_DATA_FOLDER . "/changes.csv");
 define("IGK_UPLOAD_DATA", "Data/upload.csv");
@@ -696,24 +697,25 @@ define("IGK_MSG_DROPALL_QUESTION", "Msg.DROPALLQUESTION");
 define("IGK_CONF_PAGE_TITLE", "title.CONFIGPAGE");
 define("IGK_ALL_LANG", "all-lang");
 define("IGK_ENTRY_FILES", "index.php,index.phtml,index.ptml,main.php");
-define("IGK_TB_GROUPS", "tbigk_groups");
-define("IGK_TB_REF_MODELS", "tbigk_reference_models");
-define("IGK_TB_USERS", "tbigk_users");
-define("IGK_TB_INFOS", "tbigk_infos");
-define("IGK_TB_USER_REF_MODELS", "tbigk_users_reference_models");
-define("IGK_TB_USER_INFOS", "tbigk_user_infos");
-define("IGK_TB_USER_INFO_TYPES", "tbigk_user_info_types");
-define("IGK_TB_WHO_USES", "tbigk_who_uses");
-define("IGK_TB_AUTHORISATIONS", "tbigk_authorizations");
-define("IGK_TB_SUBDOMAINS", "tbigk_subdomains");
-define("IGK_TB_USERGROUPS", "tbigk_usergroups");
-define("IGK_TB_GROUPAUTHS", "tbigk_groupauthorizations");
-define("IGK_TB_DATATYPES", "tbigk_data_types");
-define("IGK_TB_HUMAN", "tbigk_humans");
-define("IGK_TB_CONFIGS", "tbigk_configurations");
-define("IGK_TB_COMMUNITY", "tbigk_community");
-define("IGK_TB_SYSTEMURI", "tbigk_systemuri");
-define("IGK_TB_COOKIESTORE", "tbigk_cookie_storages");
+define("IGK_TB_GROUPS", "%prefix%groups");
+define("IGK_TB_REF_MODELS", "%prefix%reference_models");
+define("IGK_TB_USERS", "%prefix%users");
+define("IGK_TB_INFOS", "%prefix%infos");
+define("IGK_TB_USER_REF_MODELS", "%prefix%users_reference_models");
+define("IGK_TB_USER_INFOS", "%prefix%user_infos");
+define("IGK_TB_USER_INFO_TYPES", "%prefix%user_info_types");
+define("IGK_TB_WHO_USES", "%prefix%who_uses");
+define("IGK_TB_AUTHORISATIONS", "%prefix%authorizations");
+define("IGK_TB_SUBDOMAINS", "%prefix%subdomains");
+define("IGK_TB_USERGROUPS", "%prefix%usergroups");
+define("IGK_TB_GROUPAUTHS", "%prefix%groupauthorizations");
+define("IGK_TB_DATATYPES", "%prefix%data_types");
+define("IGK_TB_HUMAN", "%prefix%humans");
+define("IGK_TB_CONFIGS", "%prefix%configurations");
+define("IGK_TB_COMMUNITY", "%prefix%community");
+define("IGK_TB_SYSTEMURI", "%prefix%systemuri");
+define("IGK_TB_COOKIESTORE", "%prefix%cookie_storages");
+define("IGK_TB_MIGRATIONS", "%prefix%migrations");
 define("IGK_START_COMMENT", "/*");
 define("IGK_END_COMMENT", "*/");
 define("IGK_IPV4_REGEX", "/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(:[0-9]+)?$/i");
@@ -749,8 +751,7 @@ define('IGK_ERR_CTRL_', 65536);
 define('IGK_ERR_NO_PAGEVIEW', 65546);
 define('IGK_ERR_FUNCNOTAVAILABLE', 65547);
 // igk_set_env("sys://notification/msgs", array(
-// "en"=>array(
-// IGK_HOOK_DB_CHANGED=>"Database changed",
+// "en"=>array( 
 // IGK_HOOK_DB_TABLECREATED=>"New table created"
 // ),
 // "fr"=>array(),

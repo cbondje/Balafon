@@ -14,9 +14,7 @@ function igk_template_update_attrib_expression($n, $attr, $v, $context, $setattr
 		$attrname = substr($attrname, 1);
 	 $g=(function($rv) use ($n, $context, $setattrib, $attrname){
         extract($tab = (array)$context);
-        // igk_trace();
-        // igk_wln_e("ok");
-        // exit;
+  
 		$s = "return ".$rv.";";
 		$v = @eval($s);
         $setattrib($attrname, $v);

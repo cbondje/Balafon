@@ -1,13 +1,15 @@
 <?php
 ///<summary> System utility class </summary>
+
+use IGK\Controllers\BaseController;
+
 /**
  * 
  * @package 
  */
 final class IGKSysUtil
 {
-    private function __construct()
-    {
+    private function __construct(){
     }
     /**
      * Retreive all managed data information
@@ -164,10 +166,12 @@ final class IGKSysUtil
     /**
      * resolv the table name
      */
-    public static function GetTableName($table){
-        if (strpos($table, "%prefix%") !== false){
-            $table = str_replace("%prefix%", igk_app()->Configs->db_prefix, $table);
-        }
-        return $table;
+    public static function GetTableName($table, $ctrl=null){
+        // if ($table == "%prefix%jobtask"){
+        //     igk_wln($ctrl, "Prefix : ". $ctrl->Configs->clDataTablePrefix,  igk_db_get_table_name($table, $ctrl) );
+        //     igk_trace();
+        //     igk_exit();
+        // }
+        return igk_db_get_table_name($table, $ctrl); 
     }
 }

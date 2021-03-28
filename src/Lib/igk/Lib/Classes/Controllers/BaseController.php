@@ -1110,6 +1110,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getDbConstantFile(){
         return $this->getDeclaredDir()."/.db.constants.php";
     }
+    public function getSourceClassDir(){
+        return $this->getDeclaredDir()."/Lib/Classes";
+    }
     ///retrieve all controller db entries
     /**
     */
@@ -1776,13 +1779,14 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             igk_set_env(IGK_ENV_DB_INIT_CTRL, $this);
             $this->initDbFromSchemas();
             $this->initDbConstantFiles();
+            $this::InitDataBaseModel();
             igk_set_env(IGK_ENV_DB_INIT_CTRL, $bck);
         }
         igk_set_env(get_class($this)."::".__FUNCTION__, 1);
     }
-    ///<summary>Represente initDbConstantFiles function</summary>
+    ///<summary>init database constant file</summary>
     /**
-    * Represente initDbConstantFiles function
+    * init database constant file
     */
     protected function initDbConstantFiles(){
         $f=$this->getDbConstantFile();
@@ -1843,6 +1847,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     *  initialize db from data schemas
     */
     protected function initDbFromSchemas(){
+   
         $r=$this->loadDataAndNewEntriesFromSchemas();
         if(!$r)
             return;
@@ -1971,14 +1976,14 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     * Represente loadDataAndNewEntriesFromSchemas function
     */
     protected function loadDataAndNewEntriesFromSchemas(){
-        return igk_db_load_data_and_entries_schemas(igk_db_get_schema_filename($this));
+        return igk_db_load_data_and_entries_schemas(igk_db_get_schema_filename($this), $this);
     }
     ///<summary>load data base from data schemas file</summary>
     /**
     * load data base from data schemas file
     */
     protected function loadDataFromSchemas(){
-        return igk_db_load_data_schemas(igk_db_get_schema_filename($this));
+        return igk_db_load_data_schemas(igk_db_get_schema_filename($this), $this);
     }
     ///<summary>load data new entries from schemas file</summary>
     /**

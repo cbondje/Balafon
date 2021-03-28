@@ -47,7 +47,7 @@
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clIdentifier" clType="VARCHAR" clTypeLength="70" clNotNull="True" />
         <Column clName="clName" clType="VARCHAR" clTypeLength="30" clNotNull="True" />
-        <Column clName="clDateTime" clType="DATETIME" />
+        <Column clName="clDateTime" clType="DateTime" />
     </DataDefinition>
     <DataDefinition TableName="%prefix%data_types" Description="Store framework data types">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
@@ -94,7 +94,7 @@
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clName" clType="VARCHAR" clTypeLength="60" clNotNull="True" clIsUnique="True" />
         <Column clName="clEmail" clType="TEXT" clDescription="Author's email " />
-        <Column clName="clRelease" clType="DATETIME" />
+        <Column clName="clRelease" clType="DateTime" />
         <Column clName="clVersion" clType="TEXT" clDescription="plugin version " />
     </DataDefinition>
     <DataDefinition TableName="%prefix%reference_models" Description="Store reference domain">
@@ -121,7 +121,7 @@
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clName" clType="VARCHAR" clTypeLength="33" clNotNull="True" clIsUnique="True" />
 		 <Column clName="clDataType" clType="VARCHAR" clTypeLength="5"  clDescription="data type name"
-            clNotNull="True" clNotNull="True" />
+           clNotNull="True" />
         <Column clName="clRegex" clType="VARCHAR" clTypeLength="100"  clDescription="Expression used to valiate data"
             />
         <Column clName="clCardinality" clType="Int" clTypeLength="11" clDescription="cardinality of this value. 0 is infinite or more than 0."
@@ -152,8 +152,8 @@
         <Column clName="clPicture" clType="VARCHAR" clTypeLength="255" clDescription="uri of 255 max length" />
         <Column clName="clLevel" clType="Int" clTypeLength="11" clNotNull="True" />
         <Column clName="clStatus" clType="Int" clTypeLength="11" clDefault="-1" clDescription="state of the account, -1 = not activated, 1=activated, 0or2=blocked" clNotNull="True" />
-        <Column clName="clDate" clType="DATETIME" clDescription="registration date" clNotNull="True" clDefault="CURRENT_TIMESTAMP" />
-        <Column clName="clLastLogin" clType="DATETIME" clDescription="last login" clNotNull="True" clDefault="CURRENT_TIMESTAMP"/>
+        <Column clName="clDate" clType="DateTime" clDescription="registration date" clNotNull="True" clDefault="CURRENT_TIMESTAMP" />
+        <Column clName="clLastLogin" clType="DateTime" clDescription="last login" clNotNull="True" clDefault="CURRENT_TIMESTAMP"/>
         <Column clName="clParent_Id" clType="Int" clTypeLength="11" clDescription="Parent of this account" clLinkType="%prefix%users" />
         <Column clName="clClassName" clType="VARCHAR" clTypeLength="255" clDescription="if clParent_Id then object refer to class name that initialize the sub user" />
     </DataDefinition>
@@ -167,21 +167,21 @@
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clWebSite" clType="VARCHAR" clTypeLength="100" clNotNull="True" clIsUnique="True" />
         <Column clName="clState" clType="Int" clTypeLength="11" />
-        <Column clName="clDateTime" clType="DATETIME" clNotNull="True" />
+        <Column clName="clDateTime" clType="DateTime" clNotNull="True" />
         <Column clName="clIP" clType="VARCHAR" clTypeLength="15" />
     </DataDefinition>
 
 	 <DataDefinition TableName="%prefix%connexions" Definition="Store started connexions">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clUser_Id" clType="Int" clNotNull="true" clLinkType="%prefix%users" />
-        <Column clName="clDateTime" clType="DATETIME" clNotNull="True" />
+        <Column clName="clDateTime" clType="DateTime" clNotNull="True" />
         <Column clName="clFrom" clType="VARCHAR" clTypeLength="15" />
     </DataDefinition>
     <DataDefinition TableName="%prefix%sessions" Description="Track user started session">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clSessId" clType="VARCHAR" clTypeLength="50" />
         <Column clName="clSessIp" clType="VARCHAR" clTypeLength="50" />
-        <Column clName="clSessStartAt" clType="DATETIME" clNotNull="True" clInsertFunction="NOW()" clDefault="NOW()"/>
+        <Column clName="clSessStartAt" clType="DateTime" clNotNull="True" clInsertFunction="NOWd()" clDefault="NOW()"/>
         <Column clName="clSessLatitude" clType="Float" />
         <Column clName="clSessLongitude" clType="Float" />
         <Column clName="clSessCountryName" clType="VARCHAR" clTypeLength="60" />
@@ -194,6 +194,12 @@
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clGUID" clType="VARCHAR" clTypeLength="50" clIsUnique="true" />
         <Column clName="clDesc" clType="Text"  />
-        <Column clName="clCreateAt" clType="DATETIME" clNotNull="True" clInsertFunction="NOW()" clDefault="NOW()"/>
+        <Column clName="clCreateAt" clType="DateTime" clNotNull="True" clInsertFunction="NOW()" clDefault="NOW()"/>
+    </DataDefinition>
+
+    <DataDefinition TableName="%prefix%migrations" Description="Store migrations">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="clName" clType="VARCHAR" clTypeLength="60" clIsUnique="true" clDescription="m or f for male or female" clNotNull="True" />
+        <Column clName="clBatch" clType="Int" clDescription="Batch Running" />
     </DataDefinition>
 </data-schemas>

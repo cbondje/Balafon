@@ -4,8 +4,11 @@ namespace IGK\System\Http;
 
 class RedirectRequestResponse extends RequestResponse{
 
-    public function __construct($uri)
+    public function __construct($uri=null)
     {
+        if ($uri===null){
+            $uri = igk_server()->HTTP_REFERER; 
+        }
         $this->code = 301;
         $this->uri = $uri;
     }

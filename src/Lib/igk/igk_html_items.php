@@ -1893,7 +1893,8 @@ final class IGKHtmlHomeButtonItem extends IGKHtmlItem {
         parent::__construct("div");
         $this->m_targetid="home";
         $this->setClass("igk-gohome-btn igk-trans-all-200ms")->setAttribute("igk-js-eval", "igk.winui.fn.fixscroll.init({update: function(v){ if(v.scroll.y > 0) { this.addClass('igk-show'); }  else this.rmClass('igk-show') ;}});");
-        $this->addA("#")->setClass("igk-glyph-home dispb fitw fith")->setAttribute("igk-nav-link", $this->m_targetid)->addCenterBox()->setClass("fith")->add("span")->setClass("glyphicons")->Content=" &#xe021;";
+        $this->addA("#")->setClass("igk-glyph-home dispb fitw fith")->setAttribute("igk-nav-link", $this->m_targetid)->addCenterBox()
+        ->getBox()->setClass("fith")->add("span")->setClass("glyphicons")->Content=" &#xe021;";
     }
     ///<summary>Represente getTargetId function</summary>
     /**

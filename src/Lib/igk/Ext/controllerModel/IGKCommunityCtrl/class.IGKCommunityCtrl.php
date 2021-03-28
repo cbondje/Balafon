@@ -38,7 +38,7 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 		return false;
 	}
 	public function getDataTableName(){
-		return igk_db_get_table_name("%prefix%_site_community");
+		return "%prefix%site_community";
 	}
 	public function getDataTableInfo()
 	{

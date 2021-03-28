@@ -965,10 +965,17 @@ $cl["backgroundColor"]="transparent";
 $cl["pickfileHoverBackground"]="indigo";
 $cl["buttonActiveBackground"]="red";
 
-
 //+ igk-img-host
+
 $def["span.igk-img-host"]= "{sys:dispb} top:0px; height:0px; line-height: 0;";
  
 $def["select.igk-form-control"] = "cursor: pointer;";
 
 // igk_wln("load sys css: " .$doc->getId(), "is array: ". is_array($cl), $cl["stripTableEventRowBackgroundcolor"]);
+
+
+
+// animation notification
+$def[".igk-notify-host.anim-autohide"] = "[anim: 0.85s 1.5s 1 anim-autohide]";
+$theme->reg_keyFrames($def, "anim-autohide", "from { opacity: 1.0; } to { opacity: 0; }");
+

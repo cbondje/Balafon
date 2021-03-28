@@ -6,6 +6,7 @@ use Exception;
 use IGK\Helper\Utility;
 use IGK\Models\ModelEntryUtility;
 use IGKSystemController;
+use IGKSysUtil;
 use ReflectionClass;
 
 abstract class ModelBase{
@@ -29,6 +30,26 @@ abstract class ModelBase{
      */
     protected $primaryKey = "clId";
 
+    /**
+     * base model controller
+     * @var string
+     */
+    protected $controller;
+
+    /**
+     * class used for factory
+     * @var mixed
+     */
+    protected $factory;
+
+    public function getFactory(){
+        if ($this->factory === null){
+            $name = basename(igk_io_dir(get_class($this)));
+            $this->factory = $this->getController()->getEntryNamespace()."\\Database\\Factories\\".$name."Factory";
+        }
+        return $this->factory;
+    }
+
     public function getPrimaryKey(){
         return $this->primaryKey;
     }
@@ -37,16 +58,19 @@ abstract class ModelBase{
     public function __construct($raw=null)
     {
         $this->raw = igk_db_create_row($this->getTable());
+        if (!$this->raw ){
+            die("failed to create db row: ".$this->getTable());
+        }
         if ($raw){
             foreach($raw as $k=>$v){
-                if (key_exists($k, $this->raw)){
+                if (property_exists($this->raw, $k)){
                     $this->raw->$k = $v;
                 }
             }   
         }
     }
     public function __set($name, $value){
-        if (key_exists($name, $this->raw)){
+        if (property_exists($this->raw, $name)){
             $this->raw->$name = $value;
             return;
         }
@@ -61,10 +85,11 @@ abstract class ModelBase{
      * @return mixed 
      */
     public function getTable(){
-        if (strpos("%prefix%", $this->table)!== false){
-            $this->table = str_replace("%prefix%", igk_app()->Configs->db_prefix, $this->table);
-        }
-        return $this->table;
+        $ctrl = $this->getController();
+        return IGKSysUtil::GetTableName($this->table, $ctrl); 
+    }
+    public function getController(){
+        return igk_getctrl($this->controller, false);
     }
     public function getDataAdapter(){
         return igk_get_data_adapter(igk_getctrl(IGKSystemController::class));
@@ -86,7 +111,7 @@ abstract class ModelBase{
      * @return mixed 
      * @throws Exception 
      */
-    public function __callStatic($name, $arguments)
+    public static function __callStatic($name, $arguments)
     {
         if (self::$macros === null){
             // 
@@ -196,7 +221,10 @@ abstract class ModelBase{
             //$fc = $fc->bindTo($this); 
             return $fc(...$arguments);
         }   
-        igk_wln_e("failed", $name );
+        if (igk_environment()->is("DEV")){
+            igk_trace();
+            igk_wln_e("failed to call ", $name );
+        }
     }
 
     /**

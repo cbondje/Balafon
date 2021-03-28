@@ -22,13 +22,13 @@ abstract class ModelEntryExtension{
         }  
         return $tab;
     }
-    public static function select_row(ModelBase $model, $conditions, $options=null ){
-        
+    public static function select_row(ModelBase $model, $conditions, $options=null ){     
+        $cl = get_class($model);  
         $r= $model->getDataAdapter()->select($model->getTable(), $conditions, $options);
         if($r && $r->RowCount == 1){
             $g=$r->getRowAtIndex(0);
-            $g->{"sys:table"}=$model->getTable();
-            return $g;
+            $g->{"sys:table"}=$model->getTable(); 
+            return new $cl($g->toArray());  
         }
         return null;
     }
@@ -38,7 +38,7 @@ abstract class ModelEntryExtension{
     public static function insert(ModelBase $model, $entries){ 
         $ad = $model->getDataAdapter();
         if ( $m =  $ad->insert($model->getTable(), $entries)){
-            return $model::create($model::select_row([$model->getPrimaryKey()=>$ad->last_id()])->toArray());            
+            return $model::select_row([$model->getPrimaryKey()=>$ad->last_id()]);            
         }
         return false;
     }
@@ -46,4 +46,15 @@ abstract class ModelEntryExtension{
         return $model->getDataAdapter()->last_id();
     }
    
+    public static function factory(ModelBase $model){
+        // create a factory object
+        $c = get_class($model);
+        $cl = $model->getFactory();
+        if (class_exists($cl)){
+            $arg = func_get_args(); 
+            return new $cl(...$arg);
+        }
+        die("factory class not found . ".$cl);
+
+    }
 }

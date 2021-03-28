@@ -290,6 +290,7 @@ function igk_wln($msg=""){
 * write line to buffer and exit
 */
 function igk_wln_e($msg){
+   
     igk_set_env('TRACE_LEVEL', 3);
     call_user_func_array('igk_wln', func_get_args());
     igk_exit();
