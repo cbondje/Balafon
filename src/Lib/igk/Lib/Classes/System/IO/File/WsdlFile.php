@@ -26,12 +26,12 @@ class WsdlFile extends IGKObject {
     private $m_srv;
     private $m_uri;
     private $uri;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="uri"></param>
     ///<param name="attributes" default="null"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $name
     * @param mixed $uri
     * @param mixed $attributes the default value is null
@@ -51,13 +51,13 @@ class WsdlFile extends IGKObject {
         $this->m_binding=$this->m_def->addChildNodeView("binding");
         $this->m_service=$this->m_def->addChildNodeView("service");
     }
-    ///<summary>Represente addBindingService function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="style" default="rpc"></param>
     ///<param name="porttype" default="null"></param>
     ///<param name="enctype" default="'encoded'"></param>
     /**
-    * Represente addBindingService function
+    * 
     * @param mixed $name
     * @param mixed $style the default value is "rpc"
     * @param mixed $porttype the default value is null
@@ -73,13 +73,13 @@ class WsdlFile extends IGKObject {
         }
         return $c;
     }
-    ///<summary>Represente addMethod function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     ///<param name="input"></param>
     ///<param name="output" default="null"></param>
     ///<param name="porttype" default="null"></param>
     /**
-    * Represente addMethod function
+    * 
     * @param mixed $n
     * @param mixed $input
     * @param mixed $output the default value is null
@@ -111,13 +111,13 @@ class WsdlFile extends IGKObject {
         $op->addNode("input")->setAttribute("message", "igkns:".$n."Request");
         $op->addNode("output")->setAttribute("message", "igkns:".$n."Response");
     }
-    ///<summary>Represente addService function</summary>
+    ///<summary></summary>
     ///<param name="srvname"></param>
     ///<param name="doc"></param>
     ///<param name="srv"></param>
     ///<param name="loc"></param>
     /**
-    * Represente addService function
+    * 
     * @param mixed $srvname
     * @param mixed $doc
     * @param mixed $srv
@@ -134,13 +134,13 @@ class WsdlFile extends IGKObject {
         $this->m_cservice=$d;
         return $d;
     }
-    ///<summary>Represente addServiceOperation function</summary>
+    ///<summary></summary>
     ///<param name="srv"></param>
     ///<param name="name"></param>
     ///<param name="type" default="encoded"></param>
     ///<param name="urn" default="sample:demo"></param>
     /**
-    * Represente addServiceOperation function
+    * 
     * @param mixed $srv
     * @param mixed $name
     * @param mixed $type the default value is "encoded"
@@ -166,38 +166,38 @@ EOF;
 EOF;
         return $op;
     }
-    ///<summary>Represente getDocumentation function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDocumentation function
+    * 
     */
     public function getDocumentation(){
         return igk_getv($this->m_attributes, "doc", "service documentation");
     }
-    ///<summary>Represente getNSPrefix function</summary>
+    ///<summary></summary>
     /**
-    * Represente getNSPrefix function
+    * 
     */
     public function getNSPrefix(){
         return igk_getv($this->m_attributes, "nsprefix", "igkns");
     }
-    ///<summary>Represente getNSUri function</summary>
+    ///<summary></summary>
     /**
-    * Represente getNSUri function
+    * 
     */
     public function getNSUri(){
         return igk_getv($this->m_attributes, "nsuri", "http://www.igkdev.com");
     }
-    ///<summary>Represente getTargetNS function</summary>
+    ///<summary></summary>
     /**
-    * Represente getTargetNS function
+    * 
     */
     public function getTargetNS(){
         return igk_getv($this->m_attributes, "targetns", "http://www.igkdev.com");
     }
-    ///<summary>Represente getXSDType function</summary>
+    ///<summary></summary>
     ///<param name="t"></param>
     /**
-    * Represente getXSDType function
+    * 
     * @param mixed $t
     */
     protected final function getXSDType($t){
@@ -217,11 +217,11 @@ EOF;
             $v_rt=$args[$t];
         return $v_rt;
     }
-    ///<summary>Represente initService function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     ///<param name="attrs" default="null"></param>
     /**
-    * Represente initService function
+    * 
     * @param mixed $n
     * @param mixed $attrs the default value is null
     */
@@ -229,12 +229,12 @@ EOF;
         $this->m_srv=$this->addBindingService($n."_bindingService");
         $this->addService($n, igk_getv($attrs, "doc"), $this->m_srv, $this->m_uri);
     }
-    ///<summary>Represente registerClass function</summary>
+    ///<summary></summary>
     ///<param name="className"></param>
     ///<param name="srvName"></param>
     ///<param name="attrs" default="null"></param>
     /**
-    * Represente registerClass function
+    * 
     * @param mixed $className
     * @param mixed $srvName
     * @param mixed $attrs the default value is null
@@ -314,10 +314,10 @@ EOF;
             }
         }
     }
-    ///<summary>Represente Save function</summary>
+    ///<summary></summary>
     ///<param name="f"></param>
     /**
-    * Represente Save function
+    * 
     * @param mixed $f
     */
     public function Save($f){

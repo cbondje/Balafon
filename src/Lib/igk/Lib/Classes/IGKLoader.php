@@ -33,10 +33,10 @@ class IGKLoader implements IResponse {
         }
         return null;
     }
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $ctrl
     */
     public function __construct($ctrl, $listener){
@@ -44,10 +44,10 @@ class IGKLoader implements IResponse {
         $this->_output="";
 		$this->_listener = $listener;
     }
-    ///<summary>Represente __get function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente __get function
+    * 
     * @param mixed $n
     */
     public function __get($n){
@@ -58,11 +58,11 @@ class IGKLoader implements IResponse {
             return $this->_controller->$n;
         }
     }
-    ///<summary>Represente _inc_file function</summary>
+    ///<summary></summary>
     ///<param name="file"></param>
     ///<param name="data"></param>
     /**
-    * Represente _inc_file function
+    * 
     * @param mixed $file
     * @param mixed $data
     */
@@ -72,12 +72,12 @@ class IGKLoader implements IResponse {
         $loader = $this;
         include($file);
     }
-    ///<summary>Represente article function</summary>
+    ///<summary></summary>
     ///<param name="file"></param>
     ///<param name="args" default="null"></param>
     ///<param name="render" default="1"></param>
     /**
-    * Represente article function
+    * 
     * @param mixed $file
     * @param mixed $args the default value is null
     * @param mixed $render the default value is 1
@@ -95,9 +95,9 @@ class IGKLoader implements IResponse {
         }
         return $n;
     }
-    ///<summary>Represente clear function</summary>
+    ///<summary></summary>
     /**
-    * Represente clear function
+    * 
     */
     public function clear(){
         $this->_controller->_output="";
@@ -117,30 +117,30 @@ class IGKLoader implements IResponse {
         }
         return false;
     }
-    ///<summary>Represente getConfigs function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigs function
+    * 
     */
     public function getConfigs(){
         return $this->_controller->getConfigs();
     }
-    ///<summary>Represente getLoader function</summary>
+    ///<summary></summary>
     /**
-    * Represente getLoader function
+    * 
     */
     public function getLoader(){
         return $this;
     }
-    ///<summary>Represente getOut function</summary>
+    ///<summary></summary>
     /**
-    * Represente getOut function
+    * 
     */
     public function getOut(){
         return $this->_controller->_output;
     }
-    ///<summary>Represente getUser function</summary>
+    ///<summary></summary>
     /**
-    * Represente getUser function
+    * 
     */
     public function getUser(){
         return $this->_controller->User;

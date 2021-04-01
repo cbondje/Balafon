@@ -14,30 +14,30 @@ use function igk_resources_gets as __;
 * represent google's font configuration layer
 */
 final class IGKGoogleFontConfiguration extends IGKConfigCtrlBase{
-    ///<summary>Represente getConfigFile function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigFile function
+    * 
     */
     protected function getConfigFile(){
         return igk_io_dir($this->getDataDir()."/google.".IGK_CTRL_CONF_FILE);
     }
-    ///<summary>Represente getConfigGroup function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigGroup function
+    * 
     */
     public function getConfigGroup(){
         return "google";
     }
-    ///<summary>Represente getConfigPage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigPage function
+    * 
     */
     public function getConfigPage(){
         return "google.fonts";
     }
-    ///<summary>Represente getfontlist function</summary>
+    ///<summary></summary>
     /**
-    * Represente getfontlist function
+    * 
     */
     private function getfontlist(){
         $r=igk_google_settings();
@@ -45,16 +45,16 @@ final class IGKGoogleFontConfiguration extends IGKConfigCtrlBase{
         $t=(array)($fonts);
         return array_keys($t);
     }
-    ///<summary>Represente getName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getName function
+    * 
     */
     public function getName(){
         return "com.igkdev.googlefont";
     }
-    ///<summary>Represente initConfigMenu function</summary>
+    ///<summary></summary>
     /**
-    * Represente initConfigMenu function
+    * 
     */
     public function initConfigMenu(){
         return array(
@@ -63,9 +63,9 @@ final class IGKGoogleFontConfiguration extends IGKConfigCtrlBase{
             $this->getUri("showConfig")))->setGroup($this->ConfigGroup)
         );
     }
-    ///<summary>Represente install function</summary>
+    ///<summary></summary>
     /**
-    * Represente install function
+    * 
     */
     public function install(){
         session_write_close();
@@ -86,9 +86,9 @@ final class IGKGoogleFontConfiguration extends IGKConfigCtrlBase{
         igk_ajx_redirect();
         igk_navto_referer();
     }
-    ///<summary>Represente showConfig function</summary>
+    ///<summary></summary>
     /**
-    * Represente showConfig function
+    * 
     */
     public function showConfig(){
         parent::showConfig();

@@ -13,30 +13,30 @@
 * represent a controller to manage security
 */
 class IGKSecurityCtrl extends IGKConfigCtrlBase{
-    ///<summary>Represente getConfigGroup function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigGroup function
+    * 
     */
     public function getConfigGroup(){
         return "administration";
     }
-    ///<summary>Represente getConfigImageKey function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigImageKey function
+    * 
     */
     public function getConfigImageKey(){
         return "";
     }
-    ///<summary>Represente getConfigPage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigPage function
+    * 
     */
     public function getConfigPage(){
         return "security";
     }
-    ///<summary>Represente getIsConfigPageAvailable function</summary>
+    ///<summary></summary>
     /**
-    * Represente getIsConfigPageAvailable function
+    * 
     */
     public function getIsConfigPageAvailable(){
         return false;

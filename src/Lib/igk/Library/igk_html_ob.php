@@ -8,10 +8,10 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
-///<summary>Represente igk_html_ob function</summary>
+///<summary></summary>
 ///<param name="callback"></param>
 /**
-* Represente igk_html_ob function
+* 
 * @param mixed $callback
 */
 function igk_html_ob($callback){
@@ -21,7 +21,7 @@ function igk_html_ob($callback){
     ob_end_clean();
     igk_wl($s);
 }
-///<summary>Represente igk_html_ob_select function</summary>
+///<summary></summary>
 ///<param name="id"></param>
 ///<param name="options"></param>
 ///<param name="selected" default="null"></param>
@@ -29,7 +29,7 @@ function igk_html_ob($callback){
 ///<param name="attribs" default="null"></param>
 ///<param name="render" default="1"></param>
 /**
-* Represente igk_html_ob_select function
+* 
 * @param mixed $id
 * @param mixed $options
 * @param mixed $selected the default value is null
@@ -66,13 +66,13 @@ function igk_html_ob_select($id, $options, $selected=null, $display=null, $attri
         igk_wl($o);
     return $o;
 }
-///<summary>Represente igk_html_ob_submit function</summary>
+///<summary></summary>
 ///<param name="id"></param>
 ///<param name="text"></param>
 ///<param name="attribs" default="null"></param>
 ///<param name="render" default="1"></param>
 /**
-* Represente igk_html_ob_submit function
+* 
 * @param mixed $id
 * @param mixed $text
 * @param mixed $attribs the default value is null

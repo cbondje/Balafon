@@ -9,17 +9,17 @@
 final class IGKServer{
     private $data;
     private static $sm_server;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     private function __construct(){
         $this->prepareServerInfo();
     }
-    ///<summary>Represente __get function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente __get function
+    * 
     * @param mixed $n
     */
     public function __get($n){
@@ -27,20 +27,20 @@ final class IGKServer{
             return $this->data[$n];
         return null;
     }
-    ///<summary>Represente __isset function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente __isset function
+    * 
     * @param mixed $n
     */
     public function __isset($n){
         return isset($this->data[$n]);
     }
-    ///<summary>Represente __set function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     ///<param name="v"></param>
     /**
-    * Represente __set function
+    * 
     * @param mixed $n
     * @param mixed $v
     */
@@ -71,9 +71,9 @@ final class IGKServer{
     public function get($name, $default=null){
         return igk_getv($this->data, $name, $default);
     }
-    ///<summary>Represente getInstance function</summary>
+    ///<summary></summary>
     /**
-    * Represente getInstance function
+    * 
     */
     public static function getInstance(){
         $r=& self::$sm_server;
@@ -81,10 +81,10 @@ final class IGKServer{
             return new $s();
         });
     }
-    ///<summary>Represente IsEntryFile function</summary>
+    ///<summary></summary>
     ///<param name="file"></param>
     /**
-    * Represente IsEntryFile function
+    * 
     * @param mixed $file
     */
     public function IsEntryFile($file){
@@ -109,9 +109,9 @@ final class IGKServer{
     public function isMultipartFormData(){
         return strpos($this->CONTENT_TYPE, "multipart/form-data") === 0;
     }
-    ///<summary>Represente prepareServerInfo function</summary>
+    ///<summary></summary>
     /**
-    * Represente prepareServerInfo function
+    * 
     */
     public function prepareServerInfo(){
         $this->data=array();
@@ -158,9 +158,9 @@ final class IGKServer{
         }
         $this->REQUEST_PATH=explode("?", $this->REQUEST_URI)[0];
     }
-    ///<summary>Represente toArray function</summary>
+    ///<summary></summary>
     /**
-    * Represente toArray function
+    * 
     */
     public function toArray(){
         return $this->data;

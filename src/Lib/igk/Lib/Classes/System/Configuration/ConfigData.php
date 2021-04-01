@@ -23,29 +23,29 @@ final class ConfigData {
         $this->m_configCtrl=$configCtrl;
         $this->m_configEntries=$entries;
     }
-    ///<summary>Represente __get function</summary>
+    ///<summary></summary>
     ///<param name="key"></param>
     /**
-    * Represente __get function
+    * 
     * @param mixed $key
     */
     public function __get($key){
         return igk_getv($this->m_configEntries, $key);
     }
-    ///<summary>Represente __isset function</summary>
+    ///<summary></summary>
     ///<param name="key"></param>
     /**
-    * Represente __isset function
+    * 
     * @param mixed $key
     */
     public function __isset($key){
         return isset($this->m_configEntries[$key]);
     }
-    ///<summary>Represente __set function</summary>
+    ///<summary></summary>
     ///<param name="key"></param>
     ///<param name="value"></param>
     /**
-    * Represente __set function
+    * 
     * @param mixed $key
     * @param mixed $value
     */
@@ -64,18 +64,18 @@ final class ConfigData {
             } 
         } 
     }
-    ///<summary>Represente __toString function</summary>
+    ///<summary>display value</summary>
     /**
-    * Represente __toString function
+    * display value
     */
     public function __toString(){
         return "IGKConfigurationData [Count: ".count($this->m_configEntries)."]";
     }
-    ///<summary>Represente getConfig function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="default" default="null"></param>
     /**
-    * Represente getConfig function
+    * 
     * @param mixed $name
     * @param mixed $default the default value is null
     */
@@ -85,23 +85,23 @@ final class ConfigData {
     public function get($xpath, $default= null){
         return igk_conf_get($this->m_configEntries, $xpath, $default);
     }
-    ///<summary>Represente getEntries function</summary>
+    ///<summary></summary>
     /**
-    * Represente getEntries function
+    * 
     */
     public function getEntries(){
         return $this->m_configEntries;
     }
-    ///<summary>Represente getEntriesKeys function</summary>
+    ///<summary></summary>
     /**
-    * Represente getEntriesKeys function
+    * 
     */
     public function getEntriesKeys(){
         return array_keys($this->m_configEntries);
     }
-    ///<summary>Represente saveData function</summary>
+    ///<summary></summary>
     /**
-    * Represente saveData function
+    * 
     */
     public function saveData(){
         if(defined("IGK_FRAMEWORK_ATOMIC"))
@@ -136,11 +136,11 @@ final class ConfigData {
         }
         $this->saveData();
     }
-    ///<summary>Represente setConfig function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="value"></param>
     /**
-    * Represente setConfig function
+    * 
     * @param mixed $name
     * @param mixed $value
     */
@@ -148,9 +148,9 @@ final class ConfigData {
         if($name)
             $this->m_configEntries[$name]=$value;
     }
-    ///<summary>Represente SortByKeys function</summary>
+    ///<summary></summary>
     /**
-    * Represente SortByKeys function
+    * 
     */
     public function SortByKeys(){
         $keys=array_keys($this->m_configEntries);

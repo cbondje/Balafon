@@ -26,7 +26,6 @@ class IGKQueryRowObj implements ArrayAccess, Iterator{
 		$tab = $this->m_rows;
 		if ($filter){
 			$tab = array_filter($tab, function($k, $m){
-
 				if (strpos($m, ":") === false){
 					return 1;
 				}
@@ -35,7 +34,7 @@ class IGKQueryRowObj implements ArrayAccess, Iterator{
 		}
 		return $tab;
 	}
-	public function OffsetExists($i){
+	public function OffsetExists($i){ 
 		return isset($this->m_rows[$i]);
 	}
 	public function OffsetSet($i, $v){
@@ -50,10 +49,10 @@ class IGKQueryRowObj implements ArrayAccess, Iterator{
 	public function OffsetUnset($i){
 		 unset( $this->m_rows[$i]);
 	}
-	public function __isset($i){
+	public function __isset($i){ 
 		return $this->OffsetExists($i);
 	}
-	public function __get($i){
+	public function __get($i){ 
 		return $this[$i];
 	}
 	public function __set($i,$v){

@@ -14,12 +14,12 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
     const IGK_CTRL_APP_TEMPLATE=self::IGK_CTRL_APPS_KEY + 2;
     private static $INIT;
     static $sm_apps;
-    ///<summary>Represente __viewDoc function</summary>
+    ///<summary></summary>
     ///<param name="view" default="'default'"></param>
     ///<param name="doc" default="null"></param>
     ///<param name="render" default="true"></param>
     /**
-    * Represente __viewDoc function
+    * 
     * @param mixed $view the default value is 'default'
     * @param mixed $doc the default value is null
     * @param mixed $render the default value is true
@@ -44,11 +44,11 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
             igk_render_doc($d, 0, $this);
         }
     }
-    ///<summary>Represente _getfunclist function</summary>
+    ///<summary></summary>
     ///<param name="news" default="false"></param>
     ///<param name="funcrequest" default="null"></param>
     /**
-    * Represente _getfunclist function
+    * 
     * @param mixed $news the default value is false
     * @param mixed $funcrequest the default value is null
     */
@@ -70,9 +70,9 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
     protected function _createDbUtility(){
         return new IGKDbUtility($this);
     }
-    ///<summary>Represente about function</summary>
+    ///<summary></summary>
     /**
-    * Represente about function
+    * 
     */
     public function about(){
         $doc= $this->getAppDocument(); //createNewDoc();
@@ -100,9 +100,9 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
         // unset($doc);
 		igk_exit();
     }
-    ///<summary>Represente administration function</summary>
+    ///<summary></summary>
     /**
-    * Represente administration function
+    * 
     */
     public function administration(){
         $doc= $this->getAppDocument();
@@ -115,11 +115,11 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
         $div->addA($this->getAppUri(""))->setClass("glyphicons no-decoration")->Content="&#xe021;";
         $doc->RenderAJX();
     }
-    ///<summary>Represente bind_func function</summary>
+    ///<summary></summary>
     ///<param name="func"></param>
     ///<param name="args"></param>
     /**
-    * Represente bind_func function
+    * 
     * @param mixed $func
     * @param mixed $args
     */
@@ -149,10 +149,10 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
         }
         return true;
     }
-    ///<summary>Represente checkFunc function</summary>
+    ///<summary></summary>
     ///<param name="funcname"></param>
     /**
-    * Represente checkFunc function
+    * 
     * @param mixed $funcname
     */
     protected final function checkFunc($funcname){
@@ -191,10 +191,10 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
         }
         return $r;
     }
-    ///<summary>Represente conffunctions function</summary>
+    ///<summary></summary>
     ///<param name="node" default="null"></param>
     /**
-    * Represente conffunctions function
+    * 
     * @param mixed $node the default value is null
     */
     public function conffunctions($node=null){
@@ -225,10 +225,10 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
             }
         }
     }
-    ///<summary>Represente createNewDoc function</summary>
+    ///<summary></summary>
     ///<param name="clear" default="false"></param>
     /**
-    * Represente createNewDoc function
+    * 
     * @param mixed $clear the default value is false
     */
     public function createNewDoc($clear=false){
@@ -245,9 +245,9 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
 
         return $doc;
     }
-    ///<summary>Represente dbinitentries function</summary>
+    ///<summary></summary>
     /**
-    * Represente dbinitentries function
+    * 
     */
     public final function dbinitentries(){
         $s=igk_is_conf_connected() || $this->IsUserAllowedTo(igk_ctrl_auth_key($this, __FUNCTION__));
@@ -363,9 +363,9 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
         $b->addButton("btn.init")->setAttribute("value", "init function list")->setAttribute("onclick", "javascript: ns_igk.form.posturi('".$u."'); return false;");
         $doc->RenderAJX();
     }
-    ///<summary>Represente get_data_schemas function</summary>
+    ///<summary></summary>
     /**
-    * Represente get_data_schemas function
+    * 
     */
     public function get_data_schemas(){
         $u=$this->App->Session->User;
@@ -384,9 +384,9 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
         }
         igk_exit();
     }
-    ///<summary>Represente GetAdditionalConfigInfo function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetAdditionalConfigInfo function
+    * 
     */
     public static function GetAdditionalConfigInfo(){
         return array(
@@ -397,9 +397,9 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
             IGK_CTRL_CNF_APPNOTACTIVE=>(object)array("clType"=>"bool", "clDefaultValue"=>"0")
         );
     }
-    ///<summary>Represente GetAdditionalDefaultViewContent function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetAdditionalDefaultViewContent function
+    * 
     */
     public static function GetAdditionalDefaultViewContent(){
         return <<<EOF
@@ -409,9 +409,9 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
 \$t->inflate(igk_io_dir(\$dir."/".\$fname));
 EOF;
 }
-    ///<summary>Represente getAllowViewDirectAccess function</summary>
+    ///<summary></summary>
     /**
-    * Represente getAllowViewDirectAccess function
+    * 
     */
     protected function getAllowViewDirectAccess(){
         return 0;
@@ -423,16 +423,16 @@ EOF;
     protected function getAppDocument($newdoc=false){
         return igk_get_document($this, $newdoc);
     }
-    ///<summary>Represente getAppImgUri function</summary>
+    ///<summary></summary>
     /**
-    * Represente getAppImgUri function
+    * 
     */
     public function getAppImgUri(){
         return igk_html_resolv_img_uri($this->getDataDir().IGK_APP_LOGO);
     }
-    ///<summary>Represente getAppName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getAppName function
+    * 
     */
     public function getAppName(){
         return igk_getv($this->Configs, IGK_CTRL_CNF_APPNAME);
@@ -444,10 +444,10 @@ EOF;
     public function getAppNotActive(){
         return igk_getv($this->Configs, IGK_CTRL_CNF_APPNOTACTIVE);
     }
-    ///<summary>Represente GetApps function</summary>
+    ///<summary></summary>
     ///<return refout="true"></return>
     /**
-    * Represente GetApps function
+    * 
     * @return *
     */
     public static function & GetApps(){
@@ -464,9 +464,9 @@ EOF;
         }
         return IGKApplicationController::$sm_apps;
     }
-    ///<summary>Represente getAppTitle function</summary>
+    ///<summary></summary>
     /**
-    * Represente getAppTitle function
+    * 
     */
     public function getAppTitle(){
         return igk_getv($this->Configs, IGK_CTRL_CNF_TITLE);
@@ -532,16 +532,16 @@ EOF;
     public function getAuthKey($k=null){
         return igk_ctrl_auth_key($this, $k);
     }
-    ///<summary>Represente getBasicUriPattern function</summary>
+    ///<summary></summary>
     /**
-    * Represente getBasicUriPattern function
+    * 
     */
     public function getBasicUriPattern(){
         return igk_getv($this->Configs, IGK_CTRL_CNF_BASEURIPATTERN);
     }
-    ///<summary>Represente getcanAddChild function</summary>
+    ///<summary></summary>
     /**
-    * Represente getcanAddChild function
+    * 
     */
     public function getcanAddChild(){
         return false;
@@ -553,16 +553,16 @@ EOF;
     public function getCurrentDoc(){
         return $this->AppDocument;
     }
-    ///<summary>Represente getDataTablePrefix function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDataTablePrefix function
+    * 
     */
     public function getDataTablePrefix(){
         return igk_getv($this->Configs, IGK_CTRL_CNF_TABLEPREFIX);
     }
-    ///<summary>Represente getDb function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDb function
+    * 
     */
     public function getDb(){
         if(!$db=$this->getEnvParam("dbu")){
@@ -571,9 +571,9 @@ EOF;
         }
         return $db;
     }
-    ///<summary>Represente getDomainUriAction function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDomainUriAction function
+    * 
     */
     public function getDomainUriAction(){
         return "^(/(?P<lang>".R::GetSupportLangRegex()."))?".IGK_REG_ACTION_METH."(;:options)?";
@@ -589,9 +589,9 @@ EOF;
         }
         return $exposed;
     }
-    ///<summary>Represente getIsVisible function</summary>
+    ///<summary></summary>
     /**
-    * Represente getIsVisible function
+    * 
     */
     public function getIsVisible(){
         $v=$this->RegisterToViewMecanism;
@@ -602,9 +602,9 @@ EOF;
     public function getNoGlobalAction(){
         return true;
     }
-    ///<summary>Represente getRegInvokeUri function</summary>
+    ///<summary></summary>
     /**
-    * Represente getRegInvokeUri function
+    * 
     */
     public function getRegInvokeUri(){
         return $this->getUri(IGK_EVALUATE_URI_FUNC);
@@ -645,9 +645,9 @@ EOF;
         }
         return null;
     }
-    ///<summary>Represente getSystemVars function</summary>
+    ///<summary></summary>
     /**
-    * Represente getSystemVars function
+    * 
     */
     public function getSystemVars(){
         $doc=$this->getEnvParam(IGK_CURRENT_DOC_PARAM_KEY);
@@ -797,18 +797,18 @@ EOF;
         }
         return false;
     }
-    ///<summary>Represente HandleError function</summary>
+    ///<summary></summary>
     ///<param name="code"></param>
     /**
-    * Represente HandleError function
+    * 
     * @param mixed $code the default value is 0
     */
     protected function HandleError($code=0){
         return 0;
     }
-    ///<summary>Represente InitComplete function</summary>
+    ///<summary></summary>
     /**
-    * Represente InitComplete function
+    * 
     */
     protected function InitComplete(){
         parent::InitComplete();
@@ -830,10 +830,10 @@ EOF;
         }
         IGKOwnViewCtrl::RegViewCtrl($this, 0);
     }
-    ///<summary>Represente initDb function</summary>
+    ///<summary></summary>
     ///<param name="s" default="null"></param>
     /**
-    * Represente initDb function
+    * 
     * @param mixed $s the default value is null
     */
     public function initDb($s=null){
@@ -848,10 +848,10 @@ EOF;
             igk_navto($this->getAppUri());
         }
     }
-    ///<summary>Represente InitEnvironment function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     /**
-    * Represente InitEnvironment function
+    * 
     * @param mixed $ctrl
     */
     public static function InitEnvironment($ctrl){
@@ -887,18 +887,18 @@ EOF
         }
         return $this->RegisterToViewMecanism;
     }
-    ///<summary>Represente IsActive function</summary>
+    ///<summary></summary>
     /**
-    * Represente IsActive function
+    * 
     */
     public function IsActive(){
         $inf=igk_sys_ac_getpatterninfo();
         return (($inf != null) && preg_match(igk_sys_ac_getpattern($this->getBasicUriPattern()), igk_io_rootBaseRequestUri()));
     }
-    ///<summary>Represente isAuthKeys function</summary>
+    ///<summary></summary>
     ///<param name="k"></param>
     /**
-    * Represente isAuthKeys function
+    * 
     * @param mixed $k
     */
     public function isAuthKeys($k){
@@ -935,9 +935,9 @@ EOF
             return true;
         return igk_sys_isuser_authorize($this->User, $authDemand);
     }
-    ///<summary>Represente load_data function</summary>
+    ///<summary></summary>
     /**
-    * Represente load_data function
+    * 
     */
     public function load_data(){
         $doc= $this->getAppDocument();
@@ -957,9 +957,9 @@ EOF;
         $doc->RenderAJX();
         igk_exit();
     }
-    ///<summary>Represente load_data_files function</summary>
+    ///<summary></summary>
     /**
-    * Represente load_data_files function
+    * 
     */
     public function load_data_files(){
         if(isset($_FILES["clFileName"])){
@@ -986,9 +986,9 @@ EOF;
         }
         igk_exit();
     }
-    ///<summary>Represente register_action function</summary>
+    ///<summary></summary>
     /**
-    * Represente register_action function
+    * 
     */
     protected final function register_action(){
         $k=$this->getEnvParam("appkeys");
@@ -1001,12 +1001,12 @@ EOF;
             $this->setEnvParam("appkeys", $k);
         }
     }
-    ///<summary>Represente renderDefaultDoc function</summary>
+    ///<summary></summary>
     ///<param name="view" default="'default'"></param>
     ///<param name="doc" default="null"></param>
     ///<param name="render" default="true"></param>
     /**
-    * Represente renderDefaultDoc function
+    * 
     * @param mixed $view the default value is 'default'
     * @param mixed $doc the default value is null
     * @param mixed $render the default value is true
@@ -1014,10 +1014,10 @@ EOF;
     protected function renderDefaultDoc($view='default', $doc=null, $render=true){
          $this->__viewDoc($view, $doc, $render);
     }
-    ///<summary>Represente renderError function</summary>
+    ///<summary></summary>
     ///<param name="c"></param>
     /**
-    * Represente renderError function
+    * 
     * @param mixed $c
     */
     protected function renderError($c){
@@ -1036,10 +1036,10 @@ EOF;
 			igk_exit();
         }
     }
-    ///<summary>Represente resetDb function</summary>
+    ///<summary></summary>
     ///<param name="navigate" default="1"></param>
     /**
-    * Represente resetDb function
+    * 
     * @param mixed $navigate the default value is 1
     */
     public final function resetDb($navigate=1){
@@ -1137,10 +1137,10 @@ EOF;
         if($exit)
             igk_exit();
     }
-    ///<summary>Represente SetAdditionalConfigInfo function</summary>
+    ///<summary></summary>
     ///<param name="t" ref="true"></param>
     /**
-    * Represente SetAdditionalConfigInfo function
+    * 
     * @param  * $t
     */
     public static function SetAdditionalConfigInfo(& $t){
@@ -1150,10 +1150,10 @@ EOF;
         $t[IGK_CTRL_CNF_APPNOTACTIVE]=igk_getr(IGK_CTRL_CNF_APPNOTACTIVE);
         $t[IGK_CTRL_CNF_TABLEPREFIX]=igk_getr(IGK_CTRL_CNF_TABLEPREFIX);
     }
-    ///<summary>Represente setDefaultFavicon function</summary>
+    ///<summary></summary>
     ///<param name="doc"></param>
     /**
-    * Represente setDefaultFavicon function
+    * 
     * @param mixed $doc
     */
     protected function setDefaultFavicon($doc){		
@@ -1161,10 +1161,10 @@ EOF;
         // $d=$this->getResourcesDir()."/Img/favicon.ico";
         // igk_doc_set_favicon($doc, $d);
     }
-    ///<summary>Represente SetupCtrl function</summary>
+    ///<summary></summary>
     ///<param name="param"></param>
     /**
-    * Represente SetupCtrl function
+    * 
     * @param mixed $param
     */
     public function SetupCtrl($param){
@@ -1180,9 +1180,9 @@ EOF;
             }
         }
     }
-    ///<summary>Represente storeConfigSettings function</summary>
+    ///<summary></summary>
     /**
-    * Represente storeConfigSettings function
+    * 
     */
     public function storeConfigSettings(){
         if ($ret = parent::storeConfigSettings()){
@@ -1190,9 +1190,9 @@ EOF;
         }
         return $ret;
     }
-    ///<summary>Represente sync_from_user_data function</summary>
+    ///<summary></summary>
     /**
-    * Represente sync_from_user_data function
+    * 
     */
     public function sync_from_user_data(){
         igk_wln(__FUNCTION__." Not implements");
@@ -1226,9 +1226,9 @@ EOF;
     public function v($view='default', $forceview=false){
         $this->setCurrentView($view, $forceview);
     }
-    ///<summary>Represente View function</summary>
+    ///<summary></summary>
     /**
-    * Represente View function
+    * 
     */
     public function View(){
         $v_context="app";

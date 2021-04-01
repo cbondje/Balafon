@@ -14,9 +14,9 @@
 abstract class IGKBalafonMiddleware{
     private $_next;
     private static $sm_manager;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     protected function __construct(){}
     ///<summary> attach the middleware</summary>
@@ -36,12 +36,12 @@ abstract class IGKBalafonMiddleware{
         $service->Attach($middle);
         $middle->initialize($middle);
     }
-    ///<summary>Represente CreateMiddleware function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="args" default="null"></param>
     ///<param name="service" default="null"></param>
     /**
-    * Represente CreateMiddleware function
+    * 
     * @param mixed $name
     * @param mixed $args
     * @param mixed $service
@@ -65,9 +65,9 @@ abstract class IGKBalafonMiddleware{
         }
         return null;
     }
-    ///<summary>Represente GetManager function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetManager function
+    * 
     */
     public static function GetManager(){
         if(count($c=self::$sm_manager) > 0){
@@ -75,9 +75,9 @@ abstract class IGKBalafonMiddleware{
         }
         return null;
     }
-    ///<summary>Represente getService function</summary>
+    ///<summary></summary>
     /**
-    * Represente getService function
+    * 
     */
     public function getService(){
         return self::GetManager();
@@ -89,27 +89,27 @@ abstract class IGKBalafonMiddleware{
     * @param mixed $serviceIIGKBalafonApplicationMiddlewareService instance
     */
     protected function initialize($service){}
-    ///<summary>Represente invoke function</summary>
+    ///<summary></summary>
     /**
-    * Represente invoke function
+    * 
     */
     public function invoke(){
         $this->next();
     }
-    ///<summary>Represente next function</summary>
+    ///<summary></summary>
     /**
-    * Represente next function
+    * 
     */
     protected function next(){
         if($this->_next){
             $this->_next->invoke();
         }
     }
-    ///<summary>Represente Process function</summary>
+    ///<summary></summary>
     ///<param name="service"></param>
     ///<param name="wherelist"></param>
     /**
-    * Represente Process function
+    * 
     * @param mixed $service
     * @param mixed $wherelist
     */
@@ -123,9 +123,9 @@ abstract class IGKBalafonMiddleware{
         }
         array_shift(self::$sm_manager);
     }
-    ///<summary>Represente stopChain function</summary>
+    ///<summary></summary>
     /**
-    * Represente stopChain function
+    * 
     */
     protected function stopChain(){
         $this->chainFlag=1;

@@ -19,24 +19,24 @@ namespace IGK\Core\Ext\Google;
 */
 final class IGKHrefListValue{
     var $values;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     public function __construct(){
         $this->values=func_get_args();
     }
-    ///<summary>Represente __toString function</summary>
+    ///<summary>display value</summary>
     /**
-    * Represente __toString function
+    * display value
     */
     public function __toString(){
         return $this->getValue();
     }
-    ///<summary>Represente getValue function</summary>
+    ///<summary></summary>
     ///<param name="options" default="null"></param>
     /**
-    * Represente getValue function
+    * 
     * @param mixed $options the default value is null
     */
     public function getValue($options=null){

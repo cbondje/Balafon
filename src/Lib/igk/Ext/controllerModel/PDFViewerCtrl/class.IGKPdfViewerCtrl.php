@@ -21,7 +21,7 @@ final class IGKHtmlPdfViewNode extends IGKHtmlItem
 		$this["class"]="noborder dispb fitw fith cliframe";
 
 	}
-	public function Render($xmloption=null)
+	public function render($xmloption=null)
 	{
 		$uri = $this->m_ctrl->getUri("render_pdf_ajx");
 		$this["src"] = igk_io_baseuri().$uri;

@@ -8,11 +8,11 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
-///<summary>Represente igk_designer_off function</summary>
+///<summary></summary>
 ///<param name="doc"></param>
 ///<param name="v" default="1"></param>
 /**
-* Represente igk_designer_off function
+* 
 * @param mixed $doc
 * @param mixed $v the default value is 1
 */

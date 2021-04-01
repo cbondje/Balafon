@@ -15,11 +15,11 @@ define("IGK_INC_APP_INITDB", IGK_LIB_DIR."/".IGK_INC_FOLDER."/igk_initapp_db.pin
 use function igk_resources_gets as __; 
 
 
-///<summary>Represente igk_app_ctrl_dropped_callback function</summary>
+///<summary></summary>
 ///<param name="ctrl"></param>
 ///<param name="n"></param>
 /**
-* Represente igk_app_ctrl_dropped_callback function
+* 
 * @param mixed $ctrl
 * @param mixed $n
 */
@@ -28,13 +28,13 @@ function igk_app_ctrl_dropped_callback($ctrl, $n){
     $c=array();
 }
 
-///<summary>Represente igk_app_load_login_form function</summary>
+///<summary></summary>
 ///<param name="app"></param>
 ///<param name="node"></param>
 ///<param name="fname"></param>
 ///<param name="goodUri" default="null"></param>
 /**
-* Represente igk_app_load_login_form function
+* 
 * @param mixed $app
 * @param mixed $node
 * @param mixed $fname
@@ -51,13 +51,13 @@ function igk_app_load_login_form($app, $node, $fname, $goodUri=null){
     }
     $frm=$node->addAppLoginForm($app, $app->getAppUri($fname), $u);
 }
-///<summary>Represente igk_app_login_form function</summary>
+///<summary></summary>
 ///<param name="app"></param>
 ///<param name="div"></param>
 ///<param name="badUri" default="null"></param>
 ///<param name="goodUri" default="null"></param>
 /**
-* Represente igk_app_login_form function
+* 
 * @param mixed $app
 * @param mixed $div
 * @param mixed $badUri the default value is null

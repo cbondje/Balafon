@@ -13,20 +13,20 @@
 * Represente IGKApplicationManagerDbUtility class
 */
 final class IGKApplicationManagerDbUtility extends IGKDbUtility{
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="app"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $app
     */
     public function __construct($app){
         parent::__construct($app);
     }
-    ///<summary>Represente addInstalledTemplate function</summary>
+    ///<summary></summary>
     ///<param name="manifest"></param>
     ///<param name="outdir"></param>
     /**
-    * Represente addInstalledTemplate function
+    * 
     * @param mixed $manifest
     * @param mixed $outdir
     */
@@ -43,18 +43,18 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
             $this->close();
         }
     }
-    ///<summary>Represente dropTemplate function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     /**
-    * Represente dropTemplate function
+    * 
     * @param mixed $id
     */
     public function dropTemplate($id){
         $this->delete(TBIGK_TEMPLATES, $id);
     }
-    ///<summary>Represente getInstallTemplates function</summary>
+    ///<summary></summary>
     /**
-    * Represente getInstallTemplates function
+    * 
     */
     public function getInstallTemplates(){
         igk_set_env("sys://db/constraint_key", "tmplate_");
@@ -65,10 +65,10 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
         }
         return $h;
     }
-    ///<summary>Represente getPackageRow function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     /**
-    * Represente getPackageRow function
+    * 
     * @param mixed $id
     */
     public function getPackageRow($id){
@@ -79,9 +79,9 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
         }
         return $row;
     }
-    ///<summary>Represente getTemplateNames function</summary>
+    ///<summary></summary>
     /**
-    * Represente getTemplateNames function
+    * 
     */
     public function getTemplateNames(){
         $h=null;
@@ -91,10 +91,10 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
         }
         return $h;
     }
-    ///<summary>Represente insertTemplate function</summary>
+    ///<summary></summary>
     ///<param name="inf"></param>
     /**
-    * Represente insertTemplate function
+    * 
     * @param mixed $inf
     */
     public function insertTemplate($inf){
@@ -124,10 +124,10 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
             $this->close();
         }
     }
-    ///<summary>Represente updateTemplate function</summary>
+    ///<summary></summary>
     ///<param name="row"></param>
     /**
-    * Represente updateTemplate function
+    * 
     * @param mixed $row
     */
     public function updateTemplate($row){

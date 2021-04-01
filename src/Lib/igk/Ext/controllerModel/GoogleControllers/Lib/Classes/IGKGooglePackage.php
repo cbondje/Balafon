@@ -18,9 +18,9 @@ namespace IGK\Core\Ext\Google;
 * use for google package
 */
 class IGKGooglePackage{
-    ///<summary>Represente Button function</summary>
+    ///<summary></summary>
     /**
-    * Represente Button function
+    * 
     */
     public function Button(){
         $n=igk_createNode("div");
@@ -30,10 +30,10 @@ class IGKGooglePackage{
         $n->Content="Google Button";
         return $n;
     }
-    ///<summary>Represente CreateNode function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     /**
-    * Represente CreateNode function
+    * 
     * @param mixed $name
     */
     public function CreateNode($name){

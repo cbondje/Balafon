@@ -12,12 +12,12 @@
 * Represente IGKViewHandleActionMiddleware class
 */
 class IGKViewHandleActionMiddleware extends IGKRunCallbackMiddleware{
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="fname"></param>
     ///<param name="action"></param>
     ///<param name="params"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $fname
     * @param mixed $action
     * @param mixed $params

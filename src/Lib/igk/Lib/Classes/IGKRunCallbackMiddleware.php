@@ -13,18 +13,18 @@
 */
 class IGKRunCallbackMiddleware extends IGKBalafonMiddleware{
     private $callback;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="callback"></param>
     /**
-    * Represente __construct function
+    * 
     * @param closure callback
     */
     public function __construct($callback){
         $this->callback=$callback;
     }
-    ///<summary>Represente invoke function</summary>
+    ///<summary></summary>
     /**
-    * Represente invoke function
+    * 
     */
     public function invoke(){
         $r=call_user_func_array($this->callback, array($this->getService()));

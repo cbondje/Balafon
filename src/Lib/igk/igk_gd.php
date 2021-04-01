@@ -13,14 +13,14 @@ define("IGK_GD_SUPPORT", 1);
 
 
 
-///<summary>Represente igk_gd_resize_proportional function</summary>
+///<summary></summary>
 ///<param name="src"></param>
 ///<param name="w"></param>
 ///<param name="h"></param>
 ///<param name="type" default="1"></param>
 ///<param name="compression"></param>
 /**
-* Represente igk_gd_resize_proportional function
+* 
 * @param mixed $src
 * @param mixed $w
 * @param mixed $h
@@ -67,12 +67,12 @@ class IGKGD {
     private $m_height;
     private $m_himg;
     private $m_width;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="w"></param>
     ///<param name="h"></param>
     ///<param name="himg"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $w
     * @param mixed $h
     * @param mixed $himg
@@ -98,10 +98,10 @@ class IGKGD {
     public function setAlphaBlending($b){
         imagealphablending($this->m_himg, $b);
     }
-    ///<summary>Represente _createColor function</summary>
+    ///<summary></summary>
     ///<param name="color"></param>
     /**
-    * Represente _createColor function
+    * 
     * @param mixed $color
     */
     private function _createColor($color){
@@ -110,10 +110,10 @@ class IGKGD {
             $hcl=imagecolorallocate($this->m_himg, $color->R, $color->G, $color->B);
         return $hcl;
     }
-    ///<summary>Represente Clear function</summary>
+    ///<summary></summary>
     ///<param name="color"></param>
     /**
-    * Represente Clear function
+    * 
     * @param mixed $color
     */
     public function Clear($color){
@@ -121,10 +121,10 @@ class IGKGD {
         imagefill($this->m_himg, 0, 0, $hcl);
         imagecolordeallocate($this->m_himg, $hcl);
     }
-    ///<summary>Represente Clearf function</summary>
+    ///<summary></summary>
     ///<param name="color">color float object </param>
     /**
-    * Represente Clearf function
+    * 
     * @param mixed $color
     */
     public function Clearf($color){
@@ -137,20 +137,20 @@ class IGKGD {
             "B"=>$color->B * 255
         ));
     }
-    ///<summary>Represente Clearw function</summary>
+    ///<summary></summary>
     ///<param name="webcolor"></param>
     /**
-    * Represente Clearw function
+    * 
     * @param mixed $webcolor
     */
     public function Clearw($webcolor){
         $this->Clearf(IGKColorf::FromString($webcolor));
     }
-    ///<summary>Represente Create function</summary>
+    ///<summary></summary>
     ///<param name="imgwidth"></param>
     ///<param name="imgheight"></param>
     /**
-    * Represente Create function
+    * 
     * @param mixed $imgwidth
     * @param mixed $imgheight
     */
@@ -188,9 +188,9 @@ class IGKGD {
        // imagecolordeallocate($c->m_himg, $tcl);
        return $c;
     }
-    ///<summary>Represente Dispose function</summary>
+    ///<summary></summary>
     /**
-    * Represente Dispose function
+    * 
     */
     public function Dispose(){
         imagedestroy($this->m_himg);
@@ -200,12 +200,12 @@ class IGKGD {
         imageline($this->m_himg, $x1, $y1, $x2, $y2, $hcl);
         imagecolordeallocate($this->m_himg, $hcl);
     }
-    ///<summary>Represente DrawEllipse function</summary>
+    ///<summary></summary>
     ///<param name="color"></param>
     ///<param name="center"></param>
     ///<param name="radius"></param>
     /**
-    * Represente DrawEllipse function
+    * 
     * @param mixed $color
     * @param mixed $center
     * @param mixed $radius
@@ -215,14 +215,14 @@ class IGKGD {
         imageellipse($this->m_himg, $center->X, $center->Y, abs($radius->X * 2.0), abs($radius->Y * 2.0), $hcl);
         imagecolordeallocate($this->m_himg, $hcl);
     }
-    ///<summary>Represente DrawImage function</summary>
+    ///<summary></summary>
     ///<param name="himg"></param>
     ///<param name="x"></param>
     ///<param name="y"></param>
     ///<param name="w" default="-1"></param>
     ///<param name="h" default="-1"></param>
     /**
-    * Represente DrawImage function
+    * 
     * @param mixed $himg
     * @param mixed $x
     * @param mixed $y
@@ -272,14 +272,14 @@ class IGKGD {
         else
             imagecopymerge($this->m_himg, $himg, $x, $y, 0, 0, $w, $h,10);
     }
-    ///<summary>Represente DrawRectangle function</summary>
+    ///<summary></summary>
     ///<param name="color"></param>
     ///<param name="rect"></param>
     ///<param name="y" default="null"></param>
     ///<param name="width" default="null"></param>
     ///<param name="height" default="null"></param>
     /**
-    * Represente DrawRectangle function
+    * 
     * @param mixed $color
     * @param mixed $rect
     * @param mixed $y the default value is null
@@ -300,7 +300,7 @@ class IGKGD {
     public function Scale($scalex, $scaley){
 
     }
-    ///<summary>Represente DrawString function</summary>
+    ///<summary></summary>
     ///<param name="string"></param>
     ///<param name="font"></param>
     ///<param name="size"></param>
@@ -308,7 +308,7 @@ class IGKGD {
     ///<param name="y"></param>
     ///<param name="color"></param>
     /**
-    * Represente DrawString function
+    * 
     * @param mixed $string
     * @param mixed $font
     * @param mixed $size
@@ -327,12 +327,12 @@ class IGKGD {
             "height"=>abs($r[5] - $r[1])
         );
     }
-    ///<summary>Represente FillEllipse function</summary>
+    ///<summary></summary>
     ///<param name="color"></param>
     ///<param name="center"></param>
     ///<param name="radius"></param>
     /**
-    * Represente FillEllipse function
+    * 
     * @param mixed $color
     * @param mixed $center
     * @param mixed $radius
@@ -342,14 +342,14 @@ class IGKGD {
         imagefilledellipse($this->m_himg, $center->X, $center->Y, abs($radius->X * 2.0), abs($radius->Y * 2.0), $hcl);
         imagecolordeallocate($this->m_himg, $hcl);
     }
-    ///<summary>Represente FillRectangle function</summary>
+    ///<summary></summary>
     ///<param name="color"></param>
     ///<param name="rectx"></param>
     ///<param name="y" default="null"></param>
     ///<param name="width" default="null"></param>
     ///<param name="height" default="null"></param>
     /**
-    * Represente FillRectangle function
+    * 
     * @param mixed $color
     * @param mixed $rectx
     * @param mixed $y the default value is null
@@ -366,27 +366,27 @@ class IGKGD {
         imagefilledrectangle($this->m_himg, $rectx->X, $rectx->Y, $rectx->X + $rectx->Width, $rectx->Y + $rectx->Height, $hcl);
         imagecolordeallocate($this->m_himg, $hcl);
     }
-    ///<summary>Represente FromGd function</summary>
+    ///<summary></summary>
     ///<param name="himg"></param>
     /**
-    * Represente FromGd function
+    * 
     * @param mixed $himg
     */
     public static function FromGd($himg){
         return new IGKGD(imagesx($himg), imagesy($himg), $himg);
     }
-    ///<summary>Represente Render function</summary>
+    ///<summary></summary>
     /**
-    * Represente Render function
+    * 
     */
-    public function Render($type=null, $quality=null){
+    public function render($type=null, $quality=null){
         if (($type===null) || ($type=="PNG"))
             return imagepng($this->m_himg);
         return imagejpeg($this->m_himg, null, $quality);
     }
-    ///<summary>Represente RenderText function</summary>
+    ///<summary></summary>
     /**
-    * Represente RenderText function
+    * 
     */
     public function RenderText(){
         IGKOb::Start();

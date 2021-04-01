@@ -7,9 +7,9 @@
 * represent IIAction Result interface
 */
 interface IIGKActionResult{
-    ///<summary>Represente index function</summary>
+    ///<summary></summary>
     /**
-    * Represente index function
+    * 
     */
     function index();
 }
@@ -22,9 +22,9 @@ interface IIGKActionResult{
 * Represente IIGKConfigController interface
 */
 interface IIGKConfigController {
-    ///<summary>Represente showConfig function</summary>
+    ///<summary></summary>
     /**
-    * Represente showConfig function
+    * 
     */
     function showConfig();
 }
@@ -33,29 +33,29 @@ interface IIGKConfigController {
 * Represente IIGKController interface
 */
 interface IIGKController{
-    ///<summary>Represente getName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getName function
+    * 
     */
     function getName();
-    ///<summary>Represente getTargetNode function</summary>
+    ///<summary></summary>
     /**
-    * Represente getTargetNode function
+    * 
     */
     function getTargetNode();
-    ///<summary>Represente getTargetNodeId function</summary>
+    ///<summary></summary>
     /**
-    * Represente getTargetNodeId function
+    * 
     */
     function getTargetNodeId();
-    ///<summary>Represente initMenu function</summary>
+    ///<summary></summary>
     /**
-    * Represente initMenu function
+    * 
     */
     function initMenu();
-    ///<summary>Represente View function</summary>
+    ///<summary></summary>
     /**
-    * Represente View function
+    * 
     */
     function View();
 }
@@ -64,18 +64,18 @@ interface IIGKController{
 * Represente IIGKControllerInitListener interface
 */
 interface IIGKControllerInitListener{
-    ///<summary>Represente addDir function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     /**
-    * Represente addDir function
+    * 
     * @param mixed $name
     */
     function addDir($name);
-    ///<summary>Represente addSource function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="source"></param>
     /**
-    * Represente addSource function
+    * 
     * @param mixed $name
     * @param mixed $source
     */
@@ -86,15 +86,15 @@ interface IIGKControllerInitListener{
 * Represente IIGKCssCtrlHost interface
 */
 interface IIGKCssCtrlHost{
-    ///<summary>Represente bindCss function</summary>
+    ///<summary></summary>
     /**
-    * Represente bindCss function
+    * 
     */
     function bindCss();
-    ///<summary>Represente getIsCssActive function</summary>
+    ///<summary></summary>
     ///<param name="doc" default="null"></param>
     /**
-    * Represente getIsCssActive function
+    * 
     * @param mixed $doc the default value is null
     */
     function getIsCssActive($doc=null);
@@ -104,34 +104,34 @@ interface IIGKCssCtrlHost{
 * Represente IIGKCtrlDirManagement interface
 */
 interface IIGKCtrlDirManagement{
-    ///<summary>Represente getDataDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDataDir function
+    * 
     */
     function getDataDir();
-    ///<summary>Represente getDeclaredDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDeclaredDir function
+    * 
     */
     function getDeclaredDir();
-    ///<summary>Represente getName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getName function
+    * 
     */
     function getName();
-    ///<summary>Represente getResourcesDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getResourcesDir function
+    * 
     */
     function getResourcesDir();
-    ///<summary>Represente getStylesDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getStylesDir function
+    * 
     */
     function getStylesDir();
-    ///<summary>Represente getViewDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getViewDir function
+    * 
     */
     function getViewDir();
 }
@@ -140,19 +140,19 @@ interface IIGKCtrlDirManagement{
 * Represente IIGKDataAdapter interface
 */
 interface IIGKDataAdapter{
-    ///<summary>Represente countAndWhere function</summary>
+    ///<summary></summary>
     /**
-    * Represente countAndWhere function
+    * 
     */
     function countAndWhere();
-    ///<summary>Represente createDb function</summary>
+    ///<summary></summary>
     /**
-    * Represente createDb function
+    * 
     */
     function createDb();
-    ///<summary>Represente setForeignKeyCheck function</summary>
+    ///<summary></summary>
     /**
-    * Represente setForeignKeyCheck function
+    * 
     */
     function setForeignKeyCheck();
 }
@@ -166,12 +166,12 @@ interface IIGKDataTable{}
 * Represente IIGKDbUtility interface
 */
 interface IIGKDbUtility{
-    ///<summary>Represente insertIfNotExists function</summary>
+    ///<summary></summary>
     ///<param name="table"></param>
     ///<param name="obj"></param>
     ///<param name="leaveopen" default="false"></param>
     /**
-    * Represente insertIfNotExists function
+    * 
     * @param mixed $table
     * @param mixed $obj
     * @param mixed $leaveopen the default value is false
@@ -188,126 +188,126 @@ interface IIGKDbModel{
 * engine form builder interface
 */
 interface IIGKFormBuilderEngine{
-    ///<summary>Represente addButton function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     ///<param name="type" default="'submit'"></param>
     ///<param name="text" default="null"></param>
     /**
-    * Represente addButton function
+    * 
     * @param mixed $id
     * @param mixed $type the default value is 'submit'
     * @param mixed $text the default value is null
     */
     function addButton($id, $type='submit', $text=null);
-    ///<summary>Represente addCheckbox function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     ///<param name="value" default="null"></param>
     ///<param name="attribs" default="null"></param>
     /**
-    * Represente addCheckbox function
+    * 
     * @param mixed $id
     * @param mixed $value the default value is null
     * @param mixed $attribs the default value is null
     */
     function addCheckbox($id, $value=null, $attribs=null);
-    ///<summary>Represente addControl function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     ///<param name="type" default="'text'"></param>
     ///<param name="style" default="null"></param>
     /**
-    * Represente addControl function
+    * 
     * @param mixed $id
     * @param mixed $type the default value is 'text'
     * @param mixed $style the default value is null
     */
     function addControl($id, $type='text', $style=null);
-    ///<summary>Represente addGroup function</summary>
+    ///<summary></summary>
     /**
-    * Represente addGroup function
+    * 
     */
     function addGroup();
-    ///<summary>Represente addLabel function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     ///<param name="class" default="null"></param>
     /**
-    * Represente addLabel function
+    * 
     * @param mixed $id
     * @param mixed $class the default value is null
     */
     function addLabel($id, $class=null);
-    ///<summary>Represente addLabelControl function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     ///<param name="value" default="null"></param>
     ///<param name="type" default="'text'"></param>
     ///<param name="style" default="null"></param>
     /**
-    * Represente addLabelControl function
+    * 
     * @param mixed $id
     * @param mixed $value the default value is null
     * @param mixed $type the default value is 'text'
     * @param mixed $style the default value is null
     */
     function addLabelControl($id, $value=null, $type='text', $style=null);
-    ///<summary>Represente addLabelSelect function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     ///<param name="entries"></param>
     ///<param name="filter" default="null"></param>
     /**
-    * Represente addLabelSelect function
+    * 
     * @param mixed $id
     * @param mixed $entries
     * @param mixed $filter the default value is null
     */
     function addLabelSelect($id, $entries, $filter=null);
-    ///<summary>Represente addLabelTextarea function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     ///<param name="value" default="null"></param>
     /**
-    * Represente addLabelTextarea function
+    * 
     * @param mixed $id
     * @param mixed $value the default value is null
     */
     function addLabelTextarea($id, $value=null);
-    ///<summary>Represente addRadioButton function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     ///<param name="value" default="null"></param>
     ///<param name="attribs" default="null"></param>
     /**
-    * Represente addRadioButton function
+    * 
     * @param mixed $id
     * @param mixed $value the default value is null
     * @param mixed $attribs the default value is null
     */
     function addRadioButton($id, $value=null, $attribs=null);
-    ///<summary>Represente addTextarea function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     ///<param name="value" default="null"></param>
     /**
-    * Represente addTextarea function
+    * 
     * @param mixed $id
     * @param mixed $value the default value is null
     */
     function addTextarea($id, $value=null);
-    ///<summary>Represente addTextfield function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     ///<param name="value" default="null"></param>
     ///<param name="attribs" default="null"></param>
     /**
-    * Represente addTextfield function
+    * 
     * @param mixed $id
     * @param mixed $value the default value is null
     * @param mixed $attribs the default value is null
     */
     function addTextfield($id, $value=null, $attribs=null);
-    ///<summary>Represente getView function</summary>
+    ///<summary></summary>
     /**
-    * Represente getView function
+    * 
     */
     function getView();
-    ///<summary>Represente setView function</summary>
+    ///<summary></summary>
     ///<param name="host"></param>
     /**
-    * Represente setView function
+    * 
     * @param mixed $host
     */
     function setView($host);
@@ -317,12 +317,12 @@ interface IIGKFormBuilderEngine{
 * Represente IIGKFrameController interface
 */
 interface IIGKFrameController{
-    ///<summary>Represente ContainFrame function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     ///<param name="frame"></param>
     ///<param name="remove" default="true"></param>
     /**
-    * Represente ContainFrame function
+    * 
     * @param mixed $id
     * @param mixed $frame
     * @param mixed $remove the default value is true
@@ -334,28 +334,28 @@ interface IIGKFrameController{
 * Represente IIGKHtmlComponent interface
 */
 interface IIGKHtmlComponent{
-    ///<summary>Represente getComponentId function</summary>
+    ///<summary></summary>
     /**
-    * Represente getComponentId function
+    * 
     */
     function getComponentId();
-    ///<summary>Represente getComponentUri function</summary>
+    ///<summary></summary>
     ///<param name="uri"></param>
     /**
-    * Represente getComponentUri function
+    * 
     * @param mixed $uri
     */
     function getComponentUri($uri);
-    ///<summary>Represente getController function</summary>
+    ///<summary></summary>
     /**
-    * Represente getController function
+    * 
     */
     function getController();
-    ///<summary>Represente setComponentListener function</summary>
+    ///<summary></summary>
     ///<param name="listener"></param>
     ///<param name="param" default="null"></param>
     /**
-    * Represente setComponentListener function
+    * 
     * @param mixed $listener
     * @param mixed $param the default value is null
     */
@@ -366,15 +366,15 @@ interface IIGKHtmlComponent{
 * use to indicate that an element can store a cookie to client size
 */
 interface IIGKHtmlCookieItem{
-    ///<summary>Represente getCookieId function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCookieId function
+    * 
     */
     function getCookieId();
-    ///<summary>Represente setCookieId function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     /**
-    * Represente setCookieId function
+    * 
     * @param mixed $v
     */
     function setCookieId($v);
@@ -384,10 +384,10 @@ interface IIGKHtmlCookieItem{
 * Represente IIGKHtmlGetValue interface
 */
 interface IIGKHtmlGetValue {
-    ///<summary>Represente getValue function</summary>
+    ///<summary></summary>
     ///<param name="options" default="null"></param>
     /**
-    * Represente getValue function
+    * 
     * @param mixed $options the default value is null
     */
     function getValue($options=null);
@@ -397,27 +397,27 @@ interface IIGKHtmlGetValue {
 * Represente IIGKHtmlLoadContent interface
 */
 interface IIGKHtmlLoadContent {
-    ///<summary>Represente LoadExpression function</summary>
+    ///<summary></summary>
     ///<param name="data"></param>
     ///<param name="context" default="null"></param>
     /**
-    * Represente LoadExpression function
+    * 
     * @param mixed $data
     * @param mixed $context the default value is null
     */
     function LoadExpression($data, $context=null);
-    ///<summary>Represente LoadFile function</summary>
+    ///<summary></summary>
     ///<param name="file"></param>
     /**
-    * Represente LoadFile function
+    * 
     * @param mixed $file
     */
     function LoadFile($file);
-    ///<summary>Represente LoadView function</summary>
+    ///<summary></summary>
     ///<param name="ctr"></param>
     ///<param name="article"></param>
     /**
-    * Represente LoadView function
+    * 
     * @param mixed $ctr
     * @param mixed $article
     */
@@ -428,15 +428,15 @@ interface IIGKHtmlLoadContent {
 * Represente IIGKHtmlUriItem interface
 */
 interface IIGKHtmlUriItem{
-    ///<summary>Represente getUri function</summary>
+    ///<summary></summary>
     /**
-    * Represente getUri function
+    * 
     */
     function getUri();
-    ///<summary>Represente setUri function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     /**
-    * Represente setUri function
+    * 
     * @param mixed $v
     */
     function setUri($v);
@@ -449,23 +449,23 @@ interface IIGKListener{
 * Represente IIGKMailAttachmentContainer interface
 */
 interface IIGKMailAttachmentContainer{
-    ///<summary>Represente attachContent function</summary>
+    ///<summary></summary>
     ///<param name="content"></param>
     ///<param name="type" default="IGK_CT_PLAIN_TEXT"></param>
     ///<param name="cid" default="null"></param>
     /**
-    * Represente attachContent function
+    * 
     * @param mixed $content
     * @param mixed $type the default value is IGK_CT_PLAIN_TEXT
     * @param mixed $cid the default value is null
     */
     function attachContent($content, $type=IGK_CT_PLAIN_TEXT, $cid=null);
-    ///<summary>Represente attachFile function</summary>
+    ///<summary></summary>
     ///<param name="file"></param>
     ///<param name="type" default="IGK_CT_PLAIN_TEXT"></param>
     ///<param name="cid" default="null"></param>
     /**
-    * Represente attachFile function
+    * 
     * @param mixed $file
     * @param mixed $type the default value is IGK_CT_PLAIN_TEXT
     * @param mixed $cid the default value is null
@@ -477,73 +477,73 @@ interface IIGKMailAttachmentContainer{
 * notification message
 */
 interface IIGKNotifyMessage {
-    ///<summary>Represente addError function</summary>
+    ///<summary></summary>
     ///<param name="message"></param>
     /**
-    * Represente addError function
+    * 
     * @param mixed $message
     */
     function addError($message);
-    ///<summary>Represente addErrorr function</summary>
+    ///<summary></summary>
     ///<param name="keymessage"></param>
     /**
-    * Represente addErrorr function
+    * 
     * @param mixed $keymessage
     */
     function addErrorr($keymessage);
-    ///<summary>Represente addInfo function</summary>
+    ///<summary></summary>
     ///<param name="message"></param>
     /**
-    * Represente addInfo function
+    * 
     * @param mixed $message
     */
     function addInfo($message);
-    ///<summary>Represente addInfor function</summary>
+    ///<summary></summary>
     ///<param name="keymessage"></param>
     /**
-    * Represente addInfor function
+    * 
     * @param mixed $keymessage
     */
     function addInfor($keymessage);
-    ///<summary>Represente addMsg function</summary>
+    ///<summary></summary>
     ///<param name="message"></param>
     /**
-    * Represente addMsg function
+    * 
     * @param mixed $message
     */
     function addMsg($message);
-    ///<summary>Represente addMsgr function</summary>
+    ///<summary></summary>
     ///<param name="keymessage"></param>
     /**
-    * Represente addMsgr function
+    * 
     * @param mixed $keymessage
     */
     function addMsgr($keymessage);
-    ///<summary>Represente addSuccess function</summary>
+    ///<summary></summary>
     ///<param name="message"></param>
     /**
-    * Represente addSuccess function
+    * 
     * @param mixed $message
     */
     function addSuccess($message);
-    ///<summary>Represente addSuccessr function</summary>
+    ///<summary></summary>
     ///<param name="keymessage"></param>
     /**
-    * Represente addSuccessr function
+    * 
     * @param mixed $keymessage
     */
     function addSuccessr($keymessage);
-    ///<summary>Represente addWarning function</summary>
+    ///<summary></summary>
     ///<param name="message"></param>
     /**
-    * Represente addWarning function
+    * 
     * @param mixed $message
     */
     function addWarning($message);
-    ///<summary>Represente addWarningr function</summary>
+    ///<summary></summary>
     ///<param name="keymessage"></param>
     /**
-    * Represente addWarningr function
+    * 
     * @param mixed $keymessage
     */
     function addWarningr($keymessage);
@@ -553,30 +553,30 @@ interface IIGKNotifyMessage {
 * Represente IIGKParamHostService interface
 */
 interface IIGKParamHostService{
-    ///<summary>Represente getParam function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="default" default="null"></param>
     /**
-    * Represente getParam function
+    * 
     * @param mixed $name
     * @param mixed $default the default value is null
     */
     function getParam($name, $default=null);
-    ///<summary>Represente getParamKeys function</summary>
+    ///<summary></summary>
     /**
-    * Represente getParamKeys function
+    * 
     */
     function getParamKeys();
-    ///<summary>Represente resetParam function</summary>
+    ///<summary></summary>
     /**
-    * Represente resetParam function
+    * 
     */
     function resetParam();
-    ///<summary>Represente setParam function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="value"></param>
     /**
-    * Represente setParam function
+    * 
     * @param mixed $name
     * @param mixed $value
     */
@@ -587,16 +587,16 @@ interface IIGKParamHostService{
 * Represente IIGKParentDocumentHost interface
 */
 interface IIGKParentDocumentHost{
-    ///<summary>Represente BindScriptTo function</summary>
+    ///<summary></summary>
     ///<param name="document"></param>
     /**
-    * Represente BindScriptTo function
+    * 
     * @param mixed $document
     */
     function BindScriptTo($document);
-    ///<summary>Represente getDoc function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDoc function
+    * 
     */
     function getDoc();
 }
@@ -605,16 +605,16 @@ interface IIGKParentDocumentHost{
 *  represent query result interface
 */
 interface IIGKQueryResult{
-    ///<summary>Represente getRowAtIndex function</summary>
+    ///<summary></summary>
     ///<param name="index"></param>
     /**
-    * Represente getRowAtIndex function
+    * 
     * @param mixed $index
     */
     function getRowAtIndex($index);
-    ///<summary>Represente getRows function</summary>
+    ///<summary></summary>
     /**
-    * Represente getRows function
+    * 
     */
     function getRows();
 }
@@ -623,9 +623,9 @@ interface IIGKQueryResult{
 * Represente IIGKSystemUser interface
 */
 interface IIGKSystemUser {
-    ///<summary>Represente getLogin function</summary>
+    ///<summary></summary>
     /**
-    * Represente getLogin function
+    * 
     */
     function getLogin();
 }
@@ -634,19 +634,19 @@ interface IIGKSystemUser {
 * Represente IIGKUriActionListener interface
 */
 interface IIGKUriActionListener{
-    ///<summary>Represente invokeUriPattern function</summary>
+    ///<summary></summary>
     ///<param name="e"></param>
     ///<param name="render" default="1"></param>
     /**
-    * Represente invokeUriPattern function
+    * 
     * @param mixed $e
     * @param mixed $render the default value is 1
     */
     function invokeUriPattern($e, $render=1);
-    ///<summary>Represente matche function</summary>
+    ///<summary></summary>
     ///<param name="uri"></param>
     /**
-    * Represente matche function
+    * 
     * @param mixed $uri
     */
     function matche($uri);
@@ -656,9 +656,9 @@ interface IIGKUriActionListener{
 * Represente IIGKUriActionRegistrableController interface
 */
 interface IIGKUriActionRegistrableController{
-    ///<summary>Represente getBasicUriPattern function</summary>
+    ///<summary></summary>
     /**
-    * Represente getBasicUriPattern function
+    * 
     */
     function getBasicUriPattern();
     ///<summary>registrated invocation uri </summary>
@@ -666,9 +666,9 @@ interface IIGKUriActionRegistrableController{
     * registrated invocation uri
     */
     function getRegInvokeUri();
-    ///<summary>Represente getRegUriAction function</summary>
+    ///<summary></summary>
     /**
-    * Represente getRegUriAction function
+    * 
     */
     function getRegUriAction();
 }
@@ -677,14 +677,14 @@ interface IIGKUriActionRegistrableController{
 * Represente IIGKUserController interface
 */
 interface IIGKUserController{
-    ///<summary>Represente connect function</summary>
+    ///<summary></summary>
     /**
-    * Represente connect function
+    * 
     */
     function connect();
-    ///<summary>Represente signup function</summary>
+    ///<summary></summary>
     /**
-    * Represente signup function
+    * 
     */
     function signup();
 }
@@ -693,9 +693,9 @@ interface IIGKUserController{
 * Represente IIGKWebAdministrativeCtrl interface
 */
 interface IIGKWebAdministrativeCtrl {
-    ///<summary>Represente getConfigNode function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigNode function
+    * 
     */
     function getConfigNode();
 }
@@ -704,9 +704,9 @@ interface IIGKWebAdministrativeCtrl {
 * Represente IIGKWebPageChildCtrontroller interface
 */
 interface IIGKWebPageChildCtrontroller{
-    ///<summary>Represente getWebParentCtrl function</summary>
+    ///<summary></summary>
     /**
-    * Represente getWebParentCtrl function
+    * 
     */
     function getWebParentCtrl();
 }
@@ -715,22 +715,22 @@ interface IIGKWebPageChildCtrontroller{
 * db manager interface
 */
 interface IIGKdbManager {
-    ///<summary>Represente close function</summary>
+    ///<summary></summary>
     ///<param name="leaveopen" default="false"></param>
     /**
-    * Represente close function
+    * 
     * @param mixed $leaveopen the default value is false
     */
     function close($leaveopen=false);
-    ///<summary>Represente connect function</summary>
+    ///<summary></summary>
     /**
-    * Represente connect function
+    * 
     */
     function connect();
-    ///<summary>Represente dropTable function</summary>
+    ///<summary></summary>
     ///<param name="tableName"></param>
     /**
-    * Represente dropTable function
+    * 
     * @param mixed $tableName
     */
     function dropTable($tableName);
@@ -743,20 +743,20 @@ interface IIGKAppModuleListener extends IIGKConfigController{
     const DATA=1;
     const DATA2=self::DATA + 5;
     const DATA3=self::DATA2;
-    ///<summary>Represente getBaseUri function</summary>
+    ///<summary></summary>
     /**
-    * Represente getBaseUri function
+    * 
     */
     function getBaseUri();
-    ///<summary>Represente getConfigs function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigs function
+    * 
     */
     function getConfigs();
-    ///<summary>Represente getTable function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente getTable function
+    * 
     * @param mixed $n
     */
     function getTable($n);
@@ -766,9 +766,9 @@ interface IIGKAppModuleListener extends IIGKConfigController{
 * Represente IIGKDataController interface
 */
 interface IIGKDataController extends IIGKController {
-    ///<summary>Represente getDataAdapterName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDataAdapterName function
+    * 
     */
     function getDataAdapterName();
     ///<summary>return primary data table info or mixed array of table info</summary>
@@ -776,9 +776,9 @@ interface IIGKDataController extends IIGKController {
     * return primary data table info or mixed array of table info
     */
     function getDataTableInfo();
-    ///<summary>Represente getDataTableName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDataTableName function
+    * 
     */
     function getDataTableName();
 }
@@ -787,22 +787,22 @@ interface IIGKDataController extends IIGKController {
 * Represente IIGKWebController interface
 */
 interface IIGKWebController extends IIGKController {
-    ///<summary>Represente getChilds function</summary>
+    ///<summary></summary>
     /**
-    * Represente getChilds function
+    * 
     */
     function getChilds();
-    ///<summary>Represente regChildController function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     /**
-    * Represente regChildController function
+    * 
     * @param mixed $ctrl
     */
     function regChildController($ctrl);
-    ///<summary>Represente unregChildController function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     /**
-    * Represente unregChildController function
+    * 
     * @param mixed $ctrl
     */
     function unregChildController($ctrl);
@@ -812,24 +812,24 @@ interface IIGKWebController extends IIGKController {
 * Represente IIGKQueryConditionalExpression interface
 */
 interface IIGKQueryConditionalExpression extends IIGKHtmlGetValue {
-    ///<summary>Represente add function</summary>
+    ///<summary></summary>
     ///<param name="expression"></param>
     ///<param name="operator" default="AND"></param>
     /**
-    * Represente add function
+    * 
     * @param mixed $expression
     * @param mixed $operator the default value is "AND"
     */
     function add($expression, $operator="AND");
-    ///<summary>Represente getCount function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCount function
+    * 
     */
     function getCount();
-    ///<summary>Represente remove function</summary>
+    ///<summary></summary>
     ///<param name="expression"></param>
     /**
-    * Represente remove function
+    * 
     * @param mixed $expression
     */
     function remove($expression);
@@ -839,17 +839,17 @@ interface IIGKQueryConditionalExpression extends IIGKHtmlGetValue {
 * Represente IIGKWebPageController interface
 */
 interface IIGKWebPageController extends IIGKWebController {
-    ///<summary>Represente loadWebTheme function</summary>
+    ///<summary></summary>
     ///<param name="file"></param>
     /**
-    * Represente loadWebTheme function
+    * 
     * @param mixed $file
     */
     function loadWebTheme($file);
-    ///<summary>Represente manageErrorUriRequest function</summary>
+    ///<summary></summary>
     ///<param name="uri"></param>
     /**
-    * Represente manageErrorUriRequest function
+    * 
     * @param mixed $uri
     */
     function manageErrorUriRequest($uri);

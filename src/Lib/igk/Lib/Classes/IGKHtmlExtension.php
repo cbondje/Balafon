@@ -10,7 +10,7 @@
 
 ///<summary>Represente class: IGKHtmlExtension</summary>
 class IGKHtmlExtension{
-    ///<summary>Represente loadItems function</summary>
+    ///<summary></summary>
     ///<param name="p"></param>
     ///<param name="options" type="array"></param>
     public function loadItems($p, array $options){

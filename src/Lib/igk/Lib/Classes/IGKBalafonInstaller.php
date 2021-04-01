@@ -14,14 +14,14 @@ use function\igk_resources_gets as __;
 * use to update core framework
 */
 class IGKBalafonInstaller implements IIGKActionResult{
-    ///<summary>Represente index function</summary>
+    ///<summary></summary>
     /**
-    * Represente index function
+    * 
     */
     public function index(){}
-    ///<summary>Represente update function</summary>
+    ///<summary></summary>
     /**
-    * Represente update function
+    * 
     */
     public function update(){
 		// igk_set_header(500, "update not allowed");
@@ -91,9 +91,9 @@ class IGKBalafonInstaller implements IIGKActionResult{
         igk_flush_data();
         igk_app()->session->getParam($key, null);
     }
-    ///<summary>Represente upload function</summary>
+    ///<summary></summary>
     /**
-    * Represente upload function
+    * 
     */
     public function upload(){
         $file=igk_io_sys_tempnam("igk");

@@ -67,12 +67,12 @@ function igk_const_defined($ctname, $defvalue=1){
         return constant($ctname) == $defvalue;
     return false;
 }
-///<summary>Represente igk_create_instance function</summary>
+///<summary></summary>
 ///<param name="class"></param>
 ///<param name="obj" ref="true"></param>
 ///<param name="callback"></param>
 /**
-* Represente igk_create_instance function
+* 
 * @param mixed $class
 * @param  * $obj
 * @param mixed $callback
@@ -99,10 +99,10 @@ function igk_html_uri($uri){
 function igk_io_basenamewithoutext($file){
     return igk_io_remove_ext(basename($file));
 }
-///<summary>Represente igk_io_path_ext function</summary>
+///<summary></summary>
 ///<param name="fname"></param>
 /**
-* Represente igk_io_path_ext function
+* 
 * @param mixed $fname
 */
 function igk_io_path_ext($fname){
@@ -131,10 +131,10 @@ function igk_io_remove_ext($name){
 function igk_is_cmd(){
     return igk_get_env("sys://func/".__FUNCTION__) || (isset($_SERVER["argv"]) && !isset($_SERVER["SERVER_PROTOCOL"]));
 }
-///<summary>Represente igk_load_library function</summary>
+///<summary></summary>
 ///<param name="name"></param>
 /**
-* Represente igk_load_library function
+* 
 * @param mixed $name
 */
 function igk_load_library($name){
@@ -192,10 +192,10 @@ function igk_sys_download_core($download=1){
         igk_download_file("Balafon.".IGK_VERSION.".zip", $tfile, "binary", 0);
     return $tfile;
 }
-///<summary>Represente igk_wl function</summary>
+///<summary></summary>
 ///<param name="msg"></param>
 /**
-* Represente igk_wl function
+* 
 * @param mixed $msg
 */
 function igk_wl($msg){
@@ -209,10 +209,10 @@ function igk_wl($msg){
         echo $msg;
     }
 }
-///<summary>Represente igk_wl_pre function</summary>
+///<summary></summary>
 ///<param name="p"></param>
 /**
-* Represente igk_wl_pre function
+* 
 * @param mixed $p
 */
 function igk_wl_pre($p){
@@ -247,10 +247,10 @@ function igk_dev_wln_e(){
 //     igk_env_set($k, $s);
 // }
 
-///<summary>Represente igk_wln function</summary>
+///<summary></summary>
 ///<param name="msg" default=""></param>
 /**
-* Represente igk_wln function
+* 
 * @param string|mixed $msg the default value is ""
 */
 function igk_wln($msg=""){
@@ -320,10 +320,10 @@ function igk_tag_wln($tag, $args=''){
 
 
 
-///<summary>Represente igk_app_is_appuser function</summary>
+///<summary></summary>
 ///<param name="ctrl"></param>
 /**
-* Represente igk_app_is_appuser function
+* 
 * @param mixed $ctrl
 */
 function igk_app_is_appuser($ctrl){

@@ -16,11 +16,11 @@ namespace IGK\Manager;
 */
 class IGKBalafonFrameworkManager{
     var $handleAllAction;
-    ///<summary>Represente __call function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="args"></param>
     /**
-    * Represente __call function
+    * 
     * @param mixed $name
     * @param mixed $args
     */
@@ -33,37 +33,37 @@ class IGKBalafonFrameworkManager{
             echo "command [{$name}] not found";
         }
     }
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     public function __construct(){
         $this->handleAllAction=1;
     }
-    ///<summary>Represente clear_cache function</summary>
+    ///<summary></summary>
     /**
-    * Represente clear_cache function
+    * 
     */
     public function clear_cache(){
         igk_clear_cache();
     }
-    ///<summary>Represente help function</summary>
+    ///<summary></summary>
     /**
-    * Represente help function
+    * 
     */
     public function help(){
         echo "help ";
     }
-    ///<summary>Represente install function</summary>
+    ///<summary></summary>
     /**
-    * Represente install function
+    * 
     */
     public function install(){
         echo "running install";
     }
-    ///<summary>Represente test function</summary>
+    ///<summary></summary>
     /**
-    * Represente test function
+    * 
     */
     public function test(){
         echo "run test";

@@ -12,22 +12,22 @@
 * Represente IIGKBalafonApplicationMiddlewareService interface
 */
 interface IIGKBalafonApplicationMiddlewareService extends ArrayAccess{
-    ///<summary>Represente GetLastMiddleware function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetLastMiddleware function
+    * 
     */
     function GetLastMiddleware();
-    ///<summary>Represente Run function</summary>
+    ///<summary></summary>
     ///<param name="callback"></param>
     /**
-    * Represente Run function
+    * 
     * @param closure callback
     */
     function Run($callback);
-    ///<summary>Represente UseMiddleware function</summary>
+    ///<summary></summary>
     ///<param name="instance"></param>
     /**
-    * Represente UseMiddleware function
+    * 
     * @param mixed instance
     */
     function UseMiddleware($instance);

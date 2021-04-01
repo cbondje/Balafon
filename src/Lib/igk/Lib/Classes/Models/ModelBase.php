@@ -31,6 +31,12 @@ abstract class ModelBase{
     protected $primaryKey = "clId";
 
     /**
+     * column use for display
+     * @var string
+     */
+    protected $display = "clName";
+
+    /**
      * base model controller
      * @var string
      */
@@ -42,6 +48,18 @@ abstract class ModelBase{
      */
     protected $factory;
 
+    /**
+     * field list use to create forms
+     * @var array
+     */
+    protected $form_fields = [];
+
+    /**
+     * fillable list use data
+     * @var mixed
+     */
+    protected $fillable;
+
     public function getFactory(){
         if ($this->factory === null){
             $name = basename(igk_io_dir(get_class($this)));
@@ -49,9 +67,16 @@ abstract class ModelBase{
         }
         return $this->factory;
     }
+    
 
+	public function display(){
+		return $this->{$this->display};
+	}
     public function getPrimaryKey(){
         return $this->primaryKey;
+    }
+    public function getFormFields(){
+        return $this->form_fields;
     }
     
 
@@ -76,7 +101,7 @@ abstract class ModelBase{
         }
         throw new Exception("Failed to access ".$name);
     }
-    public function __get($name){
+    public function __get($name){  
         return igk_getv($this->raw, $name);
     }
 
@@ -236,8 +261,12 @@ abstract class ModelBase{
         return Utility::To_JSON($this->raw, $options);
     }
 
+    /**
+     * return raw data
+     * @return mixed 
+     */
     public function to_array(){
-        return $this->raw;
+        return (array)$this->raw;
     }
     public function save(){     
         $pkey = $this->primaryKey;

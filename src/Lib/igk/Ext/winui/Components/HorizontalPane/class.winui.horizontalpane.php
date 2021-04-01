@@ -403,7 +403,7 @@ EOF;
 
 		return true;
 	}
-	// public function Render($options =null){
+	// public function render($options =null){
 			// check if web master view
 
 
@@ -604,7 +604,7 @@ else {
 }
 return true;
 	}
-	// public function Render($options =null)
+	// public function render($options =null)
 	// {
 
 		// return parent::Render($options);

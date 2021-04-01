@@ -12,9 +12,9 @@
 * Represente IGKExceptionHandleMiddleware class
 */
 class IGKExceptionHandleMiddleware extends IGKBalafonMiddleware{
-    ///<summary>Represente invoke function</summary>
+    ///<summary></summary>
     /**
-    * Represente invoke function
+    * 
     */
     public function invoke(){
         try {

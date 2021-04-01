@@ -59,15 +59,31 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     protected function getActionHandler($name, $params=null){
         $ns = $this->getEntryNameSpace();
         $c = [];
+        $t = [];
         if (!empty($ns)){
             $c[] = $ns;
         }
-        $c[] = "Actions\\".$name."Action";
-        $cl = implode("\\", $c);
-        if (class_exists($cl)){
-            return $cl;
-        }
+        $c[] = "Actions\\".ucfirst($name)."Action";
+        $t[] = implode("\\", $c);
+        
+
+        if ($name != IGK_DEFAULT_VIEW){
+            $t[] = implode("\\",array_filter(array_merge([$ns], ["Actions\\".ucfirst(IGK_DEFAULT_VIEW)."Action"])));
+        } 
+        while($cl = array_shift($t)){
+            if (class_exists($cl)){
+                return $cl;
+            }
+        } 
         return null;
+    }
+
+    ///<summary>get the current controller entry - view behaviour</summary>
+    /**
+     * get the current controller entry - view behaviour
+     */
+    protected function getCtrl(){
+        return $this;
     }
     ///<summary>get the data schema filename</summary>
     /**
@@ -116,51 +132,51 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return $adapt->delete($this->DataTableName, $entries);
     }
-    ///<summary>Represente __dbinsert function</summary>
+    ///<summary></summary>
     ///<param name="adapt"></param>
     ///<param name="entry"></param>
     /**
-    * Represente __dbinsert function
+    * 
     * @param mixed $adapt
     * @param mixed $entry
     */
     private function __dbinsert($adapt, $entry){
         return $adapt->insert($this->getDataTableName(), $entry);
     }
-    ///<summary>Represente __dbselect_andwhere function</summary>
+    ///<summary></summary>
     ///<param name="adapt"></param>
     ///<param name="properties"></param>
     /**
-    * Represente __dbselect_andwhere function
+    * 
     * @param mixed $adapt
     * @param mixed $properties
     */
     private function __dbselect_andwhere($adapt, $properties){
         return $adapt->selectAndWhere($this->getDataTableName(), $properties);
     }
-    ///<summary>Represente __dbselectAll function</summary>
+    ///<summary></summary>
     ///<param name="adapt"></param>
     /**
-    * Represente __dbselectAll function
+    * 
     * @param mixed $adapt
     */
     private function __dbselectAll($adapt){
         return $adapt->selectAll($this->getDataTableName());
     }
-    ///<summary>Represente __dbselectlastid function</summary>
+    ///<summary></summary>
     ///<param name="adapt"></param>
     /**
-    * Represente __dbselectlastid function
+    * 
     * @param mixed $adapt
     */
     private function __dbselectlastid($adapt){
         return $adapt->last_id();
     }
-    ///<summary>Represente __dbupdate_entries function</summary>
+    ///<summary></summary>
     ///<param name="adapt"></param>
     ///<param name="entries" default="null"></param>
     /**
-    * Represente __dbupdate_entries function
+    * 
     * @param mixed $adapt
     * @param mixed $entries the default value is null
     */
@@ -175,13 +191,13 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return $adapt->update($this->DataTableName, $entries);
     }
-    ///<summary>Represente __init_entries function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     ///<param name="tablename"></param>
     ///<param name="etb"></param>
     ///<param name="db"></param>
     /**
-    * Represente __init_entries function
+    * 
     * @param mixed $ctrl
     * @param mixed $tablename
     * @param mixed $etb
@@ -208,9 +224,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return true;
     }
-    ///<summary>Represente __loadCtrlConfig function</summary>
+    ///<summary></summary>
     /**
-    * Represente __loadCtrlConfig function
+    * 
     */
     protected function __loadCtrlConfig(){
         $t=igk_sys_getdefaultctrlconf();
@@ -239,9 +255,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     function __toString(){
         return "IGKCONTROLLER::".get_class($this);
     }
-    ///<summary>Represente __wakeup function</summary>
+    ///<summary></summary>
     /**
-    * Represente __wakeup function
+    * 
     */
     public function __wakeup(){
         parent::__wakeup();
@@ -267,10 +283,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             }
         }
     }
-    ///<summary>Represente _get_extra_args function</summary>
+    ///<summary></summary>
     ///<param name="file"></param>
     /**
-    * Represente _get_extra_args function
+    * 
     * @param mixed $file
     */
     protected function _get_extra_args($file){
@@ -281,9 +297,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return $data;
     }
-    ///<summary>Represente _include_constants function</summary>
+    ///<summary></summary>
     /**
-    * Represente _include_constants function
+    * 
     */
     protected function _include_constants(){
         if(($f=$this->getConstantFile()) && file_exists($f))
@@ -366,16 +382,16 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
                 $this->regSystemVars($d);
         }
     }
-    ///<summary>Represente _initCssStyle function</summary>
+    ///<summary></summary>
     /**
-    * Represente _initCssStyle function
+    * 
     */
     protected function _initCssStyle(){
         igk_ctrl_bind_css_file($this);
     }
-    ///<summary>Represente _initialize function</summary>
+    ///<summary></summary>
     /**
-    * Represente _initialize function
+    * 
     */
     private function _initialize(){
         if(method_exists($this, "initialize")){
@@ -392,9 +408,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             include($f);
         }
     }
-    ///<summary>Represente _initScripts function</summary>
+    ///<summary></summary>
     /**
-    * Represente _initScripts function
+    * 
     */
     protected function _initScripts(){
         $f1=igk_html_uri(dirname($this->getDeclaredFileName()));
@@ -447,9 +463,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return $find;
     }
-    ///<summary>Represente _renderViewFile function</summary>
+    ///<summary></summary>
     /**
-    * Represente _renderViewFile function
+    * 
     */
     protected function _renderViewFile(){ 
   
@@ -530,10 +546,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             }
         }
     }
-    ///<summary>Represente _showChild function</summary>
+    ///<summary></summary>
     ///<param name="targetNode" default="null"></param>
     /**
-    * Represente _showChild function
+    * 
     * @param mixed $targetNode the default value is null
     */
     protected function _showChild($targetNode=null){
@@ -551,17 +567,17 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             }
         }
     }
-    ///<summary>Represente _unregisterEvents function</summary>
+    ///<summary></summary>
     /**
-    * Represente _unregisterEvents function
+    * 
     */
     protected function _unregisterEvents(){}
-    ///<summary>Represente bindNodeClass function</summary>
+    ///<summary></summary>
     ///<param name="t"></param>
     ///<param name="fname"></param>
     ///<param name="css_def" default="null"></param>
     /**
-    * Represente bindNodeClass function
+    * 
     * @param mixed $t
     * @param mixed $fname
     * @param mixed $css_def the default value is null
@@ -579,43 +595,43 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return false;
     }
-    ///<summary>Represente CurrentQueryString function</summary>
+    ///<summary></summary>
     /**
-    * Represente CurrentQueryString function
+    * 
     */
     public static function CurrentQueryString(){
         return igk_server()->QUERY_STRING;
     }
-    ///<summary>Represente CurrentUri function</summary>
+    ///<summary></summary>
     /**
-    * Represente CurrentUri function
+    * 
     */
     public static function CurrentUri(){
         return igk_io_request_uri();
     }
-    ///<summary>Represente dbdelete function</summary>
+    ///<summary></summary>
     ///<param name="entries"></param>
     /**
-    * Represente dbdelete function
+    * 
     * @param mixed $entries
     */
     public function dbdelete($entries){
         return $this->dbinvokeDbFunction(array($this, "__dbdelete"), $entries);
     }
-    ///<summary>Represente dbinsert function</summary>
+    ///<summary></summary>
     ///<param name="entry"></param>
     /**
-    * Represente dbinsert function
+    * 
     * @param mixed $entry
     */
     public function dbinsert($entry){
         $v=$this->dbinvokeDbFunction(array($this, "__dbinsert"), $entry);
         return $v;
     }
-    ///<summary>Represente dbinvokeDbFunction function</summary>
+    ///<summary></summary>
     ///<param name="param"></param>
     /**
-    * Represente dbinvokeDbFunction function
+    * 
     * @param mixed $param
     */
     public function dbinvokeDbFunction($param){
@@ -646,11 +662,11 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function dbselect($equals){
         return $this->getDbEntries()->searchEqual($equals);
     }
-    ///<summary>Represente dbselectAndWhere function</summary>
+    ///<summary></summary>
     ///<param name="whereTab"></param>
     ///<param name="options"></param>
     /**
-    * Represente dbselectAndWhere function
+    * 
     * @param mixed $whereTab
     * @param mixed $options
     */
@@ -658,29 +674,29 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         $v=$this->dbinvokeDbFunction(array($this, "__dbselect_andwhere"), $whereTab, $options);
         return $v;
     }
-    ///<summary>Represente dbselectLastId function</summary>
+    ///<summary></summary>
     /**
-    * Represente dbselectLastId function
+    * 
     */
     public function dbselectLastId(){
         $v=$this->dbinvokeDbFunction(array($this, "__dbselectlastid"));
         return $v;
     }
-    ///<summary>Represente dbupdate function</summary>
+    ///<summary></summary>
     ///<param name="entries" default="null"></param>
     /**
-    * Represente dbupdate function
+    * 
     * @param mixed $entries the default value is null
     */
     public function dbupdate($entries=null){
         return $this->dbinvokeDbFunction(array($this, "__dbupdate_entries"), $entries);
     }
-    ///<summary>Represente Dispatch function</summary>
+    ///<summary></summary>
     ///<param name="obj"></param>
     ///<param name="method"></param>
     ///<param name="args"></param>
     /**
-    * Represente Dispatch function
+    * 
     * @param mixed $obj
     * @param mixed $method
     * @param mixed $args the default value is
@@ -719,9 +735,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             $this->m_->unsetFlag(self::CHILDS_FLAG);
         }
     }
-    ///<summary>Represente dropDbFromSchemas function</summary>
+    ///<summary></summary>
     /**
-    * Represente dropDbFromSchemas function
+    * 
     */
     protected function dropDbFromSchemas(){
         $r=$this->loadDataAndNewEntriesFromSchemas();
@@ -750,16 +766,16 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return $tb;
     }
-    ///<summary>Represente getAllArticles function</summary>
+    ///<summary></summary>
     /**
-    * Represente getAllArticles function
+    * 
     */
     public function getAllArticles(){
         return IGKIO::GetFiles($this->getArticlesDir(), "/\.(template|html|phtml)$/i", false);
     }
-    ///<summary>Represente getAllArticlesByCurrentLang function</summary>
+    ///<summary></summary>
     /**
-    * Represente getAllArticlesByCurrentLang function
+    * 
     */
     public function getAllArticlesByCurrentLang(){
         $dir=$this->getArticlesDir();
@@ -780,9 +796,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return $out;
     }
-    ///<summary>Represente getApp function</summary>
+    ///<summary></summary>
     /**
-    * Represente getApp function
+    * 
     */
     public function getApp(){
         return igk_app();
@@ -803,10 +819,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             return igk_str_rm_last(igk_io_baseuri(), '/')."/".$function;
         return igk_io_baseuri();
     }
-    ///<summary>Represente getArticle function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     /**
-    * Represente getArticle function
+    * 
     * @param mixed $name
     */
     public function getArticle($name){
@@ -853,43 +869,43 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return null;
     }
-    ///<summary>Represente getArticleFull function</summary>
+    ///<summary></summary>
     ///<param name="fullname"></param>
     /**
-    * Represente getArticleFull function
+    * 
     * @param mixed $fullname
     */
     public function getArticleFull($fullname){
         return igk_io_dir($this->getArticlesDir()."/".$fullname);
     }
-    ///<summary>Represente getArticleInDir function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="dir"></param>
     /**
-    * Represente getArticleInDir function
+    * 
     * @param mixed $name
     * @param mixed $dir
     */
     public function getArticleInDir($name, $dir){
         return igk_io_get_article($name, $dir);
     }
-    ///<summary>Represente getArticlesDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getArticlesDir function
+    * 
     */
     public function getArticlesDir(){
         return igk_io_dir($this->getDeclaredDir()."/".IGK_ARTICLES_FOLDER);
     }
-    ///<summary>Represente getBaseUri function</summary>
+    ///<summary></summary>
     /**
-    * Represente getBaseUri function
+    * 
     */
     public function getBaseUri(){
         return $this->getEnvParam("fulluri") ?? $this->getAppUri($this->currentView);
     }
-    ///<summary>Represente getBody function</summary>
+    ///<summary></summary>
     /**
-    * Represente getBody function
+    * 
     */
     public function getBody(){
         return igk_app()->Doc->Body;
@@ -908,16 +924,16 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getCanAddChild(){
         return true;
     }
-    ///<summary>Represente getcanDelete function</summary>
+    ///<summary></summary>
     /**
-    * Represente getcanDelete function
+    * 
     */
     public function getcanDelete(){
         return true;
     }
-    ///<summary>Represente getCanEditConfig function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCanEditConfig function
+    * 
     */
     public function getCanEditConfig(){
         return (IGKControllerManagerObject::IsSystemController($this) == false);
@@ -929,25 +945,25 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getCanEditDataBase(){
         return $this->UseDataSchema;
     }
-    ///<summary>Represente getCanEditDataTableInfo function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCanEditDataTableInfo function
+    * 
     */
     public function getCanEditDataTableInfo(){
         return !$this->UseDataSchema;
     }
-    ///<summary>Represente getCanInitDb function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCanInitDb function
+    * 
     */
     public function getCanInitDb(){
         if(defined('IGK_DB_GRANT_CAN_INIT'))
             return true;
         return igk_is_conf_connected();
     }
-    ///<summary>Represente getcanModify function</summary>
+    ///<summary></summary>
     /**
-    * Represente getcanModify function
+    * 
     */
     public function getcanModify(){
         return true;
@@ -959,16 +975,16 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     protected function getCanRegisterOnInit(){
         return true;
     }
-    ///<summary>Represente getChilds function</summary>
+    ///<summary></summary>
     /**
-    * Represente getChilds function
+    * 
     */
     public function getChilds(){
         return $this->getFlag(self::CHILDS_FLAG);
     }
-    ///<summary>Represente getConfigFile function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigFile function
+    * 
     */
     protected function getConfigFile(){
         return igk_io_dir($this->getDataDir()."/".IGK_CTRL_CONF_FILE);
@@ -992,9 +1008,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getConstantFile(){
         return $this->getDeclaredDir()."/.constants.php.inc";
     }
-    ///<summary>Represente getContentDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getContentDir function
+    * 
     */
     public function getContentDir(){
         return igk_io_dir($this->getDeclaredDir().DIRECTORY_SEPARATOR.IGK_CONTENT_FOLDER);
@@ -1006,10 +1022,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getControllerConfigOptions(){
         igk_die_m(__METHOD__);
     }
-    ///<summary>Represente getCtrlFile function</summary>
+    ///<summary></summary>
     ///<param name="path"></param>
     /**
-    * Represente getCtrlFile function
+    * 
     * @param mixed $path
     */
     public function getCtrlFile($path){
@@ -1024,44 +1040,44 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getCurrentDoc(){
         return igk_app()->Doc;
     }
-    ///<summary>Represente getCurrentPage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCurrentPage function
+    * 
     */
     public function getCurrentPage(){
         return $this->getApp()->CurrentPage;
     }
-    ///<summary>Represente getCurrentPageFolder function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCurrentPageFolder function
+    * 
     */
     public function getCurrentPageFolder(){
         return $this->getApp()->CurrentPageFolder;
     }
-    ///<summary>Represente getCurrentView function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCurrentView function
+    * 
     */
     public function getCurrentView(){
         return $this->getFlag(self::CURRENT_VIEW, IGK_DEFAULT_VIEW);
     }
-    ///<summary>Represente getDataAdapterName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDataAdapterName function
+    * 
     */
     public function getDataAdapterName(){
         return igk_sys_getconfig("default_dataadapter", IGK_MYSQL_DATAADAPTER);
     }
-    ///<summary>Represente getDataDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDataDir function
+    * 
     */
     public function getDataDir(){
         return $this->getDeclaredDir()."/".IGK_DATA_FOLDER;
     }
-    ///<summary>Represente getDataTableInfo function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDataTableInfo function
+    * 
     */
     public function getDataTableInfo(){
         if($this->getUseDataSchema()){
@@ -1079,9 +1095,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return null;
     }
-    ///<summary>Represente getDataTableName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDataTableName function
+    * 
     */
     public function getDataTableName(){
         if(file_exists($this->getDBConfigFile())){
@@ -1096,16 +1112,16 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return IGK_TABLE_PREFIX.$this->getName();
     }
-    ///<summary>Represente getDBConfigFile function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDBConfigFile function
+    * 
     */
     protected function getDBConfigFile(){
         return igk_io_dir($this->getDataDir()."/".IGK_CTRL_DBCONF_FILE);
     }
-    ///<summary>Represente getDbConstantFile function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDbConstantFile function
+    * 
     */
     public function getDbConstantFile(){
         return $this->getDeclaredDir()."/.db.constants.php";
@@ -1119,9 +1135,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getDbEntries(){
         return $this->dbinvokeDbFunction(array($this, "__dbselectAll"));
     }
-    ///<summary>Represente getDeclaredDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDeclaredDir function
+    * 
     */
     public function getDeclaredDir(){
         return dirname($this->getDeclaredFileName());
@@ -1133,9 +1149,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         $h=new ReflectionClass($this);
         return $h->getFileName();
     }
-    ///<summary>Represente getDisplayName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDisplayName function
+    * 
     */
     public function getDisplayName(){
         return get_class($this);
@@ -1158,7 +1174,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     ///<param name="ctrl"></param>
     ///<param name="code"></param>
     /**
-    * Represente GetErrorView function
+    * 
     * @param mixed $ctrl
     * @param mixed $code
     */
@@ -1168,10 +1184,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return $ctrl->getErrorViewFile($code);
     }
-    ///<summary>Represente getErrorViewFile function</summary>
+    ///<summary></summary>
     ///<param name="code"></param>
     /**
-    * Represente getErrorViewFile function
+    * 
     * @param mixed $code
     */
     protected function getErrorViewFile($code){
@@ -1192,10 +1208,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getExposedfunctions(){
         return array();
     }
-    ///<summary>Represente getFile function</summary>
+    ///<summary></summary>
     ///<param name="f"></param>
     /**
-    * Represente getFile function
+    * 
     * @param mixed $f
     */
     protected final function getFile($f){
@@ -1208,24 +1224,24 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getFlag($code, $default=null){
         return $this->getM_()->getFlag($code, $default);
     }
-    ///<summary>Represente getFlagParams function</summary>
+    ///<summary></summary>
     /**
-    * Represente getFlagParams function
+    * 
     */
     public function getFlagParams(){
         return $this->getFlag(self::PARAMS_FLAG);
     }
-    ///<summary>Represente gethasChilds function</summary>
+    ///<summary></summary>
     /**
-    * Represente gethasChilds function
+    * 
     */
     public function gethasChilds(){
         $g=$this->getFlag(self::CHILDS_FLAG);
         return $g && (is_array($g) && (count($g) > 0));
     }
-    ///<summary>Represente getHeader function</summary>
+    ///<summary></summary>
     /**
-    * Represente getHeader function
+    * 
     */
     public function getHeader(){
         return igk_app()->Doc->Header;
@@ -1237,38 +1253,38 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getIncDir(){
         return $this->getDeclaredDir()."/".IGK_INC_FOLDER;
     }
-    ///<summary>Represente getInitDbConstraintKey function</summary>
+    ///<summary></summary>
     /**
-    * Represente getInitDbConstraintKey function
+    * 
     */
     protected function getInitDbConstraintKey(){
         $cl=str_replace("\\", "_", get_class($this));
         return $cl;
     }
-    ///<summary>Represente getisAvailable function</summary>
+    ///<summary></summary>
     /**
-    * Represente getisAvailable function
+    * 
     */
     public function getisAvailable(){
         return true;
     }
-    ///<summary>Represente getIsSystemController function</summary>
+    ///<summary></summary>
     /**
-    * Represente getIsSystemController function
+    * 
     */
     public function getIsSystemController(){
         return false;
     }
-    ///<summary>Represente getIsVisible function</summary>
+    ///<summary></summary>
     /**
-    * Represente getIsVisible function
+    * 
     */
     public function getIsVisible(){
         return $this->PageView->getIsVisible($this->CurrentPage);
     }
-    ///<summary>Represente getLoader function</summary>
+    ///<summary></summary>
     /**
-    * Represente getLoader function
+    * 
     */
     public function getLoader(){
         $l=$this->getEnvParam("loader");
@@ -1280,10 +1296,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return $l;
     }
-    ///<summary>Represente getM_ function</summary>
+    ///<summary></summary>
     ///<return refout="true"></return>
     /**
-    * Represente getM_ function
+    * 
     * @return *
     */
     protected function & getM_(){
@@ -1307,23 +1323,23 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getMainView(){
         return $this->getFlag(self::MAIN_VIEW, IGK_DEFAULT_VIEW);
     }
-    ///<summary>Represente getmsbox function</summary>
+    ///<summary></summary>
     /**
-    * Represente getmsbox function
+    * 
     */
     public function getmsbox(){
         return igk_app()->getControllerManager()->msbox;
     }
-    ///<summary>Represente getName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getName function
+    * 
     */
     public function getName(){
         return strtolower(get_class($this));
     }
-    ///<summary>Represente getPageView function</summary>
+    ///<summary></summary>
     /**
-    * Represente getPageView function
+    * 
     */
     public function getPageView(){
         $g=$this->getFlag(self::PAGE_VIEW_FLAG) ?? (function(){
@@ -1364,9 +1380,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         // }
         // return $c;
     }
-    ///<summary>Represente getParamKeys function</summary>
+    ///<summary></summary>
     /**
-    * Represente getParamKeys function
+    * 
     */
     public function getParamKeys(){
         return array_keys($this->getFlagParams());
@@ -1394,30 +1410,30 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getRegisterToViewMecanism(){
         return false;
     }
-    ///<summary>Represente getResourcesDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getResourcesDir function
+    * 
     */
     public function getResourcesDir(){
         return $this->getDataDir()."/".IGK_RES_FOLDER;
     }
-    ///<summary>Represente getScriptDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getScriptDir function
+    * 
     */
     public function getScriptDir(){
         return $this->getDeclaredDir()."/".IGK_SCRIPT_FOLDER;
     }
-    ///<summary>Represente getShowChildFlag function</summary>
+    ///<summary></summary>
     /**
-    * Represente getShowChildFlag function
+    * 
     */
     public function getShowChildFlag(){
         return $this->getFlag(self::SHOW_CHILD);
     }
-    ///<summary>Represente getStylesDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getStylesDir function
+    * 
     */
     public function getStylesDir(){
         return $this->getDeclaredDir()."/".IGK_STYLE_FOLDER;
@@ -1465,18 +1481,18 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         igk_set_env($ck, $t);
         return $t;
     }
-    ///<summary>Represente getTable function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente getTable function
+    * 
     * @param mixed $n
     */
     public function getTable($n){
         igk_die("not implements : ".__FUNCTION__);
     }
-    ///<summary>Represente getTargetNode function</summary>
+    ///<summary></summary>
     /**
-    * Represente getTargetNode function
+    * 
     */
     public function getTargetNode(){
         $b=$this->getEnvParam(IGK_CTRL_TG_NODE) ?? (function(){
@@ -1486,17 +1502,17 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         })();
         return $b;
     }
-    ///<summary>Represente getTargetNodeId function</summary>
+    ///<summary></summary>
     /**
-    * Represente getTargetNodeId function
+    * 
     */
     public function getTargetNodeId(){
         return $this->TargetNode["id"];
     }
-    ///<summary>Represente getUri function</summary>
+    ///<summary></summary>
     ///<param name="function" default="null"></param>
     /**
-    * Represente getUri function
+    * 
     * @param mixed $function the default value is null
     */
     public function getUri($function=null){
@@ -1508,10 +1524,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return "./".$out;
     }
-    ///<summary>Represente getUril function</summary>
+    ///<summary></summary>
     ///<param name="uri"></param>
     /**
-    * Represente getUril function
+    * 
     * @param mixed $uri
     */
     public function getUril($uri){
@@ -1520,10 +1536,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             $out .= "&".$uri;
         return $out;
     }
-    ///<summary>Represente getUriv function</summary>
+    ///<summary></summary>
     ///<param name="page"></param>
     /**
-    * Represente getUriv function
+    * 
     * @param mixed $page
     */
     public function getUriv($page){
@@ -1532,16 +1548,16 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             $out .= "&v=".$page;
         return $out;
     }
-    ///<summary>Represente getUseDataSchema function</summary>
+    ///<summary></summary>
     /**
-    * Represente getUseDataSchema function
+    * 
     */
     protected function getUseDataSchema(){
         return !self::IsSysController(get_class($this)) && igk_getv($this->getConfigs(), "clDataSchema");
     }
-    ///<summary>Represente getval function</summary>
+    ///<summary></summary>
     /**
-    * Represente getval function
+    * 
     */
     public function getval(){
         return igk_app()->Validator;
@@ -1570,13 +1586,13 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             $this->regSystemVars(null);
         }
     }
-    ///<summary>Represente getViewContent function</summary>
+    ///<summary></summary>
     ///<param name="view"></param>
     ///<param name="target"></param>
     ///<param name="forcecreation" default="false"></param>
     ///<param name="args" default="null"></param>
     /**
-    * Represente getViewContent function
+    * 
     * @param mixed $view
     * @param mixed $target
     * @param mixed $forcecreation the default value is false
@@ -1597,9 +1613,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         $this->resetCurrentView($v_view);
         $this->setParam($key, null);
     }
-    ///<summary>Represente getViewDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getViewDir function
+    * 
     */
     public function getViewDir(){
         return igk_io_dir($this->getDeclaredDir()."/".IGK_VIEW_FOLDER);
@@ -1638,16 +1654,16 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         } 
         return $f;
     }
-    ///<summary>Represente getVisibility function</summary>
+    ///<summary></summary>
     /**
-    * Represente getVisibility function
+    * 
     */
     public function getVisibility(){
         return $this->m_visibility;
     }
-    ///<summary>Represente getWebParentCtrl function</summary>
+    ///<summary></summary>
     /**
-    * Represente getWebParentCtrl function
+    * 
     */
     public function getWebParentCtrl(){
         return $this->getM_()->getFlag(self::WEBPARENT_FLAG);
@@ -1696,11 +1712,11 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return $h;
     }
-    ///<summary>Represente handleCmd function</summary>
+    ///<summary></summary>
     ///<param name="msg"></param>
     ///<param name="args"></param>
     /**
-    * Represente handleCmd function
+    * 
     * @param mixed $msg
     * @param mixed $args
     */
@@ -1752,16 +1768,16 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         $p->registerPages();
         $this->registerHook();
     }
-    ///<summary>Represente initConfigMenu function</summary>
+    ///<summary></summary>
     /**
-    * Represente initConfigMenu function
+    * 
     */
     public function initConfigMenu(){
         return null;
     }
-    ///<summary>Represente initDb function</summary>
+    ///<summary></summary>
     /**
-    * Represente initDb function
+    * 
     */
     protected function initDb(){
         if(!$this->getCanInitDb()){
@@ -1867,16 +1883,16 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return $tb;
     }
-    ///<summary>Represente initMenu function</summary>
+    ///<summary></summary>
     /**
-    * Represente initMenu function
+    * 
     */
     public function initMenu(){
         return null;
     }
-    ///<summary>Represente initTargetNode function</summary>
+    ///<summary></summary>
     /**
-    * Represente initTargetNode function
+    * 
     */
     protected function initTargetNode(){
         $tagName=igk_sys_getconfig("app_default_controller_tag_name", "div");
@@ -1885,11 +1901,11 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         $div["igk-type"]="controller";
         return $div;
     }
-    ///<summary>Represente initUriPost function</summary>
+    ///<summary></summary>
     ///<param name="form"></param>
     ///<param name="uri"></param>
     /**
-    * Represente initUriPost function
+    * 
     * @param mixed $form
     * @param mixed $uri
     */
@@ -1901,10 +1917,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             $form->addInput($k, "hidden", $v);
         }
     }
-    ///<summary>Represente invokeInContext function</summary>
+    ///<summary></summary>
     ///<param name="m"></param>
     /**
-    * Represente invokeInContext function
+    * 
     * @param mixed $m
     */
     public function invokeInContext($m){
@@ -1915,19 +1931,19 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             call_user_func_array($m, igk_getv($g, 0));
         }
     }
-    ///<summary>Represente InvokeInitCompleteOn function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     /**
-    * Represente InvokeInitCompleteOn function
+    * 
     * @param mixed $ctrl
     */
     protected static function InvokeInitCompleteOn($ctrl){
         if($ctrl != null)
             $ctrl->InitComplete();
     }
-    ///<summary>Represente InvokeRegisterComplete function</summary>
+    ///<summary></summary>
     /**
-    * Represente InvokeRegisterComplete function
+    * 
     */
     public static function InvokeRegisterComplete(){
         if(self::$sm_regComplete){
@@ -1971,9 +1987,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return (igk_getv(self::$sm_sysController, $className) != null);
     }
-    ///<summary>Represente loadDataAndNewEntriesFromSchemas function</summary>
+    ///<summary></summary>
     /**
-    * Represente loadDataAndNewEntriesFromSchemas function
+    * 
     */
     protected function loadDataAndNewEntriesFromSchemas(){
         return igk_db_load_data_and_entries_schemas(igk_db_get_schema_filename($this), $this);
@@ -1992,11 +2008,11 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     protected function loadDataNewEntriesFromSchemas(){
         return igk_db_load_data_entries_schemas(igk_db_get_schema_filename($this));
     }
-    ///<summary>Represente loadview function</summary>
+    ///<summary></summary>
     ///<param name="viewpath"></param>
     ///<param name="args" default="null"></param>
     /**
-    * Represente loadview function
+    * 
     * @param mixed $viewpath
     * @param mixed $args the default value is null
     */
@@ -2039,9 +2055,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             $controller->setWebParentCtrl($this);
         }
     }
-    ///<summary>Represente registerHook function</summary>
+    ///<summary></summary>
     /**
-    * Represente registerHook function
+    * 
     */
     protected function registerHook(){
         igk_reg_hook(IGKEvents::HOOK_SCRIPTS, function(){
@@ -2062,10 +2078,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         return igk_count(self::$sm_regComplete);
     }
-    ///<summary>Represente RegSysController function</summary>
+    ///<summary></summary>
     ///<param name="className"></param>
     /**
-    * Represente RegSysController function
+    * 
     * @param mixed $className
     */
     public static function RegSysController($className){
@@ -2193,10 +2209,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function setFlag($code, $value){
         $this->getM_()->setFlag($code, $value);
     }
-    ///<summary>Represente setMainView function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     /**
-    * Represente setMainView function
+    * 
     * @param mixed $v
     */
     protected function setMainView($v){
@@ -2219,19 +2235,19 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         // $p[$key]=$value;
         // $this->updateFlagParams($p);
     }
-    ///<summary>Represente setShowChildFlag function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     /**
-    * Represente setShowChildFlag function
+    * 
     * @param mixed $v
     */
     public function setShowChildFlag($v){
         $this->setFlag(self::SHOW_CHILD, $v);
     }
-    ///<summary>Represente setTargetNode function</summary>
+    ///<summary></summary>
     ///<param name="node"></param>
     /**
-    * Represente setTargetNode function
+    * 
     * @param mixed $node
     */
     protected function setTargetNode($node){
@@ -2279,11 +2295,11 @@ EOF
             include($f);
         }
     }
-    ///<summary>Represente setViewArgs function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="args"></param>
     /**
-    * Represente setViewArgs function
+    * 
     * @param mixed $name
     * @param mixed $args
     */
@@ -2295,20 +2311,20 @@ EOF
         $args[$name]=$args;
         $this->setEnvParam(IGK_VIEW_ARGS, array_merge("base", $args));
     }
-    ///<summary>Represente setVisibility function</summary>
+    ///<summary></summary>
     ///<param name="visibility"></param>
     /**
-    * Represente setVisibility function
+    * 
     * @param mixed $visibility
     */
     protected function setVisibility($visibility){
         $this->m_visibility=$visibility;
     }
-    ///<summary>Represente setWebParentCtrl function</summary>
+    ///<summary></summary>
     ///<param name="value"></param>
     ///<param name="store" default="false"></param>
     /**
-    * Represente setWebParentCtrl function
+    * 
     * @param mixed $value
     * @param mixed $store the default value is false
     */
@@ -2324,9 +2340,9 @@ EOF
             $this->m_->updateFlag(self::WEBPARENT_FLAG, $g);
         }
     }
-    ///<summary>Represente storeConfigSettings function</summary>
+    ///<summary></summary>
     /**
-    * Represente storeConfigSettings function
+    * 
     */
     public function storeConfigSettings(){
         $d=igk_createxmlnode("config");
@@ -2340,10 +2356,10 @@ EOF
         }
         return false;
     }
-    ///<summary>Represente unregChildController function</summary>
+    ///<summary></summary>
     ///<param name="controller"></param>
     /**
-    * Represente unregChildController function
+    * 
     * @param mixed $controller
     */
     public function unregChildController($controller){
@@ -2365,10 +2381,10 @@ EOF
             igk_debug_wln("unreg controller not removed");
         }
     }
-    ///<summary>Represente UnRegisterInitComplete function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     /**
-    * Represente UnRegisterInitComplete function
+    * 
     * @param mixed $ctrl
     */
     public static function UnRegisterInitComplete($ctrl){
@@ -2392,10 +2408,10 @@ EOF
             }
         }
     }
-    ///<summary>Represente unsetParam function</summary>
+    ///<summary></summary>
     ///<param name="key"></param>
     /**
-    * Represente unsetParam function
+    * 
     * @param mixed $key
     */
     public function unsetParam($key){
@@ -2417,10 +2433,10 @@ EOF
         $uri=$this->getAppUri();
         igk_navto($uri);
     }
-    ///<summary>Represente updateFlagParams function</summary>
+    ///<summary></summary>
     ///<param name="g"></param>
     /**
-    * Represente updateFlagParams function
+    * 
     * @param mixed $g
     */
     public function updateFlagParams($g){

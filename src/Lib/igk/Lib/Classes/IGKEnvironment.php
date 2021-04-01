@@ -52,9 +52,9 @@ final class IGKEnvironment implements \ArrayAccess{
         $tab[$key] = $value;
         $this->$name = $tab;
     }
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     private function __construct(){
         $t=[];
@@ -69,29 +69,29 @@ final class IGKEnvironment implements \ArrayAccess{
     {
         return null;
     }
-    ///<summary>Represente __get function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente __get function
+    * 
     * @param mixed $n
     */
     public function & __get($n){
         return $this->get($n);
     }
-    ///<summary>Represente __isset function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente __isset function
+    * 
     * @param mixed $n
     */
    public function __isset($v){
 		return array_key_exists($v, $this->m_envs);
 	}
-    ///<summary>Represente __set function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     ///<param name="v"></param>
     /**
-    * Represente __set function
+    * 
     * @param mixed $n
     * @param mixed $v
     */
@@ -99,22 +99,22 @@ final class IGKEnvironment implements \ArrayAccess{
         $this->OffsetSet($n, $v);
 		return $this;
     }
-    ///<summary>Represente __sleep function</summary>
+    ///<summary></summary>
     /**
-    * Represente __sleep function
+    * 
     */
     public function __sleep(){
         igk_die("Operation Not allowed ".__CLASS__);
     }
-    ///<summary>Represente __wakeup function</summary>
+    ///<summary></summary>
     /**
-    * Represente __wakeup function
+    * 
     */
     public function __wakeup(){}
-    ///<summary>Represente get function</summary>
+    ///<summary></summary>
     ///<param name="var"></param>
     /**
-    * Represente get function
+    * 
     * @param mixed $var
     */
     public function & get($var, $default=null){
@@ -140,10 +140,10 @@ final class IGKEnvironment implements \ArrayAccess{
         return $c;
 
     } 
-    ///<summary>Represente getInstance function</summary>
+    ///<summary></summary>
     ///<return refout="true"></return>
     /**
-    * Represente getInstance function
+    * 
     * @return *
     */
     public static function & getInstance(){
@@ -151,9 +151,9 @@ final class IGKEnvironment implements \ArrayAccess{
         return $c;
     }
 
-    ///<summary>Represente getVars function</summary>
+    ///<summary></summary>
     /**
-    * Represente getVars function
+    * 
     */
     public function getVars(){
         return $this->m_envs;
@@ -169,34 +169,34 @@ final class IGKEnvironment implements \ArrayAccess{
         }
         return igk_server()->ENVIRONMENT == $env_mode;
     }
-    ///<summary>Represente IsWebApp function</summary>
+    ///<summary></summary>
     /**
-    * Represente IsWebApp function
+    * 
     */
     public function IsWebApp(){
         return $this->get("IGK_APP") == "WEBAPP";
     }
-    ///<summary>Represente name function</summary>
+    ///<summary></summary>
     /**
-    * Represente name function
+    * 
     */
     public function name(){
         return igk_server()->ENVIRONMENT;
     }
-    ///<summary>Represente OffsetExists function</summary>
+    ///<summary></summary>
     ///<param name="i"></param>
     /**
-    * Represente OffsetExists function
+    * 
     * @param mixed $i
     */
     public function OffsetExists($i){
         return isset($this->m_envs[$i]);
     }
-    ///<summary>Represente offsetGet function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     ///<return refout="true"></return>
     /**
-    * Represente offsetGet function
+    * 
     * @param mixed $v
     * @return *
     */
@@ -204,11 +204,11 @@ final class IGKEnvironment implements \ArrayAccess{
         $n=& $this->m_envs[$v];
         return $n;
     }
-    ///<summary>Represente offsetSet function</summary>
+    ///<summary></summary>
     ///<param name="i"></param>
     ///<param name="v"></param>
     /**
-    * Represente offsetSet function
+    * 
     * @param mixed $i
     * @param mixed $v
     */
@@ -219,18 +219,18 @@ final class IGKEnvironment implements \ArrayAccess{
             $this->m_envs[$i]=$v;
 
     }
-    ///<summary>Represente OffsetUnset function</summary>
+    ///<summary></summary>
     ///<param name="i"></param>
     /**
-    * Represente OffsetUnset function
+    * 
     * @param mixed $i
     */
     public function OffsetUnset($i){
         unset($this->m_envs[$i]);
     }
-    ///<summary>Represente serialize function</summary>
+    ///<summary></summary>
     /**
-    * Represente serialize function
+    * 
     */
     public function serialize(){
         die("not allowed ".__CLASS__);

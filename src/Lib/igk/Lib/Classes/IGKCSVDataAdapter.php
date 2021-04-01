@@ -12,19 +12,19 @@ final class IGKCSVDataAdapter extends IGKDataAdapter {
 	public function escape_string($v){
 		return $v;
 	}
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="ctrl" default="null"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $ctrl the default value is null
     */
     public function __construct($ctrl=null){
         $this->m_ctrl=$ctrl;
     }
-    ///<summary>Represente __removeguillemet function</summary>
+    ///<summary></summary>
     ///<param name="data"></param>
     /**
-    * Represente __removeguillemet function
+    * 
     * @param mixed $data
     */
     static function __removeguillemet($data){
@@ -35,10 +35,10 @@ final class IGKCSVDataAdapter extends IGKDataAdapter {
             $data=substr($data, 0, strlen($data)-1);
         return $data;
     }
-    ///<summary>Represente _CSVReadLine function</summary>
+    ///<summary></summary>
     ///<param name="l"></param>
     /**
-    * Represente _CSVReadLine function
+    * 
     * @param mixed $l
     */
     private static function _CSVReadLine($l, $sep=","){
@@ -76,44 +76,44 @@ final class IGKCSVDataAdapter extends IGKDataAdapter {
         }
         return $tab;
     }
-    ///<summary>Represente close function</summary>
+    ///<summary></summary>
     /**
-    * Represente close function
+    * 
     */
     public function close(){
         if($this->m_fhandle){
             fclose($this->m_f);
         }
     }
-    ///<summary>Represente connect function</summary>
+    ///<summary></summary>
     ///<param name="datafile" default="file"></param>
     /**
-    * Represente connect function
+    * 
     * @param mixed $datafile the default value is "file"
     */
     public function connect($datafile="file"){
         $this->m_dbname=$datafile;
     }
-    ///<summary>Represente countAndWhere function</summary>
+    ///<summary></summary>
     /**
-    * Represente countAndWhere function
+    * 
     */
     public function countAndWhere(){
         igk_wln_e("CSV Adapter: Not Implement, ".__METHOD__, igk_show_trace());
     }
-    ///<summary>Represente CreateEmptyResult function</summary>
+    ///<summary></summary>
     ///<param name="result" default="null"></param>
     /**
-    * Represente CreateEmptyResult function
+    * 
     * @param mixed $result the default value is null
     */
     public function CreateEmptyResult($result=null){
         return null;
     }
-    ///<summary>Represente GetValue function</summary>
+    ///<summary></summary>
     ///<param name="value"></param>
     /**
-    * Represente GetValue function
+    * 
     * @param mixed $value
     */
     public static function GetValue($value){
@@ -121,39 +121,39 @@ final class IGKCSVDataAdapter extends IGKDataAdapter {
             return "\"".$value."\"";
         return $value;
     }
-    ///<summary>Represente initSystablePushInitItem function</summary>
+    ///<summary></summary>
     ///<param name="tablename"></param>
     ///<param name="callback"></param>
     /**
-    * Represente initSystablePushInitItem function
+    * 
     * @param mixed $tablename
     * @param mixed $callback
     */
     public function initSystablePushInitItem($tablename, $callback){}
-    ///<summary>Represente initSystableRequired function</summary>
+    ///<summary></summary>
     ///<param name="tablename"></param>
     /**
-    * Represente initSystableRequired function
+    * 
     * @param mixed $tablename
     */
     public function initSystableRequired($tablename){
         return false;
     }
-    ///<summary>Represente LoadData function</summary>
+    ///<summary></summary>
     ///<param name="filename"></param>
     /**
-    * Represente LoadData function
+    * 
     * @param mixed $filename
     */
     public static function LoadData($filename, $options=null){
         $txt=IGKIO::ReadAllText($filename);
         return self::LoadString($txt, true, $options);
     }
-    ///<summary>Represente LoadString function</summary>
+    ///<summary></summary>
     ///<param name="txt"></param>
     ///<param name="rmBom" default="true"></param>
     /**
-    * Represente LoadString function
+    * 
     * @param mixed $txt
     * @param mixed $rmBom the default value is true
     */
@@ -175,19 +175,19 @@ final class IGKCSVDataAdapter extends IGKDataAdapter {
         }
         return $entries;
     }
-    ///<summary>Represente selectAll function</summary>
+    ///<summary></summary>
     ///<param name="tbname"></param>
     /**
-    * Represente selectAll function
+    * 
     * @param mixed $tbname
     */
     public function selectAll($tbname){
         $this->selectAllFile($tbname);
     }
-    ///<summary>Represente selectAllFile function</summary>
+    ///<summary></summary>
     ///<param name="tbname"></param>
     /**
-    * Represente selectAllFile function
+    * 
     * @param mixed $tbname
     */
     public function selectAllFile($tbname){
@@ -199,11 +199,11 @@ final class IGKCSVDataAdapter extends IGKDataAdapter {
         }
         return null;
     }
-    ///<summary>Represente StoreData function</summary>
+    ///<summary></summary>
     ///<param name="filename"></param>
     ///<param name="entries"></param>
     /**
-    * Represente StoreData function
+    * 
     * @param mixed $filename
     * @param mixed $entries
     */

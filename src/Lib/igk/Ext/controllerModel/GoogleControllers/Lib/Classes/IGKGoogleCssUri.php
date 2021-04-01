@@ -23,11 +23,11 @@ use \IGKHtmlRelativeUriValueAttribute;
 class IGKGoogleCssUri{
     private $m_file;
     private $m_uri;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="f"></param>
     ///<param name="uri"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $f
     * @param mixed $uri
     */
@@ -35,9 +35,9 @@ class IGKGoogleCssUri{
         $this->m_file=$f;
         $this->m_uri=$uri;
     }
-    ///<summary>Represente getValue function</summary>
+    ///<summary></summary>
     /**
-    * Represente getValue function
+    * 
     */
     public function getValue(){
         $f=$this->m_file;

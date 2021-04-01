@@ -9,34 +9,34 @@
 */
 class IGKPDODataAdpater extends IGKDataAdapter {
     private $m_pdo;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="pdo"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $pdo
     */
     private function __construct($pdo){
         $this->m_pdo=$pdo;
     }
-    ///<summary>Represente close function</summary>
+    ///<summary></summary>
     /**
-    * Represente close function
+    * 
     */
     public function close(){}
-    ///<summary>Represente connect function</summary>
+    ///<summary></summary>
     ///<param name="ctrl" default="null"></param>
     /**
-    * Represente connect function
+    * 
     * @param mixed $ctrl the default value is null
     */
     public function connect($ctrl=null){}
-    ///<summary>Represente Create function</summary>
+    ///<summary></summary>
     ///<param name="server"></param>
     ///<param name="dbname"></param>
     ///<param name="login"></param>
     ///<param name="pwd"></param>
     /**
-    * Represente Create function
+    * 
     * @param mixed $server
     * @param mixed $dbname
     * @param mixed $login
@@ -45,26 +45,26 @@ class IGKPDODataAdpater extends IGKDataAdapter {
     public static function Create($server, $dbname, $login, $pwd){
         return null;
     }
-    ///<summary>Represente CreateEmptyResult function</summary>
+    ///<summary></summary>
     /**
-    * Represente CreateEmptyResult function
+    * 
     */
     public function CreateEmptyResult(){
         return null;
     }
-    ///<summary>Represente initSystablePushInitItem function</summary>
+    ///<summary></summary>
     ///<param name="tablename"></param>
     ///<param name="callback"></param>
     /**
-    * Represente initSystablePushInitItem function
+    * 
     * @param mixed $tablename
     * @param mixed $callback
     */
     public function initSystablePushInitItem($tablename, $callback){}
-    ///<summary>Represente initSystableRequired function</summary>
+    ///<summary></summary>
     ///<param name="tablename"></param>
     /**
-    * Represente initSystableRequired function
+    * 
     * @param mixed $tablename
     */
     public function initSystableRequired($tablename){}

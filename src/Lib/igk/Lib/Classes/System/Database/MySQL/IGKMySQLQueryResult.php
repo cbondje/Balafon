@@ -28,9 +28,9 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
     public function success(){
         return $this->m_rows !== null;
     }
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     private function __construct(){
         $this->m_columns=array();
@@ -201,17 +201,17 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
         $out->m_multitable = $_nn;
         return $out;
     }
-    ///<summary>Represente getColumnCount function</summary>
+    ///<summary></summary>
     /**
-    * Represente getColumnCount function
+    * 
     */
     public function getColumnCount(){
         return igk_count($this->m_columns);
     }
-    ///<summary>Represente getColumnIndex function</summary>
+    ///<summary></summary>
     ///<param name="columnname"></param>
     /**
-    * Represente getColumnIndex function
+    * 
     * @param mixed $columnname
     */
     public function getColumnIndex($columnname){
@@ -220,30 +220,30 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
         }
         return -1;
     }
-    ///<summary>Represente getColumns function</summary>
+    ///<summary></summary>
     /**
-    * Represente getColumns function
+    * 
     */
     public function getColumns(){
         return $this->m_columns;
     }
-    ///<summary>Represente getHasRow function</summary>
+    ///<summary></summary>
     /**
-    * Represente getHasRow function
+    * 
     */
     public function getHasRow(){
         return ($this->getRowCount() > 0);
     }
-    ///<summary>Represente getQuery function</summary>
+    ///<summary></summary>
     /**
-    * Represente getQuery function
+    * 
     */
     public function getQuery(){
         return $this->m_query;
     }
-    ///<summary>Represente getResult function</summary>
+    ///<summary></summary>
     /**
-    * Represente getResult function
+    * 
     */
     public function getResult(){
         if(strtolower($this->m_type) == 'boolean'){
@@ -258,10 +258,10 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
     public function getResultType(){
         return $this->m_type;
     }
-    ///<summary>Represente getRowArray function</summary>
+    ///<summary></summary>
     ///<param name="index"></param>
     /**
-    * Represente getRowArray function
+    * 
     * @param mixed $index
     */
     public function getRowArray($index){
@@ -279,10 +279,10 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
             $f["info"]["sourcetable"]=$this->m_columns[0]->table;
         return $f;
     }
-    ///<summary>Represente getRowAtIndex function</summary>
+    ///<summary></summary>
     ///<param name="index"></param>
     /**
-    * Represente getRowAtIndex function
+    * 
     * @param mixed $index
     */
     public function getRowAtIndex($index){
@@ -291,30 +291,30 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
         }
         return null;
     }
-    ///<summary>Represente getRowCount function</summary>
+    ///<summary></summary>
     /**
-    * Represente getRowCount function
+    * 
     */
     public function getRowCount(){
         return igk_count($this->m_rows);
     }
-    ///<summary>Represente getRows function</summary>
+    ///<summary></summary>
     /**
-    * Represente getRows function
+    * 
     */
     public function getRows(){
         return $this->m_rows;
     }
-    ///<summary>Represente getSuccess function</summary>
+    ///<summary></summary>
     /**
-    * Represente getSuccess function
+    * 
     */
     public function getSuccess(){
         return ($this->ResultTypeIsBoolean() && $this->getValue()) || ($this->RowCount > 0);
     }
-    ///<summary>Represente getTables function</summary>
+    ///<summary></summary>
     /**
-    * Represente getTables function
+    * 
     */
     public function getTables(){
         return $this->m_tables;
@@ -351,10 +351,10 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
             return null;
         return $t;
     }
-    ///<summary>Represente select function</summary>
+    ///<summary></summary>
     ///<param name="callback"></param>
     /**
-    * Represente select function
+    * 
     * @param mixed $callback
     */
     public function select($callback){
@@ -369,12 +369,12 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
         }
         return $result;
     }
-    ///<summary>Represente SortBy function</summary>
+    ///<summary></summary>
     ///<param name="key"></param>
     ///<param name="asc" default="true"></param>
     ///<param name="preserveid" default="true"></param>
     /**
-    * Represente SortBy function
+    * 
     * @param mixed $key
     * @param mixed $asc the default value is true
     * @param mixed $preserveid the default value is true

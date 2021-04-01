@@ -49,10 +49,10 @@ function igk_html_json($n){
     }
     return json_encode($d);
 }
-///<summary>Represente igk_html_json_decode function</summary>
+///<summary></summary>
 ///<param name="n"></param>
 /**
-* Represente igk_html_json_decode function
+* 
 * @param string $n string to decode
 */
 function igk_html_json_decode($n){

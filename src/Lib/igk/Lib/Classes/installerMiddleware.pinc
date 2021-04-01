@@ -16,17 +16,17 @@ use function\igk_resources_gets as __;
 class InstallerActionMiddleWare{
     private $_next;
     private $_service;
-    ///<summary>Represente abort function</summary>
+    ///<summary></summary>
     /**
-    * Represente abort function
+    * 
     */
     protected function abort(){
         igk_wln("aborting : ".get_class($this));
     }
-    ///<summary>Represente AbortAction function</summary>
+    ///<summary></summary>
     ///<param name="list"></param>
     /**
-    * Represente AbortAction function
+    * 
     * @param mixed $list
     */
     public static function AbortAction($list){
@@ -36,23 +36,23 @@ class InstallerActionMiddleWare{
             $k->abort();
         }
     }
-    ///<summary>Represente getMessage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getMessage function
+    * 
     */
     public function getMessage(){
         return get_class($this);
     }
-    ///<summary>Represente getService function</summary>
+    ///<summary></summary>
     /**
-    * Represente getService function
+    * 
     */
     public function getService(){
         return $this->_service;
     }
-    ///<summary>Represente next function</summary>
+    ///<summary></summary>
     /**
-    * Represente next function
+    * 
     */
     protected final function next(){
         if($this->_next){
@@ -60,12 +60,12 @@ class InstallerActionMiddleWare{
             $this->_next->invoke();
         }
     }
-    ///<summary>Represente Run function</summary>
+    ///<summary></summary>
     ///<param name="list"></param>
     ///<param name="index"></param>
     ///<param name="service" default="null"></param>
     /**
-    * Represente Run function
+    * 
     * @param mixed $list
     * @param mixed $index
     * @param mixed $service the default value is null
@@ -99,16 +99,16 @@ class InstallerActionMiddleWare{
 * Represente BalaffonInstallerMiddelWare class
 */
 class BalafonInstallerMiddelWare extends InstallerActionMiddleWare{
-    ///<summary>Represente getMessage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getMessage function
+    * 
     */
     public function getMessage(){
         return "start installer";
     }
-    ///<summary>Represente invoke function</summary>
+    ///<summary></summary>
     /**
-    * Represente invoke function
+    * 
     */
     public function invoke(){
         $service=$this->getService();
@@ -135,21 +135,21 @@ class BalafonInstallerMiddelWare extends InstallerActionMiddleWare{
 * Represente ClearCacheMiddleWare class
 */
 class ClearCacheMiddleWare extends InstallerActionMiddleWare{
-    ///<summary>Represente abort function</summary>
+    ///<summary></summary>
     /**
-    * Represente abort function
+    * 
     */
     protected function abort(){}
-    ///<summary>Represente getMessage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getMessage function
+    * 
     */
     public function getMessage(){
         return __("Clear cache ...");
     }
-    ///<summary>Represente invoke function</summary>
+    ///<summary></summary>
     /**
-    * Represente invoke function
+    * 
     */
     public function invoke(){
         if(is_dir($cachedir=$this->getService()->CacheDir)){
@@ -163,9 +163,9 @@ class ClearCacheMiddleWare extends InstallerActionMiddleWare{
 * Represente ErrorHandleMiddleWare class
 */
 class ErrorHandleMiddleWare extends InstallerActionMiddleWare{
-    ///<summary>Represente invoke function</summary>
+    ///<summary></summary>
     /**
-    * Represente invoke function
+    * 
     */
     public function invoke(){
         try {
@@ -181,9 +181,9 @@ class ErrorHandleMiddleWare extends InstallerActionMiddleWare{
 * Represente ExtractLibaryMiddleWare class
 */
 class ExtractLibaryMiddleWare extends InstallerActionMiddleWare{
-    ///<summary>Represente abort function</summary>
+    ///<summary></summary>
     /**
-    * Represente abort function
+    * 
     */
     protected function abort(){
         $lib=$this->getService()->LibDir;
@@ -191,16 +191,16 @@ class ExtractLibaryMiddleWare extends InstallerActionMiddleWare{
             IGKIO::RmDir($lib);
         }
     }
-    ///<summary>Represente getMessage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getMessage function
+    * 
     */
     public function getMessage(){
         return __("Extract Core Library");
     }
-    ///<summary>Represente invoke function</summary>
+    ///<summary></summary>
     /**
-    * Represente invoke function
+    * 
     */
     public function invoke(){
         if(!file_exists($zip=$this->getService()->CoreZip)){
@@ -228,9 +228,9 @@ class ExtractLibaryMiddleWare extends InstallerActionMiddleWare{
 * Represente FailedMiddleWare class
 */
 class FailedMiddleWare extends InstallerActionMiddleWare{
-    ///<summary>Represente invoke function</summary>
+    ///<summary></summary>
     /**
-    * Represente invoke function
+    * 
     */
     public function invoke(){
         $this->getService()->Success=1;
@@ -242,27 +242,27 @@ class FailedMiddleWare extends InstallerActionMiddleWare{
 */
 class InstallerEventMessageMiddleWare extends InstallerActionMiddleWare{
     var $host;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="host"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $host
     */
     public function __construct($host){
         $this->host=$host;
     }
-    ///<summary>Represente abort function</summary>
+    ///<summary></summary>
     /**
-    * Represente abort function
+    * 
     */
     protected function abort(){
         $msg=$this->host->getMessage();
         igk_flush_write("aborting ... ". $msg);
         igk_flush_data();
     }
-    ///<summary>Represente invoke function</summary>
+    ///<summary></summary>
     /**
-    * Represente invoke function
+    * 
     */
     public function invoke(){
         $msg=$this->host->getMessage();
@@ -276,9 +276,9 @@ class InstallerEventMessageMiddleWare extends InstallerActionMiddleWare{
 * Represente MaintenaceLibMiddleWare class
 */
 class MaintenaceLibMiddleWare extends InstallerActionMiddleWare{
-    ///<summary>Represente __unlock function</summary>
+    ///<summary></summary>
     /**
-    * Represente __unlock function
+    * 
     */
     private function __unlock(){
         $bdir=$this->getService()->BaseDir;
@@ -294,23 +294,23 @@ class MaintenaceLibMiddleWare extends InstallerActionMiddleWare{
         }
         unlink($lock);
     }
-    ///<summary>Represente abort function</summary>
+    ///<summary></summary>
     /**
-    * Represente abort function
+    * 
     */
     public function abort(){
         $this->__unlock();
     }
-    ///<summary>Represente getMessage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getMessage function
+    * 
     */
     public function getMessage(){
         return "put site on 'maintenance mode'";
     }
-    ///<summary>Represente invoke function</summary>
+    ///<summary></summary>
     /**
-    * Represente invoke function
+    * 
     */
     public function invoke(){
         $bdir=$this->getService()->BaseDir;
@@ -347,9 +347,9 @@ EOF
 * Represente RenameLibaryMiddleWare class
 */
 class RenameLibaryMiddleWare extends InstallerActionMiddleWare{
-    ///<summary>Represente abort function</summary>
+    ///<summary></summary>
     /**
-    * Represente abort function
+    * 
     */
     public function abort(){
         $libdir=dirname($this->getService()->LibDir)."/__tempigk";
@@ -357,16 +357,16 @@ class RenameLibaryMiddleWare extends InstallerActionMiddleWare{
             rename($libdir, dirname($libdir)."/igk");
         }
     }
-    ///<summary>Represente getMessage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getMessage function
+    * 
     */
     public function getMessage(){
         return "rename library";
     }
-    ///<summary>Represente invoke function</summary>
+    ///<summary></summary>
     /**
-    * Represente invoke function
+    * 
     */
     public function invoke(){
         $libdir=$this->getService()->LibDir;
@@ -381,21 +381,21 @@ class RenameLibaryMiddleWare extends InstallerActionMiddleWare{
 * Represente SuccessMiddleWare class
 */
 class SuccessMiddleWare extends InstallerActionMiddleWare{
-    ///<summary>Represente abort function</summary>
+    ///<summary></summary>
     /**
-    * Represente abort function
+    * 
     */
     protected function abort(){}
-    ///<summary>Represente getMessage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getMessage function
+    * 
     */
     public function getMessage(){
         return __("welldone");
     }
-    ///<summary>Represente invoke function</summary>
+    ///<summary></summary>
     /**
-    * Represente invoke function
+    * 
     */
     public function invoke(){
         $srv=$this->getService();
@@ -424,27 +424,27 @@ class InstallerMiddleWareActions{
     var $BaseDir;
     var $CacheDir;
     var $LibDir;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     public function __construct(){
         $this->_list=array();
         $this->_current=array();
     }
-    ///<summary>Represente abort function</summary>
+    ///<summary></summary>
     /**
-    * Represente abort function
+    * 
     */
     public function abort(){
         if(($tc=count($this->_list))<=0)
             return;
         InstallerActionMiddleWare::AbortAction($this->_list, 0);
     }
-    ///<summary>Represente add function</summary>
+    ///<summary></summary>
     ///<param name="middle"></param>
     /**
-    * Represente add function
+    * 
     * @param mixed $middle
     */
     public function add($middle){
@@ -457,16 +457,16 @@ class InstallerMiddleWareActions{
         }
         $this->_list[]=$middle;
     }
-    ///<summary>Represente isEventStream function</summary>
+    ///<summary></summary>
     /**
-    * Represente isEventStream function
+    * 
     */
     public function isEventStream(){
         return igk_server()->HTTP_ACCEPT == "text/event-stream";
     }
-    ///<summary>Represente process function</summary>
+    ///<summary></summary>
     /**
-    * Represente process function
+    * 
     * @return mixed
     */
     public function process(){
@@ -477,10 +477,10 @@ class InstallerMiddleWareActions{
         }
         return $this->Success;
     }
-    ///<summary>Represente write function</summary>
+    ///<summary></summary>
     ///<param name="msg"></param>
     /**
-    * Represente write function
+    * 
     * @param mixed $msg
     */
     public function write($msg){

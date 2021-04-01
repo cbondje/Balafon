@@ -26,11 +26,11 @@ final class IGKAppModule extends BaseController{
             $this->m_initializer = new $classname();
         }
     }
-    ///<summary>Represente __call function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     ///<param name="args"></param>
     /**
-    * Represente __call function
+    * 
     * @param mixed $n
     * @param mixed $args
     */
@@ -45,10 +45,10 @@ final class IGKAppModule extends BaseController{
         igk_die("/!\\ function {$n} not define");
         return null;
     }
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="dir"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $dir
     */
     public function __construct($dir){
@@ -102,26 +102,26 @@ final class IGKAppModule extends BaseController{
             });
         }
     }
-    ///<summary>Represente __sleep function</summary>
+    ///<summary></summary>
     /**
-    * Represente __sleep function
+    * 
     */
     function __sleep(){
         $this->m_fclist=array();
         $this->m_src=null;
         return array("m_dir");
     }
-    ///<summary>Represente __wakeup function</summary>
+    ///<summary></summary>
     /**
-    * Represente __wakeup function
+    * 
     */
     function __wakeup(){
         $this->_init();
     }
-    ///<summary>Represente _init function</summary>
+    ///<summary></summary>
     ///<param name="c" default="null"></param>
     /**
-    * Represente _init function
+    * 
     * @param mixed $c the default value is null
     */
     private function _init($c=null){
@@ -135,36 +135,36 @@ final class IGKAppModule extends BaseController{
             $this->m_configs = $data; 
         }
     }
-    ///<summary>Represente _initconfig function</summary>
+    ///<summary></summary>
     ///<param name="configs" ref="true"></param>
     /**
-    * Represente _initconfig function
+    * 
     * @param  * $configs
     */
     protected function _initconfig(& $configs){
         $configs["libdir"]=IGK_LIB_DIR;
 
     }
-    ///<summary>Represente bindError function</summary>
+    ///<summary></summary>
     ///<param name="msg"></param>
     /**
-    * Represente bindError function
+    * 
     * @param mixed $msg
     */
     private function bindError($msg){
         $this->setParam(__METHOD__, $msg);
     }
-    ///<summary>Represente getAppDocument function</summary>
+    ///<summary></summary>
     /**
-    * Represente getAppDocument function
+    * 
     */
     public function getAppDocument(){
         return null;
     }
-    ///<summary>Represente getAppUri function</summary>
+    ///<summary></summary>
     ///<param name="c" default="null"></param>
     /**
-    * Represente getAppUri function
+    * 
     * @param mixed $c the default value is null
     */
     public function getAppUri($c=null){
@@ -175,9 +175,9 @@ final class IGKAppModule extends BaseController{
         $s=base64_encode($u);
         return igk_getctrl(IGK_SESSION_CTRL)->getUri("invmodule&q=".$s);
     }
-    ///<summary>Represente getCallee function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCallee function
+    * 
     */
     public function getCallee(){
         return igk_peek_env(__CLASS__."/callee");
@@ -189,30 +189,30 @@ final class IGKAppModule extends BaseController{
     public function getCaller(){
         return $this->m_caller;
     }
-    ///<summary>Represente GetCanCreateFrameworkInstance function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetCanCreateFrameworkInstance function
+    * 
     */
     public static function GetCanCreateFrameworkInstance(){
         return false;
     }
-    ///<summary>Represente getCurrentDoc function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCurrentDoc function
+    * 
     */
     public function getCurrentDoc(){
         return $this->m_doc;
     }
-    ///<summary>Represente getDeclaredDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDeclaredDir function
+    * 
     */
     public function getDeclaredDir(){
         return $this->m_dir;
     }
-    ///<summary>Represente getDeclaredFileName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDeclaredFileName function
+    * 
     */
     public function getDeclaredFileName(){
         return realpath($this->getDeclaredDir()."/.module.pinc");
@@ -239,27 +239,27 @@ final class IGKAppModule extends BaseController{
         }
         return $_configs[$_hash];
     }
-    ///<summary>Represente getListener function</summary>
+    ///<summary></summary>
     /**
-    * Represente getListener function
+    * 
     */
     public function getListener(){
         return $this->m_listener ?? igk_ctrl_current_view_ctrl();
     }
-    ///<summary>Represente getName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getName function
+    * 
     */
     public function getName(){
         return strtolower(str_replace("/", ".", igk_html_uri(substr($this->m_dir, strlen(igk_get_module_dir())))));
     }
-    ///<summary>Represente getParam function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     ///<param name="def" default="null"></param>
     ///<param name="register" default="false"></param>
     ///<return refout="true"></return>
     /**
-    * Represente getParam function
+    * 
     * @param mixed $n
     * @param mixed $def the default value is null
     * @param mixed $register the default value is false
@@ -273,58 +273,58 @@ final class IGKAppModule extends BaseController{
         }
         return $h;
     }
-    ///<summary>Represente getUri function</summary>
+    ///<summary></summary>
     ///<param name="c" default="null"></param>
     /**
-    * Represente getUri function
+    * 
     * @param mixed $c the default value is null
     */
     public function getUri($c=null){
         return $this->getAppUri($c);
     }
-    ///<summary>Represente methodExists function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente methodExists function
+    * 
     * @param mixed $n
     */
     public function methodExists($n){
         return isset($this->m_fclist[$n]);
     }
-    ///<summary>Represente reg_function function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     ///<param name="fc"></param>
     /**
-    * Represente reg_function function
+    * 
     * @param mixed $n
     * @param mixed $fc
     */
     protected function reg_function($n, $fc){
         $this->m_fclist[$n]=$fc;
     }
-    ///<summary>Represente setCurrentDoc function</summary>
+    ///<summary></summary>
     ///<param name="doc"></param>
     /**
-    * Represente setCurrentDoc function
+    * 
     * @param mixed $doc
     */
     private function setCurrentDoc($doc){
         $this->m_doc=$doc;
     }
-    ///<summary>Represente setListener function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     /**
-    * Represente setListener function
+    * 
     * @param mixed $v
     */
     public function setListener($v){
         $this->m_listener=$v;
     }
-    ///<summary>Represente setParam function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     ///<param name="v"></param>
     /**
-    * Represente setParam function
+    * 
     * @param mixed $n
     * @param mixed $v
     */

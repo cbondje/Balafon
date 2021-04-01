@@ -261,6 +261,16 @@ $l["clmessage"]="Message";
 $l["clmethod"]="Méthode";
 $l["clmoneybooker"]="MONEYBOOKER";
 $l["clname"]="Nom";
+$l["ClGetNkown_Id"] = "Comment vous nous connaissez?";
+$l["clfirstname"]="Prenom";
+$l["clemail"]="Email";
+$l["clgender"]="Genre";
+$l["clGsm"]="GSM";
+$l["clProfessionName"]="Profession";
+$l["clMyDemand"]="Remarque";
+$l["clformation_id"]="Formation";
+$l["cldomaines_id"]="Domaine";
+$l["cldiplome_id"]="Diplôme";
 $l["clprefix"]="Prefix";
 $l["clnotnull"]="Non null";
 $l["clpage"]="Page";
@@ -1617,3 +1627,9 @@ $l["email or login"] = "Email ou identifiant";
 $l["all rights reserved"] = "tous droits reservés";
 
 $l["Action [%s] not found"] = "Action impossible à exécuter: %s";
+
+
+$l["registration mail contact"]= "mail de contact";
+$l["first name"]= "prenom";
+$l["phone number"]= "contact telephonique";
+$l["profession name"]= "occupation actuelle";

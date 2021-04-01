@@ -16,19 +16,19 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
     private $m_ctrl;
     private $m_manifest;
     private $m_row;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $ctrl
     */
     public function __construct($ctrl){
         parent::__construct();
         $this->m_ctrl=$ctrl;
     }
-    ///<summary>Represente __destruct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __destruct function
+    * 
     */
     public function __destruct(){
         $id=$this->getParam(IGK_COMPONENT_ID_KEY);
@@ -36,12 +36,12 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
             igk_getctrl(IGK_COMPONENT_MANAGER_CTRL, true)->nodeDisposed($this);
         }
     }
-    ///<summary>Represente _validatePicture function</summary>
+    ///<summary></summary>
     ///<param name="c"></param>
     ///<param name="W"></param>
     ///<param name="H"></param>
     /**
-    * Represente _validatePicture function
+    * 
     * @param mixed $c
     * @param mixed $W
     * @param mixed $H
@@ -55,9 +55,9 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
         }
         return 0;
     }
-    ///<summary>Represente clearLogo function</summary>
+    ///<summary></summary>
     /**
-    * Represente clearLogo function
+    * 
     */
     public function clearLogo(){
         $d=$this->m_ctrl->getPackageManifestFile($this->m_row->clPackageName);
@@ -68,16 +68,16 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
         }
         $this->visualassets(null);
     }
-    ///<summary>Represente getCtrl function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCtrl function
+    * 
     */
     public function getCtrl(){
         return $this->m_ctrl;
     }
-    ///<summary>Represente global function</summary>
+    ///<summary></summary>
     /**
-    * Represente global function
+    * 
     */
     public function global(){
         $dv=null;
@@ -103,12 +103,12 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
         $dv->RenderAJX();
         igk_exit();
     }
-    ///<summary>Represente res function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     ///<param name="w"></param>
     ///<param name="h"></param>
     /**
-    * Represente res function
+    * 
     * @param mixed $n
     * @param mixed $w
     * @param mixed $h
@@ -121,27 +121,27 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
         igk_wl($e);
         igk_exit();
     }
-    ///<summary>Represente setManifest function</summary>
+    ///<summary></summary>
     ///<param name="man"></param>
     /**
-    * Represente setManifest function
+    * 
     * @param mixed $man
     */
     public function setManifest($man){
         $this->m_manifest=$man;
     }
-    ///<summary>Represente setRow function</summary>
+    ///<summary></summary>
     ///<param name="r"></param>
     /**
-    * Represente setRow function
+    * 
     * @param mixed $r
     */
     public function setRow($r){
         $this->m_row=$r;
     }
-    ///<summary>Represente storelogo function</summary>
+    ///<summary></summary>
     /**
-    * Represente storelogo function
+    * 
     */
     public function storelogo(){
         $d=$this->m_ctrl->getPackageManifestFile($this->m_row->clPackageName);
@@ -162,9 +162,9 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
         $_REQUEST["ajx-lnk"]=1;
         $this->visualassets(null);
     }
-    ///<summary>Represente update function</summary>
+    ///<summary></summary>
     /**
-    * Represente update function
+    * 
     */
     public function update(){
         $action=igk_getr("update");
@@ -172,10 +172,10 @@ final class TabUriListener extends IGKComponentListenerBase implements IIGKParam
             $this->$action();
         }
     }
-    ///<summary>Represente visualassets function</summary>
+    ///<summary></summary>
     ///<param name="page" default="null"></param>
     /**
-    * Represente visualassets function
+    * 
     * @param mixed $page the default value is null
     */
     public function visualassets($page=null){

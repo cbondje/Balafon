@@ -6,14 +6,8 @@
 * Represente IGKSQLDataAdapter class
 */
 abstract class IGKSQLDataAdapter extends IGKDataAdapter{
-    protected static function ResolvType($t){
-         switch(strtolower($t)){
-            case "int":
-            return "Int";
-            case "varchar":
-            return "VARCHAR";
-        }
-        return strtoupper($t);
+    public static function ResolvType($t){
+        return IGKSQLQueryUtils::ResolvType($t);
     }
     /**
      * get relation attached to table
@@ -70,11 +64,11 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
         //+ insert and update function ignored
         return $cl; 
     }
-    ///<summary>Represente delete function</summary>
+    ///<summary></summary>
     ///<param name="tbname"></param>
     ///<param name="entry"></param>
     /**
-    * Represente delete function
+    * 
     * @param mixed $tbname
     * @param mixed $entry
     */
@@ -105,12 +99,12 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
     * setup manager config for next operation
     */
     protected function initConfig(){}
-    ///<summary>Represente insert function</summary>
+    ///<summary></summary>
     ///<param name="tbname"></param>
     ///<param name="values"></param>
     ///<param name="tableinfo" default="null"></param>
     /**
-    * Represente insert function
+    * 
     * @param mixed $tbname
     * @param mixed $values
     * @param mixed $tableinfo the default value is null
@@ -136,9 +130,9 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
     }
 
 
-   ///<summary>Represente last_id function</summary>
+   ///<summary></summary>
     /**
-    * Represente last_id function
+    * 
     */
     public function last_id(){}
     ///<summary>build and send a mysql select query</summary>
@@ -153,10 +147,10 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
         $q=IGKSQLQueryUtils::GetSelectQuery($this, $tbname, $where, $options);
         return $this->sendQuery($q, $tbname, $options);
     }
-    ///<summary>Represente selectAll function</summary>
+    ///<summary></summary>
     ///<param name="tbname"></param>
     /**
-    * Represente selectAll function
+    * 
     * @param mixed $tbname
     */
     public function selectAll($tbname){
@@ -164,12 +158,12 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
         $q="SELECT * FROM `".($tbname)."` ";
         return $this->sendQuery($q, $tbname);
     }
-    ///<summary>Represente selectAndWhere function</summary>
+    ///<summary></summary>
     ///<param name="tbname"></param>
     ///<param name="condition" default="null"></param>
     ///<param name="options" default="null"></param>
     /**
-    * Represente selectAndWhere function
+    * 
     * @param mixed $tbname
     * @param mixed $condition the default value is null
     * @param mixed $options the default value is null
@@ -220,22 +214,22 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
         $q = "SELECT {$columns} ".$q.";";
         return $this->sendQuery($q, $tbname, $options);
     }
-    ///<summary>Represente update function</summary>
+    ///<summary></summary>
     ///<param name="tbname"></param>
     ///<param name="entry"></param>
     ///<param name="condition" default="null"></param>
     ///<param name="tabinfo" default="null"></param>
     /**
-    * Represente update function
-    * @param mixed $tbname
+    * 
+    * @param mixed $tablename
     * @param mixed $entry
     * @param mixed $condition the default value is null
     * @param mixed $tabinfo the default value is null
     */
-    public function update($tbname, $entry, $condition=null, $tabinfo=null){
+    public function update($tablename, $entry, $condition=null, $tabinfo=null){
         $this->dieNotConnect();
-        $query=IGKSQLQueryUtils::GetUpdateQuery($tbname, $entry, $condition, $tabinfo);
-        $s=$this->sendQuery($query, $tbname);
+        $query=IGKSQLQueryUtils::GetUpdateQuery($tablename, $entry, $condition, $tabinfo);
+        $s=$this->sendQuery($query, $tablename);
         return $s;
     }
 }

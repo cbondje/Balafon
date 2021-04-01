@@ -14,9 +14,9 @@
 */
 abstract class IGKCommunicationServerCtrl extends IGKApplicationController{
     const HTTP_ACCEPT="text/event-stream";
-    ///<summary>Represente getSocketFile function</summary>
+    ///<summary></summary>
     /**
-    * Represente getSocketFile function
+    * 
     */
     private function getSocketFile(){
         return $this->getDataDir()."/server.socket";
@@ -26,9 +26,9 @@ abstract class IGKCommunicationServerCtrl extends IGKApplicationController{
     * override this to handle server
     */
     abstract public function handle();
-    ///<summary>Represente sendmsg function</summary>
+    ///<summary></summary>
     /**
-    * Represente sendmsg function
+    * 
     */
     abstract public function sendmsg();
 }

@@ -16,9 +16,9 @@ use IGK\Controllers\BaseController;
 * Use to edit a template
 */
 final class IGKTemplateEditor extends BaseController{
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     public function __construct(){
         parent::__construct();

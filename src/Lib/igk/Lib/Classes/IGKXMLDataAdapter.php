@@ -7,9 +7,9 @@
 */
 final class IGKXMLDataAdapter extends IGKDataAdapter {
 	public function escape_string($v){return $v;}
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     public function __construct(){}
     ///<summary> close db</summary>
@@ -22,37 +22,37 @@ final class IGKXMLDataAdapter extends IGKDataAdapter {
     *  open db
     */
     public function connect($ctrl=null){}
-    ///<summary>Represente CreateEmptyResult function</summary>
+    ///<summary></summary>
     ///<param name="result" default="null"></param>
     /**
-    * Represente CreateEmptyResult function
+    * 
     * @param mixed $result the default value is null
     */
     public function CreateEmptyResult($result=null){
         return null;
     }
-    ///<summary>Represente initSystablePushInitItem function</summary>
+    ///<summary></summary>
     ///<param name="tablename"></param>
     ///<param name="callback"></param>
     /**
-    * Represente initSystablePushInitItem function
+    * 
     * @param mixed $tablename
     * @param mixed $callback
     */
     public function initSystablePushInitItem($tablename, $callback){}
-    ///<summary>Represente initSystableRequired function</summary>
+    ///<summary></summary>
     ///<param name="tablename"></param>
     /**
-    * Represente initSystableRequired function
+    * 
     * @param mixed $tablename
     */
     public function initSystableRequired($tablename){
         return false;
     }
-    ///<summary>Represente LoadConfig function</summary>
+    ///<summary></summary>
     ///<param name="node"></param>
     /**
-    * Represente LoadConfig function
+    * 
     * @param mixed $node
     */
     public static function LoadConfig($node){
@@ -132,11 +132,11 @@ final class IGKXMLDataAdapter extends IGKDataAdapter {
         return null;
     }
 
-    ///<summary>Represente storeData function</summary>
+    ///<summary></summary>
     ///<param name="filename"></param>
     ///<param name="data"></param>
     /**
-    * Represente storeData function
+    * 
     * @param mixed $filename
     * @param mixed $data
     */

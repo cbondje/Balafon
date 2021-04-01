@@ -14,23 +14,23 @@
 */
 abstract class IGKApplicationBase extends IGKApplicationController{
     private $m_manifest;
-    ///<summary>Represente __toString function</summary>
+    ///<summary>display value</summary>
     /**
-    * Represente __toString function
+    * display value
     */
     public function __toString(){
         return strtolower("IGKTemplateApplication://".$this->getName());
     }
-    ///<summary>Represente getDataDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDataDir function
+    * 
     */
     public function getDataDir(){
         return igk_io_dir(dirname($this->getDeclaredFileName()).DIRECTORY_SEPARATOR.IGK_DATA_FOLDER);
     }
-    ///<summary>Represente getDeclaredDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDeclaredDir function
+    * 
     */
     public function getDeclaredDir(){
         return igk_io_dir(dirname($this->getDeclaredFileName()));
@@ -58,23 +58,23 @@ abstract class IGKApplicationBase extends IGKApplicationController{
         }
         return $this->m_manifest;
     }
-    ///<summary>Represente getScriptDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getScriptDir function
+    * 
     */
     public function getScriptDir(){
         return igk_io_dir(dirname($this->getDeclaredFileName()).DIRECTORY_SEPARATOR.IGK_SCRIPT_FOLDER);
     }
-    ///<summary>Represente getStylesDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getStylesDir function
+    * 
     */
     public function getStylesDir(){
         return igk_io_dir(dirname($this->getDeclaredFileName()).DIRECTORY_SEPARATOR.IGK_STYLE_FOLDER);
     }
-    ///<summary>Represente getViewDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getViewDir function
+    * 
     */
     public function getViewDir(){
         return igk_io_dir(dirname($this->getDeclaredFileName()).DIRECTORY_SEPARATOR.IGK_VIEW_FOLDER);
@@ -86,36 +86,36 @@ abstract class IGKApplicationBase extends IGKApplicationController{
     public function getViews(){
         return igk_io_getfiles($this->getViewDir(), "/\.xtphtml$/");
     }
-    ///<summary>Represente InitComplete function</summary>
+    ///<summary></summary>
     /**
-    * Represente InitComplete function
+    * 
     */
     protected function InitComplete(){
         parent::InitComplete();
         igk_notification_reg_event(IGK_FORCEVIEW_EVENT, array($this, "notify_view"));
     }
-    ///<summary>Represente notify_view function</summary>
+    ///<summary></summary>
     /**
-    * Represente notify_view function
+    * 
     */
     public function notify_view(){
         if($this->isVisible){
             $this->View();
         }
     }
-    ///<summary>Represente onInstall function</summary>
+    ///<summary></summary>
     ///<param name="context" default="null"></param>
     /**
-    * Represente onInstall function
+    * 
     * @param mixed $context the default value is null
     */
     protected function onInstall($context=null){
         igk_die(__METHOD__." not implement");
     }
-    ///<summary>Represente onUninstal function</summary>
+    ///<summary></summary>
     ///<param name="context"></param>
     /**
-    * Represente onUninstal function
+    * 
     * @param mixed $context
     */
     protected function onUninstal($context){
@@ -128,9 +128,9 @@ abstract class IGKApplicationBase extends IGKApplicationController{
     public function uninstall(){
         $this->_unregisterEvents();
     }
-    ///<summary>Represente View function</summary>
+    ///<summary></summary>
     /**
-    * Represente View function
+    * 
     */
     public function View(){
         parent::View();

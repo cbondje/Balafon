@@ -3,12 +3,12 @@
 // licence: IGKDEV - Balafon @ 2019
 // desc: balafon unit testing utility
 
-///<summary>Represente igk_utest function</summary>
+///<summary></summary>
 ///<param name="callback"></param>
 ///<param name="title"></param>
 ///<param name="error_msg"></param>
 /**
-* Represente igk_utest function
+* 
 * @param mixed $callback
 * @param mixed $title
 * @param mixed $error_msg
@@ -26,12 +26,12 @@ function igk_utest($callback, $title, $error_msg){
     $msg=igk_str_format("{0} : {1} - {2}", $title, $type, $s);
     igk_utest_render($msg, $type);
 }
-///<summary>Represente igk_utest_append function</summary>
+///<summary></summary>
 ///<param name="status"></param>
 ///<param name="name"></param>
 ///<param name="message"></param>
 /**
-* Represente igk_utest_append function
+* 
 * @param mixed $status
 * @param mixed $name
 * @param mixed $message
@@ -40,12 +40,12 @@ function igk_utest_append($status, $name, $message){
     $o=(object)array_combine(array('status', 'name', 'message'), func_get_args());
     igk_set_env_array("igk://utest/", $o);
 }
-///<summary>Represente igk_utest_assert function</summary>
+///<summary></summary>
 ///<param name="cond"></param>
 ///<param name="message"></param>
 ///<param name="name" default="null"></param>
 /**
-* Represente igk_utest_assert function
+* 
 * @param mixed $cond
 * @param mixed $message
 * @param mixed $name the default value is null
@@ -58,11 +58,11 @@ function igk_utest_assert($cond, $message, $name=null){
     igk_utest_append(2, $name, $message);
     return 0;
 }
-///<summary>Represente igk_utest_render function</summary>
+///<summary></summary>
 ///<param name="msg"></param>
 ///<param name="t" default="'default'"></param>
 /**
-* Represente igk_utest_render function
+* 
 * @param mixed $msg
 * @param mixed $t the default value is 'default'
 */
@@ -78,10 +78,10 @@ function igk_utest_render($msg, $t='default'){
     ob_clean();
     echo $o;
 }
-///<summary>Represente igk_utest_report function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 /**
-* Represente igk_utest_report function
+* 
 * @param mixed $t
 */
 function igk_utest_report($t){
@@ -126,10 +126,10 @@ function igk_utest_run($testname=null){
         $i++;
     }
 }
-///<summary>Represente igk_utest_test function</summary>
+///<summary></summary>
 ///<param name="expression"></param>
 /**
-* Represente igk_utest_test function
+* 
 * @param mixed $expression
 */
 function igk_utest_test($expression){
@@ -139,20 +139,20 @@ function igk_utest_test($expression){
     $tab[]=$expression;
     igk_set_env("balafon://unit/test", $tab);
 }
-///<summary>Represente igk_utest_wln function</summary>
+///<summary></summary>
 ///<param name="m"></param>
 ///<param name="style" default=""></param>
 /**
-* Represente igk_utest_wln function
+* 
 * @param mixed $m
 * @param mixed $style the default value is ""
 */
 function igk_utest_wln($m, $style=""){
     igk_wln("<span style=\"".$style."\">{$m}</span>");
 }
-///<summary>Represente igk_utest_wln_e function</summary>
+///<summary></summary>
 /**
-* Represente igk_utest_wln_e function
+* 
 */
 function igk_utest_wln_e(){
     if(!defined("IGK_UNITTEST"))
@@ -165,10 +165,10 @@ function igk_utest_wln_e(){
 /**
 */
 final class IGKTestRunner extends IGKObject{
-    ///<summary>Represente RunTest function</summary>
+    ///<summary></summary>
     ///<param name="i"></param>
     /**
-    * Represente RunTest function
+    * 
     * @param mixed $i
     */
     public function RunTest($i){

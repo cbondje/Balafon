@@ -14,44 +14,44 @@ use function igk_resources_gets as __;
 * Represente IGKConsoleToolManager class
 */
 final class IGKConsoleToolManager extends IGKConfigCtrlBase{
-    ///<summary>Represente getCanConfigure function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCanConfigure function
+    * 
     */
     public function getCanConfigure(){
         return 1;
     }
-    ///<summary>Represente getConfigGroup function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigGroup function
+    * 
     */
     public function getConfigGroup(){
         return "administration";
     }
-    ///<summary>Represente getConfigImageKey function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigImageKey function
+    * 
     */
     public function getConfigImageKey(){
         return "";
     }
-    ///<summary>Represente getConfigIndex function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigIndex function
+    * 
     */
     public function getConfigIndex(){
         return 10;
     }
-    ///<summary>Represente getConfigPage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigPage function
+    * 
     */
     public function getConfigPage(){
         return "console";
     }
-    ///<summary>Represente getIsConfigPageAvailable function</summary>
+    ///<summary></summary>
     /**
-    * Represente getIsConfigPageAvailable function
+    * 
     */
     public function getIsConfigPageAvailable(){
         return !igk_environment()->is("production");

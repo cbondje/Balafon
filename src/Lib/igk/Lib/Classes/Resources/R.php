@@ -26,9 +26,9 @@ final class R extends IGKObject {
     var $LangChangedEvent;
     var $PageLangChangedEvent;
     var $langRes;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     private function __construct(){}
     ///<summary>set the langage key</summary>
@@ -39,10 +39,10 @@ final class R extends IGKObject {
         if(!empty($key))
             self::getInstance()->langRes[strtolower(trim($key))]=$value;
     }
-    ///<summary>Represente ChangeLang function</summary>
+    ///<summary></summary>
     ///<param name="lang" default="fr"></param>
     /**
-    * Represente ChangeLang function
+    * 
     * @param mixed $lang the default value is "fr"
     */
     public static function ChangeLang($lang="fr"){
@@ -67,18 +67,18 @@ final class R extends IGKObject {
         igk_set_env($key, null);
         return $r;
     }
-    ///<summary>Represente ClearLang function</summary>
+    ///<summary></summary>
     /**
-    * Represente ClearLang function
+    * 
     */
     public static function ClearLang(){
         $v=self::getInstance();
         $v->langRes=array();
         self::SaveLang(null);
     }
-    ///<summary>Represente GetCurrentLang function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetCurrentLang function
+    * 
     */
     public static function GetCurrentLang(){
         $lg=igk_app()->session->lang ?? self::GetSupportLang();
@@ -97,9 +97,9 @@ final class R extends IGKObject {
         $lg=self::GetCurrentLang();
         return $folder."/".IGK_LANG_FILE_PREFIX.$lg.IGK_LANG_FILE_EXTENSION;
     }
-    ///<summary>Represente GetDefaultLang function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetDefaultLang function
+    * 
     */
     public static function GetDefaultLang(){
         $app=igk_app();
@@ -119,10 +119,10 @@ final class R extends IGKObject {
         }
         return IGK_STR_EMPTY;
     }
-    ///<summary>Represente GetImgUri function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     /**
-    * Represente GetImgUri function
+    * 
     * @param mixed $name
     */
     public static function GetImgUri($name){
@@ -132,9 +132,9 @@ final class R extends IGKObject {
         }
         return IGK_STR_EMPTY;
     }
-    ///<summary>Represente getInstance function</summary>
+    ///<summary></summary>
     /**
-    * Represente getInstance function
+    * 
     */
     public static function getInstance(){
         if(self::$sm_instance === null){
@@ -144,10 +144,10 @@ final class R extends IGKObject {
         }
         return self::$sm_instance;
     }
-    ///<summary>Represente GetKeyValue function</summary>
+    ///<summary></summary>
     ///<param name="key"></param>
     /**
-    * Represente GetKeyValue function
+    * 
     * @param mixed $key
     */
     public static function GetKeyValue($key){
@@ -161,9 +161,9 @@ final class R extends IGKObject {
     public static function GetLang($keys){
         return new IGKLangExpression($keys);
     }
-    ///<summary>Represente GetLangInfo function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetLangInfo function
+    * 
     */
     public static function GetLangInfo(){
         return self::getInstance()->langRes;
@@ -218,16 +218,16 @@ final class R extends IGKObject {
         }
         return $lang;
     }
-    ///<summary>Represente GetSupportLangRegex function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetSupportLangRegex function
+    * 
     */
     public static function GetSupportLangRegex(){
         return igk_getctrl(IGK_CSVLANGUAGE_CTRL)->getLangRegex() ?? igk_app()->Configs->default_lang;
     }
-    ///<summary>Represente langscript function</summary>
+    ///<summary></summary>
     /**
-    * Represente langscript function
+    * 
     */
     private function langscript(){
         $f=igk_io_basepath("Lib/Scripts/lang/".R::GetCurrentLang().".xml");
@@ -250,11 +250,11 @@ igk.file.getcontents(dir, function(data){
 }
 EOF;
     }
-    ///<summary>Represente LoadCtrlLang function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     ///<param name="files" default="null"></param>
     /**
-    * Represente LoadCtrlLang function
+    * 
     * @param mixed $ctrl
     * @param mixed $files the default value is null
     */
@@ -292,9 +292,9 @@ EOF;
             }
         }
     }
-    ///<summary>Represente LoadLang function</summary>
+    ///<summary></summary>
     /**
-    * Represente LoadLang function
+    * 
     */
     public static function LoadLang(){
         $v=self::getInstance();
@@ -321,10 +321,10 @@ EOF;
         }
         $v->m_langloaded=true;
     }
-    ///<summary>Represente LoadLangFiles function</summary>
+    ///<summary></summary>
     ///<param name="file"></param>
     /**
-    * Represente LoadLangFiles function
+    * 
     * @param mixed $file
     */
     public static function LoadLangFiles($file){
@@ -335,11 +335,11 @@ EOF;
             $v->langRes=$l;
         }
     }
-    ///<summary>Represente LoadLangFileXml function</summary>
+    ///<summary></summary>
     ///<param name="file"></param>
     ///<param name="override" default="true"></param>
     /**
-    * Represente LoadLangFileXml function
+    * 
     * @param mixed $file
     * @param mixed $override the default value is true
     */
@@ -405,27 +405,27 @@ EOF;
             }
         }
     }
-    ///<summary>Represente OnKeyAdded function</summary>
+    ///<summary></summary>
     ///<param name="key"></param>
     /**
-    * Represente OnKeyAdded function
+    * 
     * @param mixed $key
     */
     protected function OnKeyAdded($key){
         igk_hook("LangKeyAdded", func_get_args());
     }
-    ///<summary>Represente OnLangChangedEvent function</summary>
+    ///<summary></summary>
     ///<param name="key"></param>
     /**
-    * Represente OnLangChangedEvent function
+    * 
     * @param mixed $key
     */
     protected function OnLangChangedEvent($key){
         igk_die(__METHOD__." Obselete");
     }
-    ///<summary>Represente onPageLangChangedEvent function</summary>
+    ///<summary></summary>
     /**
-    * Represente onPageLangChangedEvent function
+    * 
     */
     public function onPageLangChangedEvent(){
         if($this->PageLangChangedEvent != null){
@@ -450,10 +450,10 @@ EOF;
             }
         }
     }
-    ///<summary>Represente RemoveKey function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     /**
-    * Represente RemoveKey function
+    * 
     * @param mixed $name
     */
     public static function RemoveKey($name){
@@ -465,17 +465,17 @@ EOF;
         }
         return false;
     }
-    ///<summary>Represente ResetLang function</summary>
+    ///<summary></summary>
     /**
-    * Represente ResetLang function
+    * 
     */
     public static function ResetLang(){
         $v=self::getInstance();
         $v->langRes=array();
     }
-    ///<summary>Represente SaveLang function</summary>
+    ///<summary></summary>
     /**
-    * Represente SaveLang function
+    * 
     */
     public static function SaveLang(){
         $instance=self::getInstance();
@@ -508,10 +508,10 @@ EOF;
         }
         return false;
     }
-    ///<summary>Represente SaveLangXml function</summary>
+    ///<summary></summary>
     ///<param name="filename" default="null"></param>
     /**
-    * Represente SaveLangXml function
+    * 
     * @param mixed $filename the default value is null
     */
     public static function SaveLangXml($filename=null){
@@ -547,10 +547,10 @@ EOF;
         }
         return false;
     }
-    ///<summary>Represente UnRegLangCtrl function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     /**
-    * Represente UnRegLangCtrl function
+    * 
     * @param mixed $ctrl
     */
     public static function UnRegLangCtrl($ctrl){

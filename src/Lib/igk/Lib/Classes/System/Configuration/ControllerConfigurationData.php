@@ -15,10 +15,10 @@ class ControllerConfigData extends IGKObject implements ArrayAccess{
     private $ctrl;
     private $m_changed=0;
     private $m_configs;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $ctrl
     */
     public function __construct($ctrl){
@@ -33,29 +33,29 @@ class ControllerConfigData extends IGKObject implements ArrayAccess{
             }
         });
     }
-    ///<summary>Represente __get function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente __get function
+    * 
     * @param mixed $n
     */
     public function __get($n){
         return igk_conf_get($this->m_configs, $n);
     }
-    ///<summary>Represente __isset function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente __isset function
+    * 
     * @param mixed $n
     */
     public function __isset($n){
         return isset($this->m_configs->$n);
     }
-    ///<summary>Represente __set function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     ///<param name="v"></param>
     /**
-    * Represente __set function
+    * 
     * @param mixed $n
     * @param mixed $v
     */
@@ -63,17 +63,17 @@ class ControllerConfigData extends IGKObject implements ArrayAccess{
         igk_conf_set($this->m_configs, $v, $n);
         $this->m_changed=1;
     }
-    ///<summary>Represente getConfigFile function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigFile function
+    * 
     */
     public function getConfigFile(){
         return igk_io_dir($this->ctrl->getDataDir()."/".IGK_CTRL_CONF_FILE);
     }
-    ///<summary>Represente initConfigSetting function</summary>
+    ///<summary></summary>
     ///<param name="t"></param>
     /**
-    * Represente initConfigSetting function
+    * 
     * @param mixed $t
     */
     public function initConfigSetting($t){
@@ -122,44 +122,44 @@ class ControllerConfigData extends IGKObject implements ArrayAccess{
         $this->m_configs=$t;
         return $t;
     }
-    ///<summary>Represente LoadSetting function</summary>
+    ///<summary></summary>
     /**
-    * Represente LoadSetting function
+    * 
     */
     public function LoadSetting(){}
-    ///<summary>Represente offsetExists function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente offsetExists function
+    * 
     * @param mixed $n
     */
     public function offsetExists($n){
         return isset($this->m_configs->$n);
     }
-    ///<summary>Represente offsetGet function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente offsetGet function
+    * 
     * @param mixed $n
     */
     public function offsetGet($n){
         return igk_getv($this->m_configs, $n);
     }
-    ///<summary>Represente offsetSet function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     ///<param name="v"></param>
     /**
-    * Represente offsetSet function
+    * 
     * @param mixed $n
     * @param mixed $v
     */
     public function offsetSet($n, $v){
         $this->m_configs->$n=$v;
     }
-    ///<summary>Represente offsetUnset function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente offsetUnset function
+    * 
     * @param mixed $n
     */
     public function offsetUnset($n){
@@ -179,9 +179,9 @@ class ControllerConfigData extends IGKObject implements ArrayAccess{
     private function setupCtrlConfigSettings(){
         igk_die(__METHOD__." Not implement");
     }
-    ///<summary>Represente storeConfig function</summary>
+    ///<summary></summary>
     /**
-    * Represente storeConfig function
+    * 
     */
     public function storeConfig(){
         $d=igk_createxmlnode("config");

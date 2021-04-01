@@ -472,8 +472,8 @@ $def[$page." .igk-accordeon .igk-row.thead div:last-child"] = "padding:10px; fon
 //BALAFON Material component
 //BMC  login form
 $e = $page." .igk-adm-login-form";
-$def[$e] = "width:300px; margin:10px auto; background-color:[cl:configBackgroundColor]; padding:16px; overflow:hidden; ";
-
+$def[$e] = "max-width:420px; margin:10px auto; background-color:[cl:configBackgroundColor]; padding:16px; overflow:hidden; ";
+$def[$e." .igk-action-bar a.igk-btn.igk-pull-right"] = "margin-top:10px;";
 $prop["--igk-winui-bmc-shape__bgcolor"] = "yellow";
 
 
@@ -500,14 +500,14 @@ $def[":root"] .= "--config-mmenu-CatFontSize: 18pt;";
 
 
 $def[$e." .igk-action-bar"] = "padding: 10px 0px;";
-$def[$e." .content"] = "padding: 32px;";
-$def[$e." .content:hover:before"] = "{sys:loc_a, posab} content:''; background-color:#ddd; opacity:0.5";
+$def[$e." .content"] = "padding: 32px; background-color:rgb(25, 64, 60); color: #333;";
+$def[$e." .content:hover:before"] = "{sys:loc_a, posab} content:'';";
 
 
 $e = $page." .igk-adm-login-form .igk-adm-logo";
 $def[$e] = "background-color:[var:--igk-config-logo__background, orangered]; margin:-32px; padding:32px;text-align:center; ";
 
-$sm_screen[$page." .igk-adm-login-form"] = "{sys:fit} margin:0px; padding:0px;";
+$sm_screen[$page." .igk-adm-login-form"] = "{sys:fit} margin:0px auto; padding:0px;";
 
 
 //breadscrum file

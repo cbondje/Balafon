@@ -23,9 +23,9 @@ class IGKApplicationManager extends BaseController{
         parent::__construct();
         $this->m_createdCtrls=array();
     }
-    ///<summary>Represente __renderConfigPage_ajx function</summary>
+    ///<summary></summary>
     /**
-    * Represente __renderConfigPage_ajx function
+    * 
     */
     private function __renderConfigPage_ajx(){
         $s=igk_getr("ajx-lnk") ? "^": "";
@@ -35,10 +35,10 @@ class IGKApplicationManager extends BaseController{
         $this->showConfig($t->addNoTagNode());
         $t->renderAJX();
     }
-    ///<summary>Represente _get_manifest_obj function</summary>
+    ///<summary></summary>
     ///<param name="fname"></param>
     /**
-    * Represente _get_manifest_obj function
+    * 
     * @param mixed $fname
     */
     private function _get_manifest_obj($fname){
@@ -58,9 +58,9 @@ class IGKApplicationManager extends BaseController{
         $m_obj=igk_xml_to_obj($manifest);
         return $m_obj;
     }
-    ///<summary>Represente addNewTemplate_ajx function</summary>
+    ///<summary></summary>
     /**
-    * Represente addNewTemplate_ajx function
+    * 
     */
     public function addNewTemplate_ajx(){
         if(igk_qr_confirm()){
@@ -123,9 +123,9 @@ class IGKApplicationManager extends BaseController{
         $dv->addInput("btn.add", "submit", R::ngets("btn.create"));
         $frame->RenderAJX();
     }
-    ///<summary>Represente assets function</summary>
+    ///<summary></summary>
     /**
-    * Represente assets function
+    * 
     */
     public function assets(){
         $q=igk_getr("q");
@@ -170,18 +170,18 @@ class IGKApplicationManager extends BaseController{
             $d->addDiv()->load($r);
         $n->RenderAJX();
     }
-    ///<summary>Represente back function</summary>
+    ///<summary></summary>
     /**
-    * Represente back function
+    * 
     */
     public function back(){
         $this->setParam("template://row_id", null);
         $this->m_config_view="config";
         igk_navtocurrent();
     }
-    ///<summary>Represente back_ajx function</summary>
+    ///<summary></summary>
     /**
-    * Represente back_ajx function
+    * 
     */
     public function back_ajx(){
         $this->setParam("template://row_id", null);
@@ -189,45 +189,45 @@ class IGKApplicationManager extends BaseController{
         $this->m_config_view="config";
         $this->__renderConfigPage_ajx();
     }
-    ///<summary>Represente created function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente created function
+    * 
     * @param mixed $n
     */
     public function created($n){
         return isset($this->m_createdCtrls[$n]);
     }
-    ///<summary>Represente e_manifest function</summary>
+    ///<summary></summary>
     /**
-    * Represente e_manifest function
+    * 
     */
     public function e_manifest(){
         $this->setParam("template://row_id", igk_getr("id"));
         $this->m_config_view="editmanifest";
         igk_navtocurrent();
     }
-    ///<summary>Represente e_manifest_ajx function</summary>
+    ///<summary></summary>
     /**
-    * Represente e_manifest_ajx function
+    * 
     */
     public function e_manifest_ajx(){
         $this->setParam("template://row_id", igk_getr("id"));
         $this->m_config_view="editmanifest";
         $this->__renderConfigPage_ajx();
     }
-    ///<summary>Represente eventMessage function</summary>
+    ///<summary></summary>
     /**
-    * Represente eventMessage function
+    * 
     */
     public function eventMessage(){
         igk_wln("event message ....");
     }
-    ///<summary>Represente genTemplates function</summary>
+    ///<summary></summary>
     ///<param name="obj" default="null"></param>
     ///<param name="renderxml"></param>
     /**
-    * Represente genTemplates function
+    * 
     * @param mixed $obj the default value is null
     * @param mixed $renderxml the default value is 0
     */
@@ -258,25 +258,25 @@ class IGKApplicationManager extends BaseController{
             $m->RenderXML();
         return 1;
     }
-    ///<summary>Represente get_css_class_ajx function</summary>
+    ///<summary></summary>
     /**
-    * Represente get_css_class_ajx function
+    * 
     */
     public function get_css_class_ajx(){
         igk_wln(igk_css_str2class_name($this->Name));
     }
-    ///<summary>Represente getAssetsUri function</summary>
+    ///<summary></summary>
     ///<param name="row"></param>
     /**
-    * Represente getAssetsUri function
+    * 
     * @param mixed $row
     */
     public function getAssetsUri($row){
         return $this->getUri("assets&q={$row->clPackageName}");
     }
-    ///<summary>Represente getConfigView function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigView function
+    * 
     */
     public function getConfigView(){
         if(empty($this->m_config_view)){
@@ -284,25 +284,25 @@ class IGKApplicationManager extends BaseController{
         }
         return $this->m_config_view;
     }
-    ///<summary>Represente getCreatedCtrl function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente getCreatedCtrl function
+    * 
     * @param mixed $n
     */
     public function getCreatedCtrl($n){
         return $this->created($n) ? $this->m_createdCtrls[$n]: null;
     }
-    ///<summary>Represente getDataAdapterName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDataAdapterName function
+    * 
     */
     public function getDataAdapterName(){
         return IGK_MYSQL_DATAADAPTER;
     }
-    ///<summary>Represente getDb function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDb function
+    * 
     */
     public function getDb(){
         static $dbu=null;
@@ -311,24 +311,24 @@ class IGKApplicationManager extends BaseController{
         }
         return $dbu;
     }
-    ///<summary>Represente getIsVisible function</summary>
+    ///<summary></summary>
     /**
-    * Represente getIsVisible function
+    * 
     */
     public function getIsVisible(){
         return parent::getIsVisible() && igk_is_conf_connected();
     }
-    ///<summary>Represente getName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getName function
+    * 
     */
     public function getName(){
         return IGK_CTRL_IDENTIFIER + 11;
     }
-    ///<summary>Represente getPackageManifest function</summary>
+    ///<summary></summary>
     ///<param name="packagename"></param>
     /**
-    * Represente getPackageManifest function
+    * 
     * @param mixed $packagename
     */
     public function getPackageManifest($packagename){
@@ -339,25 +339,25 @@ class IGKApplicationManager extends BaseController{
         }
         return 0;
     }
-    ///<summary>Represente getPackageManifestFile function</summary>
+    ///<summary></summary>
     ///<param name="packagename"></param>
     /**
-    * Represente getPackageManifestFile function
+    * 
     * @param mixed $packagename
     */
     public function getPackageManifestFile($packagename){
         return IGKIO::GetDir($this->getPackageStoreDir()."/{$packagename}.xtbl");
     }
-    ///<summary>Represente getPackageStoreDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getPackageStoreDir function
+    * 
     */
     public function getPackageStoreDir(){
         return $this->getDataDir()."/packages";
     }
-    ///<summary>Represente getReplacementNode function</summary>
+    ///<summary></summary>
     /**
-    * Represente getReplacementNode function
+    * 
     */
     private function getReplacementNode(){
         if(!$this->m_replacementNode){
@@ -365,45 +365,45 @@ class IGKApplicationManager extends BaseController{
         }
         return $this->m_replacementNode;
     }
-    ///<summary>Represente getUseDataSchema function</summary>
+    ///<summary></summary>
     /**
-    * Represente getUseDataSchema function
+    * 
     */
     protected function getUseDataSchema(){
         return true;
     }
-    ///<summary>Represente getUser function</summary>
+    ///<summary></summary>
     /**
-    * Represente getUser function
+    * 
     */
     public function getUser(){
         return $this->App->Session->User;
     }
-    ///<summary>Represente InitComplete function</summary>
+    ///<summary></summary>
     /**
-    * Represente InitComplete function
+    * 
     */
     public function InitComplete(){
         parent::InitComplete();
         $cb=igk_create_func_callback('igk_view_render_if_visible', array($this));
         igk_reg_hook(IGK_CONF_USER_CHANGE_EVENT, $cb);
     }
-    ///<summary>Represente initDb function</summary>
+    ///<summary></summary>
     /**
-    * Represente initDb function
+    * 
     */
     public function initDb(){
         parent::initDb();
     }
-    ///<summary>Represente install function</summary>
+    ///<summary></summary>
     /**
-    * Represente install function
+    * 
     */
     public function install(){}
-    ///<summary>Represente install_template_package_ajx function</summary>
+    ///<summary></summary>
     ///<param name="f" default="null"></param>
     /**
-    * Represente install_template_package_ajx function
+    * 
     * @param mixed $f the default value is null
     */
     public function install_template_package_ajx($f=null){
@@ -438,10 +438,10 @@ class IGKApplicationManager extends BaseController{
 
         $this->Db->addInstalledTemplate($m_obj->template, igk_io_unix_path(igk_io_basePath(dirname($app_file))));
     }
-    ///<summary>Represente is_set_as_default function</summary>
+    ///<summary></summary>
     ///<param name="p"></param>
     /**
-    * Represente is_set_as_default function
+    * 
     * @param mixed $p
     */
     public function is_set_as_default($p){
@@ -474,15 +474,15 @@ class IGKApplicationManager extends BaseController{
         }
         $this->__renderConfigPage_ajx();
     }
-    ///<summary>Represente LoadTemplates function</summary>
+    ///<summary></summary>
     /**
-    * Represente LoadTemplates function
+    * 
     */
     public static function LoadTemplates(){}
-    ///<summary>Represente make_default_ajx function</summary>
+    ///<summary></summary>
     ///<param name="id" default="null"></param>
     /**
-    * Represente make_default_ajx function
+    * 
     * @param mixed $id the default value is null
     */
     public function make_default_ajx($id=null){
@@ -569,19 +569,19 @@ class IGKApplicationManager extends BaseController{
         }
         return 0;
     }
-    ///<summary>Represente showConfig function</summary>
+    ///<summary></summary>
     ///<param name="t"></param>
     /**
-    * Represente showConfig function
+    * 
     * @param mixed $t
     */
     public function showConfig($t){
         igk_ctrl_view($this, $t, $this->ConfigView);
     }
-    ///<summary>Represente uninstall_ajx function</summary>
+    ///<summary></summary>
     ///<param name="id" default="null"></param>
     /**
-    * Represente uninstall_ajx function
+    * 
     * @param mixed $id the default value is null
     */
     public function uninstall_ajx($id=null){
@@ -613,9 +613,9 @@ ns_igk.winui.ajx.lnk.getLink().select("^.igk-roll-owner").setCss({ opacity:0.0})
 EOF;
         $sc->RenderAJX();
     }
-    ///<summary>Represente update_manifest function</summary>
+    ///<summary></summary>
     /**
-    * Represente update_manifest function
+    * 
     */
     public function update_manifest(){
         $obj=igk_get_component_by_id(igk_getr("com_id"));
@@ -626,9 +626,9 @@ EOF;
             igk_wln("not parameter with id ".igk_getr("com_id"));
         }
     }
-    ///<summary>Represente visit function</summary>
+    ///<summary></summary>
     /**
-    * Represente visit function
+    * 
     */
     public function visit(){
         igk_navtobase(IGK_STR_EMPTY);

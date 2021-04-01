@@ -20,10 +20,10 @@ class IGKVideoStream {
     private $size=0;
     private $start=-1;
     private $stream="";
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="filePath"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $filePath
     */
     function __construct($filePath){
@@ -65,7 +65,7 @@ class IGKVideoStream {
     function setCacheCallback($m){
         $this->m_cache_callback=$m;
     }
-    ///<summary>Represente setHeader function</summary>
+    ///<summary></summary>
     /**
     * Set proper header to serve the video content
     */
@@ -135,9 +135,9 @@ class IGKVideoStream {
         $this->stream();
         $this->end();
     }
-    ///<summary>Represente stop function</summary>
+    ///<summary></summary>
     /**
-    * Represente stop function
+    * 
     */
     function stop(){
         $this->end=-1;

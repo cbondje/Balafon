@@ -5,11 +5,11 @@
 // file: igk_init.php
  
 define("IGK_INIT_SYSTEM", 1);
-///<summary>Represente igk_init_cmp_version function</summary>
+///<summary></summary>
 ///<param name="v1"></param>
 ///<param name="v2"></param>
 /**
-* Represente igk_init_cmp_version function
+* 
 * @param mixed $v1
 * @param mixed $v2
 */
@@ -35,11 +35,11 @@ function igk_init_cmp_version($v1, $v2){
     }
     return strcmp($v1, $v2);
 }
-///<summary>Represente igk_init_setparam function</summary>
+///<summary></summary>
 ///<param name="igk"></param>
 ///<param name="wizeinstall"></param>
 /**
-* Represente igk_init_setparam function
+* 
 * @param mixed $igk
 * @param mixed $wizeinstall
 */

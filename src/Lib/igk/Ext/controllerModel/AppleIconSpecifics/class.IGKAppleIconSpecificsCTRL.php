@@ -13,9 +13,9 @@
 * Represente IGKAppleIconCtrl class
 */
 abstract class IGKAppleIconCtrl extends IGKCtrlTypeBase {
-    ///<summary>Represente GetAdditionalConfigInfo function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetAdditionalConfigInfo function
+    * 
     */
     public static function GetAdditionalConfigInfo(){
         return array(
@@ -27,31 +27,31 @@ abstract class IGKAppleIconCtrl extends IGKCtrlTypeBase {
             ))
         );
     }
-    ///<summary>Represente getAppleIcon function</summary>
+    ///<summary></summary>
     /**
-    * Represente getAppleIcon function
+    * 
     */
     public function getAppleIcon(){
         $tb=explode(',', $this->Configs->clAppleIconUri);
         return $tb;
     }
-    ///<summary>Represente getCanAddChild function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCanAddChild function
+    * 
     */
     public function getCanAddChild(){
         return false;
     }
-    ///<summary>Represente getisVisisble function</summary>
+    ///<summary></summary>
     /**
-    * Represente getisVisisble function
+    * 
     */
     public function getisVisisble(){
         return true;
     }
-    ///<summary>Represente InitComplete function</summary>
+    ///<summary></summary>
     /**
-    * Represente InitComplete function
+    * 
     */
     protected function InitComplete(){
         parent::InitComplete();
@@ -82,24 +82,24 @@ abstract class IGKAppleIconCtrl extends IGKCtrlTypeBase {
             }
         }
     }
-    ///<summary>Represente initTargetNode function</summary>
+    ///<summary></summary>
     /**
-    * Represente initTargetNode function
+    * 
     */
     protected function initTargetNode(){}
-    ///<summary>Represente SetAdditionalConfigInfo function</summary>
+    ///<summary></summary>
     ///<param name="t" ref="true"></param>
     /**
-    * Represente SetAdditionalConfigInfo function
+    * 
     * @param  * $t
     */
     public static function SetAdditionalConfigInfo(& $t){
         $t["clAppleIconUri"]=igk_getr("clAppleIconUri");
         $t["clAppleTouchIconType"]=igk_getr("clAppleTouchIconType");
     }
-    ///<summary>Represente View function</summary>
+    ///<summary></summary>
     /**
-    * Represente View function
+    * 
     */
     public function View(){}
 }

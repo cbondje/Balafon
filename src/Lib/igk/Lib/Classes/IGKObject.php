@@ -7,10 +7,10 @@
 * Represent the base IGK object class
 */
 class IGKObject {
-    ///<summary>Represente __get function</summary>
+    ///<summary></summary>
     ///<param name="key"></param>
     /**
-    * Represente __get function
+    * 
     * @param mixed $key
     */
     public function __get($key){
@@ -23,20 +23,20 @@ class IGKObject {
     //     igk_trace(); 
     //     return method_exists($this, "get".$key);
     // }
-    ///<summary>Represente __set function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="value"></param>
     /**
-    * Represente __set function
+    * 
     * @param mixed $name
     * @param mixed $value
     */
     public function __set($name, $value){
         $this->_setIn($name, $value);
     }
-    ///<summary>Represente __toString function</summary>
+    ///<summary>display value</summary>
     /**
-    * Represente __toString function
+    * display value
     */
     public function __toString(){
         return get_class($this);
@@ -49,11 +49,11 @@ class IGKObject {
             $this->registerHook();
         }
     }
-    ///<summary>Represente _setIn function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="value" ref="true"></param>
     /**
-    * Represente _setIn function
+    * 
     * @param mixed $name
     * @param mixed * $value
     */
@@ -64,21 +64,21 @@ class IGKObject {
         }
         return false;
     }
-    ///<summary>Represente callEvent function</summary>
+    ///<summary></summary>
     ///<param name="event"></param>
     ///<param name="method"></param>
     /**
-    * Represente callEvent function
+    * 
     * @param mixed $event
     * @param mixed $method
     */
     public function callEvent($event, $method){
         throw new Exception(__METHOD__." Not implement");
     }
-    ///<summary>Represente CompareTo function</summary>
+    ///<summary></summary>
     ///<param name="obj"></param>
     /**
-    * Represente CompareTo function
+    * 
     * @param mixed $obj
     */
     public function CompareTo($obj){
@@ -92,9 +92,9 @@ class IGKObject {
     * used to dispose and release element
     */
     public function Dispose(){}
-    ///<summary>Represente getCmpObj function</summary>
+    ///<summary></summary>
     /**
-    * Represente getCmpObj function
+    * 
     */
     protected function getCmpObj(){}
     ///<summary>override this method to filter call of global method used to call internal function (protected)</summary>
@@ -113,11 +113,11 @@ class IGKObject {
         }
         return null;
     }
-    ///<summary>Represente regEvent function</summary>
+    ///<summary></summary>
     ///<param name="name"></param>
     ///<param name="value"></param>
     /**
-    * Represente regEvent function
+    * 
     * @param mixed $name
     * @param mixed $value
     */

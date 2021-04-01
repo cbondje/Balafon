@@ -18,47 +18,47 @@
 */
 final class IGKPaletteCtrl extends IGKNonVisibleControllerBase {
     private $m_palettes;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     public function __construct(){
         parent::__construct();
         $this->m_palettes=array();
     }
-    ///<summary>Represente getName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getName function
+    * 
     */
     public function getName(){
         return IGK_PALETTE_CTRL;
     }
-    ///<summary>Represente getPaletteDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente getPaletteDir function
+    * 
     */
     public function getPaletteDir(){
         return $this->Configs->Location;
     }
-    ///<summary>Represente getPalettes function</summary>
+    ///<summary></summary>
     /**
-    * Represente getPalettes function
+    * 
     */
     public function getPalettes(){
         return $this->m_palettes;
     }
-    ///<summary>Represente InitComplete function</summary>
+    ///<summary></summary>
     /**
-    * Represente InitComplete function
+    * 
     */
     protected function InitComplete(){
         parent::InitComplete();
         $this->loadPalette();
     }
-    ///<summary>Represente loadFile function</summary>
+    ///<summary></summary>
     ///<param name="fname"></param>
     /**
-    * Represente loadFile function
+    * 
     * @param mixed $fname
     */
     public function loadFile($fname){
@@ -88,9 +88,9 @@ final class IGKPaletteCtrl extends IGKNonVisibleControllerBase {
         }
         catch(Exception $ex){}
     }
-    ///<summary>Represente loadPalette function</summary>
+    ///<summary></summary>
     /**
-    * Represente loadPalette function
+    * 
     */
     public function loadPalette(){
         $dir=$this->getPaletteDir();
@@ -101,10 +101,10 @@ final class IGKPaletteCtrl extends IGKNonVisibleControllerBase {
             }
         }
     }
-    ///<summary>Represente RemovePalette function</summary>
+    ///<summary></summary>
     ///<param name="id"></param>
     /**
-    * Represente RemovePalette function
+    * 
     * @param mixed $id
     */
     public function RemovePalette($id){

@@ -12,7 +12,7 @@ class IGKWinUI_framebox extends IGKHtmlItem
 
 	}
 
-	public function Render($options =null)
+	public function render($options =null)
 	{
 		$out ="";
 		$out .="<div ";

@@ -13,9 +13,9 @@
 * Represente IGKGoogleMapCtrl class
 */
 abstract class IGKGoogleMapCtrl extends IGKCtrlTypeBase {
-    ///<summary>Represente GetAdditionalConfigInfo function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetAdditionalConfigInfo function
+    * 
     */
     public static function GetAdditionalConfigInfo(){
         return array(
@@ -23,25 +23,25 @@ abstract class IGKGoogleMapCtrl extends IGKCtrlTypeBase {
             igk_createAdditionalConfigInfo(array("clRequire"=>1))
         );
     }
-    ///<summary>Represente getcanAddChild function</summary>
+    ///<summary></summary>
     /**
-    * Represente getcanAddChild function
+    * 
     */
     public function getcanAddChild(){
         return false;
     }
-    ///<summary>Represente SetAdditionalConfigInfo function</summary>
+    ///<summary></summary>
     ///<param name="t" ref="true"></param>
     /**
-    * Represente SetAdditionalConfigInfo function
+    * 
     * @param  * $t
     */
     public static function SetAdditionalConfigInfo(& $t){
         $t["clGoogleMapUrl"]=igk_getr("clGoogleMapUrl");
     }
-    ///<summary>Represente View function</summary>
+    ///<summary></summary>
     /**
-    * Represente View function
+    * 
     */
     public function View(){
         $t=$this->TargetNode;
@@ -62,19 +62,19 @@ final class IGKHtmlGoogleMapNodeItem extends IGKHtmlItem{
     private $m_location;
     private $m_query;
     private $m_type;
-    ///<summary>Represente __acceptRender function</summary>
+    ///<summary></summary>
     ///<param name="opt" default="null"></param>
     /**
-    * Represente __acceptRender function
+    * 
     * @param mixed $opt the default value is null
     */
     protected function __acceptRender($opt=null){
         $this->initView();
         return parent::__AcceptRender($opt);
     }
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     public function __construct(){
         parent::__construct("div");
@@ -82,37 +82,37 @@ final class IGKHtmlGoogleMapNodeItem extends IGKHtmlItem{
         $this->m_type="place";
         $this->m_key="AIzaSyDDOfGXjfMVZOFoAESJ3ON0bZyiJpnXBqc";
     }
-    ///<summary>Represente getKey function</summary>
+    ///<summary></summary>
     /**
-    * Represente getKey function
+    * 
     */
     public function getKey(){
         return $this->m_key;
     }
-    ///<summary>Represente getLocation function</summary>
+    ///<summary></summary>
     /**
-    * Represente getLocation function
+    * 
     */
     public function getLocation(){
         return $this->m_location;
     }
-    ///<summary>Represente getQuery function</summary>
+    ///<summary></summary>
     /**
-    * Represente getQuery function
+    * 
     */
     public function getQuery(){
         return $this->m_query;
     }
-    ///<summary>Represente getType function</summary>
+    ///<summary></summary>
     /**
-    * Represente getType function
+    * 
     */
     public function getType(){
         return $this->m_type;
     }
-    ///<summary>Represente initView function</summary>
+    ///<summary></summary>
     /**
-    * Represente initView function
+    * 
     */
     public function initView(){
         $this->ClearChilds();
@@ -127,40 +127,40 @@ EOF;
             $this->Load($s);
         }
     }
-    ///<summary>Represente setKey function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     /**
-    * Represente setKey function
+    * 
     * @param mixed $v
     */
     public function setKey($v){
         $this->m_key=$v;
         return $this;
     }
-    ///<summary>Represente setLocation function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     /**
-    * Represente setLocation function
+    * 
     * @param mixed $v
     */
     public function setLocation($v){
         $this->m_location=$v;
         return $this;
     }
-    ///<summary>Represente setQuery function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     /**
-    * Represente setQuery function
+    * 
     * @param mixed $v
     */
     public function setQuery($v){
         $this->m_query=$v;
         return $this;
     }
-    ///<summary>Represente setType function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     /**
-    * Represente setType function
+    * 
     * @param mixed $v
     */
     public function setType($v){

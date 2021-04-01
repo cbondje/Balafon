@@ -16,11 +16,11 @@ function igk_api_build_ctrl_manifest($ctrl, $node){
     $node->addNode("Source")->Content=gethostbyname(igk_getv($_SERVER, "SERVER_NAME"));
     $node->addNode("CtrlSourceName")->Content=$ctrl->Name;
 }
-///<summary>Represente igk_api_syncfrom_ctrl function</summary>
+///<summary></summary>
 ///<param name="ctrl"></param>
 ///<param name="server" default="null"></param>
 /**
-* Represente igk_api_syncfrom_ctrl function
+* 
 * @param mixed $ctrl
 * @param mixed $server the default value is null
 */
@@ -45,11 +45,11 @@ function igk_api_syncfrom_ctrl($ctrl, $server=null){
     };
     igk_navto($ctrl->getAppUri(""));
 }
-///<summary>Represente igk_api_syncto_ctrl function</summary>
+///<summary></summary>
 ///<param name="ctrl"></param>
 ///<param name="server" default="null"></param>
 /**
-* Represente igk_api_syncto_ctrl function
+* 
 * @param mixed $ctrl
 * @param mixed $server the default value is null
 */

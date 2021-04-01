@@ -2,18 +2,18 @@
 // author: C.A.D. BONDJE DOUE
 // licence: IGKDEV - Balafon @ 2019
 
-///<summary>Represente igk_html_demo_abtn function</summary>
+///<summary></summary>
 ///<param name="tg"></param>
 /**
-* Represente igk_html_demo_abtn function
+* 
 * @param mixed $tg
 */
 function igk_html_demo_abtn($tg){$tg->addABtn("#")->Content="Demo button";
 }
-///<summary>Represente igk_html_demo_code function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 /**
-* Represente igk_html_demo_code function
+* 
 * @param mixed $t
 */
 function igk_html_demo_code($t){
@@ -22,10 +22,10 @@ function igk_html_demo_code($t){
 \$t->addCode()->Content = '//javascript';
 EOF;
 }
-///<summary>Represente igk_html_demo_combobox function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 /**
-* Represente igk_html_demo_combobox function
+* 
 * @param mixed $t
 */
 function igk_html_demo_combobox($t){
@@ -48,19 +48,19 @@ function igk_html_demo_combobox($t){
     });
     $t->addCombobox("p-type", [["value"=>1, "text"=>"News"], ["value"=>2, "text"=>"Orange"], ["value"=>3, "text"=>"Blogs"]], ["valuekey"=>"value", "displaykey"=>"text|lang|uppercase", "allowEmpty"=>1, "emptyValue"=>-1, "selected"=>2]);
 }
-///<summary>Represente igk_html_demo_facebookcomments function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 /**
-* Represente igk_html_demo_facebookcomments function
+* 
 * @param mixed $t
 */
 function igk_html_demo_facebookcomments($t){
     $t->addFacebookComments("https://facebook.com/bondjesonde");
 }
-///<summary>Represente igk_html_demo_huebar function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 /**
-* Represente igk_html_demo_huebar function
+* 
 * @param mixed $t
 */
 function igk_html_demo_huebar($t){
@@ -68,10 +68,10 @@ function igk_html_demo_huebar($t){
     $hbar=$t->add('huebar')->setStyle("width:200px; height:16px; border:1px solid black;");
     $t->addSpan()->setClass("huev")->Content='hsv';
 }
-///<summary>Represente igk_html_demo_progressbar function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 /**
-* Represente igk_html_demo_progressbar function
+* 
 * @param mixed $t
 */
 function igk_html_demo_progressbar($t){
@@ -82,10 +82,10 @@ function igk_html_demo_progressbar($t){
     $t->add($n);
     return $n;
 }
-///<summary>Represente igk_html_demo_symbol function</summary>
+///<summary></summary>
 ///<param name="tg"></param>
 /**
-* Represente igk_html_demo_symbol function
+* 
 * @param mixed $tg
 */
 function igk_html_demo_symbol($tg){$tg->addDiv()->Content="Load a symbol with integer code equal to 1 if registrated";
@@ -95,20 +95,20 @@ function igk_html_demo_symbol($tg){$tg->addDiv()->Content="Load a symbol with in
 \$tg->addDiv()->setStyle("width:40px; height:40px")->addSymbol(1);
 EOF;
 }
-///<summary>Represente igk_html_demo_toast function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 /**
-* Represente igk_html_demo_toast function
+* 
 * @param mixed $t
 */
 function igk_html_demo_toast($t){
     $g=$t->addDiv();
     $g->addA("#")->setClass("igk-btn")->setAttribute("onclick", "javascript: ns_igk.winui.controls.toast.initDemo(); return false;")->Content="Show Toast";
 }
-///<summary>Represente igk_html_demo_xslt function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 /**
-* Represente igk_html_demo_xslt function
+* 
 * @param mixed $t
 */
 function igk_html_demo_xslt($t){

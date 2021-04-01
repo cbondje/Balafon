@@ -18,7 +18,7 @@ $def["html, body, ul, div, p"] = "padding:0px; margin:0px; position:relative;";
 
 $def["a"] = "[sysfcl:linkForeColor] text-decoration:none;";
 $def["body li"] = "list-style-type:none;";
-$def["body a, body img, body a:hover, body a:focus"]= "text-decoration:none; list-style-type:none; border:none;";
+$def["body a, body img, body a:hover, body a:focus"]= "text-decoration:none; list-style-type:none;";
 $def["body a:hover"]="[sysfcl:linkHoverForeColor]";
 $def["html, body"] = "width:100%; height:100%;";
 $def["span"]="white-space: normal";//for span white space are not interprete as the same IE#firefox
@@ -222,7 +222,7 @@ $def[".igk-ctrl-options ul li"] = "{sys:dispib} vertical-align:middle;";
 
 //frame box;
 $def[".frame_textarea"] = "width: 500px; height:300px";
-$def[".igk-msbox-dialog"] = $def[".igk-framebox-dialog"] = "background-color: [cl:frameboxDialogBgColor, white]; padding: 4px;";
+$def[".igk-msbox-dialog"] = $def[".igk-framebox-dialog"] = "[bgcl:frameboxDialogBgColor, white] padding: 4px;";
 $def[".igk-msbox-dialog-title"] =
 $def[".framebox-dialog-title"]="position:relative; overflow:hidden; min-height:32px; font-size:14pt; [bgcl:igk-framebox-title-bgcl] [fcl:igk-framebox-title-fcl] cursor:move; padding-right: 64px;";
 
@@ -316,3 +316,17 @@ $cl["pickfileHoverBackground"] = "red";
 $cl["frameboxDialogBgColor"] = "#eee";
 
 
+
+
+$def[".sm-block-only"] = "display:none";
+$def[".xsm-block-only"] = "display:none";
+
+$sm_screen[".sm-block-only"] = "display:block;";
+$xsm_screen[".xsm-block-only"] = "display:block;";
+
+
+$def[".clear-b:after"] = "display:table; clear: both; content:' '; ";
+
+/* cursor style */
+$def[".cursor-pointer"] = "cursor: pointer;";
+$def[".cursor-help"] = "cursor: help;";

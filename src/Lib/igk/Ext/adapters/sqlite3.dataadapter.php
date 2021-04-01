@@ -13,11 +13,11 @@ define("IGK_SQL3LITE_KN_TABLE_KEY", IGK_SQL3LITE_KN."::/tableName");
 define("IGK_SQL3LITE_KN_QUERY_KEY", IGK_SQL3LITE_KN."::/query");
 define("IGK_SQL3LITE_TYPE_NAME_INDEX", 2);
 define("IGK_SQL3LITE_NAME_INDEX", 1);
-///<summary>Represente igk_sql3lite_autoincrement function</summary>
+///<summary></summary>
 ///<param name="r"></param>
 ///<param name="info" default="null" ref="true"></param>
 /**
-* Represente igk_sql3lite_autoincrement function
+* 
 * @param mixed $r
 * @param  * $info the default value is null
 */
@@ -31,25 +31,25 @@ function igk_sql3lite_autoincrement($r, & $info=null){
     }
     return null;
 }
-///<summary>Represente igk_sql3lite_close function</summary>
+///<summary></summary>
 /**
-* Represente igk_sql3lite_close function
+* 
 */
 function igk_sql3lite_close(){
     $sq=IGKSQLite3DataAdapter::GetCurrent();
     return $sq && $sq->close();
 }
-///<summary>Represente igk_sql3lite_connect function</summary>
+///<summary></summary>
 /**
-* Represente igk_sql3lite_connect function
+* 
 */
 function igk_sql3lite_connect(){
     igk_wln(func_get_args());
     throw new Exception("not permitted");
 }
-///<summary>Represente igk_sql3lite_error function</summary>
+///<summary></summary>
 /**
-* Represente igk_sql3lite_error function
+* 
 */
 function igk_sql3lite_error(){
     $c=IGKSQLite3DataAdapter::GetCurrent();
@@ -57,9 +57,9 @@ function igk_sql3lite_error(){
         return $c->sql->lastErrorMsg();
     return 0;
 }
-///<summary>Represente igk_sql3lite_error_code function</summary>
+///<summary></summary>
 /**
-* Represente igk_sql3lite_error_code function
+* 
 */
 function igk_sql3lite_error_code(){
     $c=IGKSQLite3DataAdapter::GetCurrent();
@@ -67,10 +67,10 @@ function igk_sql3lite_error_code(){
         return $c->sql->lastErrorCode();
     return 0;
 }
-///<summary>Represente igk_sql3lite_escapestring function</summary>
+///<summary></summary>
 ///<param name="str"></param>
 /**
-* Represente igk_sql3lite_escapestring function
+* 
 * @param mixed $str
 */
 function igk_sql3lite_escapestring($str){
@@ -78,11 +78,11 @@ function igk_sql3lite_escapestring($str){
     igk_assert_die($sq->sql === null, 'SQLite3 Error : Sql is null');
     return $sq->sql->escapeString($str);
 }
-///<summary>Represente igk_sql3lite_fetch_field function</summary>
+///<summary></summary>
 ///<param name="r"></param>
 ///<param name="requiretable" default="1"></param>
 /**
-* Represente igk_sql3lite_fetch_field function
+* 
 * @param mixed $r
 * @param mixed $requiretable the default value is 1
 */
@@ -138,35 +138,35 @@ function igk_sql3lite_fetch_field($r, $requiretable=1){
     }
     return $k;
 }
-///<summary>Represente igk_sql3lite_fetch_row function</summary>
+///<summary></summary>
 ///<param name="r"></param>
 /**
-* Represente igk_sql3lite_fetch_row function
+* 
 * @param mixed $r
 */
 function igk_sql3lite_fetch_row($r){
     return $r->fetchArray(SQLITE3_NUM);
 }
-///<summary>Represente igk_sql3lite_lastid function</summary>
+///<summary></summary>
 /**
-* Represente igk_sql3lite_lastid function
+* 
 */
 function igk_sql3lite_lastid(){
     return -1;
 }
-///<summary>Represente igk_sql3lite_num_fields function</summary>
+///<summary></summary>
 ///<param name="r"></param>
 /**
-* Represente igk_sql3lite_num_fields function
+* 
 * @param mixed $r
 */
 function igk_sql3lite_num_fields($r){
     return $r->numColumns();
 }
-///<summary>Represente igk_sql3lite_num_rows function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 /**
-* Represente igk_sql3lite_num_rows function
+* 
 * @param mixed $t
 */
 function igk_sql3lite_num_rows($t){
@@ -178,10 +178,10 @@ function igk_sql3lite_num_rows($t){
         return 0;
     }
 }
-///<summary>Represente igk_sql3lite_tosql_data function</summary>
+///<summary></summary>
 ///<param name="d"></param>
 /**
-* Represente igk_sql3lite_tosql_data function
+* 
 * @param mixed $d
 */
 function igk_sql3lite_tosql_data($d){
@@ -215,16 +215,16 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
 	public function escape_string($v){
 		    return "from sqlite3: ". $this->sql->escapeString($v);
 	}
-    ///<summary>Represente beginTransaction function</summary>
+    ///<summary></summary>
     /**
-    * Represente beginTransaction function
+    * 
     */
     public function beginTransaction(){
         $this->sql->exec("BEGIN TRANSACTION");
     }
-    ///<summary>Represente close function</summary>
+    ///<summary></summary>
     /**
-    * Represente close function
+    * 
     */
     public function close(){
         $sql=$this->getConnectionManager();
@@ -237,9 +237,9 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
             }
         }
     }
-    ///<summary>Represente commit function</summary>
+    ///<summary></summary>
     /**
-    * Represente commit function
+    * 
     */
     public function commit(){
         $this->sql->exec("COMMIT");
@@ -320,33 +320,33 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
             $this->enableForeignKey(1);
         return 1;
     }
-    ///<summary>Represente countAndWhere function</summary>
+    ///<summary></summary>
     /**
-    * Represente countAndWhere function
+    * 
     */
     public function countAndWhere(){}
-    ///<summary>Represente countTable function</summary>
+    ///<summary></summary>
     ///<param name="tb"></param>
     /**
-    * Represente countTable function
+    * 
     * @param mixed $tb
     */
     public function countTable($tb){
         return $this->sendQuery("SELECT Count(*) FROM `".$tb."`;", $tb);
     }
-    ///<summary>Represente createDb function</summary>
+    ///<summary></summary>
     /**
-    * Represente createDb function
+    * 
     */
     public function createDb(){
         return true;
     }
-    ///<summary>Represente CreateEmptyResult function</summary>
+    ///<summary></summary>
     ///<param name="result" default="null"></param>
     ///<param name="query" default="null"></param>
     ///<param name="info" default="null"></param>
     /**
-    * Represente CreateEmptyResult function
+    * 
     * @param mixed $result the default value is null
     * @param mixed $query the default value is null
     * @param mixed $info the default value is null
@@ -355,12 +355,12 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         $r=IGKMySQLQueryResult::CreateResult($result, $query, $info);
         return $r;
     }
-    ///<summary>Represente createResult function</summary>
+    ///<summary></summary>
     ///<param name="r"></param>
     ///<param name="query" default="null"></param>
     ///<param name="obj" default="null"></param>
     /**
-    * Represente createResult function
+    * 
     * @param mixed $r
     * @param mixed $query the default value is null
     * @param mixed $obj the default value is null
@@ -374,13 +374,13 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         ), (array)$obj ?? []);
         return IGKMySQLQueryResult::CreateResult(new sql3literesult($r), $query, $inf);
     }
-    ///<summary>Represente createTable function</summary>
+    ///<summary></summary>
     ///<param name="tbname"></param>
     ///<param name="columninfo"></param>
     ///<param name="entries" default="null"></param>
     ///<param name="desc" default="null"></param>
     /**
-    * Represente createTable function
+    * 
     * @param mixed $tbname
     * @param mixed $columninfo
     * @param mixed $entries the default value is null
@@ -394,13 +394,13 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         }
         return $r;
     }
-    ///<summary>Represente CreateTableQuery function</summary>
+    ///<summary></summary>
     ///<param name="tbname"></param>
     ///<param name="columninfo"></param>
     ///<param name="entries" default="null"></param>
     ///<param name="desc" default="null"></param>
     /**
-    * Represente CreateTableQuery function
+    * 
     * @param mixed $tbname
     * @param mixed $columninfo
     * @param mixed $entries the default value is null
@@ -534,17 +534,17 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         $query .= ";";
         return $query;
     }
-    ///<summary>Represente dieNotConnect function</summary>
+    ///<summary></summary>
     /**
-    * Represente dieNotConnect function
+    * 
     */
     public function dieNotConnect(){
         if($this->sql == null)
             throw new Exception("sql3lite no connection available ");
     }
-    ///<summary>Represente dropAllTables function</summary>
+    ///<summary></summary>
     /**
-    * Represente dropAllTables function
+    * 
     */
     public function dropAllTables(){
         $r=$this->listTables();
@@ -559,56 +559,56 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
             }
         }
     }
-    ///<summary>Represente dropTable function</summary>
+    ///<summary></summary>
     ///<param name="tbname"></param>
     /**
-    * Represente dropTable function
+    * 
     * @param mixed $tbname
     */
     public function dropTable($tbname){
         return $this->sendQuery("Drop Table IF EXISTS   `{$tbname}`", $tbname);
     }
-    ///<summary>Represente enableForeignKey function</summary>
+    ///<summary></summary>
     ///<param name="b"></param>
     /**
-    * Represente enableForeignKey function
+    * 
     * @param mixed $b
     */
     public function enableForeignKey($b){
         $s=$b ? 'ON': 'OFF';
         $this->sql->exec('PRAGMA foreign_keys='.$s);
     }
-    ///<summary>Represente escapeString function</summary>
+    ///<summary></summary>
     ///<param name="str"></param>
     /**
-    * Represente escapeString function
+    * 
     * @param mixed $str
     */
     public function escapeString($str){
         return $this->sql->escapeString($str);
     }
-    ///<summary>Represente getConnectionManager function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConnectionManager function
+    * 
     */
     public function getConnectionManager(){
         if(self::$sm_sql)
             return igk_getv(self::$sm_sql, $this->fname);
         return null;
     }
-    ///<summary>Represente getConnexion function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente getConnexion function
+    * 
     * @param mixed $n
     */
     public function getConnexion($n){
         $r=igk_getv(self::$sm_connexions, $n);
         return $r;
     }
-    ///<summary>Represente GetCurrent function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetCurrent function
+    * 
     */
     public static function GetCurrent(){
         if(self::$sm_list == null)
@@ -628,9 +628,9 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         }
         return $f;
     }
-    ///<summary>Represente getDatabaseVersion function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDatabaseVersion function
+    * 
     */
     public function getDatabaseVersion(){
         $r=$this->sendQuery('PRAGMA user_version;', ':global:');
@@ -786,17 +786,17 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         }
         return $rep;
     }
-    ///<summary>Represente getDbIdentifier function</summary>
+    ///<summary></summary>
     /**
-    * Represente getDbIdentifier function
+    * 
     */
     public function getDbIdentifier(){
         return IGK_SQL3LITE_KN;
     }
-    ///<summary>Represente GetSchemaOptions function</summary>
+    ///<summary></summary>
     ///<param name="n"></param>
     /**
-    * Represente GetSchemaOptions function
+    * 
     * @param mixed $n
     */
     public static function GetSchemaOptions($n){
@@ -806,9 +806,9 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         $li->addInput("clsqlite3_file", "text");
         return $n;
     }
-    ///<summary>Represente getSql function</summary>
+    ///<summary></summary>
     /**
-    * Represente getSql function
+    * 
     */
     public function getSql(){
         if(self::$sm_sql == null){
@@ -831,24 +831,24 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     public function getVersion(){
         return $this->sql->version();
     }
-    ///<summary>Represente initConfig function</summary>
+    ///<summary></summary>
     /**
-    * Represente initConfig function
+    * 
     */
     protected function initConfig(){
         $this->makeCurrent();
         self::StoreStack($this);
     }
-    ///<summary>Represente initSystableRequired function</summary>
+    ///<summary></summary>
     ///<param name="tablename"></param>
     /**
-    * Represente initSystableRequired function
+    * 
     * @param mixed $tablename
     */
     public function initSystableRequired($tablename){}
-    ///<summary>Represente IsForeignKeyEnable function</summary>
+    ///<summary></summary>
     /**
-    * Represente IsForeignKeyEnable function
+    * 
     */
     public function IsForeignKeyEnable(){
         $r=$this->sendQuery('PRAGMA foreign_keys;', ':global:');
@@ -858,54 +858,54 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         }
         return $f;
     }
-    ///<summary>Represente last_id function</summary>
+    ///<summary></summary>
     /**
-    * Represente last_id function
+    * 
     */
     public function last_id(){
         return $this->sql->lastInsertRowID();
     }
-    ///<summary>Represente listTables function</summary>
+    ///<summary></summary>
     /**
-    * Represente listTables function
+    * 
     */
     public function listTables(){
         return $this->sendQuery("SELECT name FROM sqlite_master WHERE type='table';", "sqlite_master");
     }
-    ///<summary>Represente numRows function</summary>
+    ///<summary></summary>
     /**
-    * Represente numRows function
+    * 
     */
     public function numRows(){
         return -1;
     }
-    ///<summary>Represente OpenCount function</summary>
+    ///<summary></summary>
     /**
-    * Represente OpenCount function
+    * 
     */
     public function OpenCount(){
         $r=$this->getConnectionManager();
         return $r ? $r->count: 0;
     }
-    ///<summary>Represente restoreRelationChecking function</summary>
+    ///<summary></summary>
     /**
-    * Represente restoreRelationChecking function
+    * 
     */
     public function restoreRelationChecking(){
         $this->enableForeignKey(1);
     }
-    ///<summary>Represente rollback function</summary>
+    ///<summary></summary>
     /**
-    * Represente rollback function
+    * 
     */
     public function rollback(){
         $this->sql->exec("ROLLBACK");
     }
-    ///<summary>Represente sendQuery function</summary>
+    ///<summary></summary>
     ///<param name="query"></param>
     ///<param name="tbname" default="null"></param>
     /**
-    * Represente sendQuery function
+    * 
     * @param mixed $query
     * @param mixed $tbname the default value is null
     */
@@ -930,41 +930,41 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         $obj= $this->CreateEmptyResult(false, $query, array("error"=>1, "errormsg"=>$this->sql->lastErrorMsg()));
         return $obj;
     }
-    ///<summary>Represente setCreatorListener function</summary>
+    ///<summary></summary>
     ///<param name="listener"></param>
     /**
-    * Represente setCreatorListener function
+    * 
     * @param mixed $listener
     */
     public function setCreatorListener($listener){
         $this->m_creator=$listener;
     }
-    ///<summary>Represente setDatabaseVersion function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     /**
-    * Represente setDatabaseVersion function
+    * 
     * @param mixed $v
     */
     public function setDatabaseVersion($v){
         $this->sql->exec('PRAGMA user_version='.$v);
     }
-    ///<summary>Represente setForeignKeyCheck function</summary>
+    ///<summary></summary>
     /**
-    * Represente setForeignKeyCheck function
+    * 
     */
     public function setForeignKeyCheck(){}
-    ///<summary>Represente stopRelationChecking function</summary>
+    ///<summary></summary>
     /**
-    * Represente stopRelationChecking function
+    * 
     */
     public function stopRelationChecking(){
         $this->enableForeignKey(0);
     }
-    ///<summary>Represente storeConnexion function</summary>
+    ///<summary></summary>
     ///<param name="fname"></param>
     ///<param name="sql"></param>
     /**
-    * Represente storeConnexion function
+    * 
     * @param mixed $fname
     * @param mixed $sql
     */
@@ -976,10 +976,10 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         self::
         $sm_connexions[$fname]=$this->m_current;
     }
-    ///<summary>Represente StoreStack function</summary>
+    ///<summary></summary>
     ///<param name="l"></param>
     /**
-    * Represente StoreStack function
+    * 
     * @param mixed $l
     */
     public static function StoreStack($l){
@@ -993,23 +993,23 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
 * Represente IGKSQl3DbConfigCtrl class
 */
 class IGKSQl3DbConfigCtrl extends IGKConfigCtrlBase{
-    ///<summary>Represente getConfigPage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigPage function
+    * 
     */
     public function getConfigPage(){
         return "sqlite3database";
     }
-    ///<summary>Represente getName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getName function
+    * 
     */
     public function getName(){
         return "SQLite3";
     }
-    ///<summary>Represente showConfig function</summary>
+    ///<summary></summary>
     /**
-    * Represente showConfig function
+    * 
     */
     public function showConfig(){
         parent::showConfig();
@@ -1025,10 +1025,10 @@ class sql3literesult{
     var $Columns;
     var $Rows;
     var $res;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="res" type="SQLite3Result"></param>
     /**
-    * Represente __construct function
+    * 
     * @param SQLite3Result $res
     */
     public function __construct(SQLite3Result $res){
@@ -1036,9 +1036,9 @@ class sql3literesult{
         $this->Columns=array();
         $this->Rows=array();
     }
-    ///<summary>Represente CreateEmptyResult function</summary>
+    ///<summary></summary>
     /**
-    * Represente CreateEmptyResult function
+    * 
     */
     public function CreateEmptyResult(){
         return null;

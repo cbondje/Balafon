@@ -21,11 +21,11 @@ namespace IGKApi;
 class UtilityActions{
     var $ctrl;
     var $target;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     ///<param name="t"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $ctrl
     * @param mixed $t
     */
@@ -33,9 +33,9 @@ class UtilityActions{
         $this->ctrl=$ctrl;
         $this->target=$t;
     }
-    ///<summary>Represente rmDir function</summary>
+    ///<summary></summary>
     /**
-    * Represente rmDir function
+    * 
     */
     public function rmDir(){
         $n=igk_getr("clName");

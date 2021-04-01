@@ -15,9 +15,9 @@ define("IGK_API_URI", "^/api/v2");
 define("IGK_API_LIB", dirname(__FILE__));
 require_once(IGK_API_LIB."/.igk.api.func.pinc");
 
-///<summary>Represente igk_api_free_session function</summary>
+///<summary></summary>
 /**
-* Represente igk_api_free_session function
+* 
 */
 function igk_api_free_session(){
     if(!igk_server_request_onlocal_server()){
@@ -88,16 +88,16 @@ function igk_api_sync_def_evaluate_entries($entries, $table_n, $mysql, $db, $tab
 */
 final class IGKApiFunctionCtrl extends IGKApplicationController {
     const LIBNAME=IGK_API_MYSQLPINC;
-    ///<summary>Represente about function</summary>
+    ///<summary></summary>
     /**
-    * Represente about function
+    * 
     */
     public function about(){
         igk_wln_e(__FILE__.":".__LINE__, "About");
     }
-    ///<summary>Represente beginRequest function</summary>
+    ///<summary></summary>
     /**
-    * Represente beginRequest function
+    * 
     */
     public function beginRequest(){
         $u=igk_getr("u");
@@ -120,10 +120,10 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
         $node->renderAJX();
         igk_exit();
     }
-    ///<summary>Represente ctrl function</summary>
+    ///<summary></summary>
     ///<param name="cmd" default="null"></param>
     /**
-    * Represente ctrl function
+    * 
     * @param mixed $cmd the default value is null
     */
     public function ctrl($cmd=null){
@@ -558,9 +558,9 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
         igk_exit();
         return 1;
     }
-    ///<summary>Represente endRequest function</summary>
+    ///<summary></summary>
     /**
-    * Represente endRequest function
+    * 
     */
     public function endRequest(){
         $node=IGKHtmlItem::CreateWebNode("APIResponse");
@@ -571,37 +571,37 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
         $node->renderAJX();
         igk_exit();
     }
-    ///<summary>Represente getBasicUriPattern function</summary>
+    ///<summary></summary>
     /**
-    * Represente getBasicUriPattern function
+    * 
     */
     public function getBasicUriPattern(){
         return IGK_API_URI;
     }
-    ///<summary>Represente getEntryNameSpace function</summary>
+    ///<summary></summary>
     /**
-    * Represente getEntryNameSpace function
+    * 
     */
     protected function getEntryNameSpace(){
         return "IGKApi";
     }
-    ///<summary>Represente getIsSystemController function</summary>
+    ///<summary></summary>
     /**
-    * Represente getIsSystemController function
+    * 
     */
     public function getIsSystemController(){
         return true;
     }
-    ///<summary>Represente getIsVisible function</summary>
+    ///<summary></summary>
     /**
-    * Represente getIsVisible function
+    * 
     */
     public function getIsVisible(){
         return false;
     }
-    ///<summary>Represente getName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getName function
+    * 
     */
     public function getName(){
         return IGK_API_CTRL;
@@ -609,32 +609,32 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
     public function getAppName(){
         return IGK_API_CTRL;
     }
-    ///<summary>Represente getRegUriAction function</summary>
+    ///<summary></summary>
     /**
-    * Represente getRegUriAction function
+    * 
     */
     public function getRegUriAction(){
         return IGK_API_URI.IGK_REG_ACTION_METH."(;(:options))?";
     }
-    ///<summary>Represente getVersion function</summary>
+    ///<summary></summary>
     /**
-    * Represente getVersion function
+    * 
     */
     public function getVersion(){
         return IGK_API_VERSION;
     }
-    ///<summary>Represente IsFunctionExposed function</summary>
+    ///<summary></summary>
     ///<param name="function"></param>
     /**
-    * Represente IsFunctionExposed function
+    * 
     * @param mixed $function
     */
     public function IsFunctionExposed($function){
         return true;
     }
-    ///<summary>Represente request function</summary>
+    ///<summary></summary>
     /**
-    * Represente request function
+    * 
     */
     public function request(){
         $u=igk_getr("u");
@@ -655,9 +655,9 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
 
         igk_exit();
     }
-    ///<summary>Represente sendRequest function</summary>
+    ///<summary></summary>
     /**
-    * Represente sendRequest function
+    * 
     */
     public function sendRequest(){
         $node=IGKHtmlItem::CreateWebNode("APIResponse");
@@ -672,19 +672,19 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
         $node->renderAJX();
         igk_exit();
     }
-    ///<summary>Represente setup function</summary>
+    ///<summary></summary>
     ///<param name="cmd" default="null"></param>
     /**
-    * Represente setup function
+    * 
     * @param mixed $cmd the default value is null
     */
     public function setup($cmd=null){
         igk_wln(__FUNCTION__." command");
         igk_exit();
     }
-    ///<summary>Represente sysversion function</summary>
+    ///<summary></summary>
     /**
-    * Represente sysversion function
+    * 
     */
     public function sysversion(){
         ob_clean();

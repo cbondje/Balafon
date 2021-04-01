@@ -6,11 +6,11 @@
 */
 class IGKInvalidXmlReadException extends IGKException{
     var $offset;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="msg"></param>
     ///<param name="offset"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $msg
     * @param mixed $offset the default value is 0
     */

@@ -8,7 +8,7 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
-///<summary>Represente igk_subdomain_fc_inflate function</summary>
+///<summary></summary>
 ///<param name="tab"></param>
 ///<param name="t"></param>
 ///<param name="data" default="null"></param>
@@ -17,7 +17,7 @@
 use IGK\Resources\R;
 
 /**
-* Represente igk_subdomain_fc_inflate function
+* 
 * @param mixed $tab
 * @param mixed $t
 * @param mixed $data the default value is null

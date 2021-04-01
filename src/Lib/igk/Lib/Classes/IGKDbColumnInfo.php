@@ -32,7 +32,16 @@ final class IGKDbColumnInfo extends IGKObject {
      */
     var $clDescription;
     var $clFormRefKey;
+    /**
+     * form input type
+     * @var string
+     */
     var $clInputType;
+    /**
+     * string comma separated values of available enum values if type is Enum
+     * @var mixed
+     */
+    var $clEnumValues;
     var $clInsertFunction;
     /**
      * set if the column is index
@@ -105,17 +114,16 @@ final class IGKDbColumnInfo extends IGKObject {
      * @var mixed
      */
     var $clCheckConstraint; 
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="array" default="null"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $array the default value is null
     */
     public function __construct($array=null){
         $this->clType="Int";
         $this->clTypeLength=11;
-        $this->clNotNull=false;
-        $this->clInputType="text";
+        $this->clNotNull=false; 
         if(is_array($array)){
             $t=get_class_vars(get_class($this));
             foreach($array as $k=>$v){
@@ -134,10 +142,10 @@ final class IGKDbColumnInfo extends IGKObject {
             $this->clDefault=0;
         }
     }
-    ///<summary>Represente __get function</summary>
+    ///<summary></summary>
     ///<param name="key"></param>
     /**
-    * Represente __get function
+    * 
     * @param mixed $key
     */
     public function __get($key){
@@ -147,20 +155,20 @@ final class IGKDbColumnInfo extends IGKObject {
         }
         igk_die("__get Not implements : ".$key. " ".get_class($this));
     }
-    ///<summary>Represente __set function</summary>
+    ///<summary></summary>
     ///<param name="key"></param>
     ///<param name="value"></param>
     /**
-    * Represente __set function
+    * 
     * @param mixed $key
     * @param mixed $value
     */
     public function __set($key, $value){
         igk_die("variable : [". $key. "] Not Implements");
     }
-    ///<summary>Represente __toString function</summary>
+    ///<summary>display value</summary>
     /**
-    * Represente __toString function
+    * display value
     */
     public function __toString(){
         return "IGKDbColumnInfo[".$this->clName."]";
@@ -187,16 +195,16 @@ final class IGKDbColumnInfo extends IGKObject {
         }
         return $t;
     }
-    ///<summary>Represente GetColumnInfo function</summary>
+    ///<summary></summary>
     /**
-    * Represente GetColumnInfo function
+    * 
     */
     public static function GetColumnInfo(){
         return get_class_vars("IGKDbColumnInfo");
     }
-    ///<summary>Represente NewEntryInfo function</summary>
+    ///<summary></summary>
     /**
-    * Represente NewEntryInfo function
+    * 
     */
     public static function NewEntryInfo(){
         return new IGKDbColumnInfo(array(

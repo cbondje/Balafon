@@ -101,10 +101,10 @@ abstract class ControllerExtension{
     }
     public static function InitDataBaseModel(BaseController $ctrl){
         $c = $ctrl->getSourceClassDir()."/Models/";
-        $tb=$ctrl->getDataTableInfo();
+        $tb = $ctrl->getDataTableInfo();
         $ns = igk_db_get_table_name("%prefix%", $ctrl);
 
-        if (!file_exists($base_f = $c."ModelBase8.php")){
+        if (!file_exists($base_f = $c."ModelBase.php")){
             igk_io_w2file($base_f, self::GetDefaultModelBaseSource($ctrl));
         }
 
@@ -179,5 +179,49 @@ abstract class ControllerExtension{
         }
         $o .= "}".PHP_EOL; 
         return $o;
+    }
+
+    public static function login(BaseController $ctrl, $user=null, $pwd=null, $nav=true) {
+       
+            $u = $user;
+            if (!igk_environment()->viewfile && igk_app_is_uri_demand($ctrl, __FUNCTION__) && file_exists($file = $ctrl->getViewFile(__FUNCTION__, false))){
+                $ctrl->loader->view($file, compact("u", "pwd", "nav"));
+                return;
+            }
+            $c=igk_getctrl(IGK_USER_CTRL);
+            $f=0;
+            if($ctrl->User === null){
+                if(is_object($u)){
+                    if(igk_is_array_key_present($u, array("clLogin", "clPwd"))){
+                        $c->setUser($u);                 
+                        $ctrl->checkUser(false);
+                        $f=1;
+                    } 
+                }
+                else{
+                    if($c->connect($u, $pwd)){
+                        $ctrl->checkUser(false);
+                        $f=1;
+                    }
+                    if(!$f){
+                        igk_notifyctrl("notify/app/login")->addErrorr("e.loginfailed");
+                    }
+                }
+            }
+            if($nav){
+                if($f){
+                    ($b=igk_getr("goodUri")) || ($b=$ctrl->getAppUri());
+                    igk_navto($b);
+                }
+                else{
+                    $b=igk_getr("badUri") ?? $ctrl->getAppUri();
+                    if($b){
+                        igk_navto($b);
+                        igk_exit();
+                    }
+                }
+            }
+            return $ctrl->User !== null;
+
     }
 }

@@ -78,11 +78,11 @@ function igk_html_validate_error(){
     throw new Exception("Not Implement");
 }
 
-///<summary>Represente igk_html_add_good_uri function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 ///<param name="ctrl"></param>
 /**
-* Represente igk_html_add_good_uri function
+* 
 * @param mixed $t
 * @param mixed
 */
@@ -95,10 +95,10 @@ function igk_html_add_good_uri($t, $ctrl){
     }
     $t->addInput("goodUri", "hidden", $redirect);
 }
-///<summary>Represente igk_html_attribvalue function</summary>
+///<summary></summary>
 ///<param name="n"></param>
 /**
-* Represente igk_html_attribvalue function
+* 
 * @param mixed $n
 */
 function igk_html_attribvalue($n){
@@ -109,11 +109,11 @@ function igk_html_attribvalue($n){
     }
     return "\"".$n."\"";
 }
-///<summary>Represente igk_html_add_title function</summary>
+///<summary></summary>
 ///<param name="node"></param>
 ///<param name="title"></param>
 /**
-* Represente igk_html_add_title function
+* 
 * @param mixed $node
 * @param mixed
 */
@@ -139,22 +139,22 @@ function igk_html_app_page_title($ctrl, $title){
             is_string($ctrl) ? $ctrl: $ctrl->AppTitle
         ));
 }
-///<summary>Represente igk_html_apptitle function</summary>
+///<summary></summary>
 ///<param name="ctrl"></param>
 ///<param name="title"></param>
 /**
-* Represente igk_html_apptitle function
+* 
 * @param mixed $ctrl
 * @param mixed $title
 */
 function igk_html_apptitle($ctrl, $title){
     return __("title.app_2", $title, $ctrl->getAppTitle());
 }
-///<summary>Represente igk_html_array_table function</summary>
+///<summary></summary>
 ///<param name="tab"></param>
 ///<param name="headercallback" default="null"></param>
 /**
-* Represente igk_html_array_table function
+* 
 * @param mixed $tab
 * @param mixed $headercallback the default value is null
 */
@@ -280,7 +280,7 @@ function igk_html_build_menu($target, $menuTab, $user=null, $ctrl=null, $default
 }
 
 
-///<summary>Represente igk_html_load_menu_array function</summary>
+///<summary></summary>
 ///<param name="target"></param>
 ///<param name="tab"></param>
 ///<param name="item" default="li"></param>
@@ -289,7 +289,7 @@ function igk_html_build_menu($target, $menuTab, $user=null, $ctrl=null, $default
 ///<param name="ctrl" default="null"></param>
 ///<param name="callback" default="null"></param>
 /**
-* Represente igk_html_load_menu_array function
+* 
 * @param mixed $target
 * @param mixed $tab
 * @param mixed $item the default value is "li"
@@ -443,9 +443,9 @@ function igk_html_build_select($target, $name, $tab, $selectattributes=null, $se
     $sel->AppendAttributes($attr);
     return $sel;
 }
-///<summary>Represente igk_html_build_select_setting function</summary>
+///<summary></summary>
 /**
-* Represente igk_html_build_select_setting function
+* 
 */
 function igk_html_build_select_setting(){
     return (object)array(
@@ -466,12 +466,12 @@ function igk_html_build_table($tab, $rows, $headers, $callback=null){
         igk_html_db_build_table_row($tab->add("tr"), $v, $headers, "td", $callback);
     }
 }
-///<summary>Represente igk_html_buildmenu_nav function</summary>
+///<summary></summary>
 ///<param name="tab"></param>
 ///<param name="nav"></param>
 ///<param name="selected" default="null"></param>
 /**
-* Represente igk_html_buildmenu_nav function
+* 
 * @param mixed $tab
 * @param mixed $nav
 * @param mixed $selected the default value is null
@@ -502,9 +502,9 @@ function igk_html_buildmenu_ul($tab, $ul, $selected=null){
         $a->setAttribute('href', $v)->Content=__("menu.{$k}");
     }
 }
-///<summary>Represente igk_html_cookie_warn function</summary>
+///<summary></summary>
 /**
-* Represente igk_html_cookie_warn function
+* 
 */
 function igk_html_cookie_warn(){
     $o="<div class=\"posfix\">";
@@ -512,10 +512,10 @@ function igk_html_cookie_warn(){
     $o .= "</div>";
     echo $o;
 }
-///<summary>Represente igk_html_create_message function</summary>
+///<summary></summary>
 ///<param name="ctrl"></param>
 /**
-* Represente igk_html_create_message function
+* 
 * @param mixed $ctrl
 */
 function igk_html_create_message($ctrl){
@@ -531,12 +531,12 @@ function igk_html_create_message($ctrl){
         );
     return $s;
 }
-///<summary>Represente igk_html_db_build_table_entry function</summary>
+///<summary></summary>
 ///<param name="tr"></param>
 ///<param name="tab"></param>
 ///<param name="filter" default="null"></param>
 /**
-* Represente igk_html_db_build_table_entry function
+* 
 * @param mixed $tr
 * @param mixed $tab
 * @param mixed $filter the default value is null
@@ -544,13 +544,13 @@ function igk_html_create_message($ctrl){
 function igk_html_db_build_table_entry($tr, $tab, $filter=null){
     igk_html_db_build_table_row($tr, $tab, $filter, "td");
 }
-///<summary>Represente igk_html_db_build_table_header function</summary>
+///<summary></summary>
 ///<param name="tr"></param>
 ///<param name="tab"></param>
 ///<param name="filter" default="null"></param>
 ///<param name="callback" default="null"></param>
 /**
-* Represente igk_html_db_build_table_header function
+* 
 * @param mixed $tr
 * @param mixed $tab
 * @param mixed $filter the default value is null
@@ -559,14 +559,14 @@ function igk_html_db_build_table_entry($tr, $tab, $filter=null){
 function igk_html_db_build_table_header($tr, $tab, $filter=null, $callback=null){
     igk_html_db_build_table_row($tr, $tab, $filter, "th", $callback);
 }
-///<summary>Represente igk_html_db_build_table_row function</summary>
+///<summary></summary>
 ///<param name="tr"></param>
 ///<param name="tab"></param>
 ///<param name="filter" default="null"></param>
 ///<param name="cell" default="td"></param>
 ///<param name="callback" default="null"></param>
 /**
-* Represente igk_html_db_build_table_row function
+* 
 * @param mixed $tr
 * @param mixed $tab
 * @param mixed $filter the default value is null
@@ -631,12 +631,12 @@ function igk_html_db_build_table_row($tr, $tab, $filter=null, $cell="td", $callb
         }
     }
 }
-///<summary>Represente igk_html_db_select_filter function</summary>
+///<summary></summary>
 ///<param name="dbResult"></param>
 ///<param name="sortcallback"></param>
 ///<param name="useempty"></param>
 /**
-* Represente igk_html_db_select_filter function
+* 
 * @param mixed $dbResult
 * @param mixed $sortcallback
 * @param mixed $useempty the default value is 0
@@ -647,19 +647,19 @@ function igk_html_db_select_filter($dbResult, $sortcallback, $useempty=0){
     $dbResult=$dbResult->sortBy($sortcallback);
     return $dbResult;
 }
-///<summary>Represente igk_html_domaintitle function</summary>
+///<summary></summary>
 ///<param name="title"></param>
 /**
-* Represente igk_html_domaintitle function
+* 
 * @param mixed $title
 */
 function igk_html_domaintitle($title){
     return __("title.app_2", $title, igk_app()->Configs->website_domain);
 }
-///<summary>Represente igk_html_dump function</summary>
+///<summary></summary>
 ///<param name="obj"></param>
 /**
-* Represente igk_html_dump function
+* 
 * @param mixed $obj
 */
 function igk_html_dump($obj){
@@ -684,10 +684,10 @@ function igk_html_dump($obj){
     }
     return $t;
 }
-///<summary>Represente igk_html_extract_id function</summary>
+///<summary></summary>
 ///<param name="id"></param>
 /**
-* Represente igk_html_extract_id function
+* 
 * @param mixed $id
 */
 function igk_html_extract_id($id){
@@ -715,11 +715,11 @@ function igk_html_select_constants($type){
 }
 
 
-///<summary>Represente igk_html_form_buildformfield function</summary>
+///<summary></summary>
 ///<param name="frm"></param>
 ///<param name="data"></param>
 /**
-* Represente igk_html_form_buildformfield function
+* 
 * @param mixed $frm
 * @param mixed $data
 */
@@ -829,7 +829,7 @@ function igk_html_form_fields($formFields, $render=0){
             $o .= " class=\"require\" ";
         }
         $o .= ">";
-        if(!preg_match("/(hidden|fieldset|button|submit|reset)/", $_type)){
+        if(!preg_match("/(hidden|fieldset|button|submit|reset|datalist)/", $_type)){
             $o .= "<label for='{$k}'>".ucfirst(igk_getv($v, "label_text", __($k)))."</label>";
         }
         switch($_type){
@@ -939,9 +939,9 @@ function igk_html_form_fields($formFields, $render=0){
 }
 
 
-///<summary>Represente igk_html_form_init function</summary>
+///<summary></summary>
 /**
-* Represente igk_html_form_init function
+* 
 */
 function igk_html_form_init(){
     $o=igk_createnode("input");
@@ -968,11 +968,11 @@ function igk_html_form_initfield($frm){
 		igk_html_form_init();
     }, null);
 }
-///<summary>Represente igk_html_js_lang function</summary>
+///<summary></summary>
 ///<param name="ns"></param>
 ///<param name="e"></param>
 /**
-* Represente igk_html_js_lang function
+* 
 * @param mixed $ns
 * @param mixed $e
 */
@@ -990,12 +990,12 @@ $o=$s->Render(null);
     unset($s);
     igk_wl($o);
 }
-///<summary>Represente igk_html_login_form function</summary>
+///<summary></summary>
 ///<param name="ctrl"></param>
 ///<param name="d"></param>
 ///<param name="source" default="null"></param>
 /**
-* Represente igk_html_login_form function
+* 
 * @param mixed $ctrl
 * @param mixed $d
 * @param mixed $source the default value is null
@@ -1003,9 +1003,9 @@ $o=$s->Render(null);
 function igk_html_login_form($ctrl, $d, $source=null){
     igk_app_load_login_form($ctrl, $d, $source);
 }
-///<summary>Represente igk_html_loremipsum function</summary>
+///<summary></summary>
 /**
-* Represente igk_html_loremipsum function
+* 
 */
 function igk_html_loremipsum(){
     static $ipsum=null;
@@ -1064,10 +1064,10 @@ EOF;
     }
     return $ipsum[0];
 }
-///<summary>Represente igk_html_match_message function</summary>
+///<summary></summary>
 ///<param name="setting"></param>
 /**
-* Represente igk_html_match_message function
+* 
 * @param mixed $setting
 */
 function igk_html_match_message($setting){
@@ -1085,7 +1085,7 @@ function igk_html_match_message($setting){
     }
     igk_notifyctrl($setting["notifyname"])->addMsg($setting["message"], igk_getv($setting, "resulttype", "default"));
 }
-///<summary>Represente igk_html_paginate function</summary>
+///<summary></summary>
 ///<param name="target"></param>
 ///<param name="pagingHost"></param>
 ///<param name="tab"></param>
@@ -1094,7 +1094,7 @@ function igk_html_match_message($setting){
 ///<param name="uri"></param>
 ///<param name="selected" default="1"></param>
 /**
-* Represente igk_html_paginate function
+* 
 * @param mixed $target
 * @param mixed $pagingHost
 * @param mixed $tab
@@ -1119,12 +1119,12 @@ function igk_html_paginate($target, $pagingHost, $tab, $maxperpage, $callback, $
         $pagingHost->addDiv()->addAJXPaginationView($uri, $count, $maxperpage, $selected);
     }
 }
-///<summary>Represente igk_html_password function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 ///<param name="id"></param>
 ///<param name="auto" default="current-password"></param>
 /**
-* Represente igk_html_password function
+* 
 * @param mixed $t
 * @param mixed $id
 * @param mixed $auto the default value is "current-password"
@@ -1134,12 +1134,12 @@ function igk_html_password($t, $id, $auto="current-password"){
     $i["autocomplete"]=$auto;
     return $i;
 }
-///<summary>Represente igk_html_render function</summary>
+///<summary></summary>
 ///<param name="tag"></param>
 ///<param name="array"></param>
 ///<param name="attr" default=""></param>
 /**
-* Represente igk_html_render function
+* 
 * @param mixed $tag
 * @param mixed $array
 * @param mixed $attr the default value is ""
@@ -1153,10 +1153,10 @@ function igk_html_render($tag, $array, $attr=""){
     ob_end_clean();
     echo $o;
 }
-///<summary>Represente igk_html_render_message function</summary>
+///<summary></summary>
 ///<param name="s"></param>
 /**
-* Represente igk_html_render_message function
+* 
 * @param mixed $s
 */
 function igk_html_render_message($s){
@@ -1185,11 +1185,11 @@ function igk_html_render_message($s){
 function igk_html_replace_uri($d, $uri){
     $d->addBalafonJS()->Content="igk.winui.history.replace('{$uri}');";
 }
-///<summary>Represente igk_html_select_values function</summary>
+///<summary></summary>
 ///<param name="data"></param>
 ///<param name="callback" default="null"></param>
 /**
-* Represente igk_html_select_values function
+* 
 * @param mixed $data
 * @param mixed $callback the default value is null
 */
@@ -1204,9 +1204,9 @@ function igk_html_select_values($data, $callback=null){
     }
     return $tab;
 }
-///<summary>Represente igk_html_server_info function</summary>
+///<summary></summary>
 /**
-* Represente igk_html_server_info function
+* 
 */
 function igk_html_server_info(){
     $srv="<div style='font-size:1.6em; padding:10px; background-color:#fefefe; border:1px solid :#ddd; color:#444;' >".__('Server Info')."</div>";
@@ -1234,20 +1234,20 @@ function igk_html_submit_button($value="submit", $id="submit"){
     $n->setId($id);
     $n->RenderAJX();
 }
-///<summary>Represente igk_html_subtitle function</summary>
+///<summary></summary>
 ///<param name="title"></param>
 /**
-* Represente igk_html_subtitle function
+* 
 * @param mixed $title
 */
 function igk_html_subtitle($title){
     return $title." - [".igk_sys_getconfig("website_title")."]";
 }
-///<summary>Represente igk_html_textarea function</summary>
+///<summary></summary>
 ///<param name="id"></param>
 ///<param name="value" default="null"></param>
 /**
-* Represente igk_html_textarea function
+* 
 * @param mixed $id
 * @param mixed $value the default value is null
 */
@@ -1257,12 +1257,12 @@ function igk_html_textarea($id, $value=null){
     $g->Content=$value;
     $g->RenderAJX();
 }
-///<summary>Represente igk_html_title function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 ///<param name="s"></param>
 ///<param name="level" default="2"></param>
 /**
-* Represente igk_html_title function
+* 
 * @param mixed $t
 * @param mixed $s
 * @param mixed $level the default value is 2
@@ -1270,12 +1270,12 @@ function igk_html_textarea($id, $value=null){
 function igk_html_title($t, $s, $level=2){
     return $t->add('h'.$level)->setContent($s);
 }
-///<summary>Represente igk_html_toast function</summary>
+///<summary></summary>
 ///<param name="doc"></param>
 ///<param name="message"></param>
 ///<param name="type" default="igk-default"></param>
 /**
-* Represente igk_html_toast function
+* 
 * @param mixed $doc
 * @param mixed $message
 * @param mixed $type the default value is "igk-default"
@@ -1288,22 +1288,22 @@ function igk_html_toast($doc, $message, $type="igk-default"){
     $doc->body->add($t);
     return $t;
 }
-///<summary>Represente igk_html_utils_buildformfield function</summary>
+///<summary></summary>
 ///<param name="formfields"></param>
 /**
-* Represente igk_html_utils_buildformfield function
+* 
 * @param mixed $formfields
 */
 function igk_html_utils_buildformfield($formfields, $render=1){
     return igk_html_form_fields($formfields, $render);
 }
 
-///<summary>Represente igk_html_view_node function</summary>
+///<summary></summary>
 ///<param name="tag"></param>
 ///<param name="callback"></param>
 ///<param name="type" default="html"></param>
 /**
-* Represente igk_html_view_node function
+* 
 * @param mixed $tag
 * @param mixed $callback
 * @param mixed $type the default value is "html"
@@ -1319,9 +1319,9 @@ function igk_html_view_node($tag, $callback, $type="html"){
         }
     }
 }
-///<summary>Represente igk_html_wdump function</summary>
+///<summary></summary>
 /**
-* Represente igk_html_wdump function
+* 
 */
 function igk_html_wdump(){
     return igk_html_wtag("pre", igk_ob_get_func("var_dump", func_get_args()), ["class"=>"igk-wdump"]);
@@ -1356,7 +1356,7 @@ function igk_html_dump_table($tab){
 ///<param name="attribs" default="null"></param>
 ///<param name="forcexml"></param>
 /**
-* Represente igk_html_wtag function
+* 
 * @param mixed $tag
 * @param mixed $content
 * @param mixed $attribs the default value is null

@@ -9,23 +9,26 @@
 // @url: https://www.igkdev.com
 
 ///<summary>Represente class: IGKUserVarsCtrl</summary>
+
+use IGK\Resources\R;
+
 /**
 * Represente IGKUserVarsCtrl class
 */
 final class IGKUserVarsCtrl extends IGKConfigCtrlBase {
     private $m_searchkey;
     private $m_vars;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     public function __construct(){
         parent::__construct();
         $this->__loadVars();
     }
-    ///<summary>Represente __loadVars function</summary>
+    ///<summary></summary>
     /**
-    * Represente __loadVars function
+    * 
     */
     private function __loadVars(){
         $this->m_vars=array();
@@ -36,9 +39,9 @@ final class IGKUserVarsCtrl extends IGKConfigCtrlBase {
             }
         }
     }
-    ///<summary>Represente __storeVars function</summary>
+    ///<summary></summary>
     /**
-    * Represente __storeVars function
+    * 
     */
     public function __storeVars(){
         if(defined("IGK_FRAMEWORK_ATOMIC"))
@@ -62,37 +65,37 @@ final class IGKUserVarsCtrl extends IGKConfigCtrlBase {
         }
         $this->View();
     }
-    ///<summary>Represente getConfigPage function</summary>
+    ///<summary></summary>
     /**
-    * Represente getConfigPage function
+    * 
     */
     public function getConfigPage(){
         return "uservarctrl";
     }
-    ///<summary>Represente getdataFileName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getdataFileName function
+    * 
     */
     public function getdataFileName(){
         return igk_io_syspath(IGK_DATA_FOLDER.DIRECTORY_SEPARATOR."usersvar.csv");
     }
-    ///<summary>Represente getName function</summary>
+    ///<summary></summary>
     /**
-    * Represente getName function
+    * 
     */
     public function getName(){
         return IGK_USERVARS_CTRL;
     }
-    ///<summary>Represente getVars function</summary>
+    ///<summary></summary>
     /**
-    * Represente getVars function
+    * 
     */
     public function getVars(){
         return $this->m_vars;
     }
-    ///<summary>Represente InitComplete function</summary>
+    ///<summary></summary>
     /**
-    * Represente InitComplete function
+    * 
     */
     protected function InitComplete(){
         parent::InitComplete();
@@ -110,17 +113,17 @@ final class IGKUserVarsCtrl extends IGKConfigCtrlBase {
             return;
         $this->m_vars[$name]=array("value"=>$value, "comment"=>$comment);
     }
-    ///<summary>Represente search_var function</summary>
+    ///<summary></summary>
     /**
-    * Represente search_var function
+    * 
     */
     public function search_var(){
         $this->m_searchkey=igk_getr("q");
         $this->View();
     }
-    ///<summary>Represente vc_addvarframe_ajx function</summary>
+    ///<summary></summary>
     /**
-    * Represente vc_addvarframe_ajx function
+    * 
     */
     public function vc_addvarframe_ajx(){
         $frame=igk_html_frame($this, __FUNCTION__);
@@ -137,19 +140,19 @@ final class IGKUserVarsCtrl extends IGKConfigCtrlBase {
         $frm->addInput("btn_savevar", "submit", R::ngets("btn.save"));
         igk_wl($frame->Render());
     }
-    ///<summary>Represente vc_addvars function</summary>
+    ///<summary></summary>
     /**
-    * Represente vc_addvars function
+    * 
     */
     public function vc_addvars(){
         $obj=igk_get_robj();
         $this->m_vars[$obj->clName]=array("value"=>$obj->clValue, "comment"=>$obj->clComment);
         $this->__storeVars();
     }
-    ///<summary>Represente vc_Clearvars function</summary>
+    ///<summary></summary>
     ///<param name="store" default="true"></param>
     /**
-    * Represente vc_Clearvars function
+    * 
     * @param mixed $store the default value is true
     */
     public function vc_Clearvars($store=true){
@@ -157,9 +160,9 @@ final class IGKUserVarsCtrl extends IGKConfigCtrlBase {
         if($store)
             $this->__storeVars();
     }
-    ///<summary>Represente vc_dropvars function</summary>
+    ///<summary></summary>
     /**
-    * Represente vc_dropvars function
+    * 
     */
     public function vc_dropvars(){
         $obj=igk_getr("n");
@@ -170,9 +173,9 @@ final class IGKUserVarsCtrl extends IGKConfigCtrlBase {
         }
         igk_navtocurrent();
     }
-    ///<summary>Represente vc_rm_selection function</summary>
+    ///<summary></summary>
     /**
-    * Represente vc_rm_selection function
+    * 
     */
     public function vc_rm_selection(){
         $n=igk_getr(IGK_FD_NAME);
@@ -185,9 +188,9 @@ final class IGKUserVarsCtrl extends IGKConfigCtrlBase {
         $this->View();
         igk_navtocurrent();
     }
-    ///<summary>Represente vc_saveAllVars function</summary>
+    ///<summary></summary>
     /**
-    * Represente vc_saveAllVars function
+    * 
     */
     public function vc_saveAllVars(){
         $tn=igk_getr(IGK_FD_NAME);
@@ -205,9 +208,9 @@ final class IGKUserVarsCtrl extends IGKConfigCtrlBase {
         $this->__storeVars();
         igk_navtocurrent();
     }
-    ///<summary>Represente View function</summary>
+    ///<summary></summary>
     /**
-    * Represente View function
+    * 
     */
     public function View(){
         if(!$this->getIsVisible()){

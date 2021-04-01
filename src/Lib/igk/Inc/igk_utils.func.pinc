@@ -8,9 +8,9 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
-///<summary>Represente __ function</summary>
+///<summary></summary>
 /**
-* Represente __ function
+* 
 */
 function __(){
     return call_user_func_array('igk_resources_gets', func_get_args());

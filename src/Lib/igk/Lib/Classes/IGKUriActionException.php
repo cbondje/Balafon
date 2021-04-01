@@ -9,12 +9,12 @@
 */
 class IGKUriActionException extends IGKException{
     private $m_uri;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="msg"></param>
     ///<param name="uri" default="null"></param>
     ///<param name="code"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $msg
     * @param mixed $uri the default value is null
     * @param mixed $code the default value is 0
@@ -23,9 +23,9 @@ class IGKUriActionException extends IGKException{
         parent::__construct($msg);
         $this->m_uri=$uri;
     }
-    ///<summary>Represente getUri function</summary>
+    ///<summary></summary>
     /**
-    * Represente getUri function
+    * 
     */
     public function getUri(){
         return $this->m_uri;

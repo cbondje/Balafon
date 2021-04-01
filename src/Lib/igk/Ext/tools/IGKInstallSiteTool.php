@@ -13,9 +13,9 @@
 * Represente IGKInstallSiteTool class
 */
 class IGKInstallSiteTool extends IGKToolCtrlBase{
-    ///<summary>Represente doAction function</summary>
+    ///<summary></summary>
     /**
-    * Represente doAction function
+    * 
     */
     public function doAction(){
         $frame=igk_html_frame($this, "tool.installsite");
@@ -31,9 +31,9 @@ class IGKInstallSiteTool extends IGKToolCtrlBase{
         igk_html_form_initfield($frm);
         $frame->renderAJX();
     }
-    ///<summary>Represente getIsAvailable function</summary>
+    ///<summary></summary>
     /**
-    * Represente getIsAvailable function
+    * 
     */
     public function getIsAvailable(){
         return true;

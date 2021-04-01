@@ -27,7 +27,7 @@ class DragDropZoneItem extends IGKHtmlItem
 		parent::__construct("div");
 		$this->m_scriptNode =  IGKHtmlItem::CreateWebNode("script");
 	}
-	public function Render($xmloption=null)
+	public function render($xmloption=null)
 	{
 		$this->m_scriptNode->Content = <<<EOF
 igk.winui.dragdrop.init(IGK.getParentScript());

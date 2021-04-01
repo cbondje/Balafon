@@ -164,27 +164,27 @@ function igk_treat_source($source, $callback, $tab=null, & $options=null){
 class IGKProtectHtmlField{
     private $engines;
     private $options;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     public function __construct(){
         $this->_initOptions();
         $this->engines=array();
         $this->_initengines();
     }
-    ///<summary>Represente __output function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     /**
-    * Represente __output function
+    * 
     * @param mixed $v
     */
     private function __output($v){
         return $v;
     }
-    ///<summary>Represente _initengines function</summary>
+    ///<summary></summary>
     /**
-    * Represente _initengines function
+    * 
     */
     private function _initengines(){
         $tab=& $this->engines;
@@ -262,9 +262,9 @@ class IGKProtectHtmlField{
                 }
         ));
     }
-    ///<summary>Represente _initOptions function</summary>
+    ///<summary></summary>
     /**
-    * Represente _initOptions function
+    * 
     */
     private function _initOptions(){
         $this->options=(object)array(
@@ -281,10 +281,10 @@ class IGKProtectHtmlField{
             "DataLF"=>"\n"
         );
     }
-    ///<summary>Represente protect function</summary>
+    ///<summary></summary>
     ///<param name="v"></param>
     /**
-    * Represente protect function
+    * 
     * @param mixed $v
     */
     public function protect($v){

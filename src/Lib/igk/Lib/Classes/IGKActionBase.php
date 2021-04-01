@@ -25,10 +25,10 @@ abstract class IGKActionBase implements IActionProcessor{
     public static function Register($name, $callback){
         self::$macro[$name] = $callback;
     }
-    ///<summary>Represente Initialize function</summary>
+    ///<summary></summary>
     ///<param name="ctrl"></param>
     /**
-    * Represente Initialize function
+    * 
     * @param mixed $ctrl
     */
     public function Initialize($ctrl){
@@ -104,7 +104,7 @@ abstract class IGKActionBase implements IActionProcessor{
         }  
         return igk_view_handle_actions($fname, $b, $args, $exit, $flag );
     }
-    public function __call($name, $arguments){
+    public function __call($name, $arguments){ 
         if ($fc = igk_getv(self::$macro, $name)){
             return $fc(...$arguments);
         }

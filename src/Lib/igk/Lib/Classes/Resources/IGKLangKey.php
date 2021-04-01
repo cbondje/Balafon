@@ -15,12 +15,12 @@ final class IGKLangKey implements IIGKHtmlGetValue {
     var $args;
     var $def;
     var $key;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="key"></param>
     ///<param name="default"></param>
     ///<param name="args" default="null"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $key
     * @param mixed $default
     * @param mixed $args the default value is null
@@ -32,17 +32,17 @@ final class IGKLangKey implements IIGKHtmlGetValue {
         $this->def=$default;
         $this->args=$args;
     }
-    ///<summary>Represente __toString function</summary>
+    ///<summary>display value</summary>
     /**
-    * Represente __toString function
+    * display value
     */
     public function __toString(){
         return $this->key;
     }
-    ///<summary>Represente getValue function</summary>
+    ///<summary></summary>
     ///<param name="options" default="null"></param>
     /**
-    * Represente getValue function
+    * 
     * @param mixed $options the default value is null
     */
     public function getValue($options=null){
@@ -77,11 +77,11 @@ final class IGKLangKey implements IIGKHtmlGetValue {
         }
         return html_entity_decode($s);
     }
-    ///<summary>Represente GetValueKeys function</summary>
+    ///<summary></summary>
     ///<param name="s"></param>
     ///<param name="args"></param>
     /**
-    * Represente GetValueKeys function
+    * 
     * @param mixed $s
     * @param mixed $args
     */

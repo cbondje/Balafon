@@ -7,10 +7,10 @@ use function igk_resources_gets as __;
 * represent a igk not implement exception
 */
 class IGKNotImplementException extends IGKException{
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     ///<param name="func"></param>
     /**
-    * Represente __construct function
+    * 
     * @param mixed $func
     */
     public function __construct($func){

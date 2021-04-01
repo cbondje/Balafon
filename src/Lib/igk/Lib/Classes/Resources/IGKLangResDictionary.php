@@ -10,44 +10,44 @@ use ArrayAccess;
 */
 final class IGKLangResDictionary implements ArrayAccess{
     private $_f;
-    ///<summary>Represente __construct function</summary>
+    ///<summary></summary>
     /**
-    * Represente __construct function
+    * 
     */
     public function __construct(){}
-    ///<summary>Represente OffsetExists function</summary>
+    ///<summary></summary>
     ///<param name="i"></param>
     /**
-    * Represente OffsetExists function
+    * 
     * @param mixed $i
     */
     public function OffsetExists($i){
         return isset($this->_f[strtolower($i)]);
     }
-    ///<summary>Represente offsetGet function</summary>
+    ///<summary></summary>
     ///<param name="i"></param>
     /**
-    * Represente offsetGet function
+    * 
     * @param mixed $i
     */
     public function offsetGet($i){
         return $this->_f[strtolower($i)];
     }
-    ///<summary>Represente offsetSet function</summary>
+    ///<summary></summary>
     ///<param name="i"></param>
     ///<param name="v"></param>
     /**
-    * Represente offsetSet function
+    * 
     * @param mixed $i
     * @param mixed $v
     */
     public function offsetSet($i, $v){
         $this->_f[strtolower($i)]=$v;
     }
-    ///<summary>Represente offsetUnset function</summary>
+    ///<summary></summary>
     ///<param name="i"></param>
     /**
-    * Represente offsetUnset function
+    * 
     * @param mixed $i
     */
     public function offsetUnset($i){

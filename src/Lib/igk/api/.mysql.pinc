@@ -64,16 +64,16 @@ function igk_api_get_columninfo($row, $v, $table_n, $mysql){
     //+ insert and update function ignored
     return $cl;
 }
-///<summary>Represente igk_api_get_mysql_doc function</summary>
+///<summary></summary>
 /**
-* Represente igk_api_get_mysql_doc function
+* 
 */
 function igk_api_get_mysql_doc(){
     $doc=igk_get_document("sysapp:mysql", true);
     $doc->Title="MysQL Utility - [BALFAFON]";
     return $doc;
 }
-///<summary>Represente igk_api_get_sync_definition function</summary>
+///<summary></summary>
 ///<param name="api"></param>
 ///<param name="row"></param>
 ///<param name="table_n"></param>
@@ -83,7 +83,7 @@ function igk_api_get_mysql_doc(){
 ///<param name="entries" default="null"></param>
 ///<param name="tables" default="null"></param>
 /**
-* Represente igk_api_get_sync_definition function
+* 
 * @param mixed $api
 * @param mixed $row
 * @param mixed $table_n
@@ -124,7 +124,7 @@ function igk_api_get_sync_definition($api, $row, $table_n, $u, $mysql, $db=null,
         igk_api_sync_def_evaluate_entries($entries, $table_n, $mysql, $db, $tables !== null ? $tables: (object)array("list"=>array($table_n=>$g), "value"=>array()));
     }
 }
-///<summary>Represente igk_api_get_table_definition function</summary>
+///<summary></summary>
 ///<param name="api"></param>
 ///<param name="row"></param>
 ///<param name="table_n"></param>
@@ -132,7 +132,7 @@ function igk_api_get_sync_definition($api, $row, $table_n, $u, $mysql, $db=null,
 ///<param name="tinfo" default="null"></param>
 ///<param name="entries" default="null"></param>
 /**
-* Represente igk_api_get_table_definition function
+* 
 * @param mixed $api
 * @param mixed $row
 * @param mixed $table_n
@@ -160,10 +160,10 @@ function igk_api_get_table_definition($api, $row, $table_n, $mysql, $tinfo=null,
         }
     }
 }
-///<summary>Represente igk_api_mysql_about function</summary>
+///<summary></summary>
 ///<param name="api"></param>
 /**
-* Represente igk_api_mysql_about function
+* 
 * @param mixed $api
 */
 function igk_api_mysql_about($api){
@@ -177,12 +177,12 @@ function igk_api_mysql_about($api){
     $ul->addLi()->Content="Version :".IGKMySQLUtilityConstant::VERSION;
     $doc->RenderAJX();
 }
-///<summary>Represente igk_api_mysql_addcolumn function</summary>
+///<summary></summary>
 ///<param name="api"></param>
 ///<param name="tbname"></param>
 ///<param name="name"></param>
 /**
-* Represente igk_api_mysql_addcolumn function
+* 
 * @param object $api controller
 * @param mixed $tbname table name
 * @param mixed $name name
@@ -293,11 +293,11 @@ function igk_api_mysql_check_data_structure($api, $ignore_notused=0, $exit=1){
         igk_exit();
     }
 }
-///<summary>Represente igk_api_mysql_ctrl_gen_schema function</summary>
+///<summary></summary>
 ///<param name="api"></param>
 ///<param name="ctrlname"></param>
 /**
-* Represente igk_api_mysql_ctrl_gen_schema function
+* 
 * @param mixed $api
 * @param mixed $ctrlname
 */
@@ -339,11 +339,11 @@ function igk_api_mysql_ctrl_gen_schema($api, $ctrlname){
     $rep->renderXML();
     return 1;
 }
-///<summary>Represente igk_api_mysql_extract function</summary>
+///<summary></summary>
 ///<param name="api"></param>
 ///<param name="tbname"></param>
 /**
-* Represente igk_api_mysql_extract function
+* 
 * @param mixed $api
 * @param mixed $tbname
 */
@@ -481,12 +481,12 @@ function igk_api_mysql_get_config_data_schema($api, $render=1, $param=null){
         return $tables;
     return $rep;
 }
-///<summary>Represente igk_api_mysql_get_data_schema function</summary>
+///<summary></summary>
 ///<param name="api"></param>
 ///<param name="render" default="1"></param>
 ///<param name="param" default="null"></param>
 /**
-* Represente igk_api_mysql_get_data_schema function
+* 
 * @param mixed $api
 * @param mixed $render the default value is 1
 * @param mixed $param the default value is null
@@ -531,10 +531,10 @@ function igk_api_mysql_get_data_schema($api, $render=1, $param=null){
         return $tables;
     return $rep;
 }
-///<summary>Represente igk_api_mysql_init_db function</summary>
+///<summary></summary>
 ///<param name="api"></param>
 /**
-* Represente igk_api_mysql_init_db function
+* 
 * @param mixed $api
 */
 function igk_api_mysql_init_db($api, $exit=1){
@@ -558,10 +558,10 @@ function igk_api_mysql_init_db($api, $exit=1){
     if ($exit)
     igk_exit();
 }
-///<summary>Represente igk_api_mysql_mysql_help function</summary>
+///<summary></summary>
 ///<param name="api"></param>
 /**
-* Represente igk_api_mysql_mysql_help function
+* 
 * @param mixed $api
 */
 function igk_api_mysql_mysql_help($api){
@@ -608,20 +608,20 @@ function igk_api_mysql_resetctrldb($api, $ctrlname=null){
     }
     return $r;
 }
-///<summary>Represente igk_api_mysql_resetsysdb function</summary>
+///<summary></summary>
 /**
-* Represente igk_api_mysql_resetsysdb function
+* 
 */
 function igk_api_mysql_resetsysdb(){ 
     igk_getctrl(IGK_SYSDB_CTRL)->resetDb(); 
     igk_navto_referer();
 }
-///<summary>Represente igk_api_mysql_rmcolumn function</summary>
+///<summary></summary>
 ///<param name="api"></param>
 ///<param name="tbname"></param>
 ///<param name="name"></param>
 /**
-* Represente igk_api_mysql_rmcolumn function
+* 
 * @param mixed $api
 * @param mixed $tbname
 * @param mixed $name
@@ -645,11 +645,11 @@ function igk_api_mysql_rmcolumn($api, $tbname, $name){
     $doc->RenderAJX();
     igk_exit();
 }
-///<summary>Represente igk_api_mysql_who_use function</summary>
+///<summary></summary>
 ///<param name="api"></param>
 ///<param name="tablename" default="null"></param>
 /**
-* Represente igk_api_mysql_who_use function
+* 
 * @param mixed $api
 * @param mixed $tablename the default value is null
 */
@@ -670,10 +670,10 @@ function igk_api_mysql_who_use($api, $tablename=null){
     }
 }
 
-///<summary>Represente igk_balafon_mysql_datatype function</summary>
+///<summary></summary>
 ///<param name="t"></param>
 /**
-* Represente igk_balafon_mysql_datatype function
+* 
 * @param mixed $t
 */
 function igk_balafon_mysql_datatype($t){
@@ -685,12 +685,12 @@ function igk_balafon_mysql_datatype($t){
     }
     return strtoupper($t);
 }
-///<summary>Represente igk_mysql_rename_table function</summary>
+///<summary></summary>
 ///<param name="api"></param>
 ///<param name="tbname"></param>
 ///<param name="ntbname"></param>
 /**
-* Represente igk_mysql_rename_table function
+* 
 * @param mixed $api
 * @param mixed $tbname
 * @param mixed $ntbname
