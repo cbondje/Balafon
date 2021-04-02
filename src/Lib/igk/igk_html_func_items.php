@@ -72,7 +72,12 @@ function igk_html_node_extends($parentview){
     throw new Exception("Not implemnts");
 }
 
-
+///<summary>loop thru array</summary>
+function igk_html_node_loop(array $array){
+    $p = igk_html_parent_node() ?? die("parent required");
+    $c = new IGKHtmlLooper($array, $p);
+    return $c;
+}
 
 ///<summary>function igk_html__tabbutton_add</summary>
 ///<param name="q"></param>

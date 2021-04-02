@@ -11,4 +11,3 @@ class IGKfacebookCtrl extends IGKNonVisibleControllerBase{
 		$db->insert($n, array(IGK_FD_NAME=>"facebooklink"));
 	}
 }
-?>

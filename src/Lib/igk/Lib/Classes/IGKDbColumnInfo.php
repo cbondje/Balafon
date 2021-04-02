@@ -114,6 +114,11 @@ final class IGKDbColumnInfo extends IGKObject {
      * @var mixed
      */
     var $clCheckConstraint; 
+
+    /**
+     * the link expression for default value
+     */
+    var $clDefaultLinkExpression;
     ///<summary></summary>
     ///<param name="array" default="null"></param>
     /**
@@ -140,6 +145,13 @@ final class IGKDbColumnInfo extends IGKObject {
             $this->clTypeLength=null;
         if(!$this->clNotNull && empty($this->clDefault) && preg_match("/(int|float)/i", $this->clType)){
             $this->clDefault=0;
+        }
+        if ($this->clDefault && $this->clLinkType){
+            // detect link expression
+            if (preg_match("/(.)+\.(.)+/", $this->clDefault)){
+                $this->clDefaultLinkExpression = $this->clDefault;
+            }
+            $this->clDefault = null;
         }
     }
     ///<summary></summary>

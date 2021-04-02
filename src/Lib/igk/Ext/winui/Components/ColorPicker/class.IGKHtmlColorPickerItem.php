@@ -80,7 +80,6 @@ final class IGKHtmlCircleColorPickerItem extends IGKHtmlItem
 $this->addScript()->Content = <<<EOF
 ns_igk.readyinvoke('igk.winui.components.circleColorPicker.init');
 EOF;
-		//include(dirname(__FILE__)."/Styles/default.pcss");
 	}
 
 	public function initDemo($t){
@@ -97,9 +96,6 @@ final class IGKColorPickerComponentController extends IGKNonVisibleControllerBas
 	public function getcanDelete(){return false;}
 	public function InitComplete(){
 		parent::InitComplete();
-		//include_once(dirname(__FILE__)."/Styles/default.pcss");
 	}
 
 }
-
-?>

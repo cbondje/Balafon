@@ -3831,6 +3831,31 @@ EOF
         }
     }
 }
+
+/**
+ * summary html array looper
+ */
+class IGKHtmlLooper extends IGKHtmlItemBase{
+    private $args;
+    private $node;  
+    
+    public function __construct($args, $node){
+        parent::__construct();
+        $this->args = $args;
+        $this->node = $node;
+    }
+
+    public function getIsRenderTagName() { return false; }
+
+    public function render($options = null) { return null; }
+    public function host(callable $callback){
+        foreach($this->args as $c){
+            $callback($this->node, $c);
+        }
+    }   
+}
+
+
 igk_reg_html_component("expression-node", function(){
     return igk_html_node_expression_node(null);
 });

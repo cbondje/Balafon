@@ -14,46 +14,7 @@ abstract class ControllerExtension{
         $t =  IGKResourceUriResolver::getInstance()->resolve($f); 
         return $t;
     }
-    public static function resetDb(BaseController $ctrl, $navigate=false){
-        $s_d=igk_app_is_uri_demand($ctrl, __FUNCTION__);
-        if(!$s_d){
-            $s=igk_is_conf_connected() || $ctrl->IsUserAllowedTo($ctrl->Name.":".__FUNCTION__);
-            if(!$s){
-                igk_notifyctrl()->addError("Operation not allowed");
-                igk_navto($ctrl->getAppUri());
-                return;
-            }
-        }
-        else{
-            $s=igk_is_conf_connected() || $ctrl->IsUserAllowedTo($ctrl->Name.":".__FUNCTION__);
-        }
-        if(!$s){
-            if($s_d && $navigate){
-                igk_navto($ctrl->getAppUri());
-            }
-            return;
-        }
-        $ctrl->dropdb();
-        $ad=igk_get_data_adapter($ctrl);
-        $ad->initForInitDb();
-        igk_set_env("sys://db_init_table/ctrl", $ctrl);
-        $ctrl->initDb();
-        $ad->flushForInitDb();
-        igk_hook(IGKEvents::HOOK_DB_INIT_ENTRIES, array($ctrl));
-        igk_hook(IGKEvents::HOOK_DB_INIT_COMPLETE); 
-        $ctrl->logout(0);
-        if(igk_uri_is_match(igk_io_currentUri(), $ctrl->getAppUri(__FUNCTION__))){
-            igk_notification_push_event(IGK_HOOK_DB_CHANGED, $ctrl, null);
-            if($navigate){
-                igk_navto($ctrl->getAppUri());
-            }
-        }
-        else{
-            igk_wln_e("no matching.... uri "
-            , "appuri : ".$ctrl->getAppUri(__FUNCTION__)
-            , "currenturi: ".igk_io_currentUri()); 
-        }
-    }
+  
 
     /**
      * resolv controller name key
@@ -70,6 +31,12 @@ abstract class ControllerExtension{
      */
     public static function notifyKey(BaseController $ctrl, $name=null){
         return static::name($ctrl, "notify".($name ? "/".$name: ""));
+    }
+    /**
+     * return system controller hook name
+     */
+    public static function hookName(BaseController $ctrl, $name=null){
+        return static::name($ctrl, "hook".($name ? "/".$name: ""));
     }
 
     public static function seed(BaseController $ctrl, $classname=null){
@@ -107,8 +74,6 @@ abstract class ControllerExtension{
         if (!file_exists($base_f = $c."ModelBase.php")){
             igk_io_w2file($base_f, self::GetDefaultModelBaseSource($ctrl));
         }
-
-
         foreach($tb as $k=>$v){
             //remove prefix
             $gs = !empty($ns) && strpos($k, $ns) === 0;
@@ -129,6 +94,23 @@ abstract class ControllerExtension{
         }
     }
 
+    /**
+     * resolv class from controller entry namespace
+     * @param BaseController $ctrl 
+     * @param mixed $path 
+     * @return string|string[]|null 
+     */
+    public static function resolvClass(BaseController $ctrl, $path){
+        $cl = $path;
+        if ($ns =   $ctrl->getEntryNamespace()){
+            $cl = $ns."/".$path;
+        }
+        $cl = str_replace("/", "\\", $cl);        
+        if (class_exists($cl)){
+            return $cl;
+        }
+        return null;
+    }
     private static function GetModelDefaultSourceDeclaration($name, $table, $v, $ctrl){
         $ns =  $ctrl ? $ctrl->getEntryNamespace() : 0;
         // igk_wln_e("ns ".$ns);
@@ -222,6 +204,6 @@ abstract class ControllerExtension{
                 }
             }
             return $ctrl->User !== null;
-
     }
+   
 }

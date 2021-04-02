@@ -74,7 +74,7 @@ abstract class IGKActionBase implements IActionProcessor{
      * @return mixed 
      * @throws Exception 
      */
-    private function Handle($fname, $args, $exit=1, $flag=0){ 
+    protected function Handle($fname, $args, $exit=1, $flag=0){ 
         $ctrl = null; 
 
         if ($fname instanceof BaseController){           

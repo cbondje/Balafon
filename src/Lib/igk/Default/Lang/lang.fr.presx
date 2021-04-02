@@ -1633,3 +1633,5 @@ $l["registration mail contact"]= "mail de contact";
 $l["first name"]= "prenom";
 $l["phone number"]= "contact telephonique";
 $l["profession name"]= "occupation actuelle";
+
+$l["q.confirm_remove_group_auth"] = "Voulez vous vraiment supprimer cette authorization de la liste? ";

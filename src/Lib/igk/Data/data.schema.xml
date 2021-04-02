@@ -138,8 +138,8 @@
     </DataDefinition>
     <DataDefinition TableName="%prefix%usergroups" >
         <Column clName="clId" clType="Int"  clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
-        <Column clName="clUser_Id" clType="Int"  clLinkType="%prefix%users" />
-        <Column clName="clGroup_Id" clType="Int"  clLinkType="%prefix%groups" />
+        <Column clName="clUser_Id" clType="Int"  clLinkType="%prefix%users" clIsUniqueColumnMember="true" clUniqueColumnIndex="1" />
+        <Column clName="clGroup_Id" clType="Int" clNotNull="True" clIsUniqueColumnMember="true" clUniqueColumnIndex="1" clLinkType="%prefix%groups" />
     </DataDefinition>
     <DataDefinition TableName="%prefix%users" Description="User's tables">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />

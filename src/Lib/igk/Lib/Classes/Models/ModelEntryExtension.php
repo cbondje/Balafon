@@ -7,6 +7,12 @@ use function igk_resources_gets as __;
 
 ///<summary>Extension</summary>
 abstract class ModelEntryExtension{
+    public static function createIfNotExists(ModelBase $model, $condition){
+        if (!$model->select_row($condition)){
+            return $model::create($condition);
+        }
+        return null;
+    }
     public static function beginTransaction(ModelBase $model){
         return $model->getDataAdapter()->beginTransaction();
     }
@@ -31,8 +37,18 @@ abstract class ModelEntryExtension{
         }  
         return $tab;
     }
+    public static function count(ModelBase $model, $conditions=null){         
+        $driver = $model->getDataAdapter();   
+        if ($m = $driver->countAndWhere($model->getTable(), $conditions)){
+            return $m->getRowAtIndex(0)->{"Count(*)"};
+        }
+        return null;
+    }
     public static function select_row(ModelBase $model, $conditions, $options=null ){     
-        $cl = get_class($model);  
+        $cl = get_class($model);   
+        if (is_numeric($conditions)){
+            $conditions = [$model->getPrimaryKey()=>$conditions]; 
+        }
         $r= $model->getDataAdapter()->select($model->getTable(), $conditions, $options);
         if($r && $r->RowCount == 1){
             $g=$r->getRowAtIndex(0);

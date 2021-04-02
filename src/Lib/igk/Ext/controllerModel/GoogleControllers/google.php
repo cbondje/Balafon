@@ -372,7 +372,7 @@ function igk_html_demo_googlelinewaiter($t){
 }
 
 function igk_html_node_google_icons($name, $type="span"){
-    $n = igk_createnode("type");
+    $n = igk_createnode($type);
     $n->setClass("material-icons")->Content = $name;
     return $n;
 }

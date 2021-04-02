@@ -204,7 +204,7 @@ abstract class ModelBase{
             return $fc(...$arguments);
         } 
         if ($fc = igk_getv(self::$macros, static::class."/".$name)){
-            $fc->bindTo(new static);
+            $fc = $fc->bindTo(new static);
             return $fc(...$arguments);
         }
         if (static::class === __CLASS__){

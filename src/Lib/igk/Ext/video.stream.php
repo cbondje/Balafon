@@ -46,8 +46,7 @@ class VideoStream
 
 		if ($this->m_cache_callback){
 			$c=$this->m_cache_callback;
-			$c();//igk_header_no_cache
-			//igk_ilog("bind my callback");
+			$c(); 
 		}else{
 			header("Cache-Control: max-age=2592000, public");
 			header("Expires: ".gmdate('D, d M Y H:i:s', time()+2592000) . ' GMT');
@@ -139,6 +138,4 @@ class VideoStream
         $this->stream();
         $this->end();
     }
-}
-
-?>
+} 

@@ -57,6 +57,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
     }
     protected function getActionHandler($name, $params=null){
+        if (($name!= IGK_DEFAULT_VIEW) && str_ends_with($name, IGK_DEFAULT_VIEW)){
+            $name = rtrim(substr($name,0, -strlen(IGK_DEFAULT_VIEW)), "/");
+        }
         $ns = $this->getEntryNameSpace();
         $c = [];
         $t = [];
@@ -69,7 +72,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
 
         if ($name != IGK_DEFAULT_VIEW){
             $t[] = implode("\\",array_filter(array_merge([$ns], ["Actions\\".ucfirst(IGK_DEFAULT_VIEW)."Action"])));
-        } 
+        }  
         while($cl = array_shift($t)){
             if (class_exists($cl)){
                 return $cl;
@@ -213,7 +216,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             if(($etb != null) && array_key_exists($tablename, $etb)){
                 foreach($etb[$tablename] as $e=>$ee){
                     if(!$db->insert($tablename, (object)$ee)){
-                        igk_wln("insert failed ".$db->getError());
+                        igk_ilog("insert failed ".$db->getError());
                         return false;
                     }
                 }
@@ -342,7 +345,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             //+ | insert here a middle ware to auto handle the view before include 
             //+ | ----------------------------------------------------------------
             if ((igk_count($params)>0) && ($handler = $this->getActionHandler($fname, $params[0]))){                
-                
+                   
                 igk_do_response($r = $handler::Handle($this, $fname, $params));       
             }
       
@@ -1780,25 +1783,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     * 
     */
     protected function initDb(){
-        if(!$this->getCanInitDb()){
-            igk_debug_wln("Can't init db ".$this->Name. " ConfigUserConnected: ".igk_parsebool(igk_is_conf_connected()));
-            return;
-        }
-        igk_set_env("sys://db/constraint_key", $this->getInitDbConstraintKey());
-        if(!$this->UseDataSchema){
-            igk_debug_wln("init from db functions ".get_class($this));
-            $this->initDbFromFunctions();
-        }
-        else{
-            igk_debug_wln("init from db schemas ".get_class($this));
-            $bck=igk_get_env(IGK_ENV_DB_INIT_CTRL);
-            igk_set_env(IGK_ENV_DB_INIT_CTRL, $this);
-            $this->initDbFromSchemas();
-            $this->initDbConstantFiles();
-            $this::InitDataBaseModel();
-            igk_set_env(IGK_ENV_DB_INIT_CTRL, $bck);
-        }
-        igk_set_env(get_class($this)."::".__FUNCTION__, 1);
+        self::__callStatic(__FUNCTION__, []); 
     }
     ///<summary>init database constant file</summary>
     /**
@@ -1822,13 +1807,17 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
 		$s.= "abstract class ".basename($cl)."DbConstants{".IGK_LF;
 		   if($tb != null){
 			   ksort($tb);
+               $prefix = igk_db_get_table_name("%prefix%", $this);
 			   foreach($tb as $k=>$v){
 				   $n=strtoupper($k);
 					$n=preg_replace_callback("/^%prefix%/i", function(){
 						return IGK_DB_PREFIX_TABLE_NAME;
 					}
 					, $n);
-				   $s .= "\tconst ".$n." = \"".$k."\";".IGK_LF;
+                    if ($prefix){
+                        $n = preg_replace("/^".$prefix."/i",  "TB_", $n);
+                    }
+				   $s .= "\tconst ".$n." = \"".$k."\";".IGK_LF; 
 			   }
 		   }
 		$s.="}".IGK_LF;

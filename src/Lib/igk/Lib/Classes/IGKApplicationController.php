@@ -836,17 +836,17 @@ EOF;
     * 
     * @param mixed $s the default value is null
     */
-    public function initDb($s=null){
-    
-        parent::initDb();
-        if($s){
-            igk_navto($this->getAppUri());
-        }
-        if(igk_uri_is_match(igk_io_currentUri(), $this->getAppUri(__FUNCTION__))){
-            igk_is_debug() && igk_ilog("notify message :  IGK_HOOK_DB_CHANGED" );
-            igk_notification_push_event(IGK_HOOK_DB_CHANGED, $this, null);
-            igk_navto($this->getAppUri());
-        }
+    protected function initDb($s=null){ 
+        static::__callStatic(__FUNCTION__, [$s]); // ::initDb();
+        // parent::initDb();
+        // if($s){
+        //     igk_navto($this->getAppUri());
+        // }
+        // if(igk_uri_is_match(igk_io_currentUri(), $this->getAppUri(__FUNCTION__))){
+        //     igk_is_debug() && igk_ilog("notify message :  IGK_HOOK_DB_CHANGED" );
+        //     igk_notification_push_event(IGK_HOOK_DB_CHANGED, $this, null);
+        //     igk_navto($this->getAppUri());
+        // }
     }
     ///<summary></summary>
     ///<param name="ctrl"></param>
@@ -1043,45 +1043,7 @@ EOF;
     * @param mixed $navigate the default value is 1
     */
     public final function resetDb($navigate=1){
-        $s_d=igk_app_is_uri_demand($this, __FUNCTION__);
-        if(!$s_d){
-            $s=igk_is_conf_connected() || $this->IsUserAllowedTo($this->Name.":".__FUNCTION__);
-            if(!$s){
-                igk_notifyctrl()->addError("Operation not allowed");
-                igk_navto($this->getAppUri());
-                return;
-            }
-        }
-        else{
-            $s=igk_is_conf_connected() || $this->IsUserAllowedTo($this->Name.":".__FUNCTION__);
-        }
-        if(!$s){
-            if($s_d && $navigate){
-                igk_navto($this->getAppUri());
-            }
-            return;
-        }  
-        $this->dropdb();
-        $ad=igk_get_data_adapter($this);
-        $ad->initForInitDb();
-        igk_set_env("sys://db_init_table/ctrl", $this);
-        $this->initDb();
-        $ad->flushForInitDb();
-        igk_hook(IGKEvents::HOOK_DB_INIT_ENTRIES, array($this));
-        igk_hook(IGKEvents::HOOK_DB_INIT_COMPLETE); 
-    
-        $this->logout(0); 
-        if(igk_uri_is_match(igk_io_currentUri(), $this->getAppUri(__FUNCTION__))){
-            igk_notification_push_event(IGK_HOOK_DB_CHANGED, $this, null);
-            if($navigate){
-                igk_navto($this->getAppUri());
-            }
-        }
-        else{
-            igk_wln_e("no matching.... uri "
-            , "appuri : ".$this->getAppUri(__FUNCTION__)
-            , "currenturi: ".igk_io_currentUri()); 
-        }
+        static::__callStatic(__FUNCTION__, [$navigate]);
     }
     ///<summary> save data schema</summary>
     /**

@@ -13220,8 +13220,7 @@ Name:balafon.js
 						}
 					}
 					else {
-						console.debug("send....");
-						return;
+					 
 						for (var i = 0; i < form.length; i++) {
 							e = form.elements[i];
 

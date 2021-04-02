@@ -388,13 +388,7 @@ class IGKApplicationManager extends BaseController{
         $cb=igk_create_func_callback('igk_view_render_if_visible', array($this));
         igk_reg_hook(IGK_CONF_USER_CHANGE_EVENT, $cb);
     }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function initDb(){
-        parent::initDb();
-    }
+  
     ///<summary></summary>
     /**
     * 
