@@ -11,6 +11,10 @@ class IGKQueryRowObj implements ArrayAccess, Iterator{
     public function __toString(){
         return "[".__CLASS__."]";
     }
+	public function __debugInfo()
+	{
+		return $this->m_rows; //["m_rows"=>$this->m_rows];
+	}
     public function to_json(){
         return Utility::To_JSON($this->m_rows, null);
     }

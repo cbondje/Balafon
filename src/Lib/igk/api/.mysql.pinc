@@ -231,7 +231,6 @@ function igk_api_mysql_check_data_structure($api, $ignore_notused=0, $exit=1){
         $tbname=$k;
         if(!isset($tdb[$k])){
             $err->add("msg")->Content="Table $k doesn't exists!!!";
-            // igk_wln_e($v->ctrl->getDataAdapterName());
             continue;
         }
         $v_b=$v->info;

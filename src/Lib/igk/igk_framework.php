@@ -34932,7 +34932,9 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
     public static function InitSingle(){
         if (self::$sm_instance === null){
             $obj = (object)[];
-            self::$sm_instance = new IGKApp($obj);
+            self::$sm_instance = new IGKApp($obj); 
+            igk_initenv(IGK_BASE_DIR);
+            self::$sm_instance->setIsInit(true);
         }  
         return self::$sm_instance;
     }
@@ -52115,20 +52117,6 @@ abstract class IGKPageControllerBase extends IGKCtrlTypeBase{
         $entryNS=$this->getEntryNameSpace() ?? "";
         $classdir = $this->getClassesDir(); 
         return igk_auto_load_class($n, $entryNS, $classdir);
-
-        // if(empty($entryNS) || (strpos($n, $entryNS) === 0)){
-        //     if(!empty($entryNS)){
-        //         $n=substr($n, strlen($entryNS));
-        //         while((strlen($n) > 0) && ($n[0] == "\\")){
-        //             $n=substr($n, 1);
-        //         }
-        //     }
-        //     if(file_exists($file=igk_io_dir($rq=$classdir.$n.".php"))){
-        //         include_once($file);
-        //         return 1;
-        //     }
-        // }
-        // return 0;
     }
     ///<summary>check init and init user to this apps </summary>
     /**
@@ -55252,8 +55240,10 @@ final class IGKSysDbController extends IGKNonVisibleControllerBase{
     * 
     */
     protected function initDb(){
+        igk_set_env(IGK_ENV_DB_INIT_CTRL, $this);
         $this->initDbFromSchemas();
         $this->initDbConstantFiles(); 
+        igk_set_env(IGK_ENV_DB_INIT_CTRL, null);
     }
     ///<summary></summary>
     ///<param name="name"></param>
@@ -72373,7 +72363,7 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
                 }
             }
             else{
-                $ctrl=igk_get_env(IGK_ENV_DB_INIT_CTRL) ?? igk_die(__("Environment failed : DB InitCtrl not found"));
+                $ctrl=igk_get_env(IGK_ENV_DB_INIT_CTRL) ?? igk_die(__("Environment failed : current controller to init not found. ".$tbname));
                 if(igk_count($tlinks) == 0){
                     igk_hook(IGKEvents::HOOK_DB_DATA_ENTRY, [$this, $tbname, 0]);
                 }
@@ -72909,6 +72899,7 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
             if (!$t){
                 igk_ilog("Query Error:".$this->getError());
             }
+            
             if($throwex){
                 $this->dieinfo($t, "/!\\ SQL Query Error :<div style='font-style:normal;'>".igk_html_query_parse($query)."</div>");
             }
@@ -74694,34 +74685,35 @@ final class IGKHtmlDocTheme extends IGKObjectGetProperties implements ArrayAcces
         $tab = null;
         $id = $this->m_document->getId();
         $app_info = igk_app()->settings->appInfo;
-		$docs = & $app_info->documents[$id];
-		$themes = null;
+        $docs = null;
+        $themes = null;
+        if ($app_info){
 
-		if ($docs===null){
-            $docs = [];
-			// igk_wln_e(__LINE__.":".__FILE__, igk_app()->settings->appInfo);
-			$app_info->documents[$id] = & $docs;
-			//die("no setting for id : ".$id);
-		}
-        if (!isset($docs["theme"])){
-
-            $tab = [];
-            $docs["theme"] = & $tab;
-            $tab[$this->m_id] = [];
-            $tab = & $tab[$this->m_id];
-			$themes = & $docs["theme"];
-        }else {
-			$themes = & $docs["theme"];
-			if (!isset($themes[$this->m_id])){
-				$themes[$this->m_id] = [];
-
-				$docs["theme"] = & $themes;
-			}
-            $tab = & $themes[$this->m_id];
+            $docs = & $app_info->documents[$id];
+            
+            if ($docs===null){
+                $docs = [];
+                // igk_wln_e(__LINE__.":".__FILE__, igk_app()->settings->appInfo);
+                $app_info->documents[$id] = & $docs;
+                //die("no setting for id : ".$id);
+            }
+            if (!isset($docs["theme"])){
+                
+                $tab = [];
+                $docs["theme"] = & $tab;
+                $tab[$this->m_id] = [];
+                $tab = & $tab[$this->m_id];
+                $themes = & $docs["theme"];
+            }else {
+                $themes = & $docs["theme"];
+                if (!isset($themes[$this->m_id])){
+                    $themes[$this->m_id] = [];
+                    
+                    $docs["theme"] = & $themes;
+                }
+                $tab = & $themes[$this->m_id];
+            }
         }
-		// igk_ilog("init style: ".igk_server()->REQUEST_URI." ".$id);
-
-
         $this->def = new IGKCssDefaultStyle($tab);
         $this->m_files=array();
         $this->m_medias=array();
@@ -76521,7 +76513,7 @@ class IGKSQLQueryUtils {
         if (isset($tq->extra)){
             $q .=" ".$tq->extra;
         }
-        $q ="SELECT {$column} FROM `".igk_mysql_db_tbname($tbname)."`".$q.";";// ".$tq->extra;
+        $q ="SELECT {$column} FROM `".igk_mysql_db_tbname($tbname)."`".rtrim($q).";";// ".$tq->extra;
         return $q;
     }
     ///<summary></summary>
@@ -76694,7 +76686,6 @@ class IGKSQLQueryUtils {
                 // if(self::IsNumber($tinf->clType))
                     // return " 088 ";
             }
-            // igk_wln_e($gtn, $value,$tinf->clType);
             return 'NULL';
         }
         if(empty($value)){

@@ -7,9 +7,17 @@ class IGKAppSetting{
     public function __construct(){        
     }
     private function & _setting(){
-        $app = null;
-        static $_session_data = null;         
+        $app = null;  
+        static $sm_setting = null;       
         if (!isset($_SESSION)){
+            if (igk_is_cmd()){
+
+                if($sm_setting === null){
+                    $sm_setting = [];
+                }
+                $app = & $sm_setting;
+                return $app;
+            }
             igk_wln_e("No Session started;");
         }
         if (isset($_SESSION[IGK_APP_SESSION_KEY])){

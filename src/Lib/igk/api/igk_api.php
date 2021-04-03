@@ -362,7 +362,6 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                         igk_wln("/!\\ Operation not allowed");
                         igk_exit();
                     }
-                    // igk_wln_e($args);
                     $n= implode("\\", $args);//igk_getv($args, 0);
                     $ctrl=igk_getctrl($n);
                     if($ctrl){

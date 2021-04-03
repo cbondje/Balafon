@@ -1,7 +1,7 @@
 <?php
 // Balafon : generated db constants file
-// date: 2021-03-27 13:04:03
+// date: 2021-04-03 17:45:06
 abstract class IGKApplicationManagerDbConstants{
-	const TBIGK_TEMPLATES = "tbigk_templates";
-	const TBIGK_TEMPLATES_AUTHORS = "tbigk_templates_authors";
+	const TB_TEMPLATES = "tbigk_templates";
+	const TB_TEMPLATES_AUTHORS = "tbigk_templates_authors";
 }

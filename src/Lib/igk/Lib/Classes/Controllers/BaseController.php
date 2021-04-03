@@ -960,7 +960,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     * 
     */
     public function getCanInitDb(){
-        if(defined('IGK_DB_GRANT_CAN_INIT'))
+        if(defined('IGK_DB_GRANT_CAN_INIT') || igk_is_cmd())
             return true;
         return igk_is_conf_connected();
     }

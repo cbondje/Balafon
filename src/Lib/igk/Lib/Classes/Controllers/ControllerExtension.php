@@ -2,10 +2,12 @@
 
 namespace IGK\Controllers;
 
-use IGK\Models\Migration;
+use Exception;
+use IGK\Models\Migrations;
 use IGK\Models\ModelBase;
-use IGKEvents;
+use IGK\System\Console\Logger;
 use IGKResourceUriResolver;
+use Throwable;
 
 abstract class ControllerExtension{
 
@@ -14,8 +16,14 @@ abstract class ControllerExtension{
         $t =  IGKResourceUriResolver::getInstance()->resolve($f); 
         return $t;
     }
+    public static function configFile(BaseController $ctrl, $name){
+        return $ctrl->getDeclaredDir()."/Configs/$name.php";
+    }
   
-
+    public static function uri(BaseController $ctrl, $name){
+        return $ctrl->getAppUri($name);
+    }
+  
     /**
      * resolv controller name key
      * @param BaseController $ctrl 
@@ -44,27 +52,61 @@ abstract class ControllerExtension{
         if ($classname === null){
             $classname = "Database/Seeds/DataBaseSeeder";
         }
-        $g = str_replace("/", "\\", implode("/", array_filter([ $ctrl->getEntryNamespace(), $classname] )));
+         $g = self::ns($ctrl, $classname );
         if (class_exists($g)){
             $o = new $g();
             return $o->run();
         } 
     }
     public static function migrate(BaseController $ctrl, $classname=null){
+        
+        $rgx = "/^[0-9]{8}_[0-9]{4}_(?P<name>(".IGK_IDENTIFIER_PATTERN."))/i";
+
         //get all seed class and run theme
         $dir = $ctrl->getSourceClassDir()."/Database/Migrations";
         $runbatch = 1;
         $tab = igk_io_getfiles($dir, "/\.php/");
         sort($tab);
+        // igk_environment()->querydebug = 1;
+        if ($m = Migrations::select_query(null,[
+            "Columns"=>[
+                ["Max(`migration_batch`) as max"]
+            ]
+        ])){
+            $m = $m->getRows()[0]; 
+            $runbatch = $m->max + 1;
+        }
         foreach($tab as $file){
             $t = igk_io_basenamewithoutext($file);
-            preg_match_all("/^[0-9]{6}_[0-9]{0}_(?P<name>".IGK_IDENTIFIER_PATTERN.")$/", $t, $tinf);
-            $name = $tinf["name"][0];
-            Migration::create([
-                "migration_name"=>$name,
-                "migration_batch"=>$runbatch
-                ]); 
+            if (preg_match_all($rgx, $t, $tinf)){
+
+                $name = $tinf["name"][0];
+                $cb = $ctrl::ns("Database/Migrations/{$name}");
+                include_once($file); 
+                Logger::info("init:".$t);
+                try{
+
+                    (new $cb())->up();
+                    
+                    ($r = Migrations::create([
+                        "migration_name"=>$t,
+                        "migration_batch"=>$runbatch
+                        ]) )?  
+                        Logger::success("complete:".$t):
+                        Logger::danger("failed to init:".$t);
+ 
+                    if (!$r){
+                        return false;
+                    }
+                    
+                } catch( Throwable $tex){
+                    Logger::print($tex->getMessage());
+                    Logger::danger("failed to init: ".$t);
+                }
+            }
+
         }
+    
     }
     public static function InitDataBaseModel(BaseController $ctrl){
         $c = $ctrl->getSourceClassDir()."/Models/";
@@ -94,6 +136,29 @@ abstract class ControllerExtension{
         }
     }
 
+    public static function register_autoload(BaseController $ctrl){
+        $k="sys://autoloading/".igk_base_uri_name($ctrl->getDeclaredDir());
+        if(igk_get_env($k))
+            return;
+        igk_set_env($k, 1);
+        $fc = function(){
+            $args = func_get_args();
+            // igk_wln_e($args);
+            return BaseController::Invoke($this, "auto_load_class", $args);
+
+            //return call_user_func_array(array($this, "auto_load_class"), func_get_args());
+        };
+        $fc = $fc->bindTo($ctrl);
+        igk_register_autoload_class($fc);
+    }
+    public static function ns(BaseController $ctrl, $path){
+        $cl = $path;
+        if ($ns = $ctrl::Invoke($ctrl, "getEntryNamespace")){
+            $cl = $ns."/".$cl;
+        }
+        $cl = str_replace("/", "\\", $cl);
+        return $cl;
+    }
     /**
      * resolv class from controller entry namespace
      * @param BaseController $ctrl 
@@ -101,18 +166,15 @@ abstract class ControllerExtension{
      * @return string|string[]|null 
      */
     public static function resolvClass(BaseController $ctrl, $path){
-        $cl = $path;
-        if ($ns =   $ctrl->getEntryNamespace()){
-            $cl = $ns."/".$path;
-        }
-        $cl = str_replace("/", "\\", $cl);        
+        $cl = $ctrl::ns($path);
+        $ctrl::register_autoload();    
         if (class_exists($cl)){
             return $cl;
         }
         return null;
     }
     private static function GetModelDefaultSourceDeclaration($name, $table, $v, $ctrl){
-        $ns =  $ctrl ? $ctrl->getEntryNamespace() : 0;
+        $ns =  self::ns($ctrl, "");
         // igk_wln_e("ns ".$ns);
         $o = "<?php ".PHP_EOL;
         if ($ns){
@@ -143,7 +205,7 @@ abstract class ControllerExtension{
     }
     private static function GetDefaultModelBaseSource(BaseController $ctrl){
         $o = "";
-        $ns =  $ctrl ? $ctrl->getEntryNamespace() : 0;
+        $ns =  self::ns($ctrl, "");
         // igk_wln_e("ns ".$ns);
         $o = "<?php ".PHP_EOL;
         if ($ns){
@@ -205,5 +267,7 @@ abstract class ControllerExtension{
             }
             return $ctrl->User !== null;
     }
-   
+    public static function classdir(BaseController $controller){
+        return BaseController::Invoke($controller, "getClassesDir");
+    }
 }

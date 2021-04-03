@@ -103,12 +103,11 @@ class IGKObject {
     */
     public static function Invoke($ctrl, $method, $args=null){
         if(method_exists($ctrl, $method)){
-            if(($args == null) || (is_array($args))){
-                return $ctrl->$method($args);
+            if($args == null){
+                return $ctrl->$method();
             }
             else{
-                $r=call_user_func_array(array($ctrl, $method), is_array($args) ? $args: array($args));
-                return $r;
+                return $ctrl->$method(...$args); 
             }
         }
         return null;

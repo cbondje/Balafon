@@ -5,7 +5,7 @@ if(!$controller->getCanInitDb()){
     return;
 }
 igk_set_env("sys://db/constraint_key", $controller->getInitDbConstraintKey());
-if(!$controller->UseDataSchema){
+if(!$controller->getUseDataSchema()){
     igk_debug_wln("init from db functions ".get_class($controller));
     $controller->initDbFromFunctions();
 }

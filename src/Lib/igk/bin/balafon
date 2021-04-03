@@ -1,15 +1,98 @@
-#!/usr/bin/env php
+#!/usr/bin/env php8
 <?php
 // @author: C.A.D BONDJE DOUE
 // @file : file extension
 // @description: balafon command line args
 
+use IGK\Controllers\ControllerTask;
+
 use function igk_resources_gets as __;
 require_once(__DIR__."/../igk_framework.php");
+
+
+
 //--------------------------------------------------------
 // define basics balafon command
 //
 $command = [
+    "--db:seed"=>function($command, $ctrl){
+        if ($c = igk_getctrl($ctrl, false)){ 
+            $command->app->print("seed...");
+            $c::seed();
+        } 
+    },
+    "--db:migrate"=>function($command, $ctrl){
+        if ($c = igk_getctrl($ctrl, false)){ 
+            $command->app->print("migrate...");
+            $c::migrate();
+        } 
+    },
+    "--db:initdb"=>[function($command){
+        $t = [];
+
+        if ($c = igk_app()->getControllerManager()->getControllers()){
+            foreach($c as $m){ 
+                if ($m->getCanInitDb()){
+                
+                $command->app->print("init : ".get_class($m));
+                $m::initDb();
+                }
+            }
+        }
+        // if ($c = igk_getctrl(IGK_MYSQL_DB_CTRL, false)){  
+        //     $c::Invoke($c, 'initSDb', [false, false]);
+        //     $command->app->print(
+        //         $command->app::gets($command->app::GREEN,  "initialize ...... ")
+        //     );
+        // } 
+        return 0;
+    }, __("initialize database")],
+    "--dbsys:initdb"=>[function($command){
+       
+        if ($c = igk_getctrl(IGK_SYSDB_CTRL, false)){  
+            $c::Invoke($c, 'initDb');
+        } 
+        return 0;
+    }, __("initialize system database")],
+    "--controller:list"=>[function($command){
+        $c = igk_app()->getControllerManager()->getControllers();
+        $t = [];
+        foreach($c as $m){
+            $t[] = get_class($m);
+            $m::initDb();
+        }
+        print_r($t);
+    }, __("list all controller")],
+
+    "--make:page"=>[function($command, $ctrl, $page){
+        
+        if ($c = igk_getctrl($ctrl, false)){ 
+            $path = "Pages/{$page}Page";
+
+            if (!($t = $c::resolvClass($path))){
+
+                $builder = new PHPScriptBuilder();
+                $builder
+                ->author($command->app->getConfigs()->get("author", IGK_AUTHOR))
+                ->type("class")
+                ->file("$path.php")
+                ->name(ucfirst($page)."Page")
+                ->extends(ControllerTask::class)
+                ->implements()
+                ->desc(igk_getv($command->options, "--desc"))
+                ->defs("public function index(){\n}")
+                ->namespace($c::ns("Pages"));
+                igk_io_w2file($c::classdir()."/{$path}.php", $builder->render());
+            } 
+            return 200;
+        }
+        //igk_wln_e("make page done", $c, func_get_args(), $command->options); // , $ctrl, $page, $c, $t);
+
+    }, [
+        "desc"=>__("make a new page. controller name [options]"),
+        "help"=> (object)[]
+        ]
+    ],
     // "--install-site"=>function(){
     // },
     // "--install-project"=>function(){
@@ -25,10 +108,11 @@ $command = [
     // "config:create"=>function(){ //new configuration
     // },
     "-v, --version"=>[function(){
+        echo IGK_VERSION."\n";
+        return 200;
     }, "show the current version" ]
-];
-// new IGKCommandProcessor()->handle();
-define("IGK_APP_DIR", getcwd());
+]; 
+
  
 // require_once(IGK_LIB_DIR."/SysMods/InstallSiteManager/IGKInstallSiteConfig.php");
 // $dir = "/Volumes/Data/wwwroot/sites/demo_install";

@@ -95,7 +95,7 @@ $args=igk_getquery_args($server_info->{'REDIRECT_QUERY_STRING'});
 $_REQUEST=array_merge($_REQUEST, $args);
 if($r == "POST" && ($code < 900)){
     //DEBUG: Posted data are lost
-    igk_wln_e($_POST);
+    igk_is_debug() && igk_wln_e($_POST);
 }
 $app=igk_app();
 $v_ruri=igk_io_base_request_uri();

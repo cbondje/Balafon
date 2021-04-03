@@ -19,7 +19,8 @@ function igk_auto_load_class($name, $entryNS, $classdir, & $refile=null ){
         $bindfile = function(){
             include_once(func_get_arg(0));
         };
-    }
+    } 
+
     if(empty($entryNS) || (strpos($name, $entryNS) === 0)){
         $n = $name;
         if(!empty($entryNS)){

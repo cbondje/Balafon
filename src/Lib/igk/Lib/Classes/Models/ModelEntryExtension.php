@@ -27,6 +27,7 @@ abstract class ModelEntryExtension{
         $r = $driver->update($model->getTable(), $value, $condition); 
         return $r;
     }
+    
     public static function select_all(ModelBase $model, $conditions=null, $options=null){ 
         $tab = [];
         $driver = $model->getDataAdapter();   
@@ -57,6 +58,11 @@ abstract class ModelEntryExtension{
         }
         return null;
     }
+    public static function select_query(ModelBase $model, $conditions=null, $options=null){
+        return $model->getDataAdapter()->select($model->getTable(), $conditions, $options);
+     
+    }
+    
     public static function delete(ModelBase $model, $conditions){
         return $model->getDataAdapter()->delete($model->getTable(), $conditions);
     }
@@ -122,12 +128,9 @@ abstract class ModelEntryExtension{
                         $stb[] = ["i"=>$m->{$m->getPrimaryKey()},"t"=>$m->display()];
                     }
                     $r["data"] = $stb;
-                }else{
-
                 }
 
-               //  igk_wln_e($info->clLinkType, $binf, igk_db_get_model_class_name($info->clLinkType));
-
+             
             }else{
                 switch(strtolower($type)){
                     case "enum": 

@@ -13,7 +13,7 @@ use IGK\Controllers\BaseController;
 
 
 //+Configuration data
-define('IGK_ENV_DB_INIT_CTRL', 1);
+define('IGK_ENV_DB_INIT_CTRL', 'sys://env/init_ctrl');
 define('IGK_LOCAL_DEBUGGING', 1);
 define('IGK_NODESTROY_ON_FATAL', 1);
 define('IGK_NO_TRACELOG', 1);
@@ -776,7 +776,6 @@ define("IGK_ENV_GLOBAL_SCRIPT_KEY", "sys://globalscript");
 // $flag = 0;
 // $c = 0;
 // $excludes = [
-// 'IGK_ENV_DB_INIT_CTRL'
 // ,'IGK_LOCAL_DEBUGGING'
 // ,'IGK_NODESTROY_ON_FATAL'
 // ,'IGK_NO_TRACELOG'

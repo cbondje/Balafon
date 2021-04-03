@@ -3569,7 +3569,6 @@ function igk_html_node_select_options($optionsList, $options=null){
 			$o->activate("selected");
 		}
 	}
-	 // igk_wln_e($options);
 	foreach($optionsList as $m){
 		$o = $p->add("option");
 

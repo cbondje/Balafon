@@ -8,6 +8,20 @@ class Route{
 
     protected $path = "";
 
+    public static function LoadConfig($controller){
+        if (file_exists($cf = $controller::configFile("routes"))){
+            $inc = function (){
+                include_once(func_get_arg(0));
+            };
+            $inc($cf);
+        }
+    }
+    public static function Uri_List($controller, $classpath){
+        self::LoadConfig($controller);
+        $t = self::GetAction($classpath);
+        return $t;
+    }
+
     public static function GetMatchAll(): Route{
         static $sm_route;
         if ($sm_route === null){
@@ -30,5 +44,16 @@ class Route{
     ///<summary>get action Provider</summary>
     public static function GetAction($actionClass){
         return igk_getv(self::$sm_actions, $actionClass);
+    }
+    public static function __callStatic($name, $arguments)
+    {
+        $verbs = explode('|', 'POST|GET|STORE|HEAD|PUT');
+        
+        if (in_array($v = strtoupper($name), $verbs)){
+            $fc = static::RegisterAction(...$arguments);
+            $fc->setVerb([$v]);
+            return $fc;
+        }
+
     }
 }

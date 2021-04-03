@@ -116,9 +116,10 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
             if(!$dbresult){
                 igk_set_error(__METHOD__, "CreateResult - > dbresult  not Define");
                 return null;
-            }
+            } 
             if(is_object($dbresult)){
                 $cl=strtolower(get_class($dbresult));
+                
                 if(!preg_match("/mysql(i)?_result/", $cl)){
                     $out=new IGKMySQLQueryResult();
                     $out->m_rowcount=1;
@@ -132,6 +133,7 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
                         $out->m_columns[$i]=(object)array("name"=>$k, "typeName"=>"php", "index"=>$i);
                         $i++;
                     }
+                    igk_wln("out ::: ", $out);
                     return $out;
                 }
             }
@@ -199,6 +201,9 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
         $out->m_rowcount=$c;
         $out->m_primarykey=$v_primkey;
         $out->m_multitable = $_nn;
+
+ 
+
         return $out;
     }
     ///<summary></summary>

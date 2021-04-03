@@ -172,7 +172,6 @@ class IGKLoader implements IResponse {
 					// try to get entry ns if method is public is public
 					$ns = $igk_c->getEntryNamespace();
 				}
-				// igk_wln_e($d);
 				$cl = $ns."\\Models\\".ucfirst($name)."Model";
 			}
 		}

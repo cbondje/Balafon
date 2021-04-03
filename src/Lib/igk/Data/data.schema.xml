@@ -199,7 +199,7 @@
 
     <DataDefinition TableName="%prefix%migrations" Description="Store migrations">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
-        <Column clName="clName" clType="VARCHAR" clTypeLength="60" clIsUnique="true" clDescription="m or f for male or female" clNotNull="True" />
-        <Column clName="clBatch" clType="Int" clDescription="Batch Running" />
+        <Column clName="migration_name" clType="VARCHAR" clTypeLength="60" clIsUnique="true" clDescription="m or f for male or female" clNotNull="True" />
+        <Column clName="migration_batch" clType="Int" clDescription="Batch Running" />
     </DataDefinition>
 </data-schemas>

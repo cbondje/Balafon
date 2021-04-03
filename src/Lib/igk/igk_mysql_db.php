@@ -613,6 +613,7 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
         if($sendquery){            
             $options=$options ?? (object)[];
             $r=$sendquery->sendQuery($query, $throwex);
+             
             if($r !== null)
                 return IGKMySQLQueryResult::CreateResult($r, $query, $options);
         }
