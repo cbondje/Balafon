@@ -6,6 +6,7 @@ use Exception;
 use IGK\Models\Migrations;
 use IGK\Models\ModelBase;
 use IGK\System\Console\Logger;
+use IGK\System\IO\File\PHPScriptBuilder;
 use IGKResourceUriResolver;
 use Throwable;
 
@@ -66,8 +67,7 @@ abstract class ControllerExtension{
         $dir = $ctrl->getSourceClassDir()."/Database/Migrations";
         $runbatch = 1;
         $tab = igk_io_getfiles($dir, "/\.php/");
-        sort($tab);
-        // igk_environment()->querydebug = 1;
+        sort($tab); 
         if ($m = Migrations::select_query(null,[
             "Columns"=>[
                 ["Max(`migration_batch`) as max"]
@@ -124,14 +124,15 @@ abstract class ControllerExtension{
             $name = implode("", array_map("ucfirst", array_filter(explode("_",$name))));
             //generate class name 
             
-            $file = $c.$name.".php";
-            if (file_exists($file)){
+            $file = $c.$name.".php"; 
+            if (($name != "Logginattempts") && file_exists($file)){
                 continue;
             }
             $table = $k;
             if ($gs){
                 $table = "%prefix%".$t;
             }
+
             igk_io_w2file($file, self::GetModelDefaultSourceDeclaration($name, $table, $v , $ctrl));
         }
     }
@@ -154,7 +155,7 @@ abstract class ControllerExtension{
     public static function ns(BaseController $ctrl, $path){
         $cl = $path;
         if ($ns = $ctrl::Invoke($ctrl, "getEntryNamespace")){
-            $cl = $ns."/".$cl;
+            $cl = implode("/", array_filter([$ns,$cl]));
         }
         $cl = str_replace("/", "\\", $cl);
         return $cl;
@@ -175,23 +176,18 @@ abstract class ControllerExtension{
     }
     private static function GetModelDefaultSourceDeclaration($name, $table, $v, $ctrl){
         $ns =  self::ns($ctrl, "");
-        // igk_wln_e("ns ".$ns);
-        $o = "<?php ".PHP_EOL;
-        if ($ns){
-            $o .= "namespace $ns\\Models; ".PHP_EOL;
-        } 
-        $c = $ctrl->getSourceClassDir()."/Models/";
+ 
+        $uses = [];
         $gc = 0;
+        $extends = "$ns\\Models\\ModelBase";
+        $c = $ctrl->getSourceClassDir()."/Models/";
         if( ($name!="ModelBase") && file_exists($c."/ModelBase.php")){
-            $o .=  "use $ns\\Models\\ModelBase;".PHP_EOL;    
+            $uses[] = "$ns\\Models\\ModelBase";
             $gc = 1;
         }else {
-            $o .=  "use ".ModelBase::class.";".PHP_EOL;
+            $uses[] = ModelBase::class;
         }
-        
-        $o .= "\n\n/** \n */\n";
-        $o .= "class $name extends ModelBase {".PHP_EOL;
-        $o .= "\t/** \n\t */\n";
+        $o = "\t/** \n\t */\n";
         $o .= "\tprotected \$table = \"{$table}\"; ".PHP_EOL;
 
         if (!$gc && $ctrl){
@@ -199,14 +195,22 @@ abstract class ControllerExtension{
             $o .= "\t/**\n\t */\n";
             $o.= "\tprotected \$controller = {$cl}::class; ".PHP_EOL;
         }
-        $o .= "}".PHP_EOL;
 
-        return $o;
+
+        $builder = new PHPScriptBuilder();
+        $builder->type("class")
+        ->author(IGK_AUTHOR)
+        ->extends($extends)
+        ->name($name)
+        ->namespace($ns."\\Models")
+        ->defs($o)
+        ->uses($uses);
+
+        return $builder->render(); 
     }
     private static function GetDefaultModelBaseSource(BaseController $ctrl){
         $o = "";
-        $ns =  self::ns($ctrl, "");
-        // igk_wln_e("ns ".$ns);
+        $ns =  self::ns($ctrl, ""); 
         $o = "<?php ".PHP_EOL;
         if ($ns){
             $o .= "namespace $ns\\Models; ".PHP_EOL;
@@ -230,8 +234,8 @@ abstract class ControllerExtension{
             $u = $user;
             if (!igk_environment()->viewfile && igk_app_is_uri_demand($ctrl, __FUNCTION__) && file_exists($file = $ctrl->getViewFile(__FUNCTION__, false))){
                 $ctrl->loader->view($file, compact("u", "pwd", "nav"));
-                return;
-            }
+                return false;
+            } 
             $c=igk_getctrl(IGK_USER_CTRL);
             $f=0;
             if($ctrl->User === null){
@@ -242,7 +246,7 @@ abstract class ControllerExtension{
                         $f=1;
                     } 
                 }
-                else{
+                else{ 
                     if($c->connect($u, $pwd)){
                         $ctrl->checkUser(false);
                         $f=1;
@@ -269,5 +273,120 @@ abstract class ControllerExtension{
     }
     public static function classdir(BaseController $controller){
         return BaseController::Invoke($controller, "getClassesDir");
+    }
+
+     ///<summary>check user auth demand level</summary>
+    /**
+    * check user auth demand level
+    */
+    public static function IsUserAllowedTo(BaseController $controller, $authDemand=null){
+        $user = $controller->getUser();
+        if($user === null){
+            return false;
+        }
+        if($user->clLevel == -1)
+            return true;
+        return igk_sys_isuser_authorize($user, $authDemand);
+    }
+    public static function getUser(BaseController $controller, $uid=null){
+        $u = $uid === null ? igk_app()->session->getUser() : 
+         igk_get_user($uid);
+        return $u;
+    }
+   ///<summary></summary>
+    /**
+    * 
+    */
+    public static function dropDb(BaseController $controller, $navigate=1, $force=false){
+    
+        $ctrl=$controller;
+        $func=function() use ($ctrl){
+            $rdb=$ctrl->db;
+            if($rdb && method_exists($rdb, "onStartDropTable")){
+                $rdb->onStartDropTable();
+            }
+            igk_raise_event("sys://db/startdroptable", $ctrl);
+        };
+        if(!igk_getv($ctrl->getConfigs(), "clDataSchema")){
+            $db=igk_get_data_adapter($ctrl, true);
+            if($db && $db->connect()){
+                $func();
+                $db->dropTable($ctrl->getDataTableName());
+                $db->close();
+            }
+        }
+        else{
+            $tb=$ctrl::Invoke($ctrl, "loadDataFromSchemas");
+            $db=igk_get_data_adapter($ctrl, true);
+            if($db){
+                if($db->connect()){
+                    $v_tblist=array();
+                    foreach($tb as $k=>$v){
+                        $v_tblist [$k]=$k;
+                    }
+                    $func(); 
+				    $db->dropTable($v_tblist);
+                    $db->close();
+                }
+            }
+        }
+        if ($navigate){
+            $controller->View();
+            igk_navtocurrent();
+        }
+        return;
+        
+
+        $n=igk_getr("n");
+        if($n != null){
+            $ad =igk_get_data_adapter($controller, true); 
+            $r =  $ad->sendQuery("Drop DataBase `".$n."`;"); 
+        }
+        if ($navigate){
+            $controller->View();
+            igk_navtocurrent();
+        } 
+    }
+
+    public static function logout(BaseController $controller, $navigate=1){
+       
+        if ($u = igk_app()->session->getUser())
+        { 
+            igk_getctrl(IGK_USER_CTRL)->setUser(null); 
+            if ($navigate){
+                igk_navto("");
+            }
+        }
+    }
+
+    /**
+     * init controller from function definition
+     */
+    public static function initDbFromFunctions(BaseController $controller){
+        $tbname = igk_db_get_table_name($controller->getDataTableName(), $controller);
+        if (empty($tbname)){
+            return false;
+        }
+        $v_tab= $controller->getDataTableInfo();// ?? igk_db_get_table_info($tbname);
+        
+        if(!$v_tab)
+            return; 
+        $db=igk_get_data_adapter($controller, true);
+        igk_hook(IGK_NOTIFICATION_INITTABLE, [$controller, $tbname, $v_tab]);
+        try {
+            $s=$db->createTable($tbname, $v_tab, null, null, $db->DbName);
+            $controller::Invoke($controller, "initDataEntry", [$db, $tbname]);
+        }
+        catch(Exception $ex){
+            $db->close();
+            igk_wln($ex->xdebug_message ?? $ex->getMessage());
+            igk_wln_e("failed to create dbtable. ".get_class($controller)." : ".$controller->getDeclaredFileName());
+        }   
+    }
+
+    
+    public static function getInitDbConstraintKey(BaseController $controller){
+        $cl= str_replace("_", "",  str_replace("\\", "_", get_class($controller)));
+        return $cl."_ck_";// constraint key
     }
 }

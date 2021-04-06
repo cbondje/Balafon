@@ -18,6 +18,7 @@ use IGKEvents;
 use IGK\System\Http\Request;
 use IGK\Resources\R as R;
 use IGK\System\Configuration\ControllerConfigData;
+use IGKAppModule;
 use IGKControllerManagerObject;
 use IGKDbColumnInfo;
 use IGKEnvKeys;
@@ -221,9 +222,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
                     }
                 }
             }
-            else{
-                $ctrl->initDataEntry($db, $tablename);
-            }
+        
+            $ctrl->initDataEntry($db, $tablename);
+        
         }
         return true;
     }
@@ -1256,14 +1257,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getIncDir(){
         return $this->getDeclaredDir()."/".IGK_INC_FOLDER;
     }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    protected function getInitDbConstraintKey(){
-        $cl=str_replace("\\", "_", get_class($this));
-        return $cl;
-    }
+   
     ///<summary></summary>
     /**
     * 
@@ -1782,8 +1776,11 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     /**
     * 
     */
-    protected function initDb(){
+    protected static function initDb(){ 
         self::__callStatic(__FUNCTION__, []); 
+    }
+    protected static function dropDb(){ 
+        self::__callStatic(__FUNCTION__, func_get_args());
     }
     ///<summary>init database constant file</summary>
     /**
@@ -1825,28 +1822,8 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
 		igk_io_w2file($f, $s, true);
 		include_once($f);		 
     }
-    ///<summary> initialize db from internal functions</summary>
-    /**
-    *  initialize db from internal functions
-    */
-    protected function initDbFromFunctions(){
-        if((($v_tab=$this->getDataTableInfo()) == null) || empty($v_tablename=$this->getDataTableName()))
-            return;
-        $db=igk_get_data_adapter($this, true);
-        if($db && $db->connect()){
-            igk_notification_push_event(IGK_NOTIFICATION_INITTABLE, $this, array($v_tablename, $v_tab));
-            try {
-                $s=$db->createTable($v_tablename, $v_tab, null, null, $db->DbName);
-            }
-            catch(Exception $ex){
-                $db->close();
-                igk_wln($ex->xdebug_message ?? $ex->getMessage());
-                igk_wln_e("failed to create dbtable. ".get_class($this)." : ".$this->getDeclaredFileName());
-            }
-            if($s && $db->haveNoLinks($v_tablename, $this)){}
-            $db->close();
-        }
-    }
+    
+     
     ///<summary> initialize db from data schemas </summary>
     /**
     *  initialize db from data schemas
@@ -2447,8 +2424,9 @@ EOF
     /**
     * override this method to show the controller view.
     */
-    public function View(){
-        $t=igk_getv($this->getSystemVars(), "t");
+    public function View(){ 
+        $t=igk_getv($this->getSystemVars(), "t"); 
+        
         if($t){
             $this->ShowChildFlag=true;
             $this->_initView();

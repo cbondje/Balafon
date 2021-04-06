@@ -61,9 +61,9 @@ function igk_db_escape_string($v, $r=null){
         if($b){
 			if (is_array($v)){
                 if (!igk_environment()->is("production")){
-                    igk_wln("Passing Array not allowed", $v);
-                }
-				igk_die("escape failed");
+                    igk_wln_e("Passing Array not allowed", $v);
+                }                
+				igk_die("escape failed: Array for value not allowed");
 			}
             return $g($b, $v);
 		}
@@ -609,6 +609,8 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
     * @param mixed $options use to filter the query result. the default value is null
     */
     public function sendQuery($query, $throwex=true, $options=null){
+        
+
         $sendquery=$this->queryListener ?? $this->m_dbManager;
         if($sendquery){            
             $options=$options ?? (object)[];
@@ -939,16 +941,7 @@ class IGKMySQLDataCtrl extends BaseController{
         $v_name=null;
         $v_info=null;
         $this->m_dictionary=igk_db_get_table_def($this->DataAdpaterName);
-    }
-    ///<summary></summary>
-    ///<param name="dbman"></param>
-    ///<param name="tbname" default="null"></param>
-    /**
-    * 
-    * @param mixed $dbman
-    * @param mixed $tbname the default value is null
-    */
-    public function initDataEntry($dbman, $tbname=null){}
+    } 
     ///<summary></summary>
     ///<param name="adapt"></param>
     ///<param name="dbname"></param>

@@ -15,6 +15,13 @@ class ControllerConfigData extends IGKObject implements ArrayAccess{
     private $ctrl;
     private $m_changed=0;
     private $m_configs;
+
+    public function to_array(){
+        return (array)$this->m_configs;
+    }
+    public function to_json(){
+        return json_encode($this->m_configs);
+    }
     ///<summary></summary>
     ///<param name="ctrl"></param>
     /**
@@ -183,15 +190,9 @@ class ControllerConfigData extends IGKObject implements ArrayAccess{
     /**
     * 
     */
-    public function storeConfig(){
-        $d=igk_createxmlnode("config");
-        $c=$this->m_configs;
-        foreach($c as $k=>$v){
-            igk_conf_store_value($d, $k, $v);
-        }
-        $s=$d->Render();
-        $f=$this->getConfigFile();
-        return igk_io_save_file_as_utf8($f, $s);
+    public function storeConfig(){  
+        $d = igk_createxml_config_data($this->m_configs); 
+        return igk_io_w2file($this->getConfigFile(), $d->render());
     }
     public function get($xpath, $default= null){
         return igk_conf_get($this->m_configs, $xpath, $default);

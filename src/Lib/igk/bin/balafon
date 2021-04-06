@@ -5,94 +5,195 @@
 // @description: balafon command line args
 
 use IGK\Controllers\ControllerTask;
+use IGK\System\Console\App;
+use IGK\System\Console\AppCommand;
+use IGK\System\Console\Logger;
+use IGK\System\IO\File\PHPScriptBuilder;
 
 use function igk_resources_gets as __;
-require_once(__DIR__."/../igk_framework.php");
+
+require_once(__DIR__ . "/../igk_framework.php");
 
 
 
 //--------------------------------------------------------
-// define basics balafon command
+// + define basics balafon command
 //
 $command = [
-    "--db:seed"=>function($command, $ctrl){
-        if ($c = igk_getctrl($ctrl, false)){ 
-            $command->app->print("seed...");
-            $c::seed();
-        } 
-    },
-    "--db:migrate"=>function($command, $ctrl){
-        if ($c = igk_getctrl($ctrl, false)){ 
-            $command->app->print("migrate...");
-            $c::migrate();
-        } 
-    },
-    "--db:initdb"=>[function($command){
-        $t = [];
-
-        if ($c = igk_app()->getControllerManager()->getControllers()){
-            foreach($c as $m){ 
-                if ($m->getCanInitDb()){
-                
-                $command->app->print("init : ".get_class($m));
-                $m::initDb();
-                }
+    "--debug" => [
+        function ($v, $command) {
+            $command->debug = true;
+            igk_debug(1);
+        }, __("enable debug")
+    ],
+    "--set:default_controller" => [function ($v, $command) {
+        $command->exec = function ($command, $name = "") {
+            if (!empty($name) && class_exists($name)) {
+                igk_app()->Configs->default_controller = $name;
+                igk_save_config(true);
+                Logger::success(__("controller changed to {0}", $name));
             }
-        }
-        // if ($c = igk_getctrl(IGK_MYSQL_DB_CTRL, false)){  
-        //     $c::Invoke($c, 'initSDb', [false, false]);
-        //     $command->app->print(
-        //         $command->app::gets($command->app::GREEN,  "initialize ...... ")
-        //     );
-        // } 
+        };
+    }, __("set default controller")],
+    "--get:sysconfigs" => [
+        function ($v, $command) {
+            $command->exec = function ($command, $pattern = null) {
+                $tab = igk_app()->Configs->getEntries();
+                ksort($tab);
+
+                foreach ($tab as $k => $v) {
+                    if (!$pattern ||  preg_match("/$pattern/i", $k)) {
+                        Logger::print($command->app::gets(App::BLUE, $k) . "=" . $v);
+                    }
+                }
+                Logger::print("\n");
+            };
+        },
+        __("get system configuration")
+    ],
+    "--get:configs" => [
+        function ($v, $command) {
+            $command->exec = function ($command, $classname=null, $pattern = null) {
+                if ($c = igk_getctrl($classname, false)){
+                    $ct = $c->getConfigs();
+                    $is_xml = property_exists($command->options, "-xml");
+                    if ($is_xml){
+                        $opt = igk_createobj();
+                        $opt->Indent = true;
+                        $opt->Context = "xml";
+                        igk_createxml_config_data($ct->to_array())->renderAJX($opt);
+                    }else {
+                        $cl = $ct->to_array();
+                        Logger::print(json_encode($cl, JSON_PRETTY_PRINT));
+
+                    }
+                }   
+                Logger::print("\n");
+            };
+        },
+        __("get controller class configuration")
+    ],
+    "--set:configs" => [
+        function ($v, $command) {
+            
+            $command->exec = function ($command, $classname=null, $path = null, $value=null) {
+                Logger::success("Change Configs");
+                if (($c = igk_getctrl($classname, false)) && !empty($path)){
+                    
+                    $c->Configs->$path = $value; 
+                    $c->Configs->storeConfig();
+
+                }   
+                Logger::print("\n");
+            };
+        },
+        __("set controller class configuration")
+    ],
+    
+    "--set:sysconfigs" => [
+        function ($v, $command) {
+            $command->exec = function ($command, $name = null, $value = null) {
+                if (!empty($name)) {
+                    igk_app()->Configs->$name = $value;
+                    igk_save_config(true);
+                    Logger::print("");
+                    Logger::success("configuration changed");
+                    Logger::print("");
+                }
+            };
+        },
+        __("set configuration")
+    ],
+
+    "--db:seed" =>[ function ($v, $command) {
+        $command->exec = function ($command, $ctrl, $class=null) {
+            if ($c = igk_getctrl($ctrl, false)) {
+                Logger::print("seed...");
+                $c::seed($class);
+                return 1;
+            }
+            return -1;
+        };
+    }, __("seed your data base with face controller")],
+    "--db:migrate" => [function ($v, $command) {
+        $command->exec = function ($command, $ctrl) {
+            if ($c = igk_getctrl($ctrl, false)) {
+                $command->app->print("migrate...");
+                $c::migrate();
+            }
+        };
+    }, __("migrate your database")],
+    "--db:initdb" => [function ($v, $command) {
+        $command->exec = function ($command) {
+            if ($c = igk_app()->getControllerManager()->getControllers()) {
+                foreach ($c as $m) {
+                    if ($m->getCanInitDb()) {
+                        $command->app->print("init : " . get_class($m));
+                        $m::initDb();
+                    }
+                }
+                return 1;
+            }
+            return -1;
+        };
         return 0;
     }, __("initialize database")],
-    "--dbsys:initdb"=>[function($command){
-       
-        if ($c = igk_getctrl(IGK_SYSDB_CTRL, false)){  
-            $c::Invoke($c, 'initDb');
-        } 
-        return 0;
+    "--dbsys:initdb" => [function ($v, $command) {
+        $command->exec = function () {
+            if ($c = igk_getctrl(IGK_SYSDB_CTRL, false)) {
+                $c::Invoke($c, 'initDb');
+            }
+            return 0;
+        };
     }, __("initialize system database")],
-    "--controller:list"=>[function($command){
-        $c = igk_app()->getControllerManager()->getControllers();
-        $t = [];
-        foreach($c as $m){
-            $t[] = get_class($m);
-            $m::initDb();
-        }
-        print_r($t);
-    }, __("list all controller")],
+    "--controller:list" => [function ($v, $command) {
+        $command->exec = function ($command, $pattern=".+") {
 
-    "--make:page"=>[function($command, $ctrl, $page){
-        
-        if ($c = igk_getctrl($ctrl, false)){ 
-            $path = "Pages/{$page}Page";
+            $c = igk_app()->getControllerManager()->getControllers();
+            $t = [];
+            foreach ($c as $m) {
+                if(preg_match("#".$pattern."#", $cl = get_class($m))){
+                    $t[] = $cl;
+                }
+            }
+            Logger::print( implode("\n", $t));
+            return 1;
+        };
+    }, __("list all controller"), "controller"],
 
-            if (!($t = $c::resolvClass($path))){
+    "--make:page" => [
+        function ($v, $command) {
+            $command->exec = function ($command, $ctrl, $page) {
 
-                $builder = new PHPScriptBuilder();
-                $builder
-                ->author($command->app->getConfigs()->get("author", IGK_AUTHOR))
-                ->type("class")
-                ->file("$path.php")
-                ->name(ucfirst($page)."Page")
-                ->extends(ControllerTask::class)
-                ->implements()
-                ->desc(igk_getv($command->options, "--desc"))
-                ->defs("public function index(){\n}")
-                ->namespace($c::ns("Pages"));
-                igk_io_w2file($c::classdir()."/{$path}.php", $builder->render());
-            } 
-            return 200;
-        }
-        //igk_wln_e("make page done", $c, func_get_args(), $command->options); // , $ctrl, $page, $c, $t);
+                if ($c = igk_getctrl($ctrl, false)) {
+                    $path = "Pages/{$page}Page";
 
-    }, [
-        "desc"=>__("make a new page. controller name [options]"),
-        "help"=> (object)[]
-        ]
+                    if (!($t = $c::resolvClass($path))) {
+
+                        $builder = new PHPScriptBuilder();
+                        $builder
+                            ->author($command->app->getConfigs()->get("author", IGK_AUTHOR))
+                            ->type("class")
+                            ->file("$path.php")
+                            ->name(ucfirst($page) . "Page")
+                            ->extends(ControllerTask::class)
+                            ->implements()
+                            ->desc(igk_getv($command->options, "--desc"))
+                            ->defs("public function index(){\n}")
+                            ->namespace($c::ns("Pages"));
+                        igk_io_w2file($c::classdir() . "/{$path}.php", $builder->render());
+                    }
+                    return 200;
+                }
+                //igk_wln_e("make page done", $c, func_get_args(), $command->options); // , $ctrl, $page, $c, $t);
+            };
+        }, [
+            "desc" => __("make a new page. controller name [options]"),
+            "help" => (object)[]
+        ],
+        "make"
     ],
+  
     // "--install-site"=>function(){
     // },
     // "--install-project"=>function(){
@@ -107,13 +208,38 @@ $command = [
     // },
     // "config:create"=>function(){ //new configuration
     // },
-    "-v, --version"=>[function(){
-        echo IGK_VERSION."\n";
-        return 200;
-    }, "show the current version" ]
-]; 
+    "-v, --version" => [function ($arg, $command) {
+        $command->exec = function () {
+            echo IGK_VERSION . "\n";
+            return 200;
+        };
+    }, "show the current version"]
+];
 
- 
+//-------------------------------------------------------------------------------
+// + register class command definition
+// +
+// class DefinitionCommand extends AppCommand{
+
+//     var $command = "--print";
+
+//     public function run($args, $command) { 
+
+//         Logger::print("Logger Add ");
+//     }
+
+// }
+
+//-------------------------------------------------------------------------------
+// + register command
+// +
+// AppCommand::Register("--definition", function($v, $command){
+//     if ($command->exec){
+//         return;
+//     } 
+//     igk_exit();
+// });
+
 // require_once(IGK_LIB_DIR."/SysMods/InstallSiteManager/IGKInstallSiteConfig.php");
 // $dir = "/Volumes/Data/wwwroot/sites/demo_install";
 // $m = IGK\System\Installers\InstallSite::Install($dir);

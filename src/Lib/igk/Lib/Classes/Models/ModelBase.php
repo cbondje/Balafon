@@ -1,15 +1,15 @@
 <?php
 namespace IGK\Models;
 
+use ArrayAccess;
 use Closure;
 use Exception;
-use IGK\Helper\Utility;
-use IGK\Models\ModelEntryUtility;
+use IGK\Helper\Utility; 
 use IGKSystemController;
 use IGKSysUtil;
 use ReflectionClass;
 
-abstract class ModelBase{
+abstract class ModelBase implements ArrayAccess{
 
     static $macros;
     /**
@@ -102,9 +102,29 @@ abstract class ModelBase{
         throw new Exception("Failed to access ".$name);
     }
     public function __get($name){  
+        if (method_exists($this, $m = "get".$name )){
+			return $this->$m();
+		}
         return igk_getv($this->raw, $name);
     }
 
+    public function offsetExists($offset) { }
+
+	public function offsetGet($offset) {
+		return $this->$offset;
+	 }
+
+	public function offsetSet($offset, $value) {
+		$this->$offset = $value;
+	 }
+
+	public function offsetUnset($offset) { } 
+
+	public function geturi(){ 
+		return $this->clhref;
+	}
+
+	 
     /**
      * return the current table string
      * @return mixed 

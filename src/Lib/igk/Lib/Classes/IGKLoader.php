@@ -241,5 +241,9 @@ class IGKLoader implements IResponse {
         }
         return $this;
     }
+    public function loadComponent($file, $t, ...$args){ 
+        extract($args); 
+        include($file); 
+    }
 }
 

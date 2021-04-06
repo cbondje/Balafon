@@ -4,7 +4,7 @@ use function igk_resources_gets as __;
 /*
 boot strap structure controller
 */
-final class IGKJQueryCtrl extends IGKConfigCtrlBase
+final class IGKJQueryController extends IGKConfigCtrlBase
 {
 	public function getName(){
 		return "jquery";

@@ -11,6 +11,10 @@ final class IGKSysUtil
 {
     private function __construct(){
     }
+
+    public static function Encrypt($pwd, $prefix=null){
+        return igk_encrypt($pwd, $prefix);
+    }
     /**
      * Retreive all managed data information
      * @param string $dataadapter 
@@ -102,14 +106,16 @@ final class IGKSysUtil
                 $refered = 0;
                 $refered_counter = 0;
                 $links = "";
+                $queryfilter = igk_environment()->mysql_query_filter;
                 foreach ($info->info as $ti) {
 
 
                     if ($ti->clLinkType) {
                         $refColumn = igk_getv($ti, "clLinkColumn", IGK_FD_ID);
-                        $nk = $table . "_" . $ti->clName;
+                        $nk = $queryfilter ? '' : '`'.$table . "_" . $ti->clName.'`';
+
                         $links .= trim(IGKString::Format(
-                            "ALTER TABLE {0} ADD CONSTRAINT `{1}` FOREIGN KEY (`{2}`) REFERENCES {3}  ON DELETE RESTRICT ON UPDATE RESTRICT;",
+                            "ALTER TABLE {0} ADD CONSTRAINT {1} FOREIGN KEY (`{2}`) REFERENCES {3}  ON DELETE RESTRICT ON UPDATE RESTRICT;",
                             "`{$table}`",
                             $nk,
                             $ti->clName,

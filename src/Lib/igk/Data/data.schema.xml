@@ -144,11 +144,11 @@
     <DataDefinition TableName="%prefix%users" Description="User's tables">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clLogin" clType="VARCHAR" clTypeLength="60" clIsUnique="True" />
-        <Column clName="clPwd" clType="VARCHAR" clTypeLength="60" clNotNull="True" clInsertFunction="MD5" clUpdateFunction="MD5" />
+        <Column clName="clPwd" clType="VARCHAR" clTypeLength="200" clNotNull="True" clInsertFunction="IGK_PASSWD_ENCRYPT" clUpdateFunction="IGK_PASSWD_ENCRYPT" />
         <Column clName="clFirstName" clType="VARCHAR" clTypeLength="60" />
         <Column clName="clLastName" clType="VARCHAR" clTypeLength="60" />
         <Column clName="clDisplay" clType="Text" />
-        <Column clName="clLocale" clType="VARCHAR" clTypeLength="2" clDefault="fr" />
+        <Column clName="clLocale" clType="VARCHAR" clTypeLength="5" clDefault="fr" />
         <Column clName="clPicture" clType="VARCHAR" clTypeLength="255" clDescription="uri of 255 max length" />
         <Column clName="clLevel" clType="Int" clTypeLength="11" clNotNull="True" />
         <Column clName="clStatus" clType="Int" clTypeLength="11" clDefault="-1" clDescription="state of the account, -1 = not activated, 1=activated, 0or2=blocked" clNotNull="True" />
@@ -181,7 +181,7 @@
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clSessId" clType="VARCHAR" clTypeLength="50" />
         <Column clName="clSessIp" clType="VARCHAR" clTypeLength="50" />
-        <Column clName="clSessStartAt" clType="DateTime" clNotNull="True" clInsertFunction="NOWd()" clDefault="NOW()"/>
+        <Column clName="clSessStartAt" clType="DateTime" clNotNull="True" clInsertFunction="NOW()" clDefault="NOW()"/>
         <Column clName="clSessLatitude" clType="Float" />
         <Column clName="clSessLongitude" clType="Float" />
         <Column clName="clSessCountryName" clType="VARCHAR" clTypeLength="60" />
@@ -202,4 +202,13 @@
         <Column clName="migration_name" clType="VARCHAR" clTypeLength="60" clIsUnique="true" clDescription="m or f for male or female" clNotNull="True" />
         <Column clName="migration_batch" clType="Int" clDescription="Batch Running" />
     </DataDefinition>
+
+    <DataDefinition TableName="%prefix%logginattempts" Description="Store migrations">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="logginattempts_login" clType="VARCHAR" clTypeLength="60" clIsUnique="true" clDescription="loggin - unique" clNotNull="True" />
+        <Column clName="logginattempts_try" clType="Int" clDescription="attemps" clNotNull="True" />
+        <Column clName="logginattempts_createAt" clType="DateTime"  clDefault="NOW()" clDescription="Now" clNotNull="True" />
+        <Column clName="logginattempts_updateAt" clType="DateTime"  clUpdateFunction="Now()" clDescription="Last try datetime" clNotNull="True" />
+    </DataDefinition>
+
 </data-schemas>

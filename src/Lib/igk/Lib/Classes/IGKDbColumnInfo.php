@@ -152,7 +152,7 @@ final class IGKDbColumnInfo extends IGKObject {
                 $this->clDefaultLinkExpression = $this->clDefault;
             }
             $this->clDefault = null;
-        }
+        } 
     }
     ///<summary></summary>
     ///<param name="key"></param>

@@ -1,35 +1,39 @@
 <?php
+
+use IGK\System\Console\Logger;
+
 $funcName = "resetDb";
-$s_d=igk_app_is_uri_demand($controller, $funcName);
+$s_d= igk_app_is_uri_demand($controller, $funcName);
+$s = $force || igk_is_conf_connected() || $controller::IsUserAllowedTo($controller->Name.":".$funcName);
+ 
 if(!$s_d){
-    $s=igk_is_conf_connected() || $controller->IsUserAllowedTo($controller->Name.":".$funcName);
     if(!$s){
         igk_notifyctrl()->addError("Operation not allowed");
-        igk_navto($controller->getAppUri());
+       
+        if ($navigate)
+         igk_navto($controller->getAppUri());
         return;
     }
-}
-else{
-    $s=igk_is_conf_connected() || $controller->IsUserAllowedTo($controller->Name.":".$funcName);
-}
+} 
 if(!$s){
     if($s_d && $navigate){
         igk_navto($controller->getAppUri());
     }
     return;
-} 
-
-$controller->dropdb();
+}  
+$controller::dropDb($navigate, $force); 
 $ad=igk_get_data_adapter($controller);
 $ad->initForInitDb();
 igk_set_env("sys://db_init_table/ctrl", $controller);
-$controller->initDb();
+$controller::initDb($force);
 
 $ad->flushForInitDb();
 igk_hook(IGKEvents::HOOK_DB_INIT_ENTRIES, array($controller));
-igk_hook(IGKEvents::HOOK_DB_INIT_COMPLETE); 
-$controller->logout(0);
-if(igk_uri_is_match(igk_io_currentUri(), $controller->getAppUri($funcName))){
+igk_hook(IGKEvents::HOOK_DB_INIT_COMPLETE);
+if ($navigate){
+    $controller::logout(0);
+} 
+if($force || igk_uri_is_match(igk_io_currentUri(), $controller->getAppUri($funcName))){
     igk_notification_push_event(IGK_HOOK_DB_CHANGED, $controller, null);
     if($navigate){
         igk_navto($controller->getAppUri());

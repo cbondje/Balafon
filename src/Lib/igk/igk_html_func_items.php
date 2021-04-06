@@ -252,6 +252,7 @@ function igk_html_node_menu($tab, $uriListener=null, $callback=null){
         igk_die("must set an array of menu items");
     }
     $ul = igk_createnode("ul");
+    $ul["class"] = "igk-menu";
 	  if ($uriListener){
 			if (!is_callable($uriListener)){
 				 if (is_object($uriListener) && method_exists($uriListener, "getAppUri")){

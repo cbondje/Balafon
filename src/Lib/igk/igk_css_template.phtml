@@ -340,7 +340,7 @@ $def[".igk-hmenu > li > ul > li"]="padding:0px;";
 $def[".igk-hmenu > li > ul li a"]="{sys:dispb} padding: 8px;";
 $def[".igk-hmenu > li > ul li a:hover"]="[sysbgcl:submenu-hightlight-bg] [sysfcl:submenu-hightlight-fcl]";
 $def[".igk-hmenu > li"]="{sys:dispib}";
-$def[".igk-hmenu > li:hover"]="background-color: [syscl:horizontalMenuHoverBackground]; ";
+$def[".igk-hmenu > li:hover"]="[bgcl:horizontalMenuHoverBackground,transparent]; ";
 $def[".igk-hmenu > li > ul li"]="display:block";
 $def[".igk-hmenu > li  ul.igk-show"]="opacity:1; display:block;";
 $def[".igk-hmenu > li > ul li:hover"]="[sysbgcl:igk-hmenu-si-bg]";
@@ -510,7 +510,7 @@ $def[".igk-panel"]="{sys:dispb} [sysfcl:igk-panel-fcl] [sysbgcl:igk-panel-bcl] m
 $def[".igk-btn"]=
 $def[".igk-btn-lnk"]=
 $def[".clsubmit"]=
-$def[".clbutton"]="display:inline-block; margin:auto; padding: {$pad2}; border:1px solid [cl:buttonBorderColor, rgb(221,221,221)]; border-radius: 4px; cursor:pointer;";
+$def[".clbutton"]="font-size: 16px; font-family: inherit; display:inline-block; margin:auto; padding: {$pad2}; border:1px solid [cl:buttonBorderColor, rgb(221,221,221)]; border-radius: 4px; cursor:pointer;";
 $def[".igk-btn.igk-active"]="border-left: solid 4px #FFBF00; color: #683500";
 $def[".igk-btn-connect, input.igk-btn-connect, .igk-btn-connect a"]="[sysbgcl:igk-btn-connect-bg] [sysfcl:igk-btn-connect-fcl]";
 $def[".igk-form-control, .cltext, .clpassword, .clemail, .clnumber, .clsearch, .cltel, .clselect"]="{sys:fitw,dispib} padding:{$pad1}; margin:0px;[trans: 0.1s color ease-in] [sysfcl:igk-input-cl]";
@@ -984,3 +984,8 @@ $theme->reg_keyFrames($def, "anim-autohide", "from { opacity: 1.0; } to { opacit
 
 
 $def["form.igk-debug-connect-form ul li:last-child"] = "margin-top:10px;";
+
+
+/**
+ * buttons layout
+ */

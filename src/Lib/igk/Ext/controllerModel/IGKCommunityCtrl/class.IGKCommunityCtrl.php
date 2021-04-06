@@ -50,7 +50,7 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 			new IGKDbColumnInfo(array(IGK_FD_NAME=>"clAvailable", IGK_FD_TYPE=>"Int", "clNotNull"=>1))
 			);
 	}
-	public function initDb(){
+	public static function initDb(){
 		igk_set_env("sys://db/constraint_key", "igk_com");
 		if (igk_is_conf_connected())
 			$this->initDbFromFunctions();

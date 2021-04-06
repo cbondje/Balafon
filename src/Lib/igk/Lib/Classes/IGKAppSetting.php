@@ -13,7 +13,7 @@ class IGKAppSetting{
             if (igk_is_cmd()){
 
                 if($sm_setting === null){
-                    $sm_setting = [];
+                    $sm_setting = new IGKDummySetting();
                 }
                 $app = & $sm_setting;
                 return $app;

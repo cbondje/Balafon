@@ -340,4 +340,12 @@ final class IGKAppModule extends BaseController{
     public function get($name, $default=null){
         return $this->getEnvParam($name, $default);
     }
+
+    public function view(){
+        if ($this->methodExists(__FUNCTION__)){
+            $fc = igk_getv($this->m_fclist, __FUNCTION__);
+            $args = func_get_args();
+            $fc(...$args); 
+        }
+    }
 }

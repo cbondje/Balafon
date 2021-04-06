@@ -1,11 +1,14 @@
-<?php 
-use \Models\ModelBase;
+<?php
+ 
 
+namespace IGK\Models;
+
+use IGK\Models\ModelBase; 
 
 /** 
  */
 class DataTypes extends ModelBase {
 	/** 
 	 */
-	protected $table = "%prefix%data_types"; 
+	protected $table = IGK_TB_DATATYPES; 
 }

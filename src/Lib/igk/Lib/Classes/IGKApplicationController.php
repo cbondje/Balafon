@@ -1,6 +1,8 @@
 <?php
 
 use IGK\Resources\R;
+use IGK\System\Console\Logger;
+
 use function igk_resources_gets as __;
 
 
@@ -299,18 +301,20 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
     /**
     * drop application table from system config
     */
-    public final function dropDb(){
-        $s=igk_is_conf_connected() || $this->IsUserAllowedTo($this->Name.":".__FUNCTION__);
+    protected static function dropDb($navigate=true, $force=false){
+       
+        $c = igk_getctrl(static::class);
+        $s=$force || igk_is_conf_connected() || $c->IsUserAllowedTo($c->Name.":".__FUNCTION__);
         if(!$s){
-            if(igk_app_is_uri_demand($this, __FUNCTION__)){
-                igk_navto($this->getAppUri());
+            if(igk_app_is_uri_demand($c, __FUNCTION__)){
+                igk_navto($c->getAppUri());
             }
             return;
-        }
-        parent::dropdb();
-		igk_hook("sys://drop_app_database", [$this]);
-        if(igk_app_is_uri_demand($this, __FUNCTION__)){
-            igk_navto($this->getAppUri());
+        } 
+        parent::dropDb(...func_get_args());
+		igk_hook("sys://drop_app_database", [$c]);
+        if(igk_app_is_uri_demand($c, __FUNCTION__)){
+            igk_navto($c->getAppUri());
         }
     }
     ///<summary>use to handle redirection uri</summary>
@@ -830,24 +834,7 @@ EOF;
         }
         IGKOwnViewCtrl::RegViewCtrl($this, 0);
     }
-    ///<summary></summary>
-    ///<param name="s" default="null"></param>
-    /**
-    * 
-    * @param mixed $s the default value is null
-    */
-    protected function initDb($s=null){ 
-        static::__callStatic(__FUNCTION__, [$s]); // ::initDb();
-        // parent::initDb();
-        // if($s){
-        //     igk_navto($this->getAppUri());
-        // }
-        // if(igk_uri_is_match(igk_io_currentUri(), $this->getAppUri(__FUNCTION__))){
-        //     igk_is_debug() && igk_ilog("notify message :  IGK_HOOK_DB_CHANGED" );
-        //     igk_notification_push_event(IGK_HOOK_DB_CHANGED, $this, null);
-        //     igk_navto($this->getAppUri());
-        // }
-    }
+   
     ///<summary></summary>
     ///<param name="ctrl"></param>
     /**
@@ -923,18 +910,7 @@ EOF
             return true;
         return false;
     }
-    ///<summary>check user auth demand level</summary>
-    /**
-    * check user auth demand level
-    */
-    public function IsUserAllowedTo($authDemand=null){
-        if($this->User === null){
-            return false;
-        }
-        if($this->User->clLevel == -1)
-            return true;
-        return igk_sys_isuser_authorize($this->User, $authDemand);
-    }
+   
     ///<summary></summary>
     /**
     * 
@@ -1036,15 +1012,7 @@ EOF;
 			igk_exit();
         }
     }
-    ///<summary></summary>
-    ///<param name="navigate" default="1"></param>
-    /**
-    * 
-    * @param mixed $navigate the default value is 1
-    */
-    public final function resetDb($navigate=1){
-        static::__callStatic(__FUNCTION__, [$navigate]);
-    }
+     
     ///<summary> save data schema</summary>
     /**
     *  save data schema

@@ -20,15 +20,18 @@ abstract class RootControllerBase extends IGKObject{
 				"macrosKeys"=>function(){
 					return array_keys(self::$macros);
 				},
-				"initDb"=>function(RootControllerBase $controller){
+				"initDb"=>function(RootControllerBase $controller, $force=false){
 					return include(IGK_LIB_DIR."/Inc/igk_db_ctrl_initdb.pinc"); 
 				},
-				"resetDb"=>function(RootControllerBase $controller, $navigate=true){
+				"resetDb"=>function(RootControllerBase $controller, $navigate=true, $force=false){
+					 
 					return include(IGK_LIB_DIR."/Inc/igk_db_ctrl_resetdb.pinc");
 				}
 			];
 		}
 		$c = igk_getctrl(static::class);
+ 
+		 
 		
 		if (isset(self::$macros[$name])){
 			$fc = Closure::fromCallable(self::$macros[$name]);
@@ -44,4 +47,7 @@ abstract class RootControllerBase extends IGKObject{
 		array_unshift($arguments, $c); 
 		return ControllerExtension::$name(...$arguments); 
 	}
+	public function __call($name, $argument){
+        return static::__callStatic($name, $argument);
+    }
 }

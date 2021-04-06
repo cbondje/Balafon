@@ -13,6 +13,16 @@ abstract class ModelEntryExtension{
         }
         return null;
     }
+    public static function insertOrUpdate(ModelBase $model, $condition, callable $updating=null){
+        if (!($row = $model->select_row($condition))){
+            return $model::create($condition);
+        }
+        if ($updating)
+            $updating($condition);
+        $p = $model->getPrimaryKey(); 
+        $model::update($condition, [$p=>$row->{$p}]);
+        return null;
+    }
     public static function beginTransaction(ModelBase $model){
         return $model->getDataAdapter()->beginTransaction();
     }

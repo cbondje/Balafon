@@ -22964,9 +22964,8 @@ igk.system.createNS("igk.system", {
 					_ms_n.addClass("igk-e-msg");
 					if (_e_id_msg) {
 						var _st = $igk(_e_id_msg);
-						if (_st) {
-
-							_ms_n.setHtml("?????" + _st.getHtml());
+						if (_st) { 
+							_ms_n.setHtml(_st.getHtml());
 						}
 					} else {
 						if (_e_msg) {

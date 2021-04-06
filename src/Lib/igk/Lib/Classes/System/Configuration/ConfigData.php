@@ -103,9 +103,10 @@ final class ConfigData {
     /**
     * 
     */
-    public function saveData(){
-        if(defined("IGK_FRAMEWORK_ATOMIC"))
-            return;
+    public function saveData($force=false){
+        if(!$force && defined("IGK_FRAMEWORK_ATOMIC")){
+            return false;
+        } 
         $file=$this->m_confile;
         $out=IGK_STR_EMPTY;
         $v_ln=false;

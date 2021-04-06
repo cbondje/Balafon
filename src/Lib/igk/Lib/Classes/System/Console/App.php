@@ -17,7 +17,9 @@ class App{
     const YELLOW_B = "\e[1;33m";
     const YELLOW_I = "\e[3;33m";
     const RED = "\e[1;31m";
-    const BLUE = "\e[3;34m";
+    const BLUE = "\e[0;34m";
+    const BLUE_B = "\e[1;34m";
+    const BLUE_I = "\e[3;34m";
     const PURLPLE = "\e[3;35m";
     const AQUA = "\e[3;36m";
     const END = "\e[0m";
@@ -53,7 +55,33 @@ class App{
      */
     public static function Run($command=[], $basePath=null){ 
         $app = (new static);
-        
+        if ($basePath === null){
+            $basePath = getcwd();
+        }
+
+        $app->basePath = $basePath;
+        Logger::SetLogger(new ConsoleLogger($app));
+        $app->boot();
+
+        if ($command_args = AppCommand::GetCommands()){ 
+            foreach($command_args as $c){
+                $t = [];
+                $callbable = null;
+                if ($c instanceof AppCommand ){
+                    $callbable = [$c, "run"];
+                } else {
+                    $callbable = $c->callable;
+                }
+                $command[$c->command] = [
+                    $callbable,
+                    $c->description,
+                    $c->category
+                ];
+ 
+            }
+        }
+
+
         $handle = [];
         foreach($command as $n=>$b){
             if(count($c = explode(",", $n))>1){
@@ -64,14 +92,9 @@ class App{
                 $handle[trim($n)] = $b;
             }
         }
+        ksort($command);
         $app->command = $command;
-        if ($basePath === null){
-            $basePath = getcwd();
-        }
-
-        $app->basePath = $basePath;
-        $app->boot();
-        Logger::SetLogger(new ConsoleLogger($app));
+        
         $tab = array_slice(igk_server()->argv, 1);
 
         $command = igk_createobj();
@@ -92,6 +115,7 @@ class App{
             }
             if ( isset($handle[$v]) ){
                 $action = is_callable($handle[$v])?$handle[$v]: $handle[$v][0];
+                $action($v, $command, implode(":", array_slice($c,1)));
             }
             else {
                 $c = explode(":", $v); 
@@ -111,7 +135,8 @@ class App{
         }
 
         try{
-
+            $action = $command->exec; //($v, $command, implode(":", array_slice($c,1)));
+             
             if ($action){
                 return $action($command , ...$args); 
             }
@@ -119,7 +144,9 @@ class App{
             $app->print(self::gets(self::RED, "error:"). $ex->getMessage());
         }
         catch (Throwable $ex){
-            $app->print("error: throw: ".$ex->getMessage());
+            Logger::danger("error: throw: ".$ex->getMessage());
+            Logger::print($ex->getFile().":".$ex->getLine());
+            igk_show_exception_trace($ex->getTrace(), 0);
         }
         $app->showHelp();
     }
@@ -146,14 +173,18 @@ class App{
         if (!defined('IGK_LOG_FILE') && ($logFolder  = $this->getLogFolder())){
             define('IGK_LOG_FILE', $logFolder."/.".IGK_TODAY.".cons.log");
         }
-
+        igk_loadlib(dirname(__FILE__)."/Commands");
         IGKApp::InitSingle(); 
+        igk_hook("console::app_boot", $this);
     }
-    public function print($text){
-        echo $text. PHP_EOL;
+    public function print(...$text){
+        foreach($text as $s){ 
+            echo $s. PHP_EOL;
+        }
     }
-    public function print_debug($text){        
-        echo $text. PHP_EOL;
+    public function print_debug(...$text){    
+        if (igk_is_debug())
+            $this->print(...$text); 
     }
     public function showHelp(){
         $this->print("BALAFON CLI-UTILITY");;
@@ -164,19 +195,41 @@ class App{
         $this->print("\tbalafon [command] [options] [arguments]");
         $this->print("");
         $this->print("");
-        foreach($this->command as $n=>$c){
-            $s = " ".self::GREEN.$n."\e[0m: \r\t\t\t\t";
-           
-            if (is_array($c) && is_array($c[1])){
-                $s .= (igk_getv($c[1], "desc"));
-            } 
-            else  if (! ($c instanceof Closure)){
-                $s.= (igk_getv($c, 1));
+
+        $groups = [];
+        array_walk($this->command, function($c,$key)use(& $groups){
+            
+            $cat = igk_getv($c, 2, "");
+             
+            if (!isset($groups[$cat]))
+                $groups[$cat] = [];
+            $groups[$cat][$key] = $c;
+        } );
+
+        ksort($groups); 
+        //igk_wln("groups: ", array_shift($groups));
+        $key=key($groups);
+        while((count($groups)>0) && ( $g = array_shift($groups))){
+            if (!empty($key)){
+                Logger::print("groups: ".$key);
+                Logger::print("");
             }
 
-            $this->print($s);
-        }
+        foreach($g as $n=>$c){
+                $s = " ".self::GREEN.$n."\e[0m \r\t\t\t\t";
+            
+                if (is_array($c) && is_array($c[1])){
+                    $s .= (igk_getv($c[1], "desc"));
+                } 
+                else  if (! ($c instanceof Closure)){
+                    $s.= (igk_getv($c, 1));
+                }
 
+                $this->print($s."\n");
+            }
+            $key=key($groups);
+        }
+        $this->print("");
     }
     public function getLogFolder(){
         if($this->configs){

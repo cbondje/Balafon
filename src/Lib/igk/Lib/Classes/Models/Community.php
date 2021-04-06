@@ -1,5 +1,7 @@
 <?php 
-use \Models\ModelBase;
+namespace IGK\Models;
+
+use IGK\Models\ModelBase; 
 
 
 /** 
