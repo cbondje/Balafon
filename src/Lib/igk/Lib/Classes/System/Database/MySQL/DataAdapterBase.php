@@ -168,10 +168,10 @@ abstract class DataAdapterBase extends IGKSQLDataAdapter{
     * @param mixed $tbname
     * @param mixed $whereTab the default value is null
     */
-    public function countAndWhere($tbname, $whereTab=null){
+    public function selectCount($tbname, $whereTab=null){
         $o="";
         $s=0;
-        $q="SELECT Count(*) FROM `".igk_mysql_db_tbname($tbname)."`";
+        $q="SELECT Count(*) as count FROM `".igk_mysql_db_tbname($tbname)."`";
         if(is_array($whereTab) && igk_count($whereTab) > 0){
             $q .= " WHERE ".IGKSQLQueryUtils::GetCondString($whereTab);
         }

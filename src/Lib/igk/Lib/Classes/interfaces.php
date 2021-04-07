@@ -144,7 +144,7 @@ interface IIGKDataAdapter{
     /**
     * 
     */
-    function countAndWhere();
+    function selectCount();
     ///<summary></summary>
     /**
     * 

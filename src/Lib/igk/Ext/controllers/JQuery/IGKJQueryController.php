@@ -1,4 +1,7 @@
 <?php
+
+use IGK\Resources\R;
+
 use function igk_resources_gets as __;
 
 /*
@@ -150,5 +153,4 @@ final class IGKJQueryController extends IGKConfigCtrlBase
 		igk_save_config();
 		$this->View();
 	}
-}
-?>
+} 

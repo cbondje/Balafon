@@ -324,7 +324,9 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     /**
     * 
     */
-    public function countAndWhere(){}
+    public function selectCount(){
+        return 0;
+    }
     ///<summary></summary>
     ///<param name="tb"></param>
     /**
@@ -332,7 +334,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
     * @param mixed $tb
     */
     public function countTable($tb){
-        return $this->sendQuery("SELECT Count(*) FROM `".$tb."`;", $tb);
+        return $this->sendQuery("SELECT Count(*) as count FROM `".$tb."`;", $tb);
     }
     ///<summary></summary>
     /**

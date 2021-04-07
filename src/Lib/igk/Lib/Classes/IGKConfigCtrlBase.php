@@ -3,6 +3,7 @@
 ///<summary>Represente class: IGKConfigCtrlBase</summary>
 
 use IGK\Controllers\BaseController;
+use function igk_resources_gets as __; 
 
 /**
 * Represente IGKConfigCtrlBase class

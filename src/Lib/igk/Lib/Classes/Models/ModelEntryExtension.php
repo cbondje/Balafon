@@ -75,8 +75,8 @@ abstract class ModelEntryExtension{
     }
     public static function count(ModelBase $model, $conditions=null){         
         $driver = $model->getDataAdapter();   
-        if ($m = $driver->countAndWhere($model->getTable(), $conditions)){
-            return $m->getRowAtIndex(0)->{"Count(*)"};
+        if ($m = $driver->selectCount($model->getTable(), $conditions)){
+            return $m->getRowAtIndex(0)->count; 
         }
         return null;
     }

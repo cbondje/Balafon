@@ -1,7 +1,6 @@
 <?php
 //Balafon Generated language file
 $l["failed to connect or select {0}'s databases"]="Impossible de selectionner ou de se connecter à la base de données {0}";
-$l["menu.clearsession"]="Supprimer la session";
 $l["menu.clearcache"]="Supprimer la cache";
 $l["Welcome"] = "Bienvenue";
 $l["No result"] = "Aucun résultat";

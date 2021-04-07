@@ -6889,7 +6889,7 @@ function igk_db_table_count_where($table, $andcondition=null, $adapter=IGK_MYSQL
     if($db){
         if($db->connect()){
             try {
-                $r=$db->countAndWhere($table, $andcondition);
+                $r=$db->selectCount($table, $andcondition);
             }
             catch(Exception $ex){
                 igk_ilog($ex, "BLF - SQL Error");
@@ -6958,6 +6958,18 @@ function igk_db_table_select_row($table, $id, $controllerOrAdapterName=IGK_MYSQL
         return $r->getRowAtIndex(0);
     return null;
 }
+
+function igk_db_count_rows($table, $conditions=null, $adapter=IGK_MYSQL_DATAADAPTER){
+    if ($ad = igk_get_data_adapter($adapter)){
+        if ($ab = $ad->selectCount($table, $conditions)){
+            $r = $ab->getRowAtIndex(0);
+            return $r->count;
+        }
+
+        igk_wln_e($ab);
+    }
+
+}
 ///<summary></summary>
 ///<param name="table"></param>
 ///<param name="andcondition" default="null"></param>
@@ -6979,7 +6991,7 @@ function igk_db_table_select_where($table, $andcondition=null, $adapter=IGK_MYSQ
     if($db){
         if(!$isad && !$db->connect()){
             if(!igk_sys_env_production()){
-                igk_ilog("connexion failed", __FUNCTION__);
+                igk_ilog(__FUNCTION__.":Connexion failed");
             }
             return $r;
         }
@@ -8808,7 +8820,7 @@ function igk_get_all_session_file_infos($max=null){
 				"createtime"=> date("Y-m-d H:i:s",  filemtime($k))
 			];
         }
-        if ($max && (count($sess[$id]) >= $max)){
+        if ($max && (igk_count($sess[$id]) >= $max)){
             break;
         }
 	}
@@ -37262,7 +37274,7 @@ EOF;
     * 
     */
     public function initConfigMenu(){
-        return array(
+        $t = array(
             new IGKMenuItem(IGK_HOME_PAGEFOLDER,
             IGK_DEFAULT_VIEW,
             $this->getUri("setpage"),
@@ -37275,25 +37287,29 @@ EOF;
             "serverinfo",
             $this->getUri("show_serverinfo"),
             -750),
-            new IGKMenuItem("ConfigurationMenuSetting",
-            "configurationMenuSetting",
-            $this->getUri("show_configuration_menu_setting"),
-            -700),
+            
             new IGKMenuItem("GoToIndex",
             null,
-            igk_io_baseuri(), //$this->getUri("gotoindex"),
+            igk_io_baseuri(),  
             10800),
-            new IGKMenuItem("ClearSession",
-            null,
-            $this->getUri("Clearsession"),
-            10810),
-            new IGKMenuItem("Forceview",
-            null,
-            $this->getUri("forceview"),
-            10810),
-            new IGKMenuItem("Reconnect",   null, $this->getUri("reconnect"), 10850),
-            new IGKMenuItem("LogOut", null, $this->getUri("logout"), 20000)
         );
+        if(igk_server_is_local()){
+            // new IGKMenuItem("ConfigurationMenuSetting",
+            // "configurationMenuSetting",
+            // $this->getUri("show_configuration_menu_setting"),
+            // -700),
+             // new IGKMenuItem("ClearSession",
+            // null,
+            // $this->getUri("Clearsession"),
+            // 10810),
+            // new IGKMenuItem("Forceview",
+            // null,
+            // $this->getUri("forceview"),
+            // 10810),
+            // new IGKMenuItem("Reconnect",   null, $this->getUri("reconnect"), 10850),
+        }
+        $t[] = new IGKMenuItem("LogOut", null, $this->getUri("logout"), 20000);
+        return $t;
     }
     ///<summary></summary>
     /**
@@ -40939,7 +40955,15 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
         $this->_auth_options($frm);
         $table=$frm->addDiv()->setClass("igk-table-host")->addTable();
         $table["class"]="igk-table igk-table-hover igk-table-striped";
-        $r=igk_db_table_select_where(IGK_TB_AUTHORISATIONS, null, $this);
+        // TODO Paginate sample:    
+        $tb = IGK_TB_AUTHORISATIONS;
+        $c = igk_db_count_rows($tb,null,$this);
+        $page = igk_getr("authpage", 1); // this->getParam("authpage");
+        $total = 20;
+
+        $r=igk_db_table_select_where($tb, null, $this, null, [
+            "Limit"=>[($page-1)*$total, $max = ($page*$total)]
+        ]);
         $tr=$table->addTr();
         $tr->add("th")->addSpace();
         $tr->add("th")->Content=__("lb.clName");
@@ -40956,6 +40980,24 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
                 IGKHtmlUtils::AddImgLnk($tr->addTd(), igk_js_post_frame($this->getUri("auth_edit_frame_ajx&clId=".$v->clId)), "edit_16x16");
                 IGKHtmlUtils::AddImgLnk($tr->addTd(), igk_js_post_frame($this->getUri("auth_delete_authorisation_ajx&clId=".$v->clId)), "drop_16x16");
             }
+        }
+        if ($c>$total){
+
+            $dv = $frm->div()->ul()->setclass("igk-action-bar");// ->Content=  "Pagination";
+            //render paginate
+            // no requirement
+            $items = 10;
+            $item = $c / $total;
+            $selpage = $page;
+            for($i=0;$i < $item ; $i++){
+                $sl = $i+1;
+                $li = $dv->li()->setClass("dispib");
+                if ($sl == $page){
+                    $li->class = "+selected";
+                }
+                $li->a("?authpage=".$sl)->setClass("igk-btn")->Content = $sl;
+            }
+
         }
         $this->_auth_options($frm);
         return $d;
@@ -45544,7 +45586,8 @@ EOF;
         $tab=$c->add("table", array("class"=>"fitw"));
         $ct=$this->DataTableInfo;
         $this->_m_loadTableHeader($tab);
-        $d=$this->m_customMenu;
+        if (is_array($d=$this->m_customMenu))
+        { 
         usort($d, array($this, "sortmenu"));
         foreach($d as $v){
             $tr=$tab->addTr();
@@ -45570,6 +45613,7 @@ EOF;
             IGKHtmlUtils::AddImgLnk($tr->addTd(), $this->getUri("menu_editmenuframe&n=".$v[IGK_FD_NAME]), "edit_16x16");
             IGKHtmlUtils::AddImgLnk($tr->addTd(), igk_js_post_frame($this->getUri("menu_dropmenu_ajx&n=".$v[IGK_FD_NAME])), "drop_16x16");
         }
+    }
         $c->addBr();
         $div=$c->addDiv();
         $a=IGKHtmlUtils::AddImgLnk($div, $this->getUri("menu_drop_selected_menu_ajx"), "drop_16x16");
@@ -58384,8 +58428,8 @@ class IGKDbUtility extends IGKObject implements IIGKDbUtility {
         if (!($table = $table ?? $this->getTable())){ 
             igk_die("table not found");
         } 
-        if ($r = $this->ad->countAndWhere($table, $condition)->Rows[0]){
-            return $r->{"Count(*)"}; 
+        if ($r = $this->ad->selectCount($table, $condition)->Rows[0]){
+            return $r->count;  
         }
         // igk_wln_e("table :::::".$table, $this->ad->getLastQuery());
         return -1;
@@ -72086,8 +72130,7 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
             $s=$this->_sendQuery("SELECT Count(*) FROM `".igk_mysql_db_tbname($tablename)."`", false);
             if($s && ($s->ResultType == "boolean")){
                 return true; // $s->Value;
-            }
-            // igk_wln_e("exists ? ".($s!== null));
+            } 
             return $s !== null;
         }
         catch(Exception $ex){

@@ -22,8 +22,7 @@ class MacrosHelper{
                         $auths= [$auths];
                     }
                     $data = $this->to_array();
-                    $g = $this->{"::auth"} ?? [];
-                    igk_wln("check ", $data);
+                    $g = $this->{"::auth"} ?? []; 
                     while($auth = array_shift($auths)){
                         if (in_array($auth , $g))
                         {

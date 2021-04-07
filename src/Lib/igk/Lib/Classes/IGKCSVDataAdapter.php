@@ -98,7 +98,7 @@ final class IGKCSVDataAdapter extends IGKDataAdapter {
     /**
     * 
     */
-    public function countAndWhere(){
+    public function selectCount(){
         igk_wln_e("CSV Adapter: Not Implement, ".__METHOD__, igk_show_trace());
     }
     ///<summary></summary>
