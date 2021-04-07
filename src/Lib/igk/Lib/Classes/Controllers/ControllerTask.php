@@ -3,14 +3,19 @@
 namespace IGK\Controllers;
 
 use Exception;
+use IGK\System\Http\RouteActionHandler;
 
 abstract class ControllerTask{
     
     protected $controller;
 
-    public function __construct($controller)
+    protected $route;
+
+    public function __construct($controller, ?RouteActionHandler $route=null)
     {
         $this->controller = $controller;
+        $this->route = $route;        
+    
     }
     /**
      * index start entry task

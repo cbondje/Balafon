@@ -63,9 +63,13 @@ abstract class ModelBase implements ArrayAccess{
     public function getFactory(){
         if ($this->factory === null){
             $name = basename(igk_io_dir(get_class($this)));
-            $this->factory = $this->getController()->getEntryNamespace()."\\Database\\Factories\\".$name."Factory";
+            $this->factory = $this->getController()::ns("Database\\Factories\\".$name."Factory");
         }
         return $this->factory;
+    }
+    public function set($name, $value){
+        $this->raw->{$name} = $value;
+        return $this;
     }
     
 
@@ -251,7 +255,6 @@ abstract class ModelBase implements ArrayAccess{
 
         if ($regInvoke === null){
             $regInvoke = 1;
-           
         }
         if ($fc = igk_getv(self::$macros, static::class."/".$name)){
             $fc = $fc->bindTo($this); 

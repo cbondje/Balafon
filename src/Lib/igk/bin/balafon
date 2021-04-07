@@ -108,8 +108,13 @@ $command = [
     "--db:seed" =>[ function ($v, $command) {
         $command->exec = function ($command, $ctrl, $class=null) {
             if ($c = igk_getctrl($ctrl, false)) {
-                Logger::print("seed...");
+                igk_environment()->querydebug = property_exists($command->options, "--querydebug");
+                $inf = get_class($c);
+                if (!empty($class))
+                    $inf.= "::".$class;
+                Logger::print("seed...".$inf ." ".igk_environment()->querydebug);
                 $c::seed($class);
+                Logger::success("seed complete");
                 return 1;
             }
             return -1;
@@ -166,7 +171,7 @@ $command = [
             $command->exec = function ($command, $ctrl, $page) {
 
                 if ($c = igk_getctrl($ctrl, false)) {
-                    $path = "Pages/{$page}Page";
+                    $path = "Pages/".ucfirst($page)."Page";
 
                     if (!($t = $c::resolvClass($path))) {
 

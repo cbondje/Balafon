@@ -15,7 +15,7 @@ abstract class IGKActionBase implements IActionProcessor{
     protected $ctrl;
     protected $context;
 	var $handleAllAction;
-    static $macro;
+    protected static $macro;
     /**
      * extends default faction with macro function
      * @param mixed $name 

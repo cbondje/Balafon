@@ -45,6 +45,17 @@ abstract class RootControllerBase extends IGKObject{
 			return $fc(...$arguments);
 		} 
 		array_unshift($arguments, $c); 
+
+		//if ($name == "getComponentsDir"){
+			// method is probably protected
+			if (method_exists($c, $name)){
+				//invoke in controller context
+				return $c::Invoke($c, $name, $arguments);
+			}
+		// 	igk_wln("cmethod ", method_exists($c, $name));
+		// 	igk_wln_e("ok");
+		// }
+
 		return ControllerExtension::$name(...$arguments); 
 	}
 	public function __call($name, $argument){

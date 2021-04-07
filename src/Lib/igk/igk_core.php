@@ -132,6 +132,9 @@ function igk_io_remove_ext($name){
 function igk_is_cmd(){
     return igk_get_env("sys://func/".__FUNCTION__) || (isset($_SERVER["argv"]) && !isset($_SERVER["SERVER_PROTOCOL"]));
 }
+function igk_is_null_or_empty($c){
+    return ($c === null) || empty($c);
+}
 ///<summary></summary>
 ///<param name="name"></param>
 /**

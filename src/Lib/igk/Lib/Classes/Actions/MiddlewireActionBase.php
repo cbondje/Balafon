@@ -2,7 +2,8 @@
 
 namespace IGK\Actions;
 
-use IGK\Models\User;
+use IGK\Helper\MacrosHelper;
+use IGK\Models\Users;
 use IGK\System\Http\RedirectRequestResponse;
 use IGK\System\Http\Route;
 use IGKActionBase;
@@ -48,24 +49,11 @@ abstract class MiddlewireActionBase extends IGKActionBase{
         }
         
 
-        User::registerMacro("auth", function($auths){
-            if (!is_array($auths)){
-                if (!is_string($auths)){
-                    return false;
-                }
-                $auths= [$auths];
-            }
-            $data = $this->to_array();
-            while($auth = array_shift($auths)){
-                if (!igk_sys_isuser_authorize($data, $auth)){
-                    return false;
-                }
-            } 
-            return true; 
-        });
+        Users::registerMacro("auth", MacrosHelper::auth());
 
-        $user = new User($this->ctrl->User);
+        $user = Users::createFromCache($this->ctrl->User);
         if ( $this->auths && !$user->auth($this->auths)){
+            igk_wln_e($this->auths, $this);
            throw new IGKException("Resource access not allowed");
         }
         Route::LoadConfig($this->ctrl);
@@ -79,6 +67,10 @@ abstract class MiddlewireActionBase extends IGKActionBase{
             foreach($routes as $v){
                 
                 if ($v->match($path, igk_server()->REQUEST_METHOD)){
+                    if (!$v->isAuth($user)){
+                        throw new IGKException("Resources access not allowed");
+                    }
+                    $v->setUser($user);
                     array_shift($arguments);
                     array_unshift($arguments, $this->ctrl);
                     return $v->process(...$arguments);

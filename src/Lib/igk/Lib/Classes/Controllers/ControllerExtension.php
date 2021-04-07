@@ -3,6 +3,7 @@
 namespace IGK\Controllers;
 
 use Exception;
+use Faker\Provider\Base;
 use IGK\Models\Migrations;
 use IGK\Models\ModelBase;
 use IGK\System\Console\Logger;
@@ -11,7 +12,14 @@ use IGKResourceUriResolver;
 use Throwable;
 
 abstract class ControllerExtension{
-
+    /**
+     * extends to get the base controller from class
+     * @param BaseController $ctrl 
+     * @return BaseController 
+     */
+    public static function ctrl(BaseController $ctrl){
+        return $ctrl;
+    }
     public static function asset(BaseController $ctrl, $path){
         $f = $ctrl->getDataDir()."/assets/".$path;
         $t =  IGKResourceUriResolver::getInstance()->resolve($f); 
@@ -24,6 +32,7 @@ abstract class ControllerExtension{
     public static function uri(BaseController $ctrl, $name){
         return $ctrl->getAppUri($name);
     }
+   
   
     /**
      * resolv controller name key
@@ -50,11 +59,13 @@ abstract class ControllerExtension{
 
     public static function seed(BaseController $ctrl, $classname=null){
         //get all seed class and run theme        
-        if ($classname === null){
+        if (igk_is_null_or_empty($classname)){
             $classname = "Database/Seeds/DataBaseSeeder";
         }
-         $g = self::ns($ctrl, $classname );
+        $ctrl::register_autoload();
+        $g = self::ns($ctrl, $classname ); 
         if (class_exists($g)){
+            Logger::info("run seed ".$classname);
             $o = new $g();
             return $o->run();
         } 
@@ -388,5 +399,9 @@ abstract class ControllerExtension{
     public static function getInitDbConstraintKey(BaseController $controller){
         $cl= str_replace("_", "",  str_replace("\\", "_", get_class($controller)));
         return $cl."_ck_";// constraint key
+    }
+
+    public static function getComponentsDir(BaseController $controller){
+        return $controller::classdir()."/Components";
     }
 }

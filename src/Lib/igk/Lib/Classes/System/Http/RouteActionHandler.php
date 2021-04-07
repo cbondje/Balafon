@@ -2,6 +2,7 @@
 
 namespace IGK\System\Http;
 
+use IGK\Models\Users;
 use Exception;
 use IGK\Controllers\BaseController;
 use IGK\System\Exceptions\ArgumentTypeNotValidException;
@@ -40,6 +41,17 @@ class RouteActionHandler{
     protected $verbs = [];
 
     /**
+     * autorisation string
+     * @var string|array
+     */
+    protected $auth;
+
+    /**
+     * get the attached model user
+     * @var mixed
+     */
+    protected $user;
+    /**
      * 
      * @param string $path path 
      * @param mixed $handleClass 
@@ -53,6 +65,26 @@ class RouteActionHandler{
         $this->classBind = $handleClass;
         $this->verbs = is_string($verb)? array_map("trim", explode(",", $verb)) : 
             (is_array($verb) ? $verb: ['*']);
+    }
+    public function getVerbs(){
+        return $this->verbs;
+    }
+    /**
+     * return the selected user auth
+     * @return mixed 
+     */
+    public function getUserAuth(){
+        if ($u = $this->user){
+            return $u->{"::auth"};
+        }
+        return;
+    }
+    public function setUser($user){
+        $this->user = $user;
+        return $this;
+    }
+    public function getUser(){
+        return $this->user;
     }
    
 
@@ -79,8 +111,17 @@ class RouteActionHandler{
         }
         return "#^".$croute."$#";
     }
-
+    public function isAuth(Users $user){
+        if ($user && !empty($this->auth)){ 
+            $r = $user->auth($this->auth); 
+            if (!$r)
+                igk_wln_e($this->auth);
+            return $r; 
+        }
+        return true;
+    }
     public function match($path, $verb='GET'){
+     
         if (!in_array($verb, $this->verbs)){
             igk_ilog("verb not matching ".$verb);
             return false;
@@ -97,6 +138,15 @@ class RouteActionHandler{
         $this->name = $name;
         return $this;
     }
+    /**
+     * set autorisation key name
+     * @param mixed $name 
+     * @return void 
+     */
+    public function auth($name){
+        $this->auth = $name;
+        return $this;
+    }
     public function where($id, $pattern){
         return $this->addExpression($id, $pattern);
     }
@@ -107,7 +157,7 @@ class RouteActionHandler{
         }
 
         $cl = $this->classBind;
-        $cl = new $cl($controller); 
+        $cl = new $cl($controller, $this); 
         $name = array_shift($args);
         if (empty($name)){
             $name = "index";

@@ -1,12 +1,37 @@
 <?php
 namespace IGK\Models;
 
+use Exception;
 use IGKHtmlUtils;
 
 use function igk_resources_gets as __;
 
 ///<summary>Extension</summary>
 abstract class ModelEntryExtension{
+
+    
+    /**
+     * create a model from an object. 
+     * @param ModelBase $ctrl 
+     * @param mixed $object 
+     * @return mixed 
+     * @throws Exception 
+     */
+    public static function createFromCache(ModelBase $ctrl, $object){
+        static $caches;
+        if ($caches===null){
+            $caches = [];
+        }
+
+        $id = spl_object_id($object);
+        if ($v = igk_getv($caches, $id)){ 
+            return $v->_cache;
+        } 
+        $v = (object)["_cache"=>$ctrl::create($object), "object"=>$object];
+        $caches[$id] = $v;
+        return $v->_cache;
+    }
+
     public static function createIfNotExists(ModelBase $model, $condition){
         if (!$model->select_row($condition)){
             return $model::create($condition);

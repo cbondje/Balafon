@@ -6118,7 +6118,7 @@ function igk_db_is_typelength($t){
 /**
 *
 */
-function igk_db_is_user_authorized($s, $actionName, $authTable=IGK_TB_AUTHORISATIONS, $userGroupTable=IGK_TB_USERGROUPS, $userGroupAuthTable=IGK_TB_GROUPAUTHS){
+function igk_db_is_user_authorized($s, $actionName, $strict=false, $authTable=IGK_TB_AUTHORISATIONS, $userGroupTable=IGK_TB_USERGROUPS, $userGroupAuthTable=IGK_TB_GROUPAUTHS){
     if(!is_object($s) || empty($actionName))
         return 0;
     $r=igk_db_table_select_row($authTable, array(IGK_FD_NAME=>$actionName));
@@ -6139,6 +6139,12 @@ function igk_db_is_user_authorized($s, $actionName, $authTable=IGK_TB_AUTHORISAT
                     break;
             }
             else{
+                if (!$strict){ 
+                    if($v_r ===0){
+                        break;
+                    } 
+                    continue;
+                }
                 $v_r=1;
                 break;
             }
@@ -25547,15 +25553,15 @@ function igk_sys_isredirecting(){
 /**
 * get if present user have the right to do an "authname"
 */
-function igk_sys_isuser_authorize($u, $authname, $authCtrl=null, $adapter=IGK_MYSQL_DATAADAPTER){
+function igk_sys_isuser_authorize($u, $authname, $strict=false, $authCtrl=null, $adapter=IGK_MYSQL_DATAADAPTER){
     if (!$u){
         return false;
     }
     if(is_object($u) && method_exists($u, "IsAuthorize")){
-        return $u->IsAuthorize($authname, $authCtrl, $adapter);
+        return $u->IsAuthorize($authname, $strict, $authCtrl, $adapter);
     }
-    $v_uinfo = igk_sys_create_user($u);
-    return IGKUserInfo::GetIsAuthorize($v_uinfo, $authname, $authCtrl, $adapter);
+    $v_uinfo = igk_sys_create_user($u); 
+    return IGKUserInfo::GetIsAuthorize($v_uinfo, $authname, $strict, $authCtrl, $adapter);
 }
 function igk_sys_is_auth($authname, $user=null){
 	if ($user===null){
@@ -40867,6 +40873,37 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
         $bar = $frm->addActionBar();
         IGKHtmlUtils::AddImgLnk($bar, igk_js_post_frame($this->getUri("auth_add_authorisation_ajx")), "add_16x16")
         ->setAttribute("class", "igk-btn");
+        $bar->abtn($this->getUri("auth_drop_selection"))
+        ->on("click"," ns_igk.winui.form.postData(this, '^.igk-form'); return false;")->google_icons("drop");
+    }
+
+    public function auth_drop_selection(){
+        $d = json_decode(igk_io_get_uploaded_data());
+        if ($d && ($tb = igk_getv($d, "clAuths[]"))){
+            // igk_environment()->querydebug = 1;
+            $dr = false;
+            if (!is_array($tb)){
+                $tb = [$tb];
+            }
+            foreach($tb as $k){
+                if ($dr = igk_db_delete($this, IGK_TB_AUTHORISATIONS, array("clId"=>$k))){
+                    continue;
+                }
+                break;
+            } 
+            if (igk_is_ajx_demand()){
+                $this->view();
+                if ($dr){
+                    igk_ajx_toast("auth deleted", "igk-success");
+                } else {
+                    igk_ajx_toast("auth not deleted", "igk-danger");
+                }
+                $d = $this->_authview();
+                igk_ajx_replace_node($d,"#auth"); 
+                igk_exit();
+            }
+        }
+        igk_navto($this->getUri("view"));
     }
     ///<summary></summary>
     ///<param name="q"></param>
@@ -40888,7 +40925,15 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
     * 
     */
     public function auth(){
+        $this->setParam("autview", null);
+        $d = $this->_authview();
+        $d->renderAJX();
+        igk_exit();
+    }
+    private function _authview(){
+
         $d=igk_createnode("div");
+        $d["id"]="auth";
         $frm=$d->addCol("igk-col igk-col-3-3")->addForm();
         $frm->addNotifyHost();
         $this->_auth_options($frm);
@@ -40905,7 +40950,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
         if($r){
             foreach($r->Rows as  $v){
                 $tr=$table->addTr();
-                $tr->addTd()->addInput("clAuths[]", "checkbox");
+                $tr->addTd()->addInput("clAuths[]", "checkbox", $v->clId);
                 $tr->addTd()->Content = $v->clName;
                 $tr->addTd()->Content = $this->getGroupNamesLitteral($v->clId);
                 IGKHtmlUtils::AddImgLnk($tr->addTd(), igk_js_post_frame($this->getUri("auth_edit_frame_ajx&clId=".$v->clId)), "edit_16x16");
@@ -40913,8 +40958,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
             }
         }
         $this->_auth_options($frm);
-        $d->renderAJX();
-        igk_exit();
+        return $d;
     }
     private function getGroupNamesLitteral($authid){
         static $groups; 
@@ -41021,26 +41065,41 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
     * 
     */
     public function auth_check_auth(){
-        $id=igk_getr("clUser");
-        $auth=igk_getr("clAuth");
-        $row=igk_db_table_select_row(IGK_TB_USERS, $id);
-       
-        $v_r = igk_sys_isuser_authorize($row, $auth); 
-        $d=igk_createnode();
-        $t='danger';
-        if($v_r){
-            $t='success';
-        } 
-        $d->addObData($v_r);
-        $d->addPanel()->setClass("igk-".$t)->Content= 
-        __("autorisiation: {0}", $auth ." ".
-        __($v_r?"success":"failed")
+        $uri = $this->getUri(__FUNCTION__);
+        // igk_wln_e("bind...");
+        if (igk_server()->method("POST")){
+
+           //  igk_wln("uri: ", $uri, igk_app_is_uri_demand($this, __FUNCTION__),  $_SERVER);
+            $id= igk_getr("clUser");
+            $auth= trim(igk_getr("clAuth"));
+            $strict= igk_getr("strict", false);
+            
+            // $id = 4;
+            // $auth = "tbn_ctrl/Administrators";
+            // $strict = true; 
+            // $v_r = false;
+            
+            
+            if ($row=igk_db_table_select_row(IGK_TB_USERS, $id)){
+                $v_r = igk_sys_isuser_authorize($row, $auth, $strict);             
+            }
+         
+            $d=igk_createnode();
+            $d->setId("auth_output");
+            $t='danger';
+            if($v_r){
+                $t='success';
+            } 
+            $d->addPanel()->setClass("igk-".$t)->Content= 
+            __("autorisiation: {0}", $auth ." ".
+            __($v_r?"success":"failed")
         ); 
         $this->View();
         if (igk_is_ajx_demand()){
-            $d->renderAJX();
+            //$d->renderAJX();
             igk_ajx_replace_node($d, "#auth_output");
             igk_exit();
+        }
         }
         igk_navto($this->getUri('view').'#'.__FUNCTION__);
     }
@@ -41153,6 +41212,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
     * 
     */
     public function checkauth(){
+        $this->setParam("autview", 2);
         $d=igk_createnode("div");
         $row=$d->addRow();
         $frm=$row->addCol()->addForm();
@@ -41246,11 +41306,12 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
 
         $t->ClearChilds();
         $box=$this->viewConfig($t, "title.manageauth", ".help/auth.managerdesc");
-        $pan=$box->addNodeCallback(__FUNCTION__."/setting", function($c){
+        $aut_view = $this->getParam("autview", 1);
+        $pan=$box->addNodeCallback(__FUNCTION__."/setting", function($c)use($aut_view) {
             $buri=igk_register_temp_uri(__CLASS__);
             $tab=$c->addAJXTabControl();
-            $tab->addTabPage(__("Authorization"), $buri."/auth", 1);
-            $tab->addTabPage(__("CheckAuth"), $buri."/checkauth");
+            $tab->addTabPage(__("Authorization"), $buri."/auth", $aut_view==1);
+            $tab->addTabPage(__("CheckAuth"), $buri."/checkauth", $aut_view==2);
             return $tab;
         }
         , $this); 
@@ -73018,7 +73079,7 @@ class IGKUserInfo extends IGKObject {
     * @param mixed $authCtrl the default value is null
     * @param mixed $adapter the default value is IGK_MYSQL_DATAADAPTER
     */
-    public static function GetIsAuthorize($uinfo, $authname, $authCtrl=null, $adapter=IGK_MYSQL_DATAADAPTER){
+    public static function GetIsAuthorize($uinfo, $authname, $strict=false, $authCtrl=null, $adapter=IGK_MYSQL_DATAADAPTER){
         $s=$uinfo;
         $k=self::DB_INFO_KEY;
         $v_authtable=$s->$k->authtable;
@@ -73031,7 +73092,7 @@ class IGKUserInfo extends IGKObject {
             $v_usergrouptable=$authCtrl->UserGroupTable;
             $v_groupauthtable=$authCtrl->GroupAthTable;
         }
-        return igk_db_is_user_authorized($uinfo, $authname, $v_authtable, $v_usergrouptable, $v_groupauthtable);
+        return igk_db_is_user_authorized($uinfo, $authname, $strict, $v_authtable, $v_usergrouptable, $v_groupauthtable);
     }
     ///<summary></summary>
     ///<param name="authname"></param>
@@ -75729,6 +75790,11 @@ class IGKSQLQueryUtils {
                     return igk_str_format($of, $value);
                 }
             }
+            // + allow null value
+            // if ($tinf->clName==="usertask_end_at"){
+            //     die("name not null: $of . $value == {$tinf->clDefault} ");
+            // }
+
             if(preg_match("/(date(time)?|timespan)/i", $tinf->clType)){
                 if(strtolower($of) == 'now()'){
                     switch(strtolower($tinf->clType)){
@@ -75740,6 +75806,9 @@ class IGKSQLQueryUtils {
                         case "time":
                         return "'".igk_db_escape_string(date("H:i:s"))."'";
                     }
+                }
+                if ($value === 'NULL'){
+                    $value = null;
                 }
             }
             

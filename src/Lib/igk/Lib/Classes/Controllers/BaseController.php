@@ -47,6 +47,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     private static $sm_sysController;
     /** @var array */
     static $sm_regComplete;
+
+    
+
     ///<summary>.ctr BaseController</summary>
     /**
     * .ctr BaseController

@@ -13,7 +13,7 @@ class Component{
         return $fc;
     }
     public static function viewComponent($name, $host, $controller, $args){
-        if (file_exists($file = $controller->getDeclaredDir()."/Components/".$name.".phtml")){
+        if (file_exists($file = $controller::getComponentsDir()."/".$name.".phtml")){
             return $controller->loader->loadComponent($file, $host, ...$args);
         }
         else {

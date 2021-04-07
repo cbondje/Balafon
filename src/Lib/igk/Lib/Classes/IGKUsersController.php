@@ -1,5 +1,6 @@
 <?php
 use IGK\Models\Users;
+use function igk_resources_gets as __;
 
 ///<summary>class used to register global user in system</summary>
 /**
@@ -314,8 +315,7 @@ class IGKUsersController extends IGKConfigCtrlBase {
     //     $v=array($c, "__user_info");
     //     igk_debug(1);
     //     igk_notification_reg_event("sys://db/init_complete", [$v]); 
-    //     parent::initDb($force);
-    //     igk_wln_e("bind: ");
+    //     parent::initDb($force); 
     //     igk_notification_unreg_event("sys://db/init_complete", [$v]);
     //     igk_debug(0);
     // }

@@ -4,6 +4,8 @@
 // licence: IGKDEV - Balafon @ 2019
 // description: Balafon's html functional components
 // TODO: parallax not implement
+
+use IGK\Models\Users;
 use IGK\System\Html\Dom\Factory;
 use function igk_resources_gets as __;
 use IGK\Resources\R;
@@ -247,7 +249,7 @@ function igk_html_node_menukey($menus, $ctrl=null, $root="ul", $item="li", $call
 }
 
 ///<summary>build menu </summary>
-function igk_html_node_menu($tab, $uriListener=null, $callback=null){
+function igk_html_node_menu($tab, $uriListener=null, $callback=null, ?Users $user=null){
     if(!is_array($tab)){
         igk_die("must set an array of menu items");
     }
@@ -262,7 +264,10 @@ function igk_html_node_menu($tab, $uriListener=null, $callback=null){
 					 $uriListener=null;
 			}
 	}
-    $tarray = array(["menu"=> $tab, "c"=>null, "ul"=>$ul]);
+    $tarray = array(["menu"=> $tab, "c"=>null, "ul"=>$ul]); 
+    $user = $user ?? Users::createFromCache(igk_app()->Session->getUser());
+ 
+
     $c = 0;
     while($q = array_pop($tarray)){
         $c = $q["c"];
@@ -271,7 +276,7 @@ function igk_html_node_menu($tab, $uriListener=null, $callback=null){
 
         foreach($tab as $i=>$v){
 
-            $li = $ul->addLi()->setClass("m-l");
+            // $li = $ul->addLi()->setClass("m-l");
             // if (is_array($v)){
             //     $li->setClass("m-group");
             //     $li->Content = __($i);
@@ -279,14 +284,17 @@ function igk_html_node_menu($tab, $uriListener=null, $callback=null){
             //     array_push( $tarray, ["menu"=>$v, "c"=>$c+1, "ul"=>$ul]);
             //     continue;
             // }
+            if (($auth = igk_getv($v, "auth")) && $user && !$user->auth($auth)){ 
+                continue;
+            }
+
             $li = $ul->addLi()->setClass("m-l");
             if ($callback)
                 $callback(1, $li);
             $uri = $v["uri"];
             if ($uriListener){
                 $uri = $uriListener($uri);
-            }
-
+            } 
             $li->addA($uri)->Content = igk_getv($v, "text", $i);
         }
     }
