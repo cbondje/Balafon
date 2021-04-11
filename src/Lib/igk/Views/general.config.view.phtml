@@ -27,7 +27,7 @@ if(!($ref=$ctrl->getParam("referer"))){
     $ctrl->setParam("referer", $ref);
 }
 $hd->addA($ctrl->getUri("back"))->addFontSymbol("global", 0xF001);
-$hd->addSectionTitle(4)->Content=R::ngets("title.balafonconfsettings");
+$hd->addSectionTitle(4)->Content= __("Configurations");
 $h=$bbox->addDiv();
 $f=$h->addForm();
 $f["style"]="padding:4px;";

@@ -574,7 +574,8 @@ function igk_api_mysql_mysql_help($api){
     foreach($tab["name"] as $v){
         $ul->addLi()->add("a")->setAttribute("href", $api->getAppUri("mysql/".$v))->Content=$v;
     }
-    $doc->body->addmenu()->setAttributes(array("type"=>"context", "id"=>"action"))
+    $dv->menu([])
+    ->setAttributes(array("type"=>"context", "id"=>"action"))
         ->addmenuitem()->setAttributes([
     "accesskey"=>1,
     "label"=> __("Go to next line"),

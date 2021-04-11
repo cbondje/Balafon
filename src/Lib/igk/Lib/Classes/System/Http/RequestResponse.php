@@ -5,9 +5,14 @@ namespace IGK\System\Http;
 
 abstract class RequestResponse{
  
-    var $code;
-    var $headers;
-    var $message;
+    /**
+     * return code
+     */
+    var $code = 200;
+    /**
+     * additinal header
+     */
+    var $headers; 
 
     protected function getStatus($code){
         return igk_getv(

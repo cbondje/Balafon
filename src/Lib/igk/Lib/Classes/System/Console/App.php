@@ -169,6 +169,7 @@ class App{
              
         }
         defined('IGK_APP_DIR') || define("IGK_APP_DIR", getcwd());
+        defined('IGK_BASE_DIR') || define("IGK_BASE_DIR", getcwd());
         // setup the log folder
         if (!defined('IGK_LOG_FILE') && ($logFolder  = $this->getLogFolder())){
             define('IGK_LOG_FILE', $logFolder."/.".IGK_TODAY.".cons.log");

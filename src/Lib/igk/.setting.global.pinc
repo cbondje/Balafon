@@ -65,3 +65,4 @@ igk_reg_global_setting('secure_port', 443);
 igk_reg_global_setting("force_single_controller_app", 0);
 igk_reg_global_setting("site_dir", "/sites");
 igk_reg_global_setting("sitemap_xsl", "");
+igk_reg_global_setting("phpmyadmin_uri", "//localhost/phpmyadmin");

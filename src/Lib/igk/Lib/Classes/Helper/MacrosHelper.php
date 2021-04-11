@@ -28,8 +28,8 @@ class MacrosHelper{
                         {
                             return true;
                         }
-                        if (!igk_sys_isuser_authorize($data, $auth)){
-                            igk_wln("not defined : ".$auth);
+                        if (!igk_sys_isuser_authorize($data, $auth, false)){
+                            // igk_wln_e("not authorised : ".$auth, $data);
                             return false;
                         }
                         $g[] = $auth;

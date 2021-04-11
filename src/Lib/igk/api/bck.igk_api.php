@@ -70,9 +70,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                         $c=IGKOB::Content();
                         IGKOb::Clear();
                         igk_wl($c);
-                        igk_exit();
-                        // $g=igk_post_uri($srv."/api/v2/datadb/loadsyncdata", array("data"=>$c, "login"=>$u->clLogin, "ctrl"=>$ctrl->Name));
-                        // igk_wln($g);
+                        igk_exit(); 
                     }
                     if(!$error){
                         $rep->addNode("Status")->Content=0;

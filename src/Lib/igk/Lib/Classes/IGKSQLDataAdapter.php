@@ -70,11 +70,11 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
     /**
     * 
     * @param mixed $tbname
-    * @param mixed $entry
+    * @param mixed $condition
     */
-    public function delete($tbname, $entry){
+    public function delete($tbname, $conditions=null){
         $this->dieNotConnect();
-        $query=IGKSQLQueryUtils::GetDeleteQuery($tbname, $entry);
+        $query=IGKSQLQueryUtils::GetDeleteQuery($tbname, $conditions);
         $t=$this->sendQuery($query, $tbname);
         if($t){
             return true;

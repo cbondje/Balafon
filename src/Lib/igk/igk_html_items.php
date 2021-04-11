@@ -2691,7 +2691,7 @@ final class IGKHtmlPagePreviewItem extends IGKHtmlItem {
             $d=igk_io_basePath(dirname(__FILE__)."/cgi-bin/previewpage.cgi");
             if(empty($d) == false){
                 $uri=igk_io_baseUri()."/".igk_html_uri($d);
-                $s=igk_post_uri($uri, array("query"=>$this->m_uri));
+                $s=igk_curl_post_uri($uri, array("query"=>$this->m_uri));
                 igk_wln("check for ". $uri. "<br />".$this->m_uri."<br />". " in : <br />out : ".$s);
             }
         }
@@ -3532,7 +3532,7 @@ final class IGKHtmlSelectLangNodeItem extends IGKHtmlItem {
         igk_html_build_select_option($this, $tab, array("allowEmpty"=>false, "keysupport"=>false), R::GetCurrentLang());
     }
 }
-///<summary>Represente class: IGKHtmlToggleButtonItem</summary>
+///<summary>toggle class button</summary>
 /**
 * Represente IGKHtmlToggleButtonItem class
 */
@@ -3580,8 +3580,8 @@ final class IGKHtmlToggleButtonItem extends IGKHtmlItem {
     * @param mixed $value
     */
     public function setClassProperty($value){
-        return
         $this["igk-toggle-class"]=$value;
+        return $this;
     }
     ///<summary></summary>
     ///<param name="target"></param>
@@ -3605,6 +3605,7 @@ final class IGKHtmlToggleButtonItem extends IGKHtmlItem {
             else
                 $this["igk-toggle-target"]=new IGKHtmlTargetValue($target);
         }
+        return $this;
     }
 }
 ///<summary> Item parent for rollin on touch screen</summary>

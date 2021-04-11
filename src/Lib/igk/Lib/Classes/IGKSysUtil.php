@@ -16,6 +16,22 @@ final class IGKSysUtil
         return igk_encrypt($pwd, $prefix);
     }
     /**
+     * clear lib controller
+     * @return void 
+     */
+    public static function CleanLibFolder(){
+        if ($hdir = opendir($rdir = realpath(IGK_LIB_DIR."/../"))){
+            while($cdir = readdir($hdir)){
+                if (($cdir=="." )|| ($cdir=="..") || ($cdir=="igk")){
+                    continue;
+                }
+                if (is_dir($b = $rdir."/".$cdir)){ 
+                    IGKIO::RmDir($b);
+                } 
+            }
+        }
+    }
+    /**
      * Retreive all managed data information
      * @param string $dataadapter 
      * @return array 

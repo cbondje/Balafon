@@ -8,7 +8,7 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
-use function\igk_resources_gets as __;
+use function igk_resources_gets as __;
 ///<summary>Represente class: InstallerActionMiddleWare</summary>
 /**
 * Represente InstallerActionMiddleWare class
@@ -306,7 +306,7 @@ class MaintenaceLibMiddleWare extends InstallerActionMiddleWare{
     * 
     */
     public function getMessage(){
-        return "put site on 'maintenance mode'";
+        return __("put site on 'maintenance mode'");
     }
     ///<summary></summary>
     /**
@@ -321,10 +321,7 @@ class MaintenaceLibMiddleWare extends InstallerActionMiddleWare{
         foreach($rnlist as $k=>$v){
             rename($k, $v);
         }
-        igk_io_w2file($bdir."/index.php", <<<EOF
-maintenance mode ....
-EOF
-        );
+        igk_io_w2file($bdir."/index.php", igk_io_read_allfile(IGK_LIB_DIR."/Default/Views/maintenance.mode.phtml"));
         igk_io_w2file($bdir."/.htaccess", <<<EOF
 <IfModule rewrite_module>
 RewriteEngine On

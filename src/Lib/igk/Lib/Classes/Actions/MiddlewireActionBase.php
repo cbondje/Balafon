@@ -68,7 +68,7 @@ abstract class MiddlewireActionBase extends IGKActionBase{
                 
                 if ($v->match($path, igk_server()->REQUEST_METHOD)){
                     if (!$v->isAuth($user)){
-                        throw new IGKException("Resources access not allowed");
+                        throw new IGKException("Route access not allowed");
                     }
                     $v->setUser($user);
                     array_shift($arguments);

@@ -823,13 +823,13 @@ class IGKMySQLDataCtrl extends BaseController{
                     case "FOREIGN KEY":
                     if(!isset($deleted[$ns])){
                         $q="ALTER TABLE `".$n->TABLE_NAME."` DROP ".$nt." `".$ns."`";
-                        if(!$d->sendQuery($q)->Success){
+                        if(!$d->sendQuery($q)->Success()){
                             if($node)
                                 $node->addNotifyBox("danger")->Content=$q." ".igk_mysql_db_error();
                         }
                         if($nt !== "FOREIGN KEY"){
                             $q="ALTER TABLE `".$n->TABLE_NAME."` DROP INDEX `".$ns."`";
-                            if(!$d->sendQuery($q)->Success){
+                            if(!$d->sendQuery($q)->Success()){
                                 if($node)
                                     $node->addNotifyBox("danger")->Content=$q." ".igk_mysql_db_error();
                             }
@@ -905,6 +905,9 @@ class IGKMySQLDataCtrl extends BaseController{
     */
     public function getDataTableName(){
         return null;
+    }
+    public function getCanInitDb(){
+        return false;
     }
     ///<summary></summary>
     ///<param name="tbname"></param>

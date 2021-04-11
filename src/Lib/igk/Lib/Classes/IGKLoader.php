@@ -242,18 +242,26 @@ class IGKLoader implements IResponse {
         return $this;
     }
     public function loadComponent($file, $t, $args=null){ 
-        //igk_wln_e($args);
         $fc = Closure::fromCallable(function($file, $t, $args=null){
             if ($args)
-            extract($args); 
-            igk_wln($args, $menus);
+            extract($args);  
             ob_start();
             include($file); 
             $this->_output .= ob_get_clean();
-        })->bindTo($this->_controller);
-        // $args = [$args];
-        // igk_wln_e($args);
+        })->bindTo($this->_controller); 
         return $fc($file, $t, $args);
+    }
+    public function include($file, $viewargs=null){ 
+        if (file_exists($file)){
+            $fc = Closure::fromCallable(function($file, $args){
+                if ($args)
+                    extract($args);  
+                ob_start();
+                include($file); 
+                $this->_output .= ob_get_clean();
+            })->bindTo($this->_controller);  
+            $fc($file, $viewargs);
+        }
     }
 }
 

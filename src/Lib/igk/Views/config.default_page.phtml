@@ -42,6 +42,7 @@ $ul->addLi()->Content="LibDir : ". IGK_LIB_DIR;
 $frm=$box->addForm();
 $frm["action"]=$ctrl->getUri("conf_install_platform");
 $frm["class"]="dispn";
+$frm["enctype"] = "multipart/form-data";
 $i=$frm->addInput("clFile", "file");
 $i["accept"]=".zip";
 $i["onchange"]="javascript: ns_igk.os.install(this.form, {wait:'please wait... installing', complete:'install complete !!!'}); return false;";

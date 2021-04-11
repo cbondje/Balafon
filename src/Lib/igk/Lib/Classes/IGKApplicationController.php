@@ -1,5 +1,6 @@
 <?php
 
+use IGK\Controllers\ControllerExtension;
 use IGK\Resources\R;
 use IGK\System\Console\Logger;
 
@@ -76,32 +77,32 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
     /**
     * 
     */
-    public function about(){
-        $doc= $this->getAppDocument(); //createNewDoc();
-        $doc->Title=R::ngets("title.about_1", $doc->Title);
-        $f=$this->getViewFile("about");
-        if(file_exists($f)){
-			$this->loader->view($f, []);
-			$doc->body->addBodyBox()->add($this->getTargetNode());
-        }
-        else{
-            $bbox=$doc->body->addBodyBox();
-            $bbox->ClearChilds();
-            $t=$bbox;
-            $t->addContainer()->addCol()->addDiv()->setClass("igk-fsl-4")->Content=R::ngets("title.about");
-            $ct=$t->addDiv()->addContainer();
-            $ct->addCol()->addDiv()->Content="Version : ".igk_getv($this->Configs, "Version", "1.0");
-            $ct->addCol()->addDiv()->Content="Author : ".IGK_AUTHOR;
-            $ct->addCol()->addDiv()->Content="CONTACT : ".IGK_AUTHOR_CONTACT;
-            $dv=$ct->addWebMasterNode()->addCol()->addDiv();
-            $dv->Content="Location : ".$this->getDeclaredFileName();
-        }
-        $doc->RenderAJX();
-        // $doc->RemoveChilds();
-        // $doc->Dispose();
-        // unset($doc);
-		igk_exit();
-    }
+    // public function about(){
+    //     $doc= $this->getAppDocument(); //createNewDoc();
+    //     $doc->Title=R::ngets("title.about_1", $doc->Title);
+    //     $f=$this->getViewFile("about");
+    //     if(file_exists($f)){
+	// 		$this->loader->view($f, func_get_args());
+	// 		$doc->body->addBodyBox()->add($this->getTargetNode());
+    //     }
+    //     else{
+    //         $bbox=$doc->body->addBodyBox();
+    //         $bbox->ClearChilds();
+    //         $t=$bbox;
+    //         $t->addContainer()->addCol()->addDiv()->setClass("igk-fsl-4")->Content=R::ngets("title.about");
+    //         $ct=$t->addDiv()->addContainer();
+    //         $ct->addCol()->addDiv()->Content="Version : ".igk_getv($this->Configs, "Version", "1.0");
+    //         $ct->addCol()->addDiv()->Content="Author : ".IGK_AUTHOR;
+    //         $ct->addCol()->addDiv()->Content="CONTACT : ".IGK_AUTHOR_CONTACT;
+    //         $dv=$ct->addWebMasterNode()->addCol()->addDiv();
+    //         $dv->Content="Location : ".$this->getDeclaredFileName();
+    //     }
+    //     $doc->RenderAJX();
+    //     // $doc->RemoveChilds();
+    //     // $doc->Dispose();
+    //     // unset($doc);
+	// 	igk_exit();
+    // }
     ///<summary></summary>
     /**
     * 
@@ -303,15 +304,16 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
     */
     protected static function dropDb($navigate=true, $force=false){
        
-        $c = igk_getctrl(static::class);
-        $s=$force || igk_is_conf_connected() || $c->IsUserAllowedTo($c->Name.":".__FUNCTION__);
-        if(!$s){
-            if(igk_app_is_uri_demand($c, __FUNCTION__)){
-                igk_navto($c->getAppUri());
-            }
+        if (!($c = igk_getctrl(static::class,false))){
             return;
+        }
+        $s=$force || igk_is_conf_connected() || $c->IsUserAllowedTo($c->Name.":".__FUNCTION__);
+        
+        if($s){
+            $args = func_get_args();
+            $db = [ControllerExtension::class, __FUNCTION__];            
+            return $db($c, ...$args);
         } 
-        parent::dropDb(...func_get_args());
 		igk_hook("sys://drop_app_database", [$c]);
         if(igk_app_is_uri_demand($c, __FUNCTION__)){
             igk_navto($c->getAppUri());

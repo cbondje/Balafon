@@ -1,0 +1,10 @@
+<?php
+
+
+class GoogleAssets{
+    public static function Icon($name):callable{
+        return function($n)use($name){
+            $n->google_icons($name);
+        };
+    } 
+}

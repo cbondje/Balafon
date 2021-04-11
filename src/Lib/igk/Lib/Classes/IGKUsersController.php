@@ -1,4 +1,6 @@
 <?php
+
+use IGK\Models\Usergroups;
 use IGK\Models\Users;
 use function igk_resources_gets as __;
 
@@ -366,17 +368,43 @@ class IGKUsersController extends IGKConfigCtrlBase {
             $frm->setStyle("min-width: 320px");
             $group=igk_db_user_groups($id);
             if(igk_count($group) > 0){
-                $frm->addObData(function() use ($group){
-                    foreach($group as  $v){
+                $frm->addObData(function() use ($group, $id){
+                    foreach($group as  $gid=>$v){
                         igk_wl("<div>".$v."</div>");
+                        $a = igk_createnode("a");
+                        $a["href"]=$this->getUri("rm_grp_from_group&id={$id}&gid=".$gid);
+                        $a->google_icons("delete");
+                        $a->renderAJX();
                     }
                 });
                 igk_ajx_panel_dialog(__("User's group"), $n);
             }
             else{
-                igk_ajx_toast("no group");
+                igk_ajx_toast("no group", "warn");
             }
         }
+    }
+
+    function rm_grp_from_group($userid=null, $groupid=null){
+        $userid = $userid ?? igk_getr("id");
+        $groupid = $groupid ?? igk_getr("gid"); 
+        $r = Usergroups::delete([
+            "clGroup_Id"=>$groupid,
+            "clUser_Id"=>$userid
+        ]);
+        $msg = "";
+        $type="success";
+        if (!$r){
+            $type ="danger";
+            $msg = __("failed to remove user from group");
+        }
+
+        if (igk_is_ajx_demand()){
+            igk_ajx_toast($msg, $type);
+            igk_exit();
+        }
+        igk_notifyctrl("base")->setResponse(["msg"=>$msg, "type"=>$type]);
+        igk_navto_referer();
     }
     ///<summary></summary>
     ///<param name="login"></param>

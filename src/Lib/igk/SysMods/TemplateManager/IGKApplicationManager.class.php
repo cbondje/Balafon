@@ -155,7 +155,7 @@ class IGKApplicationManager extends BaseController{
     * available templates
     */
     public function avail_t_ajx(){
-        $r=igk_post_uri("http://local.com/balafon/templates/list/xml");
+        $r=igk_curl_post_uri("http://local.com/balafon/templates/list/xml");
         $n=igk_createNode();
         $n->addDiv()->Content="Result";
         $d=$n->addDiv()->setStyle("max-height:500px; min-height:200px;");

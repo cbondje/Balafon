@@ -59,6 +59,7 @@ $cl["configMenuBorder"] = "white";
 
 
 $def[".igk-cnf-content .igk-panel-box"] = "[bgcl:configPanelBoxBackgroundColor]";
+$def[".igk-cnf-content > div > .igk-panel-box"] = " {sys:posr} width: 100%; overflow:hidden;";
 $def[$page." .igk-col-view-box"] = "{sys:no-border} [bgcl:configPanelBoxBackgroundColor]";
 
 //config button styles
@@ -346,7 +347,7 @@ $def[$page." .table_lightrow a,.igk-cnf-page .table_darkrow a"] ="{sys:dispb,fit
 $def[$page." .table_darkrow a:hover"] = "[fcl:tableDarkLinkHoverForeColor];";
 $def[$page." .table_lightrow a:hover"] = "[fcl:tableLightLinkHoverForeColor];";
 
-$def[$page." .db_info"] = "{sys:alignt} overflow:hidden;";
+$def[$page." .db_info"] = "{sys:alignt}";
 $def[$page." .row .db_info"] = "margin: 0px !important;";
 
 $def[$page." .igk-cnf-header-node"] = "{sys:no-overflow} font-size:1em; {sys:no-wrap, overflow-none}";
@@ -568,7 +569,7 @@ $def[$page.".con-start"] = "background-color:transparent !important";
 $def[$page.".con-start .igk-cnf-connexion-div"] = "border-radius:4px; box-shadaow: #444 0p 4px 20px 10px";
 
 
-$def[$page." .igk-action-bar a.igk-btn"] = "line-height:0; vertical-align:middle; border:none; [trans:transform 0.2s, background-color .3s]";
+$def[$page." .igk-action-bar a.igk-btn"] = "vertical-align:middle; border:none; [trans:transform 0.2s, background-color .3s]";
 $def[$page." .igk-action-bar a.igk-btn > *"] = "line-height:1"; 
 $def[$page." .igk-action-bar a.igk-btn:hover"] = "[bgcl: actionBarButtonHoverBackgroundColor, #333]; box-shadow: 0px 2px 6px [cl:ationBarButtonShadowColor, #111]; [transform:scale(1.1)]"; 
 

@@ -60,9 +60,27 @@
 	font-size: 0.72em;
 	font-weight:200;
 }
-body{
-	height:auto;
+body{ 
 	background-color: #302640;
+}
+body ul.prod{
+	position:absolute;
+	display: table-cell;
+	top: 78px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	vertical-align: middle;
+	text-align: center;
+
+}
+body ul.prod > li{
+	display:inline-block;
+	position:relative;
+	top:50%;  
+	transform: translate(0, -50%);
+	font-size: 4em;
+	font-weight: 900;
 }
 .igk-container{
 
@@ -74,6 +92,10 @@ body{
 	-moz-transition: all .5s ease-in-out;
 	padding:10px;
 	border : 1px solid #ddd;
+}
+
+.code-view{
+	text-align: center;
 }
 
 @media(max-width: 1024px){ /* width is lower that 1024px */

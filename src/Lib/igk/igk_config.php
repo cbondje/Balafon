@@ -18,7 +18,8 @@ define('IGK_LOCAL_DEBUGGING', 1);
 define('IGK_NODESTROY_ON_FATAL', 1);
 define('IGK_NO_TRACELOG', 1);
 define('IGK_SYS_CONFIG_FILE', 1);
-// + define("IGK_TRACE", 1); //+
+//+ define("IGK_TRACE", 1);
+//+ define('IGK_ENV_PRODUCTION', 1);
 define('IGK_TRACE_LOG', 1);
 
 

@@ -14,11 +14,13 @@ use function\igk_resources_gets as __;
 * use to update core framework
 */
 class IGKBalafonInstaller implements IIGKActionResult{
+    const INSTALLER_KEY = "installer://uploadfile";
     ///<summary></summary>
     /**
     * 
     */
-    public function index(){}
+    public function index(){ 
+    }
     ///<summary></summary>
     /**
     * 
@@ -26,11 +28,11 @@ class IGKBalafonInstaller implements IIGKActionResult{
     public function update(){
 		// igk_set_header(500, "update not allowed");
 		// igk_exit();
-		// return;
+		// return; 
         $r=0;
-        $key="installer://uploadfile";
+        $key=self::INSTALLER_KEY;
         $from_upload=0;
-        require_once(dirname(__FILE__)."/installerMiddleware.pinc");
+        require_once(dirname(__FILE__)."/InstallerActionMiddleWare.pinc");
         if(igk_server()->HTTP_ACCEPT == "text/event-stream"){
             header("Content-Type: text/event-stream");
             header("Cache-Control: no-cache");
@@ -40,6 +42,7 @@ class IGKBalafonInstaller implements IIGKActionResult{
                 igk_server()->HTTP_ACCEPT="text/event-stream";
             }
             else{
+                
                 igk_set_header(500);
                 igk_wln_e("misconfiguration");
             }
@@ -52,8 +55,7 @@ class IGKBalafonInstaller implements IIGKActionResult{
         $action=new InstallerMiddleWareActions();
 
 
-        if(igk_server()->IGK_LOCAL_TEST){
-			igk_ilog("testing: ");
+        if(igk_server()->IGK_LOCAL_TEST){ 
             $action->BaseDir= igk_server()->TEST_BASE_DIR;
             $action->LibDir=igk_server()->LIB_DIR;
             $action->CoreZip= igk_server()->CORE_ZIP;
@@ -77,31 +79,39 @@ class IGKBalafonInstaller implements IIGKActionResult{
                 igk_exit();
             }
         }
+        igk_ilog("installer init install");
         $action->add(new BalafonInstallerMiddelWare());
         $action->add(new MaintenaceLibMiddleWare());
         $action->add(new RenameLibaryMiddleWare());
         $action->add(new ExtractLibaryMiddleWare());
         $action->add(new ClearCacheMiddleWare());
         $action->add(new SuccessMiddleWare());
+        $r = false;
+        try{
         $r=$action->process();
         if($from_upload && file_exists($action->CoreZip)){
             unlink($action->CoreZip);
         }
+    } catch (Throwable $data){
+        igk_ilog("something bad happend:".$data->getMessage());
+    }
         igk_flush_write($r ? "ok": "failed", "finish");
         igk_flush_data();
+
         igk_app()->session->getParam($key, null);
+        igk_ilog("installer finish:".$r);
     }
     ///<summary></summary>
     /**
     * 
     */
-    public function upload(){
+    public function upload(){ 
         $file=igk_io_sys_tempnam("igk");
         rename($file, $file=$file.".zip");
-        igk_app()->session->setParam("installer://uploadfile", igk_html_uri($file));
+        igk_app()->session->setParam(self::INSTALLER_KEY, igk_html_uri($file));
         session_write_close();
         igk_io_store_ajx_uploaded_data(dirname($file), basename($file));
-		igk_ilog(__FILE__.":".__LINE__."\n>stored data : ".$file .":".filesize($file));
+		igk_ilog("installer stored data : ".$file .":".filesize($file));
         igk_exit();
     }
 }

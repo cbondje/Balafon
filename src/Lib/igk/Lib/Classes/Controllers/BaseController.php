@@ -61,7 +61,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
     }
     protected function getActionHandler($name, $params=null){
-        if (($name!= IGK_DEFAULT_VIEW) && str_ends_with($name, IGK_DEFAULT_VIEW)){
+        if (($name!= IGK_DEFAULT_VIEW) && preg_match("/".IGK_DEFAULT_VIEW."$/",$name)){
             $name = rtrim(substr($name,0, -strlen(IGK_DEFAULT_VIEW)), "/");
         }
         $ns = $this->getEntryNameSpace();
@@ -358,7 +358,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
 
             ob_start();
             $bckdir = set_include_path(dirname($file).PATH_SEPARATOR.get_include_path());
+            igk_environment()->viewfile = 1;
             include($file);
+            igk_environment()->viewfile = 0;
             set_include_path($bckdir);
             $out=ob_get_contents();
             ob_end_clean();
@@ -1782,9 +1784,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     protected static function initDb(){ 
         self::__callStatic(__FUNCTION__, []); 
     }
-    protected static function dropDb(){ 
-        self::__callStatic(__FUNCTION__, func_get_args());
-    }
+    // protected static function dropDb(){ 
+    //     // self::__callStatic(__FUNCTION__, func_get_args());
+    // }
     ///<summary>init database constant file</summary>
     /**
     * init database constant file

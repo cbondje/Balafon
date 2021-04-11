@@ -205,13 +205,13 @@ abstract class DataAdapterBase extends IGKSQLDataAdapter{
     /**
     * 
     * @param mixed $tablename
-    * @param mixed $entry
+    * @param mixed $conditions
     * @return mixed
     */
-    public function delete($tablename, $entry){
+    public function delete($tablename, $conditions=null){
         $r = null;
         if($this->m_dbManager != null){
-            $r = $this->m_dbManager->delete($tablename, $entry);
+            $r = $this->m_dbManager->delete($tablename, $conditions);
         }
         return $r;
     }

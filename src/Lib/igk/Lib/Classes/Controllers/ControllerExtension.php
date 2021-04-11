@@ -32,7 +32,11 @@ abstract class ControllerExtension{
     public static function uri(BaseController $ctrl, $name){
         return $ctrl->getAppUri($name);
     }
-   
+
+    public static function db_query(BaseController $ctrl, $query){
+        $ad = igk_get_data_adapter($ctrl);
+        return $ad->sendQuery($query);
+    }
   
     /**
      * resolv controller name key
@@ -77,7 +81,9 @@ abstract class ControllerExtension{
         //get all seed class and run theme
         $dir = $ctrl->getSourceClassDir()."/Database/Migrations";
         $runbatch = 1;
-        $tab = igk_io_getfiles($dir, "/\.php/");
+        if (!$tab = igk_io_getfiles($dir, "/\.php/")){
+            return 0;
+        }
         sort($tab); 
         if ($m = Migrations::select_query(null,[
             "Columns"=>[
@@ -240,15 +246,20 @@ abstract class ControllerExtension{
         return $o;
     }
 
+   
+
     public static function login(BaseController $ctrl, $user=null, $pwd=null, $nav=true) {
-       
+     
             $u = $user;
+       
+            // igk_wln_e("login, $user, $pwd" , $ctrl->User, "uri?".igk_app_is_uri_demand($ctrl, __FUNCTION__));
+
             if (!igk_environment()->viewfile && igk_app_is_uri_demand($ctrl, __FUNCTION__) && file_exists($file = $ctrl->getViewFile(__FUNCTION__, false))){
                 $ctrl->loader->view($file, compact("u", "pwd", "nav"));
                 return false;
-            } 
+            }  
             $c=igk_getctrl(IGK_USER_CTRL);
-            $f=0;
+            $f=0; 
             if($ctrl->User === null){
                 if(is_object($u)){
                     if(igk_is_array_key_present($u, array("clLogin", "clPwd"))){
@@ -257,11 +268,11 @@ abstract class ControllerExtension{
                         $f=1;
                     } 
                 }
-                else{ 
+                else{  
                     if($c->connect($u, $pwd)){
                         $ctrl->checkUser(false);
                         $f=1;
-                    }
+                    } 
                     if(!$f){
                         igk_notifyctrl("notify/app/login")->addErrorr("e.loginfailed");
                     }
@@ -279,7 +290,7 @@ abstract class ControllerExtension{
                         igk_exit();
                     }
                 }
-            }
+            } 
             return $ctrl->User !== null;
     }
     public static function classdir(BaseController $controller){
@@ -312,7 +323,7 @@ abstract class ControllerExtension{
     
         $ctrl=$controller;
         $func=function() use ($ctrl){
-            $rdb=$ctrl->db;
+            $rdb=$ctrl->getDb();
             if($rdb && method_exists($rdb, "onStartDropTable")){
                 $rdb->onStartDropTable();
             }
@@ -345,31 +356,28 @@ abstract class ControllerExtension{
             $controller->View();
             igk_navtocurrent();
         }
-        return;
+        return 1;
         
 
-        $n=igk_getr("n");
-        if($n != null){
-            $ad =igk_get_data_adapter($controller, true); 
-            $r =  $ad->sendQuery("Drop DataBase `".$n."`;"); 
-        }
-        if ($navigate){
-            $controller->View();
-            igk_navtocurrent();
-        } 
+        // $n=igk_getr("n");
+        // if($n != null){
+        //     $ad =igk_get_data_adapter($controller, true); 
+        //     $r =  $ad->sendQuery("Drop DataBase `".$n."`;"); 
+        // }
+        // if ($navigate){
+        //     $controller->View();
+        //     igk_navtocurrent();
+        // } 
     }
 
-    public static function logout(BaseController $controller, $navigate=1){
-       
-        if ($u = igk_app()->session->getUser())
-        { 
-            igk_getctrl(IGK_USER_CTRL)->setUser(null); 
-            if ($navigate){
-                igk_navto("");
-            }
-        }
+     
+    public static function logout(BaseController $ctrl,$navigate=1){
+        igk_app_is_uri_demand($ctrl, __FUNCTION__);
+        $ctrl->setUser(null);
+        igk_getctrl(IGK_USER_CTRL)->logout();
+        if($navigate)
+            igk_navto($ctrl->getAppUri());
     }
-
     /**
      * init controller from function definition
      */

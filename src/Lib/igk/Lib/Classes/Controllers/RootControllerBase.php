@@ -24,8 +24,13 @@ abstract class RootControllerBase extends IGKObject{
 					return include(IGK_LIB_DIR."/Inc/igk_db_ctrl_initdb.pinc"); 
 				},
 				"resetDb"=>function(RootControllerBase $controller, $navigate=true, $force=false){
-					 
-					return include(IGK_LIB_DIR."/Inc/igk_db_ctrl_resetdb.pinc");
+				 	return include(IGK_LIB_DIR."/Inc/igk_db_ctrl_resetdb.pinc");
+				},
+				"getDb"=>function(){
+					return null;
+				},
+				"getMacro"=>function($name) {
+					return  igk_getv(self::$macros, $name);
 				}
 			];
 		}
@@ -44,17 +49,17 @@ abstract class RootControllerBase extends IGKObject{
 			}
 			return $fc(...$arguments);
 		} 
-		array_unshift($arguments, $c); 
-
+		
 		//if ($name == "getComponentsDir"){
 			// method is probably protected
-			if (method_exists($c, $name)){
-				//invoke in controller context
-				return $c::Invoke($c, $name, $arguments);
-			}
+		if (method_exists($c, $name)){
+			//invoke in controller context
+			return $c::Invoke($c, $name, $arguments);
+		}
 		// 	igk_wln("cmethod ", method_exists($c, $name));
 		// 	igk_wln_e("ok");
 		// }
+		array_unshift($arguments, $c); 
 
 		return ControllerExtension::$name(...$arguments); 
 	}

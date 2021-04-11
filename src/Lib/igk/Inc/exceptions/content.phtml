@@ -4,23 +4,25 @@ use IGK\IGKEnvironment;
 
 $cl1 = "#ddd";
 $w_padding = "20px";
-$content .= ("<div class=\"igk-contair\" > ");
+$content .= ("<div style='height:100%;' > ");
     $content .= ("<h1 style=\"background-color: #efefef; padding: {$w_padding} 20px;\">/!\\ ERROR </h1>");
     if($title){
         $content .= ("<h2>".$title."</h2>");
     }
+    $class = igk_sys_env_production() ? "prod" : "dev";
     $content .= ("<div style=\"color: $cl1; padding: 0px 20px; \">");
-    $content .= ("<ul class=\"google-Roboto-Condensed\" >");
-    if (!empty($m = $Ex->getMessage())){
-        $content .= ("<li><span>Message: </span>".$m."</li>");
-    }
-    if (($s = $Ex->getCode())>0){
-        $content .= ("<li><span>Code: </span>".$s."</li>");
-    }
+    $content .= ("<ul class=\"google-Roboto-Condensed $class\" >");
+   
+ 
     $base_path = igk_sys_env_production();
     if(!igk_sys_env_production()){
         
-        
+        if (!empty($m = $Ex->getMessage())){
+            $content .= ("<li><span>Message: </span>".$m."</li>");
+        }
+        if (($s = $Ex->getCode())>0){
+            $content .= ("<li><span>Code: </span>".$s."</li>");
+        }
         // | extra information
         $content .= ("<li><span>Exception Type :</span>".get_class($Ex)."</li>");
         $file = (($file != null) ? $file: $Ex->getFile());
@@ -164,6 +166,8 @@ $content .= ("<div class=\"igk-contair\" > ");
 
     }
     else{
+        $code = $Ex->getCode(); 
+        $content .="<li class='code-view'>".$code."</li>";
         $content .= "</ul>";
     }  
 //no script rendergin

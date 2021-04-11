@@ -247,9 +247,23 @@ function igk_html_node_menukey($menus, $ctrl=null, $root="ul", $item="li", $call
 	igk_html_load_menu_array($n, $menus, $item, $root, $ctrl, $callback);
 	return $n;
 }
+/**
+ * target the menuu display
+ * @param mixed $target 
+ * @return object 
+ * @throws ReflectionException 
+ * @throws Exception 
+ */
+function igk_html_node_bindMenu($target){
+    $m = igk_createnode('div');
+    $m["igk-data-menu"]=1;
+    $m["igk-data-menu-binding"]=$target;
+    return $m;
+}
+
 
 ///<summary>build menu </summary>
-function igk_html_node_menu($tab, $uriListener=null, $callback=null, ?Users $user=null){
+function igk_html_node_menu($tab, $selected=null, $uriListener=null, $callback=null, ?Users $user=null){
     if(!is_array($tab)){
         igk_die("must set an array of menu items");
     }
@@ -295,7 +309,18 @@ function igk_html_node_menu($tab, $uriListener=null, $callback=null, ?Users $use
             if ($uriListener){
                 $uri = $uriListener($uri);
             } 
-            $li->addA($uri)->Content = igk_getv($v, "text", $i);
+            $a = $li->addA($uri);
+            if ($selected == igk_getv($v, "selected")){
+                $li["class"] = "+selected";
+            }
+            if ($icon = igk_getv($v, "icon")){
+                if (is_callable($icon)){
+                    $icon($a);
+                }else{
+                    $a->google_icons($icon);
+                }
+            }
+            $a->span()->Content = igk_getv($v, "text", __($i));
         }
     }
 
@@ -358,7 +383,7 @@ function igk_html_node_abbr($title=null){
 * function igk_html_node_abtn
 * @param mixed $uri
 */
-function igk_html_node_abtn($uri){
+function igk_html_node_abtn($uri="#"){
     $n=igk_createnode("a");
     $n["class"]="igk-btn";
     $n["href"]=$uri;

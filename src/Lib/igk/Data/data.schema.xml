@@ -59,7 +59,7 @@
         <Column clName="clId" clType="Int" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clGroup_Id" clType="Int" clNotNull="True" clLinkType="%prefix%groups" />
         <Column clName="clAuth_Id" clType="Int"  clNotNull="True" clLinkType="%prefix%authorizations" />
-        <Column clName="clGrant" clType="Int"  clDescription="Grant access depending on the authorization usage"
+        <Column clName="clGrant" clType="Enum" clEnumValues="0,1" clDescription="Grant access depending on the authorization usage"
             clNotNull="True" />
     </DataDefinition>
     <DataDefinition TableName="%prefix%groups" Description="Store framework groups" >

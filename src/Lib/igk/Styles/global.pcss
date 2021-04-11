@@ -192,14 +192,18 @@ $def[".disptabr"] = " display: table-row;min-height:0px;";
 //-----------------------------------------------------------------
 //flex properties
 //-----------------------------------------------------------------
-$def[".dispflex"] = "display: flex;";
+$def[".dispflex"] =  
+$def[".flex"] = "display: flex;";
 $def[".flex-no-wrap"] = "flex-wrap: nowrap;";
 $def[".flex-wrap"] = "flex-wrap: wrap;";
 $def[".flex-wrap-reverse"] = "flex-wrap: wrap-reverse;";
 $def[".flex-a-center"] = "justify-content: center; align-items: center;";
 
-
-
+//-----------------------------------------------------------------
+//grid properties
+//-----------------------------------------------------------------
+$def[".dispgrid"] =  
+$def[".grid"] = "display: grid;";
 
 
 $def[".igk-clear-cell"] = "display:table; content:' ' ; clear:both;";
@@ -267,7 +271,7 @@ $def[".igk-container > .igk-container"] = "width:auto;";
 
 
 	//config button styles
-$btnstyle = "[sysbgcl:buttonBackgroundColor] [sysfcl:buttonTextColor] border:none; {sys:dispib} display:inline-block; margin:2px; padding-right:4px; height:32px; vertical-align: top; text-align:center;".
+$btnstyle = "[sysbgcl:buttonBackgroundColor] [sysfcl:buttonTextColor] border:none; {sys:dispib} display:inline-block; margin:2px; vertical-align: middle; text-align:center;".
 "cursor:pointer;";
 
 

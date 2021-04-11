@@ -20164,6 +20164,12 @@ igk.ready(function () {
 
 
 	igk.system.createNS("igk.css", {
+		toggleClass: function(i,p){
+			var q = $igk(i).first();
+			if (q){
+				q.toggleClass(p);
+			}
+		},
 		initAutoTransitionProperties: _initTransitionProperties,
 		loadLinks: function (t) {
 			for (var i = 0; i < t.length; i++) {
@@ -22883,7 +22889,6 @@ igk.system.createNS("igk.system", {
 	// 
 	igk.winui.initClassControl("igk-js-btn-show-dialog", function () {
 		var _id = this.getAttribute("igk:dialog-id");
-
 		if (_id) {
 			this.reg_event("click", function () {
 				ns_igk.winui.showDialog(_id); return !1;
@@ -23254,10 +23259,7 @@ igk.system.createNS("igk.system", {
 			console.error("/!\\ igk-ajx-pickfile: no uri found found ");
 			return;
 		}
-
-		var s = this.getAttribute("igk:data");
-
-
+		var s = this.getAttribute("igk:param");
 		var p = igk.JSON.parse(s, this);
 		if (typeof (p) != 'object') {
 			p = {};

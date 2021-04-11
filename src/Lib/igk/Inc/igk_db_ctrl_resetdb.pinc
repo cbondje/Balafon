@@ -21,6 +21,7 @@ if(!$s){
     }
     return;
 }  
+// Logger::print("dropdb");
 $controller::dropDb($navigate, $force); 
 $ad=igk_get_data_adapter($controller);
 $ad->initForInitDb();

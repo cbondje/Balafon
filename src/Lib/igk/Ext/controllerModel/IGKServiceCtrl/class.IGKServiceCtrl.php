@@ -262,8 +262,7 @@ abstract class IGKServiceCtrl extends IGKCtrlTypeBase
 		}
 		return $h;
 	}
-	public final function IsExposedServiceFunction($fn){
-		//igk_ilog("check ".$fn);
+	public final function IsExposedServiceFunction($fn){ 
 		$tab = igk_get_env("sys://services/".get_class($this)."/notexposed");
 		if (isset($tab[strtolower($fn)])){
 			return 0;

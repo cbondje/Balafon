@@ -14,8 +14,7 @@ abstract class ControllerTask{
     public function __construct($controller, ?RouteActionHandler $route=null)
     {
         $this->controller = $controller;
-        $this->route = $route;        
-    
+        $this->route = $route;   
     }
     /**
      * index start entry task

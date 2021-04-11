@@ -232,9 +232,9 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                     }
                     else{
                         $c=null;
-                        $token=igk_post_uri(igk_str_rm_last($srv, '/')."/api/v2/datadb/gentoken");
+                        $token=igk_curl_post_uri(igk_str_rm_last($srv, '/')."/api/v2/datadb/gentoken");
                         if($token !== false){
-                            $c=igk_post_uri(igk_str_rm_last($srv, '/')."/api/v2/datadb/syncdata", array(
+                            $c=igk_curl_post_uri(igk_str_rm_last($srv, '/')."/api/v2/datadb/syncdata", array(
                         "clCtrl"=>$ctrl->Name,
                         "clLogin"=>$u->clLogin,
                         "clClearS"=>1,
@@ -283,7 +283,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                         $this->datadb("syncdata", $ctrl->Name, $u->clLogin);
                         $c=IGKOB::Content();
                         IGKOb::Clear();
-                        $g=igk_post_uri($srv."/api/v2/datadb/loadsyncdata", array("data"=>$c, "login"=>$u->clLogin, "ctrl"=>$ctrl->Name));
+                        $g=igk_curl_post_uri($srv."/api/v2/datadb/loadsyncdata", array("data"=>$c, "login"=>$u->clLogin, "ctrl"=>$ctrl->Name));
                         header("Content-Type: application/xml");
                         igk_wl($g);
                         igk_exit();
@@ -497,8 +497,9 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                     $doc->Title="Api - MYSQL ";
                     igk_google_addfont($doc, "Roboto");
                     $bbox=$doc->body->addBodyBox()->ClearChilds();
+                    $bbox["class"]="google-Roboto";
+                    
                     $b=$bbox->addDiv();
-                    $b["class"]="google-Roboto";
                     $b->addContainer()->addSingleRowCol()->addSectionTitle(4)->Content=__("API DataDB Command list");
                     $b=$bbox->addDiv()->addContainer()->addRow();
                     $buri=$this->getAppUri();

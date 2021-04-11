@@ -112,10 +112,8 @@ class RouteActionHandler{
         return "#^".$croute."$#";
     }
     public function isAuth(Users $user){
-        if ($user && !empty($this->auth)){ 
-            $r = $user->auth($this->auth); 
-            if (!$r)
-                igk_wln_e($this->auth);
+        if ($user && !empty($this->auth)){  
+            $r = $user->auth($this->auth);            
             return $r; 
         }
         return true;

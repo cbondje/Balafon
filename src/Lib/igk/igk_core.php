@@ -203,7 +203,8 @@ function igk_sys_download_core($download=1){
 * @param mixed $msg
 */
 function igk_wl($msg){
-    include(IGK_LIB_DIR.'/Inc/igk_trace.pinc');
+    if (file_exists(IGK_LIB_DIR.'/Inc/igk_trace.pinc'))
+        include(IGK_LIB_DIR.'/Inc/igk_trace.pinc');
     $tab = func_get_args();
     while($msg = array_shift($tab)){
     if(is_array($msg) || is_object($msg)){
@@ -260,7 +261,9 @@ function igk_dev_wln_e(){
 * @param string|mixed $msg the default value is ""
 */
 function igk_wln($msg=""){
-    include(IGK_LIB_DIR.'/Inc/igk_trace.pinc');
+    if (file_exists(IGK_LIB_DIR.'/Inc/igk_trace.pinc'))
+        include(IGK_LIB_DIR.'/Inc/igk_trace.pinc');
+
     // $LF = igk_getv($options =  igk_environment->get("sys://igk_wln"), "lf", "<br />");
 
     if(!($lf=igk_get_env(IGK_LF_KEY))){

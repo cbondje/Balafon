@@ -22,21 +22,26 @@ abstract class ModelEntryExtension{
         if ($caches===null){
             $caches = [];
         }
+        if ($object==null){
+            return null;
+        }
 
         $id = spl_object_id($object);
         if ($v = igk_getv($caches, $id)){ 
             return $v->_cache;
         } 
-        $v = (object)["_cache"=>$ctrl::create($object), "object"=>$object];
+        $cl = get_class($ctrl);
+        $_obj = new $cl($object); 
+        $v = (object)["_cache"=>$_obj, "object"=>$object];
         $caches[$id] = $v;
         return $v->_cache;
     }
 
     public static function createIfNotExists(ModelBase $model, $condition){
-        if (!$model->select_row($condition)){
+        if (! ($row = $model->select_row($condition))){
             return $model::create($condition);
         }
-        return null;
+        return $row;
     }
     public static function insertOrUpdate(ModelBase $model, $condition, callable $updating=null){
         if (!($row = $model->select_row($condition))){
@@ -243,5 +248,13 @@ abstract class ModelEntryExtension{
         if ($ctrl)
         $t["::ctrl"]=["type"=>"hidden", "value"=>get_class($ctrl)];
         return $t;
+    }
+    ///<summary>return the model table name</summary>
+    /**
+     * return the model table name
+     * @return void 
+     */
+    public static function table(ModelBase $model){
+        return $model->getTable();
     }
 }
