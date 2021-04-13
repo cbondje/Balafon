@@ -29,7 +29,7 @@ function igk_auto_load_class($name, $entryNS, $classdir, & $refile=null ){
                 $n=substr($n, 1);
             }
         }
-        if(file_exists($file=igk_io_dir($classdir.$n.".php"))){            
+        if(file_exists($file=igk_io_dir($classdir."/".$n.".php"))){            
             $bindfile($file);            
             $refile = $file;
             return 1;
@@ -285,6 +285,7 @@ function igk_wln($msg=""){
                 }
                 else{
                     igk_log_var_dump($msg, $lf);
+                    continue;
                 }
                 igk_wl($lf);
             }

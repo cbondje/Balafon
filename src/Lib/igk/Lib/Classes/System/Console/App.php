@@ -176,6 +176,9 @@ class App{
         }
         igk_loadlib(dirname(__FILE__)."/Commands");
         IGKApp::InitSingle(); 
+        if (defined('IGK_DOCUMENT_ROOT'))
+            igk_server()->IGK_DOCUMENT_ROOT = realpath(IGK_DOCUMENT_ROOT);
+         
         igk_hook("console::app_boot", $this);
     }
     public function print(...$text){

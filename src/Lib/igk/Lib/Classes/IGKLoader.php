@@ -4,7 +4,7 @@
 ///<summary>represent internal core loader</summary>
 
 use IGK\IResponse;
-use IGK\System\Http\HtmlRequestResponse;
+use IGK\System\Http\WebResponse;
 
 /**
 * represent internal core loader
@@ -18,7 +18,7 @@ class IGKLoader implements IResponse {
         $m = $this->_controller->_output.$this->_output;
         $this->_controller->_output = "";
         $this->_output = "";
-        return (new HtmlRequestResponse($m))->output();
+        return (new WebResponse($m))->output();
         
     }
     //+ store callback to call protected function info provide by the controller

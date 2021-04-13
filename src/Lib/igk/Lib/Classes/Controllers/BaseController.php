@@ -72,8 +72,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
         }
         $c[] = "Actions\\".ucfirst($name)."Action";
         $t[] = implode("\\", $c);
-        
-
+         
         if ($name != IGK_DEFAULT_VIEW){
             $t[] = implode("\\",array_filter(array_merge([$ns], ["Actions\\".ucfirst(IGK_DEFAULT_VIEW)."Action"])));
         }  
@@ -351,11 +350,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             if ((igk_count($params)>0) && ($handler = $this->getActionHandler($fname, $params[0]))){                
                    
                 igk_do_response($r = $handler::Handle($this, $fname, $params));       
-            }
-      
-
-
-
+            } 
             ob_start();
             $bckdir = set_include_path(dirname($file).PATH_SEPARATOR.get_include_path());
             igk_environment()->viewfile = 1;
@@ -719,7 +714,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
                 $cl=\Closure::fromCallable(array($obj, $method));
             }
         }
-        igk_dispatch_call($cl, $obj, $method, $args);
+        return igk_dispatch_call($cl, $obj, $method, $args);
     }
     ///<summary>dispatch to controller method</summary>
     ///<note>create an implementation of this method to dispatch to child method</note>
@@ -727,7 +722,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     * dispatch to controller method
     */
     protected static function Dispatcher($obj, $method){
-        call_user_func_array(array($obj, $method), array_slice(func_get_args(), 2));
+        return call_user_func_array(array($obj, $method), array_slice(func_get_args(), 2));
     }
     ///<summary>dropControllerMessage </summary>
     /**

@@ -10209,13 +10209,12 @@ function igk_get_node_expression($node, $dp=0){
     }
     return $o;
 }
-///<summary>get registrated name space</summary>
+///<summary>get registrated namespace</summary>
 /**
-* get registrated name space
+* get registrated namespace
 */
 function igk_get_ns(){
-    $s=igk_reg_ns();
-    return $s;
+    return igk_reg_ns();
 }
 ///<summary></summary>
 ///<param name="name"></param>
@@ -11399,6 +11398,7 @@ function igk_header_mime(){
             "png"=>"image/png",
             "jpeg"=>"image/jpeg",
             "jpg"=>"image/jpeg",
+            "ico"=>"image/png",
             "html"=>"text/html",
             "txt"=>IGK_CT_PLAIN_TEXT,
             "js"=>"text/javascript",
@@ -13749,11 +13749,10 @@ function igk_html_render_text_node($n){
 function igk_html_render_xml($item){
     if(!$item)
         return null;
-    IGKOb::Start();
+    ob_start();
     igk_wl(igk_xml_header().IGK_LF);
     igk_wl($item->Render(new IGKXmlRenderOptions()));
-    $s=IGKOb::Content();
-    IGKOb::Clear();
+    $s= ob_get_clean();
     return $s;
 }
 ///<summary></summary>
@@ -18697,8 +18696,8 @@ function igk_log_var_dump($tab, $lf=null){
         }
     }
     if(is_numeric($tab) || is_bool($tab)){
-        igk_wl($tab);
-        igk_wl($lf);
+        igk_wl($tab); 
+        igk_wl($lf); 
         return;
     }
     $textmode=(igk_is_cmd() || igk_get_env("igk_log_var_dump") == 'text');
@@ -29125,6 +29124,22 @@ function igk_xml_to_obj($n, $arraycallback=null){
         }
     }
     return $obj;
+}
+/**
+ * bind data to xml node properties
+ */
+function igk_xml_obj_2_xml($node, $data){
+    $tbuild =[["t"=>$node, "d"=>$data]];
+    while($q = array_shift($tbuild)){
+        foreach($q["d"] as $k=>$v){
+            $n = $q["t"]->add($k);
+            if (is_string($v)){
+                $n->Content = $v;
+            } elseif (is_array($v)){
+                array_unshift($tbuild, ["t"=>$n, "d"=>$v]);
+            }
+        }        
+    }       
 }
 ///<summary></summary>
 ///<param name="t"></param>
@@ -40937,7 +40952,8 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
         IGKHtmlUtils::AddImgLnk($bar, igk_js_post_frame($this->getUri("auth_add_authorisation_ajx")), "add_16x16")
         ->setAttribute("class", "igk-btn");
         $bar->abtn($this->getUri("auth_drop_selection"))
-        ->on("click"," ns_igk.winui.form.postData(this, '^.igk-form'); return false;")->google_icons("drop");
+        ->on("click"," ns_igk.winui.form.postData(this, '^.igk-form'); return false;")
+        ->google_icons("drop");
     }
 
     public function auth_drop_selection(){
@@ -41086,9 +41102,9 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
             igk_navtocurrent();
         }
         else{
-            $frame=igk_html_frame($this, __FUNCTION__);
-            $frame->Title=__("title.edit_authorisation_1");
-            $d=$frame->BoxContent->addDiv();
+            $frame= igk_createnode("div"); // igk_html_frame($this, __FUNCTION__);
+            // $frame->Title=__("title.edit_authorisation_1");
+            $d=$frame->div();
             $frm=$d->addForm();
             $frm["action"]=$this->getUri(__FUNCTION__);
             $d=$frm->addDiv();
@@ -41096,8 +41112,12 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
             $d->addSLabelInput(IGK_FD_NAME);
             $frm->addHSep();
             $frm->addInput("confirm", "hidden", "1");
-            $frm->addInput("btn.confirm", "submit");
-            $frame->RenderAJX();
+            $frm->actionbar(function($a){
+                $a->addInput("btn.confirm", "submit", __("btn.add"));
+            });
+
+            // $frame->RenderAJX();
+            igk_ajx_panel_dialog(__("Add Authorisation"), $frame);
         }
     }
     ///<summary></summary>
@@ -41261,8 +41281,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
                     $tr->addTd()->Content=$v->clName;
                     IGKHtmlUtils::AddImgLnk($tr->addTd(), igk_js_post_frame($this->getUri("auth_remove_group_ajx&clId=".$id."&clGroupId=".$v->clId)), "drop_16x16");
                 }
-            }
-            $div=$frm->addDiv();
+            } 
             $frm->addHSep();
             $frm->addInput("clId", "hidden", $id);
             $frm->addInput("confirm", "hidden", 1);
@@ -49276,8 +49295,8 @@ abstract class IGKPageControllerBase extends IGKCtrlTypeBase{
         return $s;
     }
    
-    protected function getClassesDir(){
-        return $this->getDeclaredDir()."/Lib/Classes/";
+    protected function getClassesDir(){ 
+        return $this->getDeclaredDir()."/Lib/Classes";
     }
     ///<summary></summary>
     /**
@@ -57645,6 +57664,14 @@ final class IGKHtmlClassValueAttribute extends IGKHtmlItemAttribute implements S
         $this->m_classes=array();
         $this->m_expressions=array();
     }
+
+    public function setClasses($expression){
+        $tb = array_filter(explode(" ",$expression));
+        foreach($tb as $s){
+            $this->add($s);
+        }
+        return $s;
+    }
     ///<summary></summary>
     ///<param name="v"></param>
     /**
@@ -57759,6 +57786,7 @@ final class IGKHtmlClassValueAttribute extends IGKHtmlItemAttribute implements S
         if(empty($class))
             return;
         $tab=null;
+        
         if(is_array($class)){
             $cl=[];
             foreach($class as $k=>$v){
@@ -57781,12 +57809,14 @@ final class IGKHtmlClassValueAttribute extends IGKHtmlItemAttribute implements S
         }
         else
             $tab=explode(" ", $class);
-        if(count($tab) == 1){
-            $this->_add($class);
-        }
-        else{
-            foreach($tab as $v){
-                $this->_add($v);
+        if ($tab){
+            if(count($tab) == 1){
+                $this->_add($class);
+            }
+            else{
+                foreach($tab as $v){
+                    $this->_add($v);
+                }
             }
         }
     }
@@ -72758,6 +72788,7 @@ class IGKResourceUriResolver{
         if(IGKIO::IsRealAbsolutePath($uri)){
             $rp=igk_realpath($uri);
             $bdir=igk_io_basedir();
+        
             if(!igk_io_is_subdir($bdir, $rp)){
                 if(!igk_io_is_subdir($bdir, $uri)){
                     $rp=$uri;

@@ -310,9 +310,10 @@ function igk_html_node_menu($tab, $selected=null, $uriListener=null, $callback=n
                 $uri = $uriListener($uri);
             } 
             $a = $li->addA($uri);
-            if ($selected == igk_getv($v, "selected")){
+            if ($selected && ($selected == igk_getv($v, "selected"))){
                 $li["class"] = "+selected";
             }
+            $li["class"] = "+".igk_css_str2class_name($i);
             if ($icon = igk_getv($v, "icon")){
                 if (is_callable($icon)){
                     $icon($a);
@@ -3641,7 +3642,7 @@ function igk_html_node_fields(){
 	if (( ($c = func_num_args()) >= 1) && is_array($a = func_get_arg(0))){
 		$engine = $c>1? func_get_args(1) : null;
 		$o->addObData(function() use ($a, $engine){
-			igk_html_form_fields($a, 1);
+			igk_html_form_fields($a, 1, $engine);
 		}, IGK_HTML_NOTAG_ELEMENT);
 	}
 	return $o;

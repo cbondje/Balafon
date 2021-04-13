@@ -751,6 +751,7 @@ function igk_html_form_select_data($data, $callback){
 */
 function igk_html_form_fields($formFields, $render=0){
     $o="";
+    $clprop = new  IGKHtmlClassValueAttribute();
     $get_attr_key = function($v){
         $key = null;
         foreach(["attrs", "attribs","attributes"] as $m){
@@ -761,24 +762,41 @@ function igk_html_form_fields($formFields, $render=0){
         }
         return $key;
     };
-    $load_attr=function($v, & $o) use( $get_attr_key) {
+   
+    $clprop->add("data");
+    // igk_wln($clprop->getValue());
+   
+    $load_attr=function($v, & $o) use( $get_attr_key ,  $clprop ) {
+        $clprop->clear();
         $key = $get_attr_key($v);
-        $v_def_form_control = igk_environment()->get("css/default/controlstyle", " class=\"igk-form-control form-control\" ");
+        $v_def_form_control = igk_environment()->get("css/default/controlstyle", "igk-form-control form-control");
         if($key === null){
             //default engine form control
             $e = igk_get_selected_builder_engine();
             if ($e){
-                $o .= $e->initAttributes($key, $v);
-            }else {
-                $o .= $v_def_form_control;
+                $o .= $e->initAttributes($key, $v, $clprop);
+            }else { 
+                $clprop->setClasses($v_def_form_control);
+            }
+            if (!empty($defclass = $clprop->getValue())){  
+                $o .=  " class=\"".$defclass."\"";
             }
             return;
         } 
-        if (!isset($v[$key]["class"])){
-            $o .= $v_def_form_control;
-        }
+       // if (!isset($v[$key]["class"])){
+             $clprop->setClasses($v_def_form_control);
+            // $o .= $v_def_form_control;
+       // }
         foreach($v[$key] as $k=>$v){
-            $o .= " ".$k."=\"".$v."\"";
+            if ($k=="class"){
+                $clprop->setClasses($v);
+            }else{
+                $o .= " ".$k."=\"".$v."\"";
+            }
+        }
+        if (!empty($defclass = $clprop->getValue())){  
+            // igk_wln_e($defclass);
+            $o .=  " class=\"".$defclass."\"";
         }
     };
     $bindValue = function(&$o, & $fieldset, $k, $v) use ($get_attr_key, $load_attr){
@@ -826,7 +844,7 @@ function igk_html_form_fields($formFields, $render=0){
         } 
         $o .= "<div";
         if((isset($v["required"]) ? $v["required"]: 0)){
-            $o .= " class=\"require\" ";
+            $o.= " class=\"required\"";
         }
         $o .= ">";
         if(!preg_match("/(hidden|fieldset|button|submit|reset|datalist)/", $_type)){

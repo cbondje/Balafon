@@ -20,10 +20,31 @@ abstract class ControllerExtension{
     public static function ctrl(BaseController $ctrl){
         return $ctrl;
     }
+    /**
+     * resolv asset path
+     * @param BaseController $ctrl 
+     * @param mixed $path 
+     * @return mixed 
+     */
     public static function asset(BaseController $ctrl, $path){
-        $f = $ctrl->getDataDir()."/assets/".$path;
+        $f = implode("/", [$ctrl->getDataDir(), IGK_RES_FOLDER, $path]);
         $t =  IGKResourceUriResolver::getInstance()->resolve($f); 
+        if (empty($t)){
+            igk_wln_e(file_exists($f), "-".$t, $f);
+        }
         return $t;
+    }
+    /**
+     * return asset content if exists
+     * @param BaseController $ctrl 
+     * @param mixed $path 
+     * @return string|false|void 
+     */
+    public static function asset_content(BaseController $ctrl, $path){
+        $f = implode("/", [$ctrl->getDataDir(), IGK_RES_FOLDER, $path]);
+        if (file_exists($f)){
+            return file_get_contents($f);
+        }
     }
     public static function configFile(BaseController $ctrl, $name){
         return $ctrl->getDeclaredDir()."/Configs/$name.php";
