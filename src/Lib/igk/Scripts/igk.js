@@ -13109,12 +13109,15 @@ Name:balafon.js
 					if (!form)
 						return;
 					uri = uri || form.getAttribute("action");
+					var method = form.getAttribute("method") || "POST";;
 					var msg = "";
 					var e = null;
 					var p = [];
 					if (window.tinyMCE) { // to update the tinyMce before update
 						window.tinyMCE.triggerSave();
 					}
+					var fc = method=="POST"?igk.ajx.post :igk.ajx.get;
+						
 
 					function __appendForm(id, value) {
 						if (p[id]) {
@@ -13172,7 +13175,7 @@ Name:balafon.js
 							}
 							igk.ajx.send({
 								uri: uri,
-								method: 'POST',
+								method: method,
 								contentType: 'application/json',
 								func: function (xhr) {
 									if (this.isReady()) {
@@ -13203,10 +13206,9 @@ Name:balafon.js
 							// console.debug("send....form data", form.getAttribute("enctype") ,frmData, form );
 							// return;
 							// uri = "http://local.com:8801/data.php";
-
-							igk.ajx.post(uri, frmData, func, (sync == igk.constants.undef) ? sync : true, true, {
+							fc(uri, frmData, func, (sync == igk.constants.undef) ? sync : true, true, {
 								source: $igk(form) // setting the source of the current definition
-							});
+							}); 
 						}
 					}
 					else {
@@ -13249,7 +13251,7 @@ Name:balafon.js
 								msg += i + "=" + p[i];
 							e = 1;
 						}
-						igk.ajx.post(uri, msg, func, (sync == igk.constants.undef) ? sync : true, true, {
+						fc(uri, msg, func, (sync == igk.constants.undef) ? sync : true, true, {
 							source: form
 						});
 					}

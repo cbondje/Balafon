@@ -8,7 +8,7 @@ class ZipCoreCommand extends AppExecCommand{
 
     var $command = "--zipcore";
 
-    var $description = "zip balafon core";
+    var $desc = "zip balafon core";
 
 
     public function exec($command, $path=null){

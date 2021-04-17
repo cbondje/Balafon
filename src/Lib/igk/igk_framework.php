@@ -204,6 +204,11 @@ function igk_ajx_panel_dialog($title, $d, $closeBtn='drop', $callback=null){
     }
     $dialog->RenderAJX();
 }
+function igk_ajx_panel_dialog_result($title, $d, $closeBtn='drop', $callback=null){
+    ob_start();
+    igk_ajx_panel_dialog($title, $d, $closeBtn, $callback);
+    return new IGK\System\Http\WebResponse(ob_get_clean());
+}
 ///<summary></summary>
 /**
 * 
@@ -213,6 +218,18 @@ function igk_ajx_panel_dialog_close(){
     $n["autoremove"]=1;
     $n->Content="igk.winui.controls.panelDialog.close()";
     $n->RenderAJX();
+}
+function igk_ajx_update($uri, $target, $type='get'){
+    if ($type!='get'){
+        $type = 'post';
+    }
+    if ($target=='body'){
+        $target = 'null';
+    }else  {
+        $target="'$target'";
+    }
+    igk_createnode("script")->setContent("ns_igk.ajx.{$type}('$uri', null, {$target});")
+    ->renderAJX();
 }
 ///<summary>redirect to uri in ajx context</summary>
 /**
@@ -5158,6 +5175,7 @@ function igk_db_create_opt_obj(){
 * @param mixed $length the default value is 4
 */
 function igk_db_create_ref($ctrl, $model=null, $base=36, $length=4){
+    
     return igk_getctrl(IGK_CB_REF_CTRL)->get_ref($ctrl, $model, $base, $length);
 }
 ///<summary>create and empty row from global system datatable name</summary>
@@ -6915,7 +6933,7 @@ function igk_db_table_count_where($table, $andcondition=null, $adapter=IGK_MYSQL
 * @param mixed $ctrl
 */
 function igk_db_table_exists($ctrl){
-    $v=igk_db_table_count_where($ctrl->DataTableName, null, $ctrl);
+    $v=igk_db_table_count_where(igk_db_get_table_name($ctrl->getDataTableName(), $ctrl), null, $ctrl);
     return $v;
 }
 ///<summary>filter object to fit table definition data</summary>
@@ -21489,10 +21507,12 @@ function igk_session_block_exit_callback(){
 }
 ///<summary></summary>
 /**
-* 
+* check before destroying a session
 */
 function igk_session_destroy(){
-    @session_destroy();
+    if ($id=session_id()){
+        @session_destroy();
+    }
 }
 ///<summary>check if session file exists</summary>
 /**
@@ -21757,6 +21777,7 @@ function igk_get_header_status($code){
     static $t = null;
     if ($t===null){
         $t=array( 
+                400=>"HTTP/1.0 400 Bad request condition",
                 401=>"HTTP/1.0 401 unauthorized",
                 403=>"HTTP/1.0 403 forbidden",
                 404=>"HTTP/1.0 404 not found",
@@ -23904,6 +23925,22 @@ function igk_str_rm_start($str, $pattern){
 function igk_str_split_lines($str){
     return preg_split("/(\r\n)|(\n)/i", $str);
 }
+///<summary>convert to snake version</summary>
+/**
+ * convert to snake version
+ */
+function igk_str_snake($str){
+    $out = $str;
+    if (count($g = preg_split("/[A-Z]/", $str, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_OFFSET_CAPTURE))>1){
+        $out ="";
+        $offset = 0;  
+        for($i=0; $i < count($g); $i++){
+            $out .= substr($str, $offset, 1).$g[$i][0];
+            $offset = $g[$i][1] + strlen($g[$i][0]); 
+        }
+    }
+    return $out;
+}
 ///<summary>split string data </summary>
 /**
 * split string data
@@ -25343,7 +25380,7 @@ function igk_sys_handle_request_method(){
         if(igk_getv($upd, "destroysession") == 1){
             @session_start();
             $id=session_id();
-            @igk_session_destroy();
+            igk_session_destroy();
             igk_json(igk_json_encode(["sessiondestroy"=>1, 'sessid'=>$id]));
         }
         igk_exit();
@@ -26366,7 +26403,7 @@ EOF;
         igk_set_env("sys://error/repport", 1);
         if(igk_is_cmd()){
             igk_wln("[".__FUNCTION__."] -- ERROR : ".igk_io_request_uri());
-            @igk_session_destroy();
+            igk_session_destroy();
             igk_wln($last);
         }
         else if (!ini_get("display_errors")){ 
@@ -27844,6 +27881,8 @@ function igk_do_response($r){
     }
     if ($e) 
         igk_exit();
+    // igk_trace();
+    // igk_wln("bind...".$r, $e);
     return $r;
 }
 ///<summary>handle object action.</summary>
@@ -27863,10 +27902,15 @@ function igk_view_handle_obj_action($fname, $object, array $params= [], $exit = 
     $r=0; 
     if (!empty($action)){
         igk_set_env(IGKEnvKeys::VIEW_CURRENT_ACTION, $action); 
-        igk_environment()->set(IGKEnvKeys::VIEW_CURRENT_VIEW_NAME, $fname); 
-        $c = $object->$action(...$params);
-        if ($exit){
-            return igk_do_response($c); 
+        igk_environment()->set(IGKEnvKeys::VIEW_CURRENT_VIEW_NAME, $fname);
+        $args = array_slice($params, 1);
+        try{  
+            $c = $object->$action(...$args);
+            if ($exit){
+                return igk_do_response($c); 
+            }
+        } catch(Throwable $ex){
+            throw new IGKException($ex->getMessage(), 400, $ex);
         }
         return $c;
     }
@@ -29567,9 +29611,8 @@ function igk_zip_output($c, $forcegzip=0, $header=1, & $type=null){
         $type="gzip";
     }
     else{
-        // igk_wln("no zip");
+        $type = 'no-compression';
         igk_wl($c);
-        
     }
 }
 ///<summary></summary>
@@ -32326,6 +32369,11 @@ final class IGKHtmlScriptAssocInfo implements Serializable, ArrayAccess{
 final class IGKHtmlUtils {
     private static $gRendering;
 
+    public static function SubmitActionCallback($title=null, $name="btn_submit"){
+        return function($a)use ($title, $name){
+            $a->addInput($name, "submit", $title);
+        };
+    }
     public static function ConfirmAction(){
         return function($a){
             $a->addInput("btn.ok", "submit", __("restore"));
@@ -34630,7 +34678,7 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
             if(!empty($domain)){
                 $this->Session->Domain=$buri;
                 session_write_close();
-                @igk_session_destroy();
+                igk_session_destroy();
                 igk_getconfigwebpagectrl()->reconnect();
                 igk_exit();
             }
@@ -41012,6 +41060,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
     private function _authview(){
 
         $d=igk_createnode("div");
+        $d->class = "+auth-view";
         $d["id"]="auth";
         $frm=$d->addCol("igk-col igk-col-3-3")->addForm();
         $frm->addNotifyHost();
@@ -41077,7 +41126,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
             $def = [];
             foreach($g->getRows() as $r){
                 if ($gg = igk_getv($groups, $r->clGroup_Id)){
-                    $def[$r->clGroup_Id] = $gg->clName;
+                    $def[$r->clGroup_Id] = "<a href=\"".$this->getUri("group_members&id=".$r->clGroup_Id)."\" >".$gg->clName."</a>";
                 }
             }
             if (count($def)>0){
@@ -41085,6 +41134,21 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
             }
         };
         return "&nbsp;";
+    }
+    public function group_members(){
+        $id = igk_getr("id");
+
+        $d = igk_createnode("div");
+        $d->h2()->Content = "Group Members";
+        $g = \IGK\Models\Usergroups::select_all(["clGroup_Id"=>$id]);
+        $d->div()->ul()->loop($g)->host(function($n, $v){
+            $li = $n->li();
+            $user = \IGK\Models\Users::cacheRow($v->clUser_Id);
+            $li->Content = "&lt;".$user->fullname()."&gt; ".$user->clLogin;
+        });
+        $d->renderAJX();
+        igk_exit();
+        return $d;
     }
     ///<summary></summary>
     /**
@@ -51872,10 +51936,12 @@ final class IGKReferenceModelCtrl extends IGKNonVisibleControllerBase{
     * @param mixed $ref the default value is 6
     */
     public function get_ref($ctrl, $model=null, $base=36, $ref=6){
+        return \IGK\Models\ReferenceModels::get_ref($ctrl, $model, $base, $ref);
+
         $obj=(object)array();
         $q=$this;
         $obj->update=function() use ($q, $obj){
-            $tb=$q->getDataTableName();
+            $tb= igk_db_get_table_name($q->getDataTableName(), $q);
             $s=igk_db_create_row($tb, $obj);
             if($obj->newValue){
                 igk_db_insert($q, $tb, $s);
@@ -52556,7 +52622,7 @@ final class IGKWhoUseCtrl extends IGKNonVisibleControllerBase {
                 $rep->add("error")->setContent("-1")->RenderAJX();
             }
         }
-        @igk_session_destroy();
+        igk_session_destroy();
         igk_exit();
     }
     ///<summary>register site for test</summary>
@@ -53229,7 +53295,7 @@ final class IGKSessionController extends BaseController {
     public function ClearS($navigate=true){ 
         $id = session_id();
         if ($id){
-            @igk_session_destroy();  
+            igk_session_destroy();  
             $_SESSION=array();
         }
         $_rcu=explode("?", igk_io_request_uri())[0];
@@ -55587,782 +55653,7 @@ class IGKDbUserProfile extends IGKObject {
     */
     public function initiliazeSetting($s){}
 }
-///<summary>class used to manage database for a controller</summary>
-/**
-* class used to manage database for a controller
-*/
-class IGKDbUtility extends IGKObject implements IIGKDbUtility {
-    ///note : it used clId as id by default if you don't want to used clId by default for row identification
-    private $m_Ctrl;
-    private $m_ad;
-    private $m_errorcode;
-    private $m_errorstr;
-    // public function __debugInfo(){
-    //     return [];
-    // }
-    protected function getHashKey($v){    
-        if (is_bool($v)){
-            return $v? "1" :"0";
-        }
-        if (is_object($v)){
-            if (method_exists($v, "get_cachekey")){
-                return $v->get_cachekey();
-            }
-            throw new Exception("Object not implement get_cachekey");
-        }
-        return $v;
-    }
-    protected function getCacheKey($n){
-        if (is_array($n)){
-            $o = [];
-            foreach($n as $v){
-                array_push($o, $this->getHashKey($n));
-            }
-            $n = implode("-", $n);
-        }
-        return $n;
-    }
-    public function cache($name, callable $callback){
-        $key = "dbCache://".$this->getCacheKey($name);
-        $args = array_slice(func_get_args(),2);
-        if ($r = igk_environment()->get($key)){
-            return $r;
-        }
-        $r =  call_user_func_array($callback, $args); 
-        if ($r){
-            igk_environment()->set($key, $r);
-        }
-        return $r;
-    }
-    public function last_error(){
-        return $this->Ad->getError();
-    }
-    public function select_row($table, $conditions){
-        return $this->selectSingleRow($table, $conditions);
-    }
-    ///<summary></summary>
-    ///<param name="name"></param>
-    ///<param name="arguments"></param>
-    /**
-    * 
-    * @param mixed $name
-    * @param mixed $arguments
-    */
-    public function __call($name, $arguments){
-        if(preg_match("/Callback$/i", $name)){
-            $fc=igk_getv($arguments, 0);
-            $n=substr($name, 0, strlen($name)-8);
-            if(!empty($n) && (strtolower($n) != "callback")){
-                $s=call_user_func_array(array($this, $n), array_slice($arguments, 1));
-                if($s !== null){
-                    $fc($s);
-                }
-                return $s;
-            }
-        }
-        $this->close(); 
-        $msg="/!\\ DBUtility[".get_class($this)."] Action {$name} not implements";
-        igk_ilog($msg, __CLASS__);
-        igk_notifyctrl()->addError($msg);
-        igk_assert_die(igk_server_is_local(), $msg);
-        return null;
-    }
-    public function selectdb($dbname){
-        if ($this->m_ad)
-            return $this->m_ad->selectdb($dbname);
-        return false;
-    }
-    ///<summary></summary>
-    ///<param name="ctrl"></param>
-    /**
-    * 
-    * @param mixed $ctrl
-    */
-    public function __construct($ctrl){
-        if($ctrl == null)
-            igk_die("variable ctrl can't be null");
-        $this->m_Ctrl=$ctrl;
-        if($this->connect()){
-            register_shutdown_function(function(){
-                $this->close();
-            });
-        }
-        else{
-            igk_die(__("Failed to select {0}'s databases", $this->m_Ctrl->getDataAdapterName()));
-        }
-    }
-    ///<summary>get table prefix</summary>
-    /**
-    * get table prefix
-    */
-    protected function _getTablePrefix(){
-        return "";
-    }
-	public function getTableName($table){
-		return igk_db_get_table_name($table);
-	}
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="value"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $value
-    */
-    protected function _syncValue($table, $value){
-        $v_=$value;
-        if(preg_match_all("#^@:/(?P<value>(.)+)$#", $value, $tab)){
-            $v_=igk_getv($tab["value"], 0);
-        }
-        return $v_;
-    }
-    ///<summary>table fixture </summary>
-    /**
-    * table fixture
-    */
-    protected function _table($table){
-        if(empty($table=trim($table))){
-            igk_die("table name is empty");
-        }
-        return $this->_getTablePrefix().$table;
-    }
-    ///<summary></summary>
-    ///<param name="callback"></param>
-    /**
-    * 
-    * @param mixed $callback
-    */
-    public function adCallback(callable $callback){
-        if(!$this->connect())
-            return;
-        $o=$callback($this);
-        $this->close();
-        return $o;
-    }
-    ///<summary>add direct object for table name</summary>
-    /**
-    * add direct object for table name
-    */
-    public function addObject($tablen, $mixed){
-        $r=igk_db_create_row($tablen, $mixed);
-        return $this->insertIfNotExists($tablen, $r);
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function beginTransaction(){
-        return $this->m_ad->beginTransaction();
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function close(){
-        if($this->m_ad){
-            $this->m_ad->close();
-            if($this->m_ad->OpenCount()<=0){
-                $this->m_ad=null;
-            }
-        }
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function commit(){
-        return $this->m_ad->commit();
-    }
-    ///<summary>connect adapter</summary>
-    /**
-    * connect adapter
-    */
-    public function connect(){
-        if(!$this->m_ad)
-            $this->m_ad=$this->initDataAdapter();
 
-        return $this->m_ad && $this->m_ad->connect($this->m_Ctrl);
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="id" default="null"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $id the default value is null
-    */
-    public function delete($table, $id=null){
-        if(is_numeric($id)){
-            return igk_db_delete($this->m_Ctrl, $table, array(IGK_FD_ID=>$id));
-        }
-        return igk_db_delete($this->m_Ctrl, $table, $id);
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    /**
-    * 
-    * @param mixed $table
-    */
-    public final function dropTable($table){
-        $this->connect();
-        $r=null;
-        if($this->m_ad){
-            $r=$this->m_ad->dropTable($table);
-        }
-        $this->close();
-        return $r;
-    }
-    ///<summary></summary>
-    ///<param name="g"></param>
-    /**
-    * 
-    * @param mixed $g
-    */
-    public function endTransaction($g){
-        if($g){
-            $this->m_ad->commit();
-        }
-        else{
-            $this->m_ad->rollback();
-        }
-    }
-    ///<summary>get the data adapter</summary>
-    /**
-    * get the data adapter
-    */
-    public final function getAd(){
-        return $this->m_ad;
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    /**
-    * 
-    * @param mixed $table
-    */
-    public function getCanSyncDataTable($table){
-        return true;
-    }
-    ///<summary> get configs db function</summary>
-    /**
-    *  get configs db function
-    */
-    public function getConfigv($n, $default=null, $table=null, $comment=null){
-        return igk_db_get_config($n, $default, $comment, 0);
-    }
-    ///<summary>get controller</summary>
-    /**
-    * get controller
-    */
-    public function getCtrl(){
-        return $this->m_Ctrl;
-    }
-    ///END sync functions
-    /**
-    */
-    public function getErrorCode(){
-        return $this->m_errorcode;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getErrorString(){
-        return $this->m_errorstr;
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="condition"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $condition
-    */
-    public function getID($table, $condition){
-        $r=$this->select($table, $condition)->getRowAtIndex(0);
-        if($r)
-            return $r->clId;
-        return null;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getLastQuery(){
-        $ad=$this->Ad;
-        return $ad ? $ad->getLastQuery(): -1;
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="condition"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $condition
-    */
-    public function getRow($table, $condition){
-        $r=$this->select($table, $condition)->getRowAtIndex(0);
-        return $r;
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="id"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $id
-    */
-    public function getRowById($table, $id){
-        return $this->select($table, array(IGK_FD_ID=>$id))->getRowAtIndex(0);
-    }
-    ///get default condition id
-    ///<summary>return a sync data id</summary>
-    /**
-    * return a sync data id
-    */
-    public function getSyncDataID($table, $value, $properties=null){
-        if($table == IGK_TB_USERS){
-            if("+@id:/".$properties->User->clLogin === $value){
-                return $properties->User->clId;
-            }
-            return $value;
-        }
-        $tab=array();
-        $v_=$this->_syncValue($table, $value);
-        if(!empty($v_)){
-            $tb_row=igk_getv($properties->Rows[$table], $v_);
-            $c=$this->selectSingleRow($table, $tb_row["row"]);
-            if($c){
-                return $c->clId;
-            }
-            if($this->connect()){
-                $id=null;
-                if($this->insertIfNotExists($table, $tb_row["row"])){
-                    $id=$this->last_id();
-                    unset($properties->Entries[$table][$tb_row["index"]]);
-                }
-                else{
-                    igk_ilog("Failed to insert value : ".$this->Ad->getLastQuery(), __FUNCTION__);
-                }
-                $this->close();
-                return $id;
-            }
-        }
-        return null;
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="valueInTable"></param>
-    ///<param name="info" default="null"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $valueInTable
-    * @param mixed $info the default value is null
-    */
-    public function getSyncDataValueDisplay($table, $valueInTable, $info=null){
-        $row=$this->selectSingleRow($table, $valueInTable);
-        if(!$row){
-            return "[row is null ". $valueInTable."]";
-        }
-        if($table == IGK_TB_USERS && $row){
-            return "+@id:/".$row->clLogin;
-        }
-        return "@:/".$this->getSyncIdentificationId($table, $row);
-    }
-    ///SYNC functions
-    ///override
-    /**
-    */
-    public function getSyncIdentificationId($table, $syncrow){
-        $r=igk_getv($syncrow, "clId");
-        if($r){
-            return $r;
-        }
-        return igk_getv($syncrow, "clName");
-    }
-    ///<summary></summary>
-    ///<param name="id"></param>
-    /**
-    * 
-    * @param mixed $id
-    */
-    public function getSystemUserById($id){
-        return $this->select(IGK_TB_USERS, array(IGK_FD_ID=>$id))->getRowAtIndex(0);
-    }
-    ///<summary>get user id</summary>
-    /**
-    * get user id
-    */
-    public function getUID(){
-        $u=$this->m_Ctrl->User;
-        return $u ? $u->clId: 0;
-    }
-    ///<summary>get user by id</summary>
-    /**
-    * get user by id
-    */
-    public function getUser($uid){
-        if(!$this->connect())
-            return false;
-        $r=$this->selectSingleRow(IGK_TB_USERS, $uid);
-        $this->close();
-    }
-    ///<summary></summary>
-    ///<param name="uid" default="null"></param>
-    /**
-    * 
-    * @param mixed $uid the default value is null
-    */
-    public function getUserId($uid=null){
-        if(($uid == null) && ($u=$this->m_Ctrl->getUser())){
-            $uid=$u->clId;
-        }
-        return $uid;
-    }
-    ///<summary>initialize data adapter</summary>
-    /**
-    * initialize data adapter
-    */
-    protected function initDataAdapter(){
-        return igk_get_data_adapter($this->m_Ctrl);
-    }
-  
-    ///<summary>insert data</summary>
-    ///<param name="table">table where to insert</param>
-    ///<param name="obj">object to insert</param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $obj
-    */
-    public function insert($table, $obj){
-        $table=$this->_table($table);
-        if($this->m_ad){
-            return $this->m_ad->insert($table, $obj);
-        }
-        else
-            return igk_db_insert($this->m_Ctrl, $table, $obj);
-    }
-	///<summary>insert array in items by building as semi-column separated query</summary>
-	public function insert_array($tbname, $values, $throwex=true){
-		 $tbname=$this->_table($tbname);
-        if($this->m_ad){
-            return $this->m_ad->insert_array($tbname, $values, $throwex);
-        }
-	}
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="obj"></param>
-    ///<param name="id" default="'clId'"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $obj
-    * @param mixed $id the default value is 'clId'
-    */
-    public function insertAndUpdate($table, $obj, $id='clId'){
-        if($this->insert($table, $obj)){
-            $obj->$id=$this->last_id();
-            return 1;
-        }
-        return 0;
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="obj"></param>
-    ///<param name="leaveOpen" default="false"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $obj
-    * @param mixed $leaveOpen the default value is false
-    */
-    public function insertIfNotExists($table, $obj, $leaveOpen=false){
-        return igk_db_insert_if_not_exists($this->m_Ctrl, $table, $obj, null, null, $leaveOpen, "Or");
-    }
-    ///<summary>insert or update $obj</summary>
-    /**
-    * insert or update $obj
-    */
-    public function insertOrUpdate($table, $condition, $obj, callable $callback=null){
-        $_invoke=function($r) use ($table, $condition, $obj, $callback){
-            if($r->RowCount == 1){
-                $row=$r->getRowAtIndex(0);
-                if(is_callable($callback)){
-                    if(!$callback($row, $obj))
-                        return false;
-                }
-                $obj->clId=$row->clId;
-                if($this->update($table, $obj, $condition)){
-                    return 2;
-                }
-            }
-            
-            return igk_die("not implement ".$r->RowCount);
-            
-        };
-        if($condition == null){
-            $tab=null;
-            if(igk_db_data_is_present($this->Ctrl, $table, $obj, null, $tab)){
-                return $_invoke($tab);
-            }
-            if($this->insert($table, $obj))
-                return 1;
-        }
-        else{
-            $r=$this->select($table, $condition);
-            if($r->RowCount > 0){
-                return $_invoke($r);
-            }
-            else{
-                if($this->insert($table, $obj))
-                    return 1;
-            }
-        }
-        return 0;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function last_id(){
-        $ad=$this->Ad;
-        return $ad ? $ad->last_id(): -1;
-    }
-    ///<summary></summary>
-    ///<param name="tab"></param>
-    ///<param name="callback" default="null"></param>
-    ///<param name="tablen" default="products"></param>
-    /**
-    * 
-    * @param mixed $tab
-    * @param mixed $callback the default value is null
-    * @param mixed $tablen the default value is "products"
-    */
-    public function loadCsvEntries($tab, $callback=null, $tablen="products"){
-        $row=igk_db_create_row($tablen);
-        if(!$row)
-            return 0;
-        return $this->adCallback(function($ad) use ($tab, $callback, $tablen, $row){
-            $error=0;
-            if($callback){
-                foreach($tab as$v){
-                    $error=!$callback($v, $tablen, $row, $ad) && !$error;
-                }
-            }
-            else{
-                foreach($tab as  $v){
-                    $row->clName=igk_getv($v, 1);
-                    $error=!$ad->insert($tablen, $row) && !$error;
-                }
-            }
-            return !$error;
-        });
-    }
-    public function model($modeltype, $name=null){
-        return $this->Ctrl->loader->model($modeltype, $name);
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function rollback(){
-        return $this->m_ad->rollback();
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="condition" default="null"></param>
-    ///<param name="options" default="null"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $condition the default value is null
-    * @param mixed $options the default value is null
-    */
-    public function select($table, $condition=null, $options=null){
-        $table=$this->_table($table);
-        if($this->m_ad){
-            return $this->m_ad->select($table, $condition, $options);
-        }
-        igk_die("/!\ no adapter created. tips. call connect function first ");
-        return igk_db_table_select_where($table, $condition, $this->m_Ctrl, false, $options);
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="condition" default="null"></param>
-    ///<param name="callback" default="null"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $condition the default value is null
-    * @param mixed $callback the default value is null
-    */
-    public function selectCallback($table, $condition=null, $callback=null){
-        $options=array("callback"=>$callback);
-        $r=$this->select($table, $condition, $options);
-        return $r;
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="condition" default="null"></param>
-    ///<param name="options" default="null"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $condition the default value is null
-    * @param mixed $options the default value is null
-    */
-    public function selectFirstRow($table, $condition=null, $options=null){
-        $r=$this->select($table, $condition, $options);
-        if($r && $r->RowCount > 0)
-            return $r->getRowAtIndex(0);
-        return null;
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="condition" default="null"></param>
-    ///<param name="options" default="null"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $condition the default value is null
-    * @param mixed $options the default value is null
-    */
-    public function selectLastRow($table, $condition=null, $options=null){
-        $r=$this->select($table, $condition, $options);
-        if($r && $r->RowCount > 0)
-            return $r->getRowAtIndex($r->RowCount-1);
-        return null;
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="condition" default="null"></param>
-    ///<param name="options" default="null"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $condition the default value is null
-    * @param mixed $options the default value is null
-    */
-    public function selectSingleRow($table, $condition=null, $options=null){
-        $r=$this->select($table, $condition, $options);
-        if($r && $r->RowCount == 1){
-            $g=$r->getRowAtIndex(0);
-            $g->{"sys:table"}=$table;
-            return $g;
-        }
-        return null;
-    }
-    ///send query string
-    /**
-    */
-    public final function sendQuery($querystring){
-        $this->connect(); 
-        $r=null;
-        if($this->m_ad){
-            $r=$this->m_ad->sendQuery($querystring);
-        }
-        $this->close();
-        return $r;
-    }
-    ///<summary> set the data adapter</summary>
-    ///<remark>from connect set the dataapter to change it</remark>
-    /**
-    *  set the data adapter
-    */
-    protected final function setAd($ad){
-        $this->m_ad=$ad;
-    }
-    ///<summary></summary>
-    ///<param name="code"></param>
-    /**
-    * 
-    * @param mixed $code
-    */
-    protected function setErrorCode($code){
-        $this->m_errorcode=$code;
-    }
-    ///<summary></summary>
-    ///<param name="s"></param>
-    /**
-    * 
-    * @param mixed $s
-    */
-    protected function setErrorString($s){
-        $this->m_errorstr=$s;
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    /**
-    * 
-    * @param mixed $table
-    */
-    public final function tableExists($table){
-        $this->connect();
-        $r=$this->getAd()->tableExists($table);
-        $this->close();
-        return $r;
-    }
-   
-    
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="entrie"></param>
-    ///<param name="condition" default="null"></param>
-    ///<param name="tabinfo" default="null"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $entrie
-    * @param mixed $condition the default value is null
-    * @param mixed $tabinfo the default value is null
-    */
-    public final function update($table, $entrie, $condition=null, $tabinfo=null){
-        $table=$this->_table($table);
-        if ( $_ad=$this->getAd()){  
-            return $_ad->update($table, $entrie, $condition, $tabinfo);
-        }
-        $r=null;
-        if ($this->connect()){
-            $_ad=$this->m_ad;
-            if($_ad){            
-                $r=$_ad->update($table, $entrie, $condition, $tabinfo);
-            }
-            $this->close();
-        }
-        return $r;
-    }
-	///<summary> Update row table </summary>
-	public function update_row($row, $table=null, $condition=null){
-		($table == null) && !($table = $this->getTable()) && igk_die(__("table name not define"));
-		return $this->update($table, $row, $condition, null);
-	}
-	public function select_rows($table=null, $condition=null, $options=null){
-		($table == null) && !($table = $this->getTable()) && igk_die(__("table name not define"));
-		if ($g = $this->select($table, $condition, $options)){
-			return $g->getRows();
-		}
-		return null;
-	}
-	public function drop($table, $condition=null){
-		$this->connect();
-        $_ad=$this->Ad;
-        if($_ad){ 
-            $r=$_ad->drop($table, $condition);
-        }
-        $this->close();
-    }
-    public function select_count($condition=null, $table=null){
-        if (!($table = $table ?? $this->getTable())){ 
-            igk_die("table not found");
-        } 
-        if ($r = $this->ad->selectCount($table, $condition)->Rows[0]){
-            return $r->count;  
-        }
-        // igk_wln_e("table :::::".$table, $this->ad->getLastQuery());
-        return -1;
-    }
-}
 ///<summary>Represente class: IGKDynamicObject</summary>
 /**
 * Represente IGKDynamicObject class
@@ -60805,6 +60096,12 @@ class IGKXmlNode extends IGKHtmlItemBase implements ArrayAccess {
     */
     public function setClass($value){
         $this["class"]=$value;
+        return $this;
+    }
+    public function setAssertClass($condition, $value){
+        if ($condition){
+            $this->setClass($value);
+        }
         return $this;
     }
     ///<summary>set internal description</summary>
@@ -69365,7 +68662,7 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
         }
         $dbname=$dbname == null ? igk_sys_getconfig("db_name"): $dbname;
         $tbname=igk_mysql_db_tbname($tbname);
-        $query=IGKSQLQueryUtils::CreateTableQuery($tbname, $columninfo, $desc);
+        $query=IGKSQLQueryUtils::CreateTableQuery($tbname, $columninfo, $desc, $this->m_adapter);
         $nk=igk_get_env("sys://db/constraint_key");
         if($nk){
             if(!igk_get_env("sys://db/initConstraint/".$nk)){
@@ -72809,11 +72106,17 @@ class IGKResourceUriResolver{
                                 $exists=file_exists($o);
                                 if(!$exists && !is_link($o)){
                                     $odir=dirname($o);
-                                    IGKIO::CreateDir($odir);
-                                    if(!($outlink=igk_io_symlink($rp, $o))){
-                                        igk_die(__("Failed to create symbolic link - 2 - ", $o)." ". $o. " ? ".is_link($o)." = ".$outlink);
+                                    if (IGKIO::CreateDir($odir)){
+                                        if(!($outlink=igk_io_symlink($rp, $o))){
+                                             
+                                            igk_ilog(__("Failed to create symbolic link - 2 - ")." ".$rp .'==$gt; '. $o. " ? ".is_link($o)." = ".$outlink);
+                                            return null;
+                                        }
+                                        igk_hook("generateLink", $gt=array("outdir"=>$odir, "link"=>$rp));
+                                    }else {                                        
+                                        igk_ilog("failed to create dir:".$odir);
+                                        return null;
                                     }
-                                    igk_hook("generateLink", $gt=array("outdir"=>$odir, "link"=>$rp));
                                 }
                             }
                         }
@@ -72955,8 +72258,19 @@ class IGKSQLQueryUtils {
             "bigint"=>"BIGINT",
             "ubigint"=>"BIGINT",
             "date"=>"Date",
-            "enum"=>"Enum"
+            "enum"=>"Enum",
+            "json"=>"JSON"
         ], $t = strtolower($t), $t);    
+    }
+    public static function fallbackType($t, $adapter){
+        switch(strtolower($t)){
+            case "json":
+                if ($adapter->isTypeSupported('longtext')){
+                    return "longtext";
+                }
+                break;
+        }
+        return "text";
     }
     protected static function AllowedDefValue(){
         static $defvalue = null;
@@ -72996,12 +72310,8 @@ class IGKSQLQueryUtils {
     * @param mixed $noengine the default value is 0
     * @param mixed $nocomment the default value is 0
     */
-    public static function CreateTableQuery($tbname, $columninfo, $desc=null, $noengine=0, $nocomment=0){
-        if ($tbname == "tbigk_jobtask"){
-            igk_trace();
-            igk_wln("table : ".$tbname);
-            igk_exit();
-        }
+    public static function CreateTableQuery($tbname, $columninfo, $desc=null, $adapter=null, $noengine=0, $nocomment=0){
+        
 
         $query="CREATE TABLE IF NOT EXISTS `".igk_mysql_db_tbname($tbname)."`(";
         $tb=false;
@@ -73025,6 +72335,9 @@ class IGKSQLQueryUtils {
             $v_name=igk_db_escape_string($v->clName);
             $query .= "`".$v_name."` ";
             $type=igk_getev(static::ResolvType($v->clType), "Int");
+            if (!$adapter->isTypeSupported($type)){
+                $type = static::fallbackType($type, $adapter);
+            } 
             $query .= igk_db_escape_string($type);
             $s=strtolower($type);
             $number=false;
@@ -73397,6 +72710,9 @@ class IGKSQLQueryUtils {
             }
             foreach($v as $m){ 
                 $t = "INNER JOIN";
+                if (!is_array($m)){
+                    die("expected array list in joint: ".$m);
+                }
                 $tab = array_keys($m)[0];
                 $vv = array_values($m)[0];
 
@@ -73435,7 +72751,7 @@ class IGKSQLQueryUtils {
                         }
                         $query.= " Limit ".$h;
                     break;
-                    case "Joins": 
+                    case "Joins":  
                         $_buildjoins($v, $join);
                     break;
                     case "GroupBy":
@@ -74929,7 +74245,7 @@ unset($file);
 define("IGK_BALAFON_JS_VERSION", "4.6.0.0408");
 define("IGK_FRAMEWORK", "IGKDEV-WFM");
 !defined("IGK_WEBFRAMEWORK") && define("IGK_WEBFRAMEWORK", "11.5");
-!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".0.0409");
+!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".0.0416");
 define("IGK_AUTHOR", "C.A.D. BONDJE DOUE");
 define("IGK_AUTHOR_CONTACT", "bondje.doue@igkdev.com");
 define("IGK_AUTHOR_2", "R. TCHATCHO");
@@ -75026,102 +74342,82 @@ igk_sys_reg_uri("^/favicon.ico[%q%]", function(){
     igk_exit();
 }
 , 1); 
+//+ | -----------------------------------------------------------------------------------
+//+ | asset balanfon preloader
+//+ | uri: /assets/Scripts/balafon.js
+//+ | ----------------------------------------------------------------------------------- 
 igk_sys_reg_uri("^/".IGK_RES_FOLDER."/".IGK_SCRIPT_FOLDER."/balafon.js[%q%]", function(){
-
-    $doc=igk_app()->Doc;
+    $_igk = igk_app();
+    $doc= $_igk->Doc;
     if(!$doc){
         igk_set_header(404);
         igk_exit();
-    }
+    } 
     session_write_close();
+    igk_server()->HTTP_ACCEPT_ENCODING = "br";
+    $generate_source = function($doc){
+        $c=$doc->ScriptManager->getMergedContent();
+        $tassoc=$doc->ScriptManager->getAssoc();  
+        // TASK : Render core js 
+        $buri=igk_io_baseuri();
+        $const="constant";
+        $header  = "//author: C.A.D BONDJE DOUE".IGK_LF;
+        $header .= "//libname: balafon.js".IGK_LF;
+        $header .= "//version: {$const('IGK_BALAFON_JS_VERSION')}".IGK_LF;
+        $header .= "//copyright: igkdev @ 2013 - ".date('Y').IGK_LF;
+        $header .= "//license: //igkdev.com/balafon/balafonjs/license".IGK_LF;
+        $header .= "//generate: ".date("Ymd H:i:s").IGK_LF;
+        $header .= "\"use strict\";";
+        $s=empty($c->data) ? "/* core script failed to load cache not provide. */": $c->data;
+        $s=str_replace("\"use strict\";", "", $s);
+        if (ob_get_level()>0)
+            ob_clean();
+        ob_start();
+        $src = "";
+        if(igk_getr('d') == 1){
+            $src = $header.$s;
+        }
+        else{
+            $src = $header.igk_js_minify($s);
+        }
+        ob_get_clean();
+        return $src;
+    };
+
+    $accept = igk_server()->accepts(["gzip", "deflate"]);
+    if (!$accept){
+        $src = $generate_source($doc);
+        igk_clear_header_list(); 
+        header("Content-Type: application/javascript; charset= UTF-8");
+        header("Content-Encoding: txt");
+        echo $src;
+        exit;
+    } 
     $sf=igk_core_dist_jscache();
     $resolver=IGKResourceUriResolver::getInstance(); 
-    if(file_exists($sf)){
+    if(0 && file_exists($sf)){
         $resolver->resolve($sf);
         igk_header_set_contenttype("js");
+        header("Content-Type: application/javascript; charset= UTF-8");   
         header("Content-Encoding:deflate"); 
         echo file_get_contents($sf); 
         igk_exit();
     }
-    $c=$doc->ScriptManager->getMergedContent();
-    $tassoc=$doc->ScriptManager->getAssoc();  
-    // TASK : Render core js 
-    $buri=igk_io_baseuri();
-    $const="constant";
-    $header  = "//author: C.A.D BONDJE DOUE".IGK_LF;
-    $header .= "//libname: balafon.js".IGK_LF;
-    $header .= "//version: {$const('IGK_BALAFON_JS_VERSION')}".IGK_LF;
-    $header .= "//copyright: igkdev @ 2013 - ".date('Y').IGK_LF;
-    $header .= "//license: //igkdev.com/balafon/balafonjs/license".IGK_LF;
-    $header .= "//generate: ".date("Ymd H:i:s").IGK_LF;
-    $header .= "\"use strict\";";
-    $s=empty($c->data) ? "/* core script failed to load cache not provide. */": $c->data;
-    $s=str_replace("\"use strict\";", "", $s);
-    if (ob_get_level()>0)
-        ob_clean();
-    ob_start();
-    $src = "";
-    if(igk_getr('d') == 1){
-        $src = $header.$s;
-    }
-    else{
-        $src = $header.igk_js_minify($s);
-    }
+   
+    $src = $generate_source($doc);
     $type = 0;
+
+
+    if ( 1 || $_igk->Configs->core_no_zipjs){
+        header("Content-Type: application/javascript; charset= UTF-8");
+        header("Content-Encoding:deflate");  
+        igk_wl($src);
+        igk_exit();    
+    }
     igk_zip_output($src, 0, $type);
     $c=ob_get_contents();    
     ob_end_clean();
     igk_io_w2file($sf, $c);
-
-
-    // igk_ilog("generate resources case");
-    // foreach($tassoc->toArray() as $k=>$t){
-    //     igk_wln($k, "\n");
-    // }
-  
- /*
-    $js=IGK_LIB_DIR."/".IGK_SCRIPT_FOLDER;
-    $core_res_regex = "/\.(json|xml|js|jpeg|png|svg)$/i";
- 
-    if(!igk_io_is_subdir(igk_io_applicationdir(), IGK_LIB_DIR)){
-        //local dev 
-        foreach($tassoc->toArray() as $k=>$t){
-            if(!preg_match("/\.js$/", $k)){
-                $resolver->resolve($k);
-            }
-        }
-        $dirname=dirname($sf);
-        $jslen=strlen($js) + 1;
-        foreach(igk_io_getfiles($js, $core_res_regex) as $f){
-            $resolver->resolve($f);
-            $v_out=$dirname."/".substr($f, $jslen);
-            IGKIO::CreateDir(dirname($v_out));
-            igk_io_symlink($f, $v_out);
-        }
-    }
-    else{ 
-        $dirname=dirname($sf);
-        $jslen=strlen($js) + 1;
-        // foreach($tassoc->toArray() as $k=>$t){
-        //     if(!preg_match($core_res_regex, $k)){
-        //         if(strstr($k, $js)){
-        //             $k=igk_io_dir($k);
-        //             $target=igk_io_dir($out."/".substr($k, $ln));
-        //             IGKIO::CreateDir(dirname($target));
-        //             igk_io_symlink($k, $target);
-        //         }
-        //     }
-        // }
-        //igk_ilog("resolve resources : production : ".$jslen);
-        foreach(igk_io_getfiles($js, "/\.(json|xml|jpeg|png|svg)$/i") as $f){
-            
-            $st = $resolver->resolve($f);
-            $v_out=$dirname."/".substr($f, $jslen);
-            IGKIO::CreateDir(dirname($v_out));
-            // igk_ilog("resolve : ".$f . " to : ".$v_out . " st : ". $st);
-            igk_io_symlink($f, $v_out);
-        }
-    } */
     igk_hook(IGKEvents::HOOK_CACHE_RES_CREATED, array("dir"=>$sf, "type"=>"js", "name"=>"balafonjs"));
     //header_remove();
     igk_header_set_contenttype("js");

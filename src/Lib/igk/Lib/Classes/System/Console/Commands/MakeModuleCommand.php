@@ -9,7 +9,7 @@ use IGKIO;
 class MakeModuleCommand extends AppCommand{
     var $command = "--make:module"; 
     var $category = "make";
-    var $description = "make new module.";
+    var $desc  = "make new module.";
 
     public function run($args, $command)
     {

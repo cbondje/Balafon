@@ -12,7 +12,7 @@ use ReflectionClass;
 class InitCommand extends AppExecCommand{
     var $command = "--command:init";
 
-    var $description = "initialize balafon command cache";
+    var $desc  = "initialize balafon command cache";
 
     public function exec($command){
         $t = [

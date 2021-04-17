@@ -145,7 +145,7 @@ class IGKLoader implements IResponse {
     public function getUser(){
         return $this->_controller->User;
     }
-    ///<summary> use to load model class</summary>
+    ///<summary> use to load model utility class</summary>
     /**
     *  use to load model class
     */
@@ -172,11 +172,11 @@ class IGKLoader implements IResponse {
 					// try to get entry ns if method is public is public
 					$ns = $igk_c->getEntryNamespace();
 				}
-				$cl = $ns."\\Models\\".ucfirst($name)."Model";
+				$cl = $ns."\\ModelUtilities\\".ucfirst($name)."ModelUtility";
 			}
 		}
         if(!class_exists($cl)){
-            throw new IGKException("model [$name] not found.");
+            throw new IGKException("ModelUtility [$name] not found.");
         }
         $m[$n]=new $cl($igk_c);
         igk_set_env($key, $m);

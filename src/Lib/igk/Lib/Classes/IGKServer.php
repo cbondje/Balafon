@@ -27,6 +27,20 @@ final class IGKServer{
             return $this->data[$n];
         return null;
     }
+    /**
+     * get encoding support
+     */
+    public function accepts($list){
+        $accept = $this->HTTP_ACCEPT_ENCODING;
+        if (is_array($list)){
+            foreach($list as $k){
+                if (strstr($accept, $k)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     ///<summary></summary>
     ///<param name="n"></param>
     /**

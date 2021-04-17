@@ -11,54 +11,52 @@ use IGKCtrlInitListener;
 use IGKIO;
 use \IGKApplicationController;
 use \IGKControllerManagerObject;
- 
-class MakeViewCommand extends AppExecCommand{
-    var $command = "--make:view"; 
+use IGKDbUtility;
+
+class MakeModelUtilityCommand extends AppExecCommand{
+    var $command = "--make:model-utility"; 
  
     var $category = "make";
 
-    var $desc  = "make new project's view";
+    var $desc  = "make new project's model utility";
 
-    var $options = [
-        "--action"=>"enable action",
-        "--dir"=>"enable view dir"
+    var $options = [ 
     ]; 
-    public function exec($command, $name="", $viewname=""){
+    public function exec($command, $name="", $modelname=""){
         if (empty($name)){
             return false;
         } 
-        if (empty($viewname)){
-            Logger::danger("view name required");
+        if (empty($modelname)){
+            Logger::danger("model utility name required");
             return false;
         } 
-        Logger::info("make view ...".$name);
+        Logger::info("make model utility class ...".$name);
         $author = $command->app->getConfigs()->get("author", IGK_AUTHOR);
-                   
-        $action = property_exists($command->options, "--action");
-        $is_dir = property_exists($command->options, "--dir");
+                    
         $ctrl = igk_getctrl(str_replace("/", "\\", $name), false);
         if (!$ctrl){
             Logger::danger("controller $name not found");
             return false;
         }
   
-        $dir = $ctrl->getViewDir();
-        if ($is_dir){
-           $dir .=  "/$viewname";
-           $viewname =  IGK_DEFAULT_VIEW; 
-        }       
-
+        $clname = ucfirst(igk_str_ns($modelname))."Model";
+        $ns = $ctrl->getEntryNamespace();
+        if (!empty($ns)){
+            $ns = str_replace("/", "\\", $ns."/ModelUtilities");
+        }
+         
         $bind = [];
-
-        $bind[$dir."/{$viewname}.phtml"] = function($file)use($viewname, $author){           
+        $bind[$ctrl::classdir()."/ModelUtilities/".$clname.".php"] = function($file)use($clname, $author, $ns){           
             $builder = new PHPScriptBuilder();
-            $fname = $viewname.".phtml";
-            $builder->type("function")->name($viewname)
+            $fname = basename($file);
+            $builder->type("class")->name($clname)
             ->author($author)
-            ->defs("\$t->clearChilds();")
+            ->defs("")
             ->doc("view entry point")
             ->file($fname)
-            ->desc("view ".$viewname);
+            ->namespace($ns)
+            ->extends(IGKDbUtility::class)
+            ->desc("module utility ".$clname);
             igk_io_w2file( $file,  $builder->render());
         };
 
@@ -76,7 +74,7 @@ class MakeViewCommand extends AppExecCommand{
     }
     public function help(){
         Logger::print("-");
-        Logger::info("Make new Balafon's PROJECT view");
+        Logger::info("Make new db modeul utility");
         Logger::print("-\n");
         Logger::print("Usage : ". App::gets(App::GREEN, $this->command). " ctrl name [options]" );
         Logger::print("\n\n");

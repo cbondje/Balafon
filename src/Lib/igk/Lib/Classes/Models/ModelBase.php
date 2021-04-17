@@ -109,6 +109,12 @@ abstract class ModelBase implements ArrayAccess{
         if (method_exists($this, $m = "get".$name )){
 			return $this->$m();
 		}
+        if (igk_environment()->is("DEV")){
+            if (!property_exists($this->raw, $name) && (strpos($name, "::")!==0)){
+                igk_trace();
+                die("property ".static::class."::$name not present");
+            }
+        }
         return igk_getv($this->raw, $name);
     }
 
@@ -172,6 +178,8 @@ abstract class ModelBase implements ArrayAccess{
                     if ($c->raw){
                         if ($g = $c->insert($c->raw)){
                             $c->raw = $g->raw;;
+                        }else{
+                            return null;
                         }
                     }
                     return $c;

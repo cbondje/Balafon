@@ -801,7 +801,7 @@ function igk_html_form_fields($formFields, $render=0){
     };
     $bindValue = function(&$o, & $fieldset, $k, $v) use ($get_attr_key, $load_attr){
         $attr_key = $get_attr_key($v);
-        $_value= isset($v["value"]) ? $v["value"]: "";
+        $_value= key_exists("value", $v) ? $v["value"]: "";
         if ($attr_key){
             if (isset($v[$attr_key]["value"])){
                 $_value = $v[$attr_key]["value"];
@@ -917,7 +917,7 @@ function igk_html_form_fields($formFields, $render=0){
             if(empty($_id))
                 $_id=' id="'.$k.'"';
             $_vt ="";
-            if (!empty($_value))
+            if (!empty($_value) || ($_value=="0"))
                 $_vt="value=\"{$_value}\"";
             $o .= "<input type=\"{$_type}\" {$_vt} {$_name}{$_id} ";
             if(isset($v["maxlength"])){

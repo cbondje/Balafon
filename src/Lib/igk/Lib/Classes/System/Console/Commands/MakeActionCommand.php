@@ -18,7 +18,7 @@ class MakeActionCommand extends AppExecCommand{
  
     var $category = "make";
 
-    var $description = "make new project's action";
+    var $desc = "make new project's action";
 
     var $options = [ 
         "--type"=>"defaut action type class"

@@ -28,6 +28,7 @@ igk_reg_global_setting('db_server', 'localhost');
 igk_reg_global_setting('db_user', 'root');
 igk_reg_global_setting('db_driver', 'nodb');
 igk_reg_global_setting('db_default_column_id', 'clId');
+igk_reg_global_setting('error_debug', '0');
 igk_reg_global_setting('default_lang', 'fr');
 igk_reg_global_setting('mail_admin', 'administrator@igkdev.com');
 igk_reg_global_setting('mail_contact', 'info@igkdev.com');

@@ -104,7 +104,7 @@ final class IGKEnvironment implements \ArrayAccess{
     * 
     */
     public function __sleep(){
-        igk_die("Operation Not allowed ".__CLASS__);
+        igk_die("Sleep Environment: Operation Not allowed ".__CLASS__);
     }
     ///<summary></summary>
     /**

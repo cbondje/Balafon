@@ -4,7 +4,10 @@ namespace IGK\Controllers;
 
 use Exception;
 use IGK\System\Http\RouteActionHandler;
-
+/**
+ * controller task : routable controller action
+ * @package IGK\Controllers
+ */
 abstract class ControllerTask{
     
     protected $controller;
@@ -14,7 +17,11 @@ abstract class ControllerTask{
     public function __construct($controller, ?RouteActionHandler $route=null)
     {
         $this->controller = $controller;
-        $this->route = $route;   
+        $this->route = $route;  
+        $this->init(); 
+    }
+    protected function init(){
+
     }
     /**
      * index start entry task

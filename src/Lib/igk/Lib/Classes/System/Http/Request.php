@@ -81,9 +81,14 @@ class Request
         return igk_getv($_FILES, $name);
     }
 
-    public function view_args()
+    public function view_args($params=null, $default=null)
     {
-        return igk_get_view_args();
+        $t = igk_get_view_args();
+        if ($params!==null) 
+        {
+            return igk_getv($t, $params, $default);
+        }
+        return $t;
     }
     public function __toString()
     {

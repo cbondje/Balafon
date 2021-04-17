@@ -168,10 +168,21 @@ abstract class DataAdapterBase extends IGKSQLDataAdapter{
     * @param mixed $tbname
     * @param mixed $whereTab the default value is null
     */
-    public function selectCount($tbname, $whereTab=null){
+    public function selectCount($tbname, $whereTab=null, $options=null){
+     
         $o="";
         $s=0;
+        $extra = null;
+        if ($options){
+            $extra = IGKSQLQueryUtils::GetExtraOptions($options, $this);
+        }
+        
         $q="SELECT Count(*) as count FROM `".igk_mysql_db_tbname($tbname)."`";
+       
+        if ($extra && ($joints = igk_getv($extra, "join"))){            
+            $q.= $joints.PHP_EOL;            
+        }
+
         if(is_array($whereTab) && igk_count($whereTab) > 0){
             $q .= " WHERE ".IGKSQLQueryUtils::GetCondString($whereTab);
         }
@@ -179,7 +190,7 @@ abstract class DataAdapterBase extends IGKSQLDataAdapter{
             if(is_string($whereTab)){
                 $q .= " WHERE ".igk_db_escape_string($whereTab);
             }
-        }
+        } 
         $q .= ";";
         try {
             $g=$this->sendQuery($q, false);

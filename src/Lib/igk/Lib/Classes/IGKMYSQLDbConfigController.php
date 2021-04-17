@@ -43,7 +43,7 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
         $q=igk_getr("clQuery");
         if(empty($q) || !igk_is_conf_connected())
             igk_exit();
-        if(!preg_match("#^(SELECT|UPDATE|DELETE|SHOW|ALTER) (.)+#i", $q)){
+        if(!preg_match("#^(SELECT|UPDATE|DELETE|SHOW|ALTER|INSERT|CREATE|DROP) (.)+#i", $q)){
             igk_wl("/!\\". __("Query not allowed : {0}",$q));
             igk_exit();
         }
@@ -670,7 +670,7 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
             $g = $r->getColumns();
             $clname = $g[0]->name; 
             $ul->loop($r->getRows())->host(function($n,$i)use($clname){                
-                $n->li()->a("#")->on("click", "\$igk('#clQuery').first().setHtml('SELECT * from `'+this.o.innerHTML+'`'); ")->content = $i->{$clname};
+                $n->li()->a("#")->on("click", "\$igk('#clQuery').first().o.value = 'SELECT * from `'+this.o.innerHTML+'`';")->content = $i->{$clname};
             });
             $ul->setStyle("max-height: 150px; overflow-x:clip; overflow-y:auto;");
         }

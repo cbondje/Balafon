@@ -2,6 +2,7 @@
 namespace IGK\Models;
 
 use Exception;
+use IGKException;
 use IGKHtmlUtils;
 
 use function igk_resources_gets as __;
@@ -37,8 +38,14 @@ abstract class ModelEntryExtension{
         return $v->_cache;
     }
 
-    public static function createIfNotExists(ModelBase $model, $condition){
+    public static function createIfNotExists(ModelBase $model, $condition, $extra=null){
         if (! ($row = $model->select_row($condition))){
+            if ($extra){
+                $condition = (object)$condition;
+                foreach($extra as $k=>$v){
+                    $condition->$k = $v;
+                }
+            }
             return $model::create($condition);
         }
         return $row;
@@ -62,8 +69,12 @@ abstract class ModelEntryExtension{
     public static function rollback(ModelBase $model){
         return $model->getDataAdapter()->rollback();
     }
-    public static function update(ModelBase $model, $value, $condition=null){
+    public static function update(ModelBase $model, $value=null, $condition=null){
         $driver = $model->getDataAdapter();         
+        if ($value===null){
+            $primary = $model->getPrimaryKey();
+            return $driver->update($model->getTable(), $model->to_array(), [$primary=>$model->$primary]);
+        }
         $r = $driver->update($model->getTable(), $value, $condition); 
         return $r;
     }
@@ -78,9 +89,11 @@ abstract class ModelEntryExtension{
         }  
         return $tab;
     }
-    public static function count(ModelBase $model, $conditions=null){         
+    public static function count(ModelBase $model, $conditions=null, $options=null){         
+ 
+
         $driver = $model->getDataAdapter();   
-        if ($m = $driver->selectCount($model->getTable(), $conditions)){
+        if ($m = $driver->selectCount($model->getTable(), $conditions, $options)){
             return $m->getRowAtIndex(0)->count; 
         }
         return null;
@@ -254,7 +267,38 @@ abstract class ModelEntryExtension{
      * return the model table name
      * @return void 
      */
-    public static function table(ModelBase $model){
-        return $model->getTable();
+    public static function table(ModelBase $model,$column=null){
+        if (!empty($column))
+            $column = ".".$column;
+        return $model->getTable().$column;
+    }
+    public static function primaryKey(ModelBase $model){
+        return $model->getPrimaryKey();
+    }
+    public static function cacheRow(ModelBase $model, $primaryKeyIdentifier){
+        static $states;
+		if ($states===null){
+			$states = [];
+		}
+        $id = $primaryKeyIdentifier;
+        if (is_array($id))
+            $id = json_encode($primaryKeyIdentifier);
+        $cl  = get_class($model);
+        $key = $cl."/".$id;
+		if ($row = igk_getv($states, $key)){
+			return $row;
+		}
+        $g = null;
+        if (is_array($primaryKeyIdentifier))
+            $g = $primaryKeyIdentifier;
+        else 
+		    $g = [$model->getPrimaryKey()=>$primaryKeyIdentifier];
+		$row = $cl::select_row($g);
+		if (!$row){
+			throw new IGKException("Row not found");
+		}
+		$states[$key] = $row;
+		return $row;
+
     }
 }

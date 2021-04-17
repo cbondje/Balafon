@@ -107,7 +107,7 @@ abstract class IGKActionBase implements IActionProcessor{
     public function __call($name, $arguments){ 
         if ($fc = igk_getv(self::$macro, $name)){
             return $fc(...$arguments);
-        }
+        } 
         throw new ActionNotFoundException($name);   
     }
     /**

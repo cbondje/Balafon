@@ -7,7 +7,7 @@ use IGK\System\Console\Logger;
 class MySQLCommand extends AppExecCommand{
     var $command = "--db:mysql";
 
-    var $description = "mysql db managment command"; 
+    var $desc = "mysql db managment command"; 
 
     public function sendQuery($query){
         if (preg_match("/^(CREATE|INSERT|ALTER)/i", $query)){
@@ -23,6 +23,8 @@ class MySQLCommand extends AppExecCommand{
     public function exec($command, $ctrl=null)
     {   
         $c = igk_app()->getControllerManager()->getControllers(); 
+ 
+
         switch(igk_getv($command->options, "--action")){
             case null: 
                 return;

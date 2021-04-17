@@ -18,7 +18,7 @@ class MakeManifestCommand extends AppExecCommand{
  
     var $category = "make";
 
-    var $description = "make new project's manifest";
+    var $desc = "make new project's manifest";
 
     var $options = [
         "--name"=>"display name of the application",

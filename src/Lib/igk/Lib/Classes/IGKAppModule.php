@@ -41,9 +41,14 @@ final class IGKAppModule extends BaseController{
             $o=call_user_func_array($fc, $args);
             $dc=igk_pop_env(__CLASS__."/callee");
             return $o;
-        }
+        } 
         igk_die("/!\\ function {$n} not define");
         return null;
+    }
+    public function setEnvParam($name, $value){
+        igk_set_env("module://".$this->name."/".$name, $value);
+        //igk_wln_e($this->name);
+        return $this;
     }
     ///<summary></summary>
     ///<param name="dir"></param>

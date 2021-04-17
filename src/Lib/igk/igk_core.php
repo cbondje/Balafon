@@ -59,6 +59,23 @@ function igk_const($n){
     }
     return null;
 }
+/**
+ * check value for assertion
+ * @return void 
+ */
+function igk_check($b):bool{
+    switch(true){
+        case is_bool($b): return $b;
+        case is_object($b): 
+            if (method_exists($b, "success")){
+                return $b->success();
+            }
+            return true;
+        case is_array($b):
+            return !empty($b);
+    }
+    return false;
+}
 ///<summary>check if a constant match the defvalue</summary>
 /**
 * check if a constant match the defvalue

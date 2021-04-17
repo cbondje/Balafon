@@ -339,14 +339,18 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
     * @param mixed $ctrl the default value is null
     */
     public function __construct($ctrl=null){
-        parent::__construct($ctrl);
-
-
-        if (!self::$_initAdapter){
-
-
-
-        }
+        parent::__construct($ctrl); 
+    }
+    public function isTypeSupported($type){
+        static $supportedList;
+        if ($supportedList===null){
+            $supportedList = [];
+            $g = $this->sendQuery('SELECT distinct data_type as type FROM INFORMATION_SCHEMA.COLUMNS');
+            foreach($g->getRows() as $r){
+                $supportedList[] = strtolower($r->type);
+            }
+        } 
+        return in_array(strtolower($type), $supportedList); 
     }
     ///<summary></summary>
     /**
@@ -430,8 +434,8 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
         return $this->sendQuery($query, false);
     }
 	public function resetAutoIncrement($table, $value=1){
-		$table =  $tbname=igk_db_escape_string($table);
-		$query = "SELECT count(*) FROM `{$table}`";
+		$table =  igk_db_escape_string($table);
+		$query = "SELECT Count(*) as count FROM `{$table}`";
 		$value = max($value, 1);
 		if (($r = $this->sendQuery($query)) && ($r->getRowCount() == 0)){
 			return $this->sendQuery("ALTER `{$table}` AUTO_INCREMENT {$value}");

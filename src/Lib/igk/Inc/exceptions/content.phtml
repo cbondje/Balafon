@@ -2,6 +2,8 @@
 
 use IGK\IGKEnvironment;
 
+$is_prod =  !igk_app()->Configs->error_debug && igk_sys_env_production();
+$base_path = $is_prod;
 $cl1 = "#ddd";
 $w_padding = "20px";
 $content .= ("<div style='height:100%;' > ");
@@ -9,13 +11,13 @@ $content .= ("<div style='height:100%;' > ");
     if($title){
         $content .= ("<h2>".$title."</h2>");
     }
-    $class = igk_sys_env_production() ? "prod" : "dev";
+    $class = $is_prod ? "prod" : "dev";
     $content .= ("<div style=\"color: $cl1; padding: 0px 20px; \">");
     $content .= ("<ul class=\"google-Roboto-Condensed $class\" >");
    
  
-    $base_path = igk_sys_env_production();
-    if(!igk_sys_env_production()){
+    
+    if(!$is_prod){
         
         if (!empty($m = $Ex->getMessage())){
             $content .= ("<li><span>Message: </span>".$m."</li>");

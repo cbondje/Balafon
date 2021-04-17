@@ -35,4 +35,13 @@ class IGKSystemHelper{
             }
         }
     }
+    public static function assert_notify($condition, $successmsg, $errormessage, $name=null){
+        $check = igk_check($condition);
+        $notify = igk_notifyctrl($name);
+        if ($check){
+            $notify->success($successmsg);
+        } else {
+            $notify->error($errormessage);
+        }
+    }
 }

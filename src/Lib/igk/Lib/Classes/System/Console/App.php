@@ -74,7 +74,7 @@ class App{
                 }
                 $command[$c->command] = [
                     $callbable,
-                    $c->description,
+                    $c->desc,
                     $c->category
                 ];
  

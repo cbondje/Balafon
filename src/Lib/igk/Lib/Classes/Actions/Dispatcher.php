@@ -1,7 +1,6 @@
 <?php
 namespace IGK\Actions;
-
-use ArgumentCountError;
+ 
 use Closure;
 use IGK\Actions\IActionProcessor;
 use IGK\System\Exceptions\ActionNotFoundException;
@@ -27,9 +26,6 @@ class Dispatcher implements IActionProcessor{
         $this->host = $host;
     } 
     public static function __callStatic($name, $args){
-
-
-      
        
         if (self::$sm_macro===null){
             self::$sm_macro = [];
@@ -103,6 +99,6 @@ class Dispatcher implements IActionProcessor{
             $targs = array_merge([$fc] , array_slice($arguments,1));       
             return self::__callStatic("Dispatch", $targs);   
         }     
-        throw new ActionNotFoundException($name);   
+        throw new ActionNotFoundException("PPP".$name);   
     }
 }

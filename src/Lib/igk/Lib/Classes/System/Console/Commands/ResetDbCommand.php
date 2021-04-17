@@ -7,7 +7,7 @@ use IGK\System\Console\Logger;
 class ResetDbCommand extends AppExecCommand{
     var $command = "--db:resetdb";
 
-    var $description = "reset database"; 
+    var $desc = "reset database"; 
 
     public function exec($command, $ctrl=null)
     {   

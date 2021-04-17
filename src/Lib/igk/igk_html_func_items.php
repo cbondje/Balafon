@@ -298,7 +298,10 @@ function igk_html_node_menu($tab, $selected=null, $uriListener=null, $callback=n
             //     array_push( $tarray, ["menu"=>$v, "c"=>$c+1, "ul"=>$ul]);
             //     continue;
             // }
-            if (($auth = igk_getv($v, "auth")) && $user && !$user->auth($auth)){ 
+            $auth = igk_getv($v, "auth");            
+            if ( (is_bool($auth) && !$auth) ||
+                 ((is_string($auth) && $user && !$user->auth($auth)))
+                 ){ 
                 continue;
             }
 
@@ -357,13 +360,30 @@ function igk_html_handle_cssstyle($n){
 * @param mixed $attributes
 * @param mixed $index
 */
-function igk_html_node_a($href=null, $attributes=null, $index=null){
+function igk_html_node_a($href="#", $attributes=null, $index=null){
     $a=new IGKHtmlA();
     $a["href"]=$href;
     $a->setIndex($index);
     if($attributes){
         $a->AppendAttributes($attributes);
     }
+    if ($href!="#"){
+        $a->EmptyContent = $href;
+    }
+    return $a;
+}
+function igk_html_node_a_post($uri, $complete=''){
+    $a = igk_html_node_a();
+    $a->on("click", "igk.ajx.post('".
+        $uri
+        ."',null,'".$complete."');");
+    return $a;
+}
+function igk_html_node_a_get($uri, $complete=''){
+    $a = igk_html_node_a();
+    $a->on("click", "igk.ajx.get('".
+        $uri
+        ."',null,'".$complete."');");
     return $a;
 }
 ///<summary>function igk_html_node_abbr</summary>
@@ -3691,7 +3711,19 @@ function igk_html_node_expression_node($raw, $ctrl=null){
     $n=new IGKHtmlExpressionNodeItem($raw, $ctrl);
     return $n;
 }
-
+function igk_html_node_nbsp(){
+    $c = igk_createtextnode("&nbsp;");
+    if ($f = igk_html_parent_node()){
+        $f->add($c);
+        return $f;
+    }
+    return $c;
+}
+function igk_html_node_actiongroup(){
+    $c = igk_createnode("div");
+    $c["class"] = "igk-action-group";
+    return $c;
+}
 //---------------------------------------------------------------------------------
 // form tag extension
 //
@@ -3787,10 +3819,30 @@ Factory::form("initfield", function(){
     }    
     return $f;
 });
+Factory::form("ajx", function(){
+    if ($f = igk_html_parent_node()){        
+        $f["igk-ajx-form"] = 1;
+    }    
+    return $f;
+});
 
 Factory::form("multipart", function(){
     if ($f = igk_html_parent_node()){
         $f["enctype"] = "multipart/form-data";
+    }
+    return $f;
+});
+
+Factory::table("header", function(array $header){
+    if ($f = igk_html_parent_node()){
+   
+        $f->tr()->loop($header)->host(function($n, $v){
+             if (empty($v)){
+                $n->th()->nbsp();
+            }else{
+                $n->th()->Content = $v;
+            }
+        });
     }
     return $f;
 });

@@ -348,8 +348,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             //+ | insert here a middle ware to auto handle the view before include 
             //+ | ----------------------------------------------------------------
             if ((igk_count($params)>0) && ($handler = $this->getActionHandler($fname, $params[0]))){                
-                   
-                igk_do_response($r = $handler::Handle($this, $fname, $params));       
+                $handler::Handle($this, $fname, $params);       
             } 
             ob_start();
             $bckdir = set_include_path(dirname($file).PATH_SEPARATOR.get_include_path());
@@ -1167,13 +1166,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public final function getDoc(){
         return $this->getEnvParam(IGK_CURRENT_DOC_PARAM_KEY) ?? igk_app()->Doc;
     }
-    ///<summary>get environment parameter for this controller</summary>
-    /**
-    * get environment parameter for this controller
-    */
-    public function getEnvParam($key, $default=null){
-        return igk_get_env(igk_ctrl_env_param_key($this)."/".$key, $default);
-    }
+   
     ///<summary>View Error</summary>
     ///<param name="ctrl"></param>
     ///<param name="code"></param>
@@ -2161,13 +2154,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
                 $this->TargetNode=$bck;
         }
     }
-    ///<summary>set environment parameter for this controller</summary>
-    /**
-    * set environment parameter for this controller
-    */
-    public function setEnvParam($key, $value, $default=null){
-        return igk_set_env(igk_ctrl_env_param_key($this)."/".$key, $value, $default);
-    }
+    
     ///<summary>set the flag</summary>
     /**
     * set the flag

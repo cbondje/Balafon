@@ -7,6 +7,8 @@ use Faker\Provider\Base;
 use IGK\Models\Migrations;
 use IGK\Models\ModelBase;
 use IGK\System\Console\Logger;
+use IGK\System\Http\Route;
+use IGK\System\Http\RouteActionHandler;
 use IGK\System\IO\File\PHPScriptBuilder;
 use IGKResourceUriResolver;
 use Throwable;
@@ -28,7 +30,9 @@ abstract class ControllerExtension{
      */
     public static function asset(BaseController $ctrl, $path){
         $f = implode("/", [$ctrl->getDataDir(), IGK_RES_FOLDER, $path]);
-        $t =  IGKResourceUriResolver::getInstance()->resolve($f); 
+        if (!file_exists($f))
+            return null;
+        $t = IGKResourceUriResolver::getInstance()->resolve($f); 
         if (empty($t)){
             igk_wln_e(file_exists($f), "-".$t, $f);
         }
@@ -432,5 +436,29 @@ abstract class ControllerExtension{
 
     public static function getComponentsDir(BaseController $controller){
         return $controller::classdir()."/Components";
+    }
+
+    ///<summary>set environment parameter for this controller</summary>
+    /**
+    * set environment parameter for this controller
+    */
+    public static function setEnvParam(BaseController $controller, $key, $value, $default=null){
+        return igk_set_env(igk_ctrl_env_param_key($controller)."/".$key, $value, $default);
+    }
+     ///<summary>get environment parameter for this controller</summary>
+    /**
+    * get environment parameter for this controller
+    */
+    public static function getEnvParam(BaseController $controller, $key, $default=null){
+        return igk_get_env(igk_ctrl_env_param_key($controller)."/".$key, $default);
+    }
+
+
+    // +| Routing macros
+    public static function getRouteUri(BaseController $controller, $routename, $path=null){
+        if ($route = Route::GetRouteByName($routename)){
+            return RouteActionHandler::GetRouteUri($route, $controller, $path); 
+        }
+        return null;
     }
 }

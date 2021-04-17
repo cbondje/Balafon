@@ -17,7 +17,7 @@ class MakeProjectCommand extends AppExecCommand{
  
     var $category = "make";
 
-    var $description = "make new project.";
+    var $desc  = "make new project.";
 
     var $options = [
         "--type"=>"define the type of the project"
