@@ -204,6 +204,14 @@ function igk_ajx_panel_dialog($title, $d, $closeBtn='drop', $callback=null){
     }
     $dialog->RenderAJX();
 }
+///<summary>return a panel dialog result</summary>
+/**
+ * return a panel dialog result
+ * @param string $title title of the dialog
+ * @param mixed $d node or string to show
+ * @param string $closeBtn close button
+ * @param callable $callback the call to to call
+ */
 function igk_ajx_panel_dialog_result($title, $d, $closeBtn='drop', $callback=null){
     ob_start();
     igk_ajx_panel_dialog($title, $d, $closeBtn, $callback);
@@ -225,10 +233,12 @@ function igk_ajx_update($uri, $target, $type='get'){
     }
     if ($target=='body'){
         $target = 'null';
-    }else  {
+    }else{
         $target="'$target'";
     }
-    igk_createnode("script")->setContent("ns_igk.ajx.{$type}('$uri', null, {$target});")
+    igk_createnode("script")
+    ->setAttribute("autoremove","true")
+    ->setContent("ns_igk.ajx.{$type}('$uri', null, {$target});")
     ->renderAJX();
 }
 ///<summary>redirect to uri in ajx context</summary>
@@ -1590,8 +1600,8 @@ function igk_conf_match($t, $n, $op){
 }
 ///<summary>set object at igkXpath selection model</summary>
 /**
-* set object at igkXpath selection model
-*/
+ * * set object at igkXpath selection model
+ */
 function igk_conf_set(& $obj, $data, $path){
     $c=explode("/", $path);
     $s=$obj;
@@ -20843,7 +20853,9 @@ function igk_register_autoload_class(callable $func= null, $priority=10){
             }
             if(file_exists($f=igk_html_uri(IGK_LIB_DIR."/Lib/Classes/".$f.".php"))){
                 include_once($f);
-                if(!class_exists($n, false) && !interface_exists($n, false)){
+                if(!class_exists($n, false) && !interface_exists($n, false)
+                && !trait_exists($n, false)
+                    ){
                     igk_die("file loaded but not content class {$n} definition", 1, 500);
                 }
                 return 1;
@@ -44096,7 +44108,7 @@ final class IGKPICRESCtrl extends IGKConfigCtrlBase {
         $frm->addBr();
         $frm->addSLabelInput("dir", "text", $this->m_selectedir);
         $frm->addBr();
-        $frm->add("input", array("type"=>"hidden", "name"=>"MAXFILESIZE", "value"=>5000));
+        $frm->addInput()->setAttributes(array("type"=>"hidden", "name"=>"MAXFILESIZE", "value"=>5000));
         $frm->addHSep();
         $frm->addBtn("upload", __("btn.upload"));
         return $frm;
@@ -53176,6 +53188,13 @@ EOF;
                 igk_html_add($this->TargetNode, $host);
             }
         }
+    }
+
+    public function __call($name, $c){
+        if (method_exists($this, $fc = "add".$name)){
+            return $this->$fc(...$c);
+        }
+        return parent::__call($name, $c);
     }
 }
 ///<summary>return script data</summary>
@@ -72579,12 +72598,17 @@ class IGKSQLQueryUtils {
                 return $tab->getValue($grammar);
             }
         }
+        $qtab = [$tab];
+        $loop=  0;
+        while($tab = array_shift($qtab)){
+          //  igk_wln("entry one 1.. .".$loop);
+        
         foreach($tab as $k=>$v){
 
 			$c="=";
             if($t == 1)
                 $query .= " $op ";
-			 $t=1;
+			
             if(is_object($v)){
                 if($v instanceof IGKDbExpression){
                     $query .= $v->getValue((object)[
@@ -72594,26 +72618,36 @@ class IGKSQLQueryUtils {
                         ]);
                     continue;
                 }
-            }
+                $tb = igk_get_robjs("operand|conditions", 0, $v);                
+                $op = $tb->operand;
+                if ($tb->operand && $tb->conditions && preg_match("/(or|and)/i", $tb->operand)){
+                    if ($t){
+                        $t = 0;
+                    } 
+                    $op = strtoupper($tb->operand);
+                    array_unshift($qtab, $tb->conditions);
+                    continue; 
+                }
+                //array_unshift($qtab, $tb->conditions);
+                //igk_wln("query request is object", $v, $tb, count($qtab));
+                //igk_wln_e("query request is object", $v, $t);
 
-            if(is_object($v)){
-                igk_wln_e("object", $v);
-                if(isset($v->$to)){
-                    switch($v->$to){
-                        case "igk_db_field":
-                        if(is_array($v->clName)){
-                            $hh=array();
-                            foreach($v->clName as $ks){
-                                $hh[]="`".$adapter->escape_string(str_replace(".", "`.`", $ks))."`";
-                            }
-                            $query .= igk_str_join_tab($hh, $v->clOperator, false);
-                        }
-                        break;
-                    }
-                }
-                else{
+                // if(isset($v->$to)){
+                //     switch($v->$to){
+                //         case "igk_db_field":
+                //         if(is_array($v->clName)){
+                //             $hh=array();
+                //             foreach($v->clName as $ks){
+                //                 $hh[]="`".$adapter->escape_string(str_replace(".", "`.`", $ks))."`";
+                //             }
+                //             $query .= igk_str_join_tab($hh, $v->clOperator, false);
+                //         }
+                //         break;
+                //     }
+                // }
+                // else{
                     $query .= "`".igk_obj_call($v, $fc)."`";
-                }
+                // }
             }
             else{
                 if(preg_match("/^(!|@@|(<|>)=?|#)/", $k, $tab)){
@@ -72644,9 +72678,9 @@ class IGKSQLQueryUtils {
                 else
                     $query .= " ".$c_exp;
             }
-
-
+            $t=1;
         }
+    } 
         return $query;
     }
     ///<summary></summary>
@@ -72722,14 +72756,13 @@ class IGKSQLQueryUtils {
                 $join .= $t. " ";                
                 $join .= $tab;
                 if (isset($vv[0]))
-                    $join .= " on (".$vv[0].") "; 
-                // ipb_wln_e($m, $vv, $join);
+                    $join .= " on (".$vv[0].") ";  
             }
         };
 		foreach(igk_array_extract($options, "Distinct|GroupBy|OrderBy|OrderByField|Columns|Limit|Joins") as $k=>$v){
             if (!$v)continue;
                 switch($k){
-                    case "Distinct":
+                    case "Distinct": 
                         $flag .= "DISTINCT ";
                     break;
                     case "Limit":
@@ -72865,7 +72898,7 @@ class IGKSQLQueryUtils {
         }
         }
         
-        return (object)["columns"=>$columns, "join"=>$join, "extra"=> $q. $query];
+        return (object)["columns"=>$columns, "join"=>$join, "extra"=> $q. $query, "flag"=>$flag];
     }
     ///<summary></summary>
     ///<param name="b"></param>
@@ -74245,7 +74278,7 @@ unset($file);
 define("IGK_BALAFON_JS_VERSION", "4.6.0.0408");
 define("IGK_FRAMEWORK", "IGKDEV-WFM");
 !defined("IGK_WEBFRAMEWORK") && define("IGK_WEBFRAMEWORK", "11.5");
-!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".0.0416");
+!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".0.0418");
 define("IGK_AUTHOR", "C.A.D. BONDJE DOUE");
 define("IGK_AUTHOR_CONTACT", "bondje.doue@igkdev.com");
 define("IGK_AUTHOR_2", "R. TCHATCHO");

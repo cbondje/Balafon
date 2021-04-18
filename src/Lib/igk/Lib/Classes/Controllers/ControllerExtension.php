@@ -461,4 +461,13 @@ abstract class ControllerExtension{
         }
         return null;
     }
+
+    // +| Model Utility extension macros
+    public static function dispatchToModelUtility(BaseController $controller, $modelname, $funcName, ...$args){
+        if ($mod = $controller->loader->model($modelname)){
+            $func = $funcName;
+            return $mod->$func(...$args);
+        }
+        return false;
+    }
 }

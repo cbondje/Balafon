@@ -15,7 +15,22 @@ $content .= ("<div style='height:100%;' > ");
     $content .= ("<div style=\"color: $cl1; padding: 0px 20px; \">");
     $content .= ("<ul class=\"google-Roboto-Condensed $class\" >");
    
+    $from = "";
  
+    $tx = $Ex->getPrevious();
+
+    while($tx){
+        $file = (($file != null) ? $file: $tx->getFile());
+        $from .= "<div> From : <span>".get_class($tx)."</span>";
+        $from .= "<ul>";
+        $from .= ("<li><span>File :</span>". ($base_path ? igk_io_basepath($file) : $file ).":".
+        (($line != null) ? $line: $tx->getLine())
+        ."</li>");       
+        $from .= "</ul>";
+        $from ."</div>";
+        $tx = $tx->getPrevious();
+    } 
+
     
     if(!$is_prod){
         
@@ -29,9 +44,13 @@ $content .= ("<div style='height:100%;' > ");
         $content .= ("<li><span>Exception Type :</span>".get_class($Ex)."</li>");
         $file = (($file != null) ? $file: $Ex->getFile());
         $content .= ("<li><span>File :</span>". ($base_path ? igk_io_basepath($file) : $file )."</li>");
-        $content .= ("<li><span>Line :</span> ".(($line != null) ? $line: $Ex->getLine())."</li>");
-        
+        $content .= ("<li><span>Line :</span> ".(($line != null) ? $line: $Ex->getLine())."</li>");        
         $content .= "</ul>";
+
+        if (!empty($from)){
+            $content .= $from;
+        }
+
         $tabs = [
             "Stack traces"=>function(&$content)use($Ex, $traces, $base_path){
                 $content .= "<div>";        

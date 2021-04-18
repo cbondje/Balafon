@@ -143,8 +143,8 @@
     </DataDefinition>
     <DataDefinition TableName="%prefix%users" Description="User's tables">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
-        <Column clName="clLogin" clType="VARCHAR" clTypeLength="60" clIsUnique="True" />
-        <Column clName="clPwd" clType="VARCHAR" clTypeLength="200" clNotNull="True" clInsertFunction="IGK_PASSWD_ENCRYPT" clUpdateFunction="IGK_PASSWD_ENCRYPT" />
+        <Column clName="clLogin" clType="VARCHAR" clTypeLength="60" clIsUnique="True" clNotNull="True" />
+        <Column clName="clPwd" clType="VARCHAR" clTypeLength="200" clNotNull="True" clInsertFunction="IGK_PASSWD_ENCRYPT" clUpdateFunction="IGK_PASSWD_ENCRYPT" clInputType="password"/>
         <Column clName="clFirstName" clType="VARCHAR" clTypeLength="60" />
         <Column clName="clLastName" clType="VARCHAR" clTypeLength="60" />
         <Column clName="clDisplay" clType="Text" />

@@ -172,12 +172,16 @@ abstract class DataAdapterBase extends IGKSQLDataAdapter{
      
         $o="";
         $s=0;
+        $flag = "";
         $extra = null;
         if ($options){
             $extra = IGKSQLQueryUtils::GetExtraOptions($options, $this);
-        }
-        
-        $q="SELECT Count(*) as count FROM `".igk_mysql_db_tbname($tbname)."`";
+            $flag = igk_getv($extra, "flag");
+        }               
+        $q="SELECT ";
+        if (!empty($flag))
+            $q.=$flag;
+        $q.= "Count(*) as count FROM `".igk_mysql_db_tbname($tbname)."`";
        
         if ($extra && ($joints = igk_getv($extra, "join"))){            
             $q.= $joints.PHP_EOL;            

@@ -904,7 +904,7 @@ function igk_html_form_fields($formFields, $render=0){
                         $o .= "selected";
                     }
                     $o .= ">";
-                    $o .= __($row["t"]);
+                    $o .= $row["t"];
                     $o .= "</option>";
                 }
             }

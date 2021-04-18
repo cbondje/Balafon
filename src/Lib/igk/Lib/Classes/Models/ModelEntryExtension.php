@@ -89,9 +89,7 @@ abstract class ModelEntryExtension{
         }  
         return $tab;
     }
-    public static function count(ModelBase $model, $conditions=null, $options=null){         
- 
-
+    public static function count(ModelBase $model, $conditions=null, $options=null){  
         $driver = $model->getDataAdapter();   
         if ($m = $driver->selectCount($model->getTable(), $conditions, $options)){
             return $m->getRowAtIndex(0)->count; 
@@ -167,6 +165,7 @@ abstract class ModelEntryExtension{
             $info  = $inf[$v];
             $r = ["type"=>"text"];
             $type = !empty($info->clInputType) ? IGKHtmlUtils::GetInputType($info->clInputType) : $info->clType;
+          
             $attribs = [];
             if ($info->clLinkType){
                 $r["type"] = "select";
@@ -187,7 +186,6 @@ abstract class ModelEntryExtension{
             }else{
                 switch(strtolower($type)){
                     case "enum": 
-
                         $attribs["maxlength"] = $info->clTypeLength;
                         $attribs["list"] = strtolower($v."-datalist");
                         if (!empty($info->clDescription)){
@@ -239,6 +237,10 @@ abstract class ModelEntryExtension{
                             $attribs["maxlength"] = 9;
                             $attribs["pattern"] = "[0-9]+(\.[0-9]+)?";
                         break;
+                    case "password":
+                        $r["type"] = "password";
+                        $attribs["igk-validate-pwd"] = "1";
+                        break;
                     case "varchar":                        
                     default:
                         $attribs["maxlength"] = $info->clTypeLength;
@@ -275,7 +277,15 @@ abstract class ModelEntryExtension{
     public static function primaryKey(ModelBase $model){
         return $model->getPrimaryKey();
     }
-    public static function cacheRow(ModelBase $model, $primaryKeyIdentifier){
+    /**
+     * get the cached row
+     * @param ModelBase $model 
+     * @param mixed $primaryKeyIdentifier 
+     * @return mixed 
+     * @throws Exception 
+     * @throws IGKException if row not found
+     */
+    public static function cacheRow(ModelBase $model, $primaryKeyIdentifier, $throw=true){
         static $states;
 		if ($states===null){
 			$states = [];
@@ -295,7 +305,9 @@ abstract class ModelEntryExtension{
 		    $g = [$model->getPrimaryKey()=>$primaryKeyIdentifier];
 		$row = $cl::select_row($g);
 		if (!$row){
-			throw new IGKException("Row not found");
+            if ($throw)
+			    throw new IGKException("Row not found");
+            return null;
 		}
 		$states[$key] = $row;
 		return $row;

@@ -17,14 +17,23 @@ class Request
     {
         return null;
     }
-    public function getJsonData(){
+    public function getUploadedData(){
         if (!$this->prepared){
             $this->js_data = igk_io_get_uploaded_data();
         }
+        return $this->js_data;
+    }
+    /**
+     * prepare and return the updload data as json forma
+     * @return mixed 
+     */
+    public function getJsonData(){
+        $this->getUploadedData();
         if ($this->js_data !== null){
+            //try to convert josn data data;
             return json_decode($this->js_data);
-        }
-        
+        } 
+        return $this->js_data;
     }
     /**
      * set the request parameters
@@ -62,6 +71,18 @@ class Request
     public function get($name, $default = null)
     {
         return igk_getr($name, $default);
+    }
+    /**
+     * 
+     * @param mixed $name 
+     * @param mixed|null $default 
+     * @return void 
+     */
+    public function have($name, $default=null){
+        if (key_exists($name, $_REQUEST)){
+            return igk_getr($name);
+        }
+        return  $default;
     }
     /**
      * 

@@ -6,6 +6,7 @@ use Exception;
 use IGK\System\Http\RouteActionHandler;
 /**
  * controller task : routable controller action
+ * note: a Balafon Page is a ControllerTask
  * @package IGK\Controllers
  */
 abstract class ControllerTask{
@@ -34,11 +35,11 @@ abstract class ControllerTask{
         $n = $name."_".igk_server()->REQUEST_METHOD;
         if (method_exists($this, $n)){
             return $this->$n(...$args);
-        }else {
-            array_unshift($args, $name);
-            return $this->index(...$args);
         }
-
-        throw new Exception("Task $name not found");
+        array_unshift($args, $name);
+        return $this->index(...$args);
+        // throw new Exception("Task $name not found");
     }
+
+
 }

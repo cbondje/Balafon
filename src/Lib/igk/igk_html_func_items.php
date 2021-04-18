@@ -374,9 +374,12 @@ function igk_html_node_a($href="#", $attributes=null, $index=null){
 }
 function igk_html_node_a_post($uri, $complete=''){
     $a = igk_html_node_a();
+    if (empty($complete)){
+        $complete='null';
+    } 
     $a->on("click", "igk.ajx.post('".
         $uri
-        ."',null,'".$complete."');");
+        ."',null, ".$complete.");");
     return $a;
 }
 function igk_html_node_a_get($uri, $complete=''){
@@ -3812,6 +3815,15 @@ function igk_html_node_pre($c=null){
     return $p;
 }
 
+function igk_html_node_hiddenfields(array $fields){
+    if ($f = igk_html_parent_node()){
+        foreach($fields as $k=>$v){
+            $f->addInput($k, "hidden", $v);
+        }
+    }
+    return $f;
+
+}
 
 Factory::form("initfield", function(){
     if ($f = igk_html_parent_node()){        
@@ -3819,9 +3831,11 @@ Factory::form("initfield", function(){
     }    
     return $f;
 });
-Factory::form("ajx", function(){
+Factory::form("ajx", function($target=null){
+  
     if ($f = igk_html_parent_node()){        
         $f["igk-ajx-form"] = 1;
+        $f["igk-ajx-form-target"] = $target;
     }    
     return $f;
 });
@@ -3833,9 +3847,18 @@ Factory::form("multipart", function(){
     return $f;
 });
 
-Factory::table("header", function(array $header){
+Factory::form("hiddenFields", function(array $fields){
     if ($f = igk_html_parent_node()){
-   
+        
+        $f->loop($fields)->host(function($f, $v){
+            $f->addInput($v, "hidden", $v[1]);
+        });
+    }
+    return $f;
+});
+
+Factory::table("header", function(...$header){
+    if ($f = igk_html_parent_node()){   
         $f->tr()->loop($header)->host(function($n, $v){
              if (empty($v)){
                 $n->th()->nbsp();
@@ -3846,4 +3869,5 @@ Factory::table("header", function(array $header){
     }
     return $f;
 });
+ 
 

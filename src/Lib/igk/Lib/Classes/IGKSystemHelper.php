@@ -44,4 +44,24 @@ class IGKSystemHelper{
             $notify->error($errormessage);
         }
     }
+    /**
+     * 
+     * @param mixed $condition 
+     * @param mixed $successmsg 
+     * @param mixed $errormessage 
+     * @return void 
+     * @throws Exception 
+     * @throws ReflectionException 
+     */
+    public static function assert_toast($condition, $successmsg, $errormessage){
+        if (!igk_is_ajx_demand())
+            return;
+        $check = igk_check($condition);
+        $d = ["msg"=>$successmsg, "type"=>"igk-success"];
+        if (!$check){
+            $d["msg"] =$errormessage;
+            $d["type"]="igk-danger";
+        }
+        igk_ajx_toast($d["msg"], $d["type"]);
+    }
 }

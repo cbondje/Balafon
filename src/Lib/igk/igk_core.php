@@ -142,6 +142,19 @@ function igk_io_remove_ext($name){
     }
     return $name;
 }
+function igk_io_inject_uri_arg($uri, $name, & $fragment = null){
+    $g = parse_url($uri);
+	if (!empty($fragment = igk_getv($g, "fragment"))){
+		$fragment="#".$fragment;
+	}	
+	$uri = explode("?",$uri)[0]."?";
+	if (!empty($query = igk_getv($g, "query"))){
+		parse_str($query, $info);
+		unset($info[$name]);
+		$uri = explode("?",$uri)[0]."?".http_build_query($info)."&"; 
+	} 
+    return $uri;
+}
 ///<summary>detect that the environment in on mand line mode</summary>
 /**
 * detect that the environment in on command line mode

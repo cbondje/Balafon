@@ -33,9 +33,11 @@ class Factory{
     public function handle($name, $funcName){
         return isset($this->m_actions[$name][$funcName]);
     }
-    public function invoke($name, $funcName, ...$arguments){
-        $callback = $this->m_actions[$name][$funcName];
-        return $callback(...$arguments); // call_user_func_array()
+    public function invoke($name, $funcName, $arguments){
+        if ($callback = $this->m_actions[$name][$funcName]){
+            return call_user_func_array($callback, $arguments);
+        }
+        return null; // $callback(...$arguments); // call_user_func_array()
     }
 }
 

@@ -47,13 +47,13 @@ foreach(["IGK_APP_DIR", "IGK_SESS_DIR", "IGK_BASE_DIR"] as $k){
     }
 } 
 $_SERVER["DOCUMENT_ROOT"] = IGK_BASE_DIR;
-$_SERVER["SERVER_NAME"] = "local.com";
+$_SERVER["SERVER_NAME"] = "local.test.com";
 $_SERVER["SERVER_PORT"] = "8801";
 igk_server()->prepareServerInfo();
 
 foreach(["IGK_NO_DBCACHE"] as $k){
     if (!defined($k) && ($t = igk_getv($_ENV, $k))){
-            define($k, $t);                
+        define($k, $t);                
     }
 }
 defined("IGK_PROJECT_DIR") || define("IGK_PROJECT_DIR", IGK_APP_DIR."/Projects");           

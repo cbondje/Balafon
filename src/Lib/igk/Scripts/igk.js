@@ -17308,29 +17308,22 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 
 	// override the click event functions register function for click or touch screen
 	igk.winui.registerEventHandler("click", {
-		reg_event: function (item, func, useCapture) {	// click host handler
-			// if($igk(item).istouchable())
-			// {			
-
-			// igk.winui.reg_system_event(item,"click",__disable_func,useCapture);
-			// igk.winui.reg_system_event(item,"click",func,useCapture);
-			// return igk.winui.reg_system_event(item,"touchend",func,useCapture);
-			// }
-			// else{		
+		reg_event: function (item, func, useCapture) {	// click host handler				
 			return igk.winui.reg_system_event(item, "click", func, useCapture);
-			// }
 		},
-		unreg_event: function (item, func) {
-			// if($igk(item).istouchable())
-			// {
-			// var s=igk.winui.unreg_system_event(item,"click",__disable_func);
-			// return igk.winui.unreg_system_event(item,"touchend",func) && s;
-			// }
-			// else{			
-			return igk.winui.unreg_system_event(item, "click", func);
-			// }
+		unreg_event: function (item, func) {			 			
+			return igk.winui.unreg_system_event(item, "click", func); 
 		}
 	});
+
+	// igk.winui.registerEventHandler("doubleTouchOrClick", {
+	// 	reg_event: function (item, func, useCapture) {				
+	// 		return igk.winui.reg_system_event(item, "click", func, useCapture);
+	// 	},
+	// 	unreg_event: function (item, func) {			 			
+	// 		return igk.winui.unreg_system_event(item, "click", func); 
+	// 	}
+	// });
 
 	function _dblevent(item, func) {
 		var last = 0;
@@ -17421,9 +17414,9 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 		}
 		return r;
 	};
-
-	var PN = "touchOrClick";
-
+	
+	// register double click event
+	(function(PN){
 	igk.winui.registerEventHandler(PN, {
 		reg_event: function (item, func, useCapture, single) {
 			var _dc = 0;
@@ -17459,7 +17452,7 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 			return igk.winui.reg_system_event(item, "click", c.bind, useCapture);
 		},
 		unreg_event: function (item, func, useCapture) {
-			var n = "touchOrClick";
+			var n = PN;
 			var c = _getEventData(n, item, func);
 			if (c) {
 				if ($igk(item).istouchable()) {
@@ -17473,6 +17466,58 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 			}
 		}
 	});
+	})("touchOrClick");
+	(function(PN){  
+		igk.winui.registerEventHandler(PN, {
+			reg_event: function (item, func, useCapture, single) {
+				var _dc = 0;
+				if (typeof (single) == 'undefined') {
+					single = 1;
+				}
+				if (single && (_dc = _getEventData(PN, item, func))) {
+					console.debug("[BJS] - function already binded for .", item, item === _dc.i, _dc);
+					return;
+				}
+				var c = {
+					n: PN, index: 0, i: item, h: 0, "func": func, bind: function (evt) {
+						// bind is the actual method that will be register 
+						if (evt.type == "touchend") {
+							if (evt.cancelable) {
+								evt.preventDefault();
+								evt.stopPropagation();
+							}
+							c.h = 1;
+						}
+						else if (c.h == 1) {
+							c.h = 0;
+							return;
+						}
+						c.func.apply(item, [evt]);
+					}
+				};
+				c.index = m_eventDatas[c.n] ? m_eventDatas[c.n].length : 0;
+				_regEventData(c.n, c);
+				if ($igk(item).istouchable()) {
+					igk.winui.reg_system_event(item, "dbltouchend", c.bind, useCapture);
+				}
+				return igk.winui.reg_system_event(item, "dblclick", c.bind, useCapture);
+			},
+			unreg_event: function (item, func, useCapture) {
+				var n = PN;
+				var c = _getEventData(n, item, func);
+				if (c) {
+					if ($igk(item).istouchable()) {
+						igk.winui.unreg_system_event(item, "doubletouchend", c.bind);
+					}
+					var o = igk.winui.unreg_system_event(item, "dblclick", c.bind);
+					//console.debug("unbind event : "+ 
+					_unbindEventData(c, n);
+	
+					return o;
+				}
+			}
+		});
+		})("doubleTouchOrClick");
 
 	function __mobile_device_event(n, mobe) {
 		return {
@@ -18935,13 +18980,13 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 // indication
 // ---------------------------------------------------------------
 // igk-ajx-lnk
+// possible value : 1 | {method:function([ajx.get|ajx.post]),execute: [execute directly] ,complete: after receive}
 (function () {
 	var m_xhr = null;
 	igk.system.createNS("igk.winui.ajx.lnk", {
 		getLink: function () { return m_xhr.source; },// expose link for evaluation
 		getXhr: function () { return m_xhr; }
 	});
-	// igk-ajx-lnk possible value : 1 | {method:function([ajx.get|ajx.post]),execute: [execute directly] ,complete: after receive}
 	igk.ctrl.registerAttribManager("igk-ajx-lnk", { ns: "ajx", desc: "Ajax link. used in combination with 'igk-ajx-lnk-tg' properties. " });
 	igk.ctrl.bindAttribManager("igk-ajx-lnk", function (n, m) {
 		if (!m)
@@ -18960,18 +19005,13 @@ igk.ctrl.bindAttribManager("igk-js-bind-select-to", function (n, v) {
 			var fc = m.update;
 			var obj = igk.JSON.parse(m, q);
 			var opxhr = null;
-			q.reg_event("click", function (evt) {
-
-
-
+			q.reg_event("click", function (evt) { 
 				if (evt.handle || evt.defaultPrevented) {
 					return;
 				}
 				evt.preventDefault();
 				evt.stopPropagation();
-
 				evt.handle = 1;
-
 				if (obj.execute) {
 					obj.execute.apply(this, evt);
 					return;
@@ -24939,9 +24979,13 @@ igk.system.createNS("igk.system", {
 			e.stopPropagation();
 		}
 	});
-	var list = { "click": "touchOrClick" };
+	var list = { 
+		"click": "touchOrClick",
+		"doubleclick":"doubleTouchOrClick" 
+	};
 
 	igk.ctrl.registerAttribManager("[click]", { desc: "click property event" });
+	igk.ctrl.registerAttribManager("[doubleclick]", { desc: "doubleclick property event" });
 	igk.ctrl.bindAttribManager("[click]", function (m, n) {
 		if (n == null) {
 			return;
@@ -24949,6 +24993,20 @@ igk.system.createNS("igk.system", {
 		var fc = new Function(n);
 		var q = this;
 		this.reg_event("touchOrClick", function (event) {
+			igk.event.stop(event);
+			if (event.handle)
+				return;
+			fc.apply(q, [event]);
+		});
+	});
+
+	igk.ctrl.bindAttribManager("[doubleclick]", function (m, n) {
+		if (n == null) {
+			return;
+		}
+		var fc = new Function(n);
+		var q = this;
+		this.reg_event("doubleTouchOrClick", function (event) {
 			igk.event.stop(event);
 			if (event.handle)
 				return;
