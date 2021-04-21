@@ -121,8 +121,10 @@ class App{
                 $c = explode(":", $v); 
                 if (isset($handle[$c[0]]))
                 {
-                    $action = is_callable($handle[$v])?$handle[$v]: $handle[$v][0];
-                    $action($v, $command, implode(":", array_slice($c,1)));
+                    if (isset($handle[$v])){
+                        $action = is_callable($handle[$v])?$handle[$v]: $handle[$v][0];
+                        $action($v, $command, implode(":", array_slice($c,1)));
+                    }
                 }else {
 
                     if ($c[0][0]=="-"){
@@ -136,9 +138,10 @@ class App{
 
         try{
             $action = $command->exec; //($v, $command, implode(":", array_slice($c,1)));
-             
             if ($action){
                 return $action($command , ...$args); 
+            }else{
+                echo "no action found";
             }
         } catch (Exception $ex){
             $app->print(self::gets(self::RED, "error:"). $ex->getMessage());

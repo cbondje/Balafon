@@ -2,7 +2,7 @@
 
 namespace IGK\System\Database\Factories;
 
-use TBN\Models\ModelBase;
+use IGK\Models\ModelBase;
 
 abstract class FactoryBase {
     protected $count;
@@ -10,8 +10,7 @@ abstract class FactoryBase {
     
     public function __construct(ModelBase $model, $count=1){
         $this->count = $count;
-        $this->model = $model;  
-
+        $this->model = $model; 
     }
 
     public function create(){ 

@@ -138,8 +138,8 @@
     </DataDefinition>
     <DataDefinition TableName="%prefix%usergroups" >
         <Column clName="clId" clType="Int"  clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
-        <Column clName="clUser_Id" clType="Int"  clLinkType="%prefix%users" clIsUniqueColumnMember="true" clUniqueColumnIndex="1" />
-        <Column clName="clGroup_Id" clType="Int" clNotNull="True" clIsUniqueColumnMember="true" clUniqueColumnIndex="1" clLinkType="%prefix%groups" />
+        <Column clName="clUser_Id" clType="Int"  clNotNull="True" clLinkType="%prefix%users" clIsUniqueColumnMember="true" clUniqueColumnIndex="1" />
+        <Column clName="clGroup_Id" clType="Int" clNotNull="True" clLinkType="%prefix%groups" clIsUniqueColumnMember="true" clUniqueColumnIndex="1"  />
     </DataDefinition>
     <DataDefinition TableName="%prefix%users" Description="User's tables">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
@@ -153,7 +153,7 @@
         <Column clName="clLevel" clType="Int" clTypeLength="11" clNotNull="True" />
         <Column clName="clStatus" clType="Int" clTypeLength="11" clDefault="-1" clDescription="state of the account, -1 = not activated, 1=activated, 0or2=blocked" clNotNull="True" />
         <Column clName="clDate" clType="DateTime" clDescription="registration date" clNotNull="True" clDefault="CURRENT_TIMESTAMP" />
-        <Column clName="clLastLogin" clType="DateTime" clDescription="last login" clNotNull="True" clDefault="CURRENT_TIMESTAMP"/>
+        <Column clName="clLastLogin" clType="DateTime" clDescription="last login" />
         <Column clName="clParent_Id" clType="Int" clTypeLength="11" clDescription="Parent of this account" clLinkType="%prefix%users" />
         <Column clName="clClassName" clType="VARCHAR" clTypeLength="255" clDescription="if clParent_Id then object refer to class name that initialize the sub user" />
     </DataDefinition>
@@ -203,6 +203,17 @@
         <Column clName="migration_batch" clType="Int" clDescription="Batch Running" />
     </DataDefinition>
 
+    <DataDefinition TableName="%prefix%crons" Description="Store cron job">
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="crons_name" clType="VARCHAR" clTypeLength="60" clNotNull="True" />
+        <Column clName="crons_process" clType="VARCHAR" clTypeLength="1" clDefault="0" clNotNull="True" />
+        <Column clName="crons_script" clType="Text" clTypeLength="60" clNotNull="True" />        
+        <Column clName="crons_options" clType="JSON" clTypeLength="60" clNotNull="True" />        
+        <Column clName="crons_class" clType="Text" />        
+        <Column clName="crons_create_at" clType="DateTime" clDefault="CURRENT_TIMESTAMP" clNotNull="True" />        
+        <Column clName="crons_update_at" clType="DateTime" clDefault="CURRENT_TIMESTAMP" />        
+    </DataDefinition>
+
     <DataDefinition TableName="%prefix%logginattempts" Description="Store migrations">
         <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="logginattempts_login" clType="VARCHAR" clTypeLength="60" clIsUnique="true" clDescription="loggin - unique" clNotNull="True" />
@@ -210,5 +221,13 @@
         <Column clName="logginattempts_createAt" clType="DateTime"  clDefault="NOW()" clDescription="Now" clNotNull="True" />
         <Column clName="logginattempts_updateAt" clType="DateTime"  clUpdateFunction="Now()" clDescription="Last try datetime" clNotNull="True" />
     </DataDefinition>
+
+    <Migrations>
+        <Migration>
+            <changeColumn for="%prefix%users">
+                <Column clName="clLogin" clType="VARCHAR" clTypeLength="60" clIsUnique="True" /> 
+            </changeColumn>
+        </Migration>
+    </Migrations>
 
 </data-schemas>

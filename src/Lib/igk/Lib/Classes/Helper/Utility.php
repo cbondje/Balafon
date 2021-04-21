@@ -1,13 +1,43 @@
 <?php
 namespace IGK\Helper;
 
+use Exception;
+
 abstract class Utility {
+    public static function PostCref(callable $callback, $valid=1, $method="POST"){
+        if (igk_server()->method($method) && igk_valid_cref($valid)){
+            return $callback();
+        }
+        return false;
+    }
+    /**
+     * get the email display
+     * @param mixed $r 
+     * @return string 
+     */
+    public static function GetUserEmailDisplay($r){
+        return implode(" ",array_filter([
+            strtoupper($r->clLastName), ucfirst($r->clFirstName),
+            "&lt;".$r->clLogin."&gt;"]));
+    }
+    /**
+     * get the user fullname display
+     * @param mixed $r 
+     * @return string 
+     */
     public static function GetFullName($r){
         return implode(" ", array_filter([ strtoupper($r->clLastName), ucfirst($r->clFirstName)]));
     }
+    /**
+     * convert raw to json.
+     * @param mixed $raw 
+     * @param mixed|null $options , ignore_empty=1|0 , default_ouput='{}'
+     * @return mixed 
+     * @throws Exception 
+     */
     public static function To_JSON($raw , $options=null){
         $ignoreempty = igk_getv($options, "ignore_empty", 0);
-        $default_output = igk_getv($options, "defaut_output", "{}");
+        $default_output = igk_getv($options, "default_ouput", "{}");
         if(is_string($raw)){
             $sraw = json_decode($raw);
             if (json_last_error() === JSON_ERROR_NONE){

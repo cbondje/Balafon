@@ -16,6 +16,7 @@ use IGK\Controllers\BaseController;
 use IGK\System\Configuration\ConfigData;
 use IGK\System\Html\Dom\IGKHtmlMeta;
 use IGK\Resources\R;
+use IGK\System\Database\QueryBuilderConstant as queryConstant;
 use IGK\System\Console\Logger;
 
 ///<summary></summary>
@@ -227,7 +228,7 @@ function igk_ajx_panel_dialog_close(){
     $n->Content="igk.winui.controls.panelDialog.close()";
     $n->RenderAJX();
 }
-function igk_ajx_update($uri, $target, $type='get'){
+function igk_ajx_update($uri, $target='body', $type='get'){
     if ($type!='get'){
         $type = 'post';
     }
@@ -4909,7 +4910,7 @@ function igk_db_init_dataschema($ctrl, $dataschema, $db){
 
 		igk_hook(IGK_NOTIFICATION_INITTABLE, [$ctrl, $n, & $data]); 
 		if(!$db->createTable($n, igk_getv($v, 'ColumnInfo'), $data, igk_getv($v, 'Description'), $db->DbName)){
-			igk_ilog("failed to create table: ".$n);
+			// igk_ilog("failed to create table: ".$n);
 			igk_push_env("db_init_schema", __("failed to create [0]", $n));
 			$no_error  = 0;
 		}
@@ -14537,8 +14538,8 @@ function igk_init_controller($listener){
     $listener->addDir(IGK_SCRIPT_FOLDER);
     $listener->addDir(IGK_STYLE_FOLDER);
     $listener->addDir(IGK_CONTENT_FOLDER);
-    $listener->addDir(IGK_LIB_FOLDER."/Classes");
-    $listener->addDir(IGK_LIB_FOLDER."/Tests");
+    $listener->addDir(implode("/", [IGK_LIB_FOLDER,IGK_CLASSES_FOLDER]));
+    $listener->addDir(implode("/", [IGK_LIB_FOLDER,IGK_TESTS_FOLDER]));    
     $listener->addDir(IGK_CONF_FOLDER);
     $listener->addSource(IGK_DATA_FOLDER."/.htaccess", $grantaccess);
     $listener->addSource(IGK_SCRIPT_FOLDER."/.htaccess", $grantaccess);
@@ -15315,17 +15316,17 @@ function igk_io_combine(){
 }
 ///<summary>return a controller working classes path</summary>
 /**
-*  return a controller working classes path
+*  return system expected working classes path
 */
 function igk_io_controller_classes_lib_dir($ctrl){
-    return igk_io_combine($ctrl->getDeclaredDir(), "/Lib/Classes");
+    return igk_io_combine($ctrl->getDeclaredDir(), implode("/",[IGK_LIB_FOLDER, IGK_CLASSES_FOLDER]));
 }
 ///<summary>return a controller working tests classes path</summary>
 /**
-*  return a controller working classes path
+*  return system expected controller working test classes path
 */
 function igk_io_controller_tests_lib_dir($ctrl){
-    return igk_io_combine($ctrl->getDeclaredDir(), "/Lib/Tests");
+    return igk_io_combine($ctrl->getDeclaredDir(), implode("/",[IGK_LIB_FOLDER, IGK_TESTS_FOLDER]));
 }
 
 ///<summary>copy stream function</summary>
@@ -17049,6 +17050,15 @@ function igk_io_symlink($target, $cibling){
 */
 function igk_io_sys_datadir(){
     return igk_io_applicationdir().DIRECTORY_SEPARATOR.IGK_DATA_FOLDER;
+}
+/**
+ * return system io classes dir
+ */
+function igk_io_sys_classes_dir(){
+    return IGK_LIB_DIR."/".IGK_LIB_FOLDER."/".IGK_CLASSES_FOLDER;
+}
+function igk_io_sys_test_classes_dir(){
+    return IGK_LIB_DIR."/".IGK_LIB_FOLDER."/".IGK_TEST_FOLDER;
 }
 ///<summary></summary>
 ///<param name="prefix"></param>
@@ -18815,6 +18825,14 @@ function igk_log_write_i_data($tag, $data){
     else{
         IGKLog::getInstance()->write_i_data($tag, $data);
     }
+}
+/**
+ * create mail options
+ */
+function igk_mail_option(){
+    $opt = igk_xml_create_render_option();
+    $opt->Context = "mail";
+    return $opt;
 }
 ///<summary></summary>
 ///<param name="msg"></param>
@@ -20850,8 +20868,8 @@ function igk_register_autoload_class(callable $func= null, $priority=10){
             $f = igk_html_uri($n);
             if (strpos($f, "IGK/")===0){
                 $f = substr($f, 4); 
-            }
-            if(file_exists($f=igk_html_uri(IGK_LIB_DIR."/Lib/Classes/".$f.".php"))){
+            } 
+            if(file_exists($f=igk_html_uri(igk_io_sys_classes_dir()."/".$f.".php"))){
                 include_once($f);
                 if(!class_exists($n, false) && !interface_exists($n, false)
                 && !trait_exists($n, false)
@@ -25822,17 +25840,18 @@ function igk_sys_reg_autoloadlib($dir, $ns){
     $k[$dir]=1;
     igk_set_env("sys://autoloading/libs", $k);
     $reg=function($n) use ($dir, $ns){
-        $entryNS=$ns;
+        $n = trim($n);
+        $entryNS=trim($ns);
         if(empty($entryNS) || (strpos($n, $entryNS) === 0)){
             if(!empty($entryNS)){
                 $n=substr($n, strlen($entryNS));
                 $n=igk_str_rm_start($n, "\\");
             }
-            if(file_exists($file=igk_io_combine($dir, $n.".php"))){
+            if(!empty($n) && file_exists($file=igk_io_combine($dir, $n.".php"))){
                 include_once($file);
                 return 1;
             }
-        }
+        }        
         return false;
     };
     igk_register_autoload_class($reg);
@@ -41336,9 +41355,10 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
             
             $frm= igk_createnode("form");
             $frm["action"]=$this->getUri(__FUNCTION__);
+            $frm["class"]= "auth-edit-form";
             $d=$frm->addDiv();
             $d["class"]="igk-form-group";
-            $table=$d->addTable();
+            $table=$d->tablehost()->table();
             $table["class"]="igk-table igk-table-hover";
             $r=igk_db_table_select_where(IGK_TB_GROUPS, null);
             if($r){
@@ -41586,7 +41606,7 @@ final class IGKGroupController extends IGKConfigCtrlBase {
             
             break;
             default:
-            $frm=$node->addForm();
+            $frm=$node->addForm()->setClass("conf-group-list-form");
             $table=$frm->addDiv()->setClass("overflow-x-a")->addTable();
             $table["class"]="igk-table igk-table-striped";
             $tr=$table->addTr();
@@ -41595,12 +41615,26 @@ final class IGKGroupController extends IGKConfigCtrlBase {
             $tr->add("th", array("class"=>"fitw"))->Content=__("Users");
             $tr->add("th", array("style"=>"width:16px;"))->Content=IGK_HTML_SPACE;
             $tr->add("th", array("style"=>"width:16px;"))->Content=IGK_HTML_SPACE;
-            $e=$this->getDbEntries();
+            // igk_environment()->querybuilder = 1;
+            // $grp_table = IGK\Models\Groups::table();
+            // $ugrp_table = IGK\Models\Usergroups::table();
+            // $e= IGK\Models\Groups::select_query(null, [
+            //     queryConstant::Distinct=>1,
+            //     queryConstant::Joins=>[
+            //         [$ugrp_table=>["type"=>queryConstant::LeftJoin, $grp_table.".clId = ".$ugrp_table.".clGroup_Id"]]
+            //     ],
+            //     "Columns"=>["*"],
+            //     // "GroupBy"=>[$grp_table.".clId"]
+            // ])->getRows();
+             $e = $this->getDbEntries();
             if($e && ($e->RowCount > 0)) foreach($e->Rows as $v){
+                $count = IGK\Models\Usergroups::count([
+                    "clGroup_Id"=>$v->clId
+                ]);
                 $tr=$table->addTr();
                 $tr->addTd()->addInput("r", "checkbox", $v->clId);
                 $tr->addTd()->Content=$v->clName;
-                $tr->addTd()->Content="0";
+                $tr->addTd()->Content= $count;
                 IGKHtmlUtils::AddImgLnk($tr->addTd(), $this->getUri("group_view_user&clId=".$v->clId), "user_16x16");
                 $td=$tr->addTd();
                 IGKHtmlUtils::AddImgLnk($td, igk_js_post_frame($this->getUri("group_dropgroup_ajx&clId=".$v->clId)), "drop_16x16")->setAlt("drop group");
@@ -59501,8 +59535,9 @@ class IGKXmlNode extends IGKHtmlItemBase implements ArrayAccess {
         igk_get_defined_ns($this, $out, $options);
         if ($options && ($options->Context =="mail")){
             //for mail rendering attribures
-            $g = $this->Attributes["style"];
-            $cl = $this->Attributes["class"];
+            $attribs = $this->Attributes;
+            $g = $attribs["style"];
+            $cl = $attribs["class"];
             if (!empty($g)){
                 $g = rtrim($g,";")."; ";
             }
@@ -59526,7 +59561,7 @@ class IGKXmlNode extends IGKHtmlItemBase implements ArrayAccess {
                     $g = igk_css_treatstyle($g, $options->renderTheme, $options->renderTheme);
                 }
             }
-            $this->Attributes["style"] =  "{$g}";
+            $this->setStyle("{$g}");
         }
 
 
@@ -68555,11 +68590,7 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
             $this->m_openCount=0;
             igk_die("[igk] The connection was not closed properly :::ping failed : ".
 				$lcount." <br />");
-				// .igk_ob_get_func('igk_wln', array(
-                // igk_get_env("lastCounter"),
-                // $this,
-                // $this->getLastQuery()
-            // )));
+				
         }
         $r=igk_db_connect($this->m_dbserver, $this->m_dbuser, $this->m_dbpwd, $this->m_dboptions);
 
@@ -68910,7 +68941,6 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
             }
             igk_push_env("sys://adapter/sqlerror", $m);
             if(!igk_sys_env_production()){
-				igk_wln_e(__FILE__.":".__LINE__, $m);
                 throw new \Exception($m);
             }
         }
@@ -69296,6 +69326,12 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
     */
     public function sendQuery($query, $throwex=true){
         $v_qdebug = igk_environment()->querydebug;
+        $v_nolog = false;
+        if (is_array($throwex)){
+            $v_nolog = igk_getv($throwex, "no_log", false);
+            $throwex = igk_getv($throwex, "throw");
+        }
+        
         if(igk_db_is_resource($this->m_resource)){
 			if ($v_qdebug){
                 igk_dev_wln($query);
@@ -69303,10 +69339,9 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
 			}
             $this->setLastQuery($query);
             $t=igk_db_query($query, $this->m_resource);
-            if (!$t){
+            if (!$t && !$v_nolog){ 
                 igk_ilog("Query Error:".$this->getError()."\n".$query."\n"); 
-            }
-            
+            }            
             if($throwex){
                 $this->dieinfo($t, "/!\\ SQL Query Error :<div style='font-style:normal;'>".igk_html_query_parse($query)."</div>");
             }
@@ -69393,7 +69428,13 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
         if(empty($tablename))
             return false;
         try {
-            $s=$this->_sendQuery("SELECT Count(*) FROM `".igk_mysql_db_tbname($tablename)."`", false);
+            
+            $s=$this->_sendQuery("SELECT Count(*) FROM `".igk_mysql_db_tbname($tablename)."`", 
+                [
+                    "throw"=>false,
+                    "no_log"=>true
+                ]
+            );
             if($s && ($s->ResultType == "boolean")){
                 return true; // $s->Value;
             } 
@@ -72762,10 +72803,10 @@ class IGKSQLQueryUtils {
 		foreach(igk_array_extract($options, "Distinct|GroupBy|OrderBy|OrderByField|Columns|Limit|Joins") as $k=>$v){
             if (!$v)continue;
                 switch($k){
-                    case "Distinct": 
+                    case queryConstant::Distinct: 
                         $flag .= "DISTINCT ";
                     break;
-                    case "Limit":
+                    case queryConstant::Limit:
 					    $optset[$k] = 1;
                         $h = 1;
                         if (is_array($v)){
@@ -72784,10 +72825,10 @@ class IGKSQLQueryUtils {
                         }
                         $query.= " Limit ".$h;
                     break;
-                    case "Joins":  
+                    case queryConstant::Joins:  
                         $_buildjoins($v, $join);
                     break;
-                    case "GroupBy":
+                    case queryConstant::GroupBy: 
 					    $optset[$k] = 1;
                         $query .= " GROUP BY ";
                         $a = 0;
@@ -72929,6 +72970,8 @@ class IGKSQLQueryUtils {
      
         $tvalues=self::GetValues($values, $tableInfo);
         
+
+
         foreach($tvalues as $k=>$v){
             if($v_c != 0){
                 $query .= ",";
@@ -72938,8 +72981,8 @@ class IGKSQLQueryUtils {
                 $v_c=1;
             $query .= "`".igk_db_escape_string($k)."`";
             if($tableInfo){
+                // | get value 
                 $v_v .= self::GetValue($rtbname, $tableInfo, $k, $v);
-               
             }
             else{
                 if($v === null){
@@ -73059,6 +73102,14 @@ class IGKSQLQueryUtils {
 
         return $out;
     }
+    protected static function IsAllowedDefValue($def, $type, $value){
+        if ($b = igk_getv($def, strtoupper($type))){
+            if (isset($b[strtoupper($value)])){
+                return true;
+            }
+        }  
+        return false;
+    }
     ///<summary></summary>
     ///<param name="tbname"></param>
     ///<param name="tableInfo"></param>
@@ -73074,7 +73125,9 @@ class IGKSQLQueryUtils {
     * @param mixed $type the default value is "i"
     */
     public static function GetValue($tbname, $tableInfo, $columnName, $value, $type="i"){
-        $tinf=igk_getv($tableInfo, $columnName); 
+        $tinf=igk_getv($tableInfo, $columnName);        
+        $def = static::AllowedDefValue();
+
         if($tinf === null){            
             igk_die("can't get column: {$columnName} info in table: {$tbname}");
         }         
@@ -73114,14 +73167,11 @@ class IGKSQLQueryUtils {
                 if($tinf->clDefault !== null){
                     if (is_integer($tinf->clDefault)){
                         return $tinf->clDefault;
-                    }else {
-                        //bind default value
-                        $def = static::AllowedDefValue();
-                        if ($b = igk_getv($def, strtoupper($tinf->clType))){
-                            if (isset($b[strtoupper($tinf->clDefault)])){
-                                return $tinf->clDefault;
-                            }
-                        }  
+                    }else { 
+                        if(self::IsAllowedDefValue($def,$tinf->clType, $tinf->clDefault)){
+                            return $tinf->clDefault;
+                        }
+                       
                         return "'".igk_db_escape_string($tinf->clDefault)."'";
                     }
                 }
@@ -73147,11 +73197,9 @@ class IGKSQLQueryUtils {
                 }
             }
             // + allow null value
-            // if ($tinf->clName==="usertask_end_at"){
-            //     die("name not null: $of . $value == {$tinf->clDefault} ");
-            // }
+            
 
-            if(preg_match("/(date(time)?|timespan)/i", $tinf->clType)){
+            if(preg_match("/(date(time)?|timespan)/i", $tinf->clType)){                
                 if(strtolower($of) == 'now()'){
                     switch(strtolower($tinf->clType)){
                         case "datetime":
@@ -73165,6 +73213,9 @@ class IGKSQLQueryUtils {
                 }
                 if ($value === 'NULL'){
                     $value = null;
+                }
+                if($tinf->clDefault && self::IsAllowedDefValue($def,$tinf->clType, $tinf->clDefault)){
+                    return $tinf->clDefault;
                 }
             }
             

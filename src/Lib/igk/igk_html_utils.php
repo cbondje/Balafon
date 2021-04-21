@@ -842,11 +842,14 @@ function igk_html_form_fields($formFields, $render=0){
         }else {
             $_name = "name=\"{$k}\" ";
         } 
-        $o .= "<div";
-        if((isset($v["required"]) ? $v["required"]: 0)){
-            $o.= " class=\"required\"";
+        $_is_div = !preg_match("/(hidden|fieldset|button|submit|reset|datalist)/", $_type);
+        if($_is_div){
+            $o .= "<div";
+            if((isset($v["required"]) ? $v["required"]: 0)){
+                $o.= " class=\"required\"";
+            }
+            $o .= ">";
         }
-        $o .= ">";
         if(!preg_match("/(hidden|fieldset|button|submit|reset|datalist)/", $_type)){
             $o .= "<label for='{$k}'>".ucfirst(igk_getv($v, "label_text", __($k)))."</label>";
         }
@@ -866,6 +869,9 @@ function igk_html_form_fields($formFields, $render=0){
             $o .= "</div>";
             break;
             case "datalist":
+                if (empty($_id)){
+                    $_id = " id=\"{$k}\"";
+                }
             $o .= "<datalist".$_id;
             $load_attr($v, $o);
             $o .= ">";
@@ -930,7 +936,9 @@ function igk_html_form_fields($formFields, $render=0){
             $o .= "/>";
             break;
         }
-        $o .= "</div>";
+        if($_is_div){
+            $o .= "</div>";
+        }
     };
     $fieldset=0;
     foreach($formFields as $k=>$v){

@@ -98,13 +98,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     public function getDataSchemaFile(){
         return $this->getDataDir()."/".IGK_SCHEMA_FILENAME;
     }
-    ///
-    public static function CreateAutoLoadCallback(BaseController $controller){
-        return function($n)use($controller){ 
-            return igk_auto_load_class($n, $controller->getEntryNamespace(), $controller->getClassesDir());
-        };
-    }
-
+   
     // public static function Invoke($controller, $methodname, ...$args){
     //    return call_user_func_array([$controller, $methodname], $args);
     // }
@@ -275,7 +269,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     */
     protected function _conf_regToParent(){
         $h=null;
-        $p=$this->getConfigs()->clParentCtrl;
+        $p=trim($this->getConfigs()->clParentCtrl);        
+        if (strlen($p)==2){
+            igk_wln_e(get_class($this));
+        }
         $p && ($h=igk_getctrl($p, false));
         if($h){
             if($this->WebParentCtrl != null){

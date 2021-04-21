@@ -9,7 +9,7 @@ if(!igk_cmp_version(phpversion(), "7.0")){
     igk_die("version requirement 7.0+");
 }
 spl_autoload_register(function($n){
-    $cdir=igk_io_dir(IGK_LIB_DIR."/Classes/");
+    $cdir=igk_io_dir(IGK_LIB_DIR."/".IGK_CLASSES_FOLDER);
     $s=str_replace("IGK\\Core\\", $cdir, $n);
     $f=igk_io_dir($s.".php");
     if(file_exists($f)){

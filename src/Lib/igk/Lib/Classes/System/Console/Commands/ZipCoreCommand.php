@@ -17,11 +17,11 @@ class ZipCoreCommand extends AppExecCommand{
             Logger::danger("zip utility function not found");
             return -1;
         }
-
+        $fname = "/balafon.".IGK_VERSION."-".date("Ymd").".zip";
         if ($path == null){
-            $path = getcwd()."/balafon.".IGK_VERSION.".zip";
+            $path = getcwd().$fname;
         } else if (is_dir($path)){
-            $path = $path."/balafon.".IGK_VERSION.".zip"; 
+            $path = $path.$fname;
         }
         if (igk_sys_zip_core($path)){
             Logger::print("out file : ".$path);

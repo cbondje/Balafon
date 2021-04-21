@@ -711,10 +711,7 @@ class IGKDbUtility extends IGKObject implements IIGKDbUtility {
     * @param mixed $table
     */
     public final function tableExists($table){
-        $this->connect();
-        $r=$this->getAd()->tableExists($table);
-        $this->close();
-        return $r;
+        return $this->getAd()->tableExists($table); 
     }
    
     

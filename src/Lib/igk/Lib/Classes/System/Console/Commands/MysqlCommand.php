@@ -20,8 +20,19 @@ class MySQLCommand extends AppExecCommand{
         }
         return true;
     }
+    public function help(){
+        Logger::success($this->command . " [--action:options*]");
+        Logger::print("");
+        Logger::print($this->desc);
+        Logger::print("");
+        Logger::info("options*:");
+        foreach(explode("|", "initdb|dropdb") as $k){
+            Logger::print("\t{$k}");
+        }
+    }
     public function exec($command, $ctrl=null)
     {   
+        
         $c = igk_app()->getControllerManager()->getControllers(); 
  
 

@@ -4,6 +4,7 @@ namespace IGK\Models;
 use Exception;
 use IGKException;
 use IGKHtmlUtils;
+use IGKQueryResult;
 
 use function igk_resources_gets as __;
 
@@ -106,6 +107,16 @@ abstract class ModelEntryExtension{
             $g=$r->getRowAtIndex(0);
             $g->{"sys:table"}=$model->getTable(); 
             return new $cl($g->toArray());  
+        }
+        return null;
+    }
+
+    public static function select_row_query(ModelBase $model, $conditions, $options=null ){     
+        $r = static::select_query($model, $conditions, $options);        
+        if($r && $r->RowCount == 1){
+            $g=$r->getRowAtIndex(0);
+            $g->{"sys:table"}=$model->getTable(); 
+            return $g;
         }
         return null;
     }
@@ -240,6 +251,7 @@ abstract class ModelEntryExtension{
                     case "password":
                         $r["type"] = "password";
                         $attribs["igk-validate-pwd"] = "1";
+                        $attribs["autocomplete"]="off";
                         break;
                     case "varchar":                        
                     default:
@@ -256,6 +268,7 @@ abstract class ModelEntryExtension{
             if ($info->clNotNull){
                 $attribs["required"] = "required";
             }
+            $attribs["autocomplete"]="off";
             $r["attribs"] = $attribs;
             $t[$v] = $r;
         } 
@@ -306,11 +319,28 @@ abstract class ModelEntryExtension{
 		$row = $cl::select_row($g);
 		if (!$row){
             if ($throw)
-			    throw new IGKException("Row not found");
+			    throw new IGKException("Row not found ".$model->getTable().":".json_encode($g));
             return null;
 		}
 		$states[$key] = $row;
 		return $row;
 
+    }
+
+
+    public static function form_select_all(ModelBase $model, callable $filter, $condition=null, $options=null){
+        if ($options==null){
+            $options = [];
+        }
+        $tab = [];
+        $options[IGKQueryResult::CALLBACK_OPTS] = 
+        function($row)use($filter, & $tab){
+            if ($g = $filter($row)){
+                $tab[] = $g;
+            }
+            return false; 
+        };
+        $model::select_all($condition, $options);
+        return $tab;
     }
 }

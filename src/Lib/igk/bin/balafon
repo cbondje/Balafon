@@ -5,10 +5,12 @@
 // @description: balafon command line args
 
 use IGK\Controllers\ControllerTask;
+use IGK\Models\Crons;
 use IGK\System\Console\App;
 use IGK\System\Console\AppCommand;
 use IGK\System\Console\Logger;
 use IGK\System\IO\File\PHPScriptBuilder;
+use IGK\System\Process\CronJobProcess;
 
 use function igk_resources_gets as __;
 
@@ -53,21 +55,20 @@ $command = [
     ],
     "--get:configs" => [
         function ($v, $command) {
-            $command->exec = function ($command, $classname=null, $pattern = null) {
-                if ($c = igk_getctrl($classname, false)){
+            $command->exec = function ($command, $classname = null, $pattern = null) {
+                if ($c = igk_getctrl($classname, false)) {
                     $ct = $c->getConfigs();
                     $is_xml = property_exists($command->options, "-xml");
-                    if ($is_xml){
+                    if ($is_xml) {
                         $opt = igk_createobj();
                         $opt->Indent = true;
                         $opt->Context = "xml";
                         igk_createxml_config_data($ct->to_array())->renderAJX($opt);
-                    }else {
+                    } else {
                         $cl = $ct->to_array();
                         Logger::print(json_encode($cl, JSON_PRETTY_PRINT));
-
                     }
-                }   
+                }
                 Logger::print("\n");
             };
         },
@@ -75,21 +76,19 @@ $command = [
     ],
     "--set:configs" => [
         function ($v, $command) {
-            
-            $command->exec = function ($command, $classname=null, $path = null, $value=null) {
+            $command->exec = function ($command, $classname = null, $path = null, $value = null) {
                 Logger::success("Change Configs");
-                if (($c = igk_getctrl($classname, false)) && !empty($path)){
-                    
-                    $c->Configs->$path = $value; 
-                    $c->Configs->storeConfig();
+                if (($c = igk_getctrl($classname, false)) && !empty($path)) {
 
-                }   
+                    $c->Configs->$path = $value;
+                    $c->Configs->storeConfig();
+                }
                 Logger::print("\n");
             };
         },
         __("set controller class configuration")
     ],
-    
+
     "--set:sysconfigs" => [
         function ($v, $command) {
             $command->exec = function ($command, $name = null, $value = null) {
@@ -105,14 +104,14 @@ $command = [
         __("set configuration")
     ],
 
-    "--db:seed" =>[ function ($v, $command) {
-        $command->exec = function ($command, $ctrl, $class=null) {
+    "--db:seed" => [function ($v, $command) {
+        $command->exec = function ($command, $ctrl, $class = null) {
             if ($c = igk_getctrl($ctrl, false)) {
                 igk_environment()->querydebug = property_exists($command->options, "--querydebug");
                 $inf = get_class($c);
                 if (!empty($class))
-                    $inf.= "::".$class;
-                Logger::print("seed...".$inf ." ".igk_environment()->querydebug);
+                    $inf .= "::" . $class;
+                Logger::print("seed..." . $inf . " " . igk_environment()->querydebug);
                 $c::seed($class);
                 Logger::success("seed complete");
                 return 1;
@@ -129,12 +128,23 @@ $command = [
         };
     }, __("migrate your database")],
     "--db:initdb" => [function ($v, $command) {
-        $command->exec = function ($command) {
-            if ($c = igk_app()->getControllerManager()->getControllers()) {
+        $command->exec = function ($command, $ctrl = "") {
+            $c = null;
+            if (!empty($ctrl)) {
+                if (!($ctrl = igk_getctrl($ctrl, false))) {
+                    Logger::danger("no countroller found");
+                    return -1;
+                }
+                $c = [$ctrl];
+            } else {
+                $c = igk_app()->getControllerManager()->getControllers();
+            }
+            if ($c) {
                 foreach ($c as $m) {
                     if ($m->getCanInitDb()) {
-                        $command->app->print("init : " . get_class($m));
+                        Logger::info("init : " . get_class($m));
                         $m::initDb();
+                        Logger::success("complete : " . get_class($m));
                     }
                 }
                 return 1;
@@ -152,16 +162,16 @@ $command = [
         };
     }, __("initialize system database")],
     "--controller:list" => [function ($v, $command) {
-        $command->exec = function ($command, $pattern=".+") {
+        $command->exec = function ($command, $pattern = ".+") {
 
             $c = igk_app()->getControllerManager()->getControllers();
             $t = [];
             foreach ($c as $m) {
-                if(preg_match("#".$pattern."#", $cl = get_class($m))){
+                if (preg_match("#" . $pattern . "#", $cl = get_class($m))) {
                     $t[] = $cl;
                 }
             }
-            Logger::print( implode("\n", $t));
+            Logger::print(implode("\n", $t));
             return 1;
         };
     }, __("list all controller"), "controller"],
@@ -171,7 +181,7 @@ $command = [
             $command->exec = function ($command, $ctrl, $page) {
 
                 if ($c = igk_getctrl($ctrl, false)) {
-                    $path = "Pages/".ucfirst($page)."Page";
+                    $path = "Pages/" . ucfirst($page) . "Page";
 
                     if (!($t = $c::resolvClass($path))) {
 
@@ -198,7 +208,51 @@ $command = [
         ],
         "make"
     ],
-  
+    "--run" => [function ($v, $command) {
+        $command->exec = function ($command, $file) {
+            try {
+                if (file_exists($file)) {
+                    include($file);
+                } else {
+                    igk_wln("file not present");
+                }
+            } catch (Throwable $ex) {
+                Logger::danger(":" . $ex->getMessage());
+                return false;
+            }
+            return 0;
+        };
+    }, __("run script by loading")],
+    "--run:cron" => [function ($v, $command) {
+        $command->exec = function ($command, $ctrl = null) {
+            try {
+                $ctrl = igk_getctrl($ctrl, false);
+                $condition = ["crons_process" => 0];
+                if ($ctrl) {
+                    $condition["crons_class"] = get_class($ctrl);
+                }
+                $rows = Crons::select_all($condition); // 
+                foreach ($rows as $r) {
+
+                    if ($provider = CronJobProcess::GetJobProcessProvider($r->crons_script)) {
+                        if ($provider->exec($r->crons_name, json_decode($r->crons_options), $ctrl)) {
+                            $r->crons_process = 1;
+                            Logger::success("success :" . $r->crons_name);
+                        } else {
+                            $r->crons_process = -1;
+                            Logger::danger("failed :" . $r->crons_name);
+                        }
+                    }
+                    $r->update();
+                }
+            } catch (Throwable $ex) {
+                Logger::danger(":" . $ex->getMessage());
+                return false;
+            }
+            return 0;
+        };
+    }, __("run script by loading")],
+
     // "--install-site"=>function(){
     // },
     // "--install-project"=>function(){
@@ -218,7 +272,18 @@ $command = [
             echo IGK_VERSION . "\n";
             return 200;
         };
-    }, "show the current version"]
+    }, "show the current version"],
+    "--help" => [function ($arg, $command) {
+        if ($command->exec) {
+            $command->options->{"--help"} = "1";
+        } else {
+            $command->exec = function ($command) {
+                $command->app->showHelp();
+                return 200;
+            };
+        }
+        return 200;
+    }, "show help or activate help option for a command"]
 ];
 
 //-------------------------------------------------------------------------------

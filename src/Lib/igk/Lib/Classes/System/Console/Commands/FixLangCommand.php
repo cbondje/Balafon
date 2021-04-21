@@ -22,7 +22,7 @@ class FixLangCommand extends AppExecCommand{
             $o = "";
 
             foreach($l as $k=>$v){
-               $o.= "\$l['{$k}'] = \"{$v}\";".PHP_EOL;
+               $o.= "\$l['".addslashes($k)."'] = \"{$v}\";".PHP_EOL;
             }
             $author = $command->app->getConfigs()->get("author", IGK_AUTHOR);
        

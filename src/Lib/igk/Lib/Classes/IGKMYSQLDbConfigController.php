@@ -49,15 +49,19 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
         }
         if($q && ($mysql=igk_get_data_adapter(IGK_MYSQL_DATAADAPTER, true)) && $mysql->connect()){
             $this->setParam("query", $q);
-            $g=$mysql->sendQuery($q);
+            $g=$mysql->sendQuery($q, true);
             if($g && ($g->RowCount > 0)){
                 $uri = igk_register_temp_uri(__CLASS__)."/page/";
                 $selected = 1;
                 $dv=igk_createnode("div");
                 $dv->addDiv()->Content=$q;
-                $dv->addDiv()->addTableHost()// ->setClass("igk-table-host overflow-x-a fitw bdr-1")
+                $dv->addDiv()->tablehost()
                 ->addDbResult($g, $uri, $selected, igk_app()->Configs->db_query_page_result ?? 50);
                 $dv->RenderAJX();
+            } else {               
+                if ($error = $mysql->getError()){
+                        igk_wl("SQLError: ", $error);
+                }               
             }
             $mysql->close();
         } 

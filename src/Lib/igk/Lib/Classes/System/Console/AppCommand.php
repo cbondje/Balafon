@@ -93,6 +93,7 @@ abstract class AppCommand {
      * @return void 
      */
     public function help(){
-
+        Logger::info($this->command);
+        Logger::print($this->desc);
     }
 }

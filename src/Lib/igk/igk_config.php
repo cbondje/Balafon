@@ -607,6 +607,8 @@ define("IGK_INC_FOLDER", "Inc");
 define("IGK_LIB_FOLDER", "Lib");
 define("IGK_SCRIPT_FOLDER", "Scripts");
 define("IGK_PLUGINS_FOLDER", "Plugins");
+define("IGK_CLASSES_FOLDER", "Classes");
+define("IGK_TESTS_FOLDER", "Tests"); 
 define("IGK_RES_FONTS", IGK_RES_FOLDER . "/fonts");
 define("IGK_DEFAULT_THEME_FOLDER", IGK_LIB_DIR . "/Default/Themes");
 define("IGK_CACHE_FOLDER", "Caches");

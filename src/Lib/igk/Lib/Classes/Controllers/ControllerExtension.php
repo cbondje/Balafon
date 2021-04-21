@@ -6,11 +6,14 @@ use Exception;
 use Faker\Provider\Base;
 use IGK\Models\Migrations;
 use IGK\Models\ModelBase;
+use IGK\Models\ModelEntryExtension;
 use IGK\System\Console\Logger;
 use IGK\System\Http\Route;
 use IGK\System\Http\RouteActionHandler;
 use IGK\System\IO\File\PHPScriptBuilder;
+use IGKQueryResult;
 use IGKResourceUriResolver;
+use IGKSQLQueryUtils;
 use Throwable;
 
 abstract class ControllerExtension{
@@ -185,11 +188,8 @@ abstract class ControllerExtension{
             return;
         igk_set_env($k, 1);
         $fc = function(){
-            $args = func_get_args();
-            // igk_wln_e($args);
+            $args = func_get_args(); 
             return BaseController::Invoke($this, "auto_load_class", $args);
-
-            //return call_user_func_array(array($this, "auto_load_class"), func_get_args());
         };
         $fc = $fc->bindTo($ctrl);
         igk_register_autoload_class($fc);
@@ -237,8 +237,16 @@ abstract class ControllerExtension{
             $o .= "\t/**\n\t */\n";
             $o.= "\tprotected \$controller = {$cl}::class; ".PHP_EOL;
         }
-
-
+        $key = "";
+        foreach($v["ColumnInfo"] as $cinfo){
+            if ($cinfo->clIsPrimary){
+                $key = $cinfo->clName;
+            }
+        }
+        if ($key!="clId"){
+            $o .= "\t/**\n\t *override primary key \n\t */\n";
+            $o .= "\tprotected \$primaryKey = \"{$key}\"; ".PHP_EOL;
+        }
         $builder = new PHPScriptBuilder();
         $builder->type("class")
         ->author(IGK_AUTHOR)
@@ -470,4 +478,6 @@ abstract class ControllerExtension{
         }
         return false;
     }
+
+
 }
