@@ -152,7 +152,19 @@ final class IGKDbColumnInfo extends IGKObject {
                 $this->clDefaultLinkExpression = $this->clDefault;
             }
             $this->clDefault = null;
-        } 
+        }         
+    }
+    public static function CreateWithRelation($attribs, $tb, $ctrl, & $tbrelation=null){
+        $cl = new IGKDbColumnInfo(igk_to_array($attribs));
+        if (!empty($cl->clLinkType)){
+            $cl->clLinkType = IGKSysUtil::GetTableName( $cl->clLinkType, $ctrl );
+        }
+        if(($tbrelation !== null) && !empty($cl->clLinkType)){
+            if(!isset($tbrelation[$tb]))
+                $tbrelation[$tb]=array();
+            $tbrelation[$tb][$cl->clName]=array("Column"=>$cl->clName, "Table"=>$cl->clLinkType);
+        }
+        return $cl;
     }
     ///<summary></summary>
     ///<param name="key"></param>

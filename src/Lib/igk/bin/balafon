@@ -120,10 +120,17 @@ $command = [
         };
     }, __("seed your data base with face controller")],
     "--db:migrate" => [function ($v, $command) {
-        $command->exec = function ($command, $ctrl) {
+        $command->exec = function ($command, $ctrl=null) {
             if ($c = igk_getctrl($ctrl, false)) {
                 $command->app->print("migrate...");
                 $c::migrate();
+            }else {
+                $c = igk_sys_getall_ctrl();
+                foreach($c as $t){
+                    Logger::info("migrate:".get_class($t));
+                    if ($t::migrate())
+                    Logger::success("migrate:".get_class($t));
+                }
             }
         };
     }, __("migrate your database")],
@@ -142,9 +149,9 @@ $command = [
             if ($c) {
                 foreach ($c as $m) {
                     if ($m->getCanInitDb()) {
-                        Logger::info("init : " . get_class($m));
+                        Logger::info("init: " . get_class($m));
                         $m::initDb();
-                        Logger::success("complete : " . get_class($m));
+                        Logger::success("complete: " . get_class($m));
                     }
                 }
                 return 1;

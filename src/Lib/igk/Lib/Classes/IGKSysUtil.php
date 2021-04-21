@@ -54,7 +54,8 @@ final class IGKSysUtil
     public static function GetDataDefinitionFromFile($file, $v=null, & $tables=null){
         if ($tables ===null)
             $tables = [];
-        $tschema = igk_db_load_data_schemas($file);
+        $data = igk_db_load_data_schemas($v->getDataSchemaFile());
+        $tschema = $data->tables;
         if ($tschema) {
             $entries = [];
             foreach ($tschema as $ck => $cv) {

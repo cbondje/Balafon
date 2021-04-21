@@ -96,7 +96,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                             $entries=$sync->addNode("Entries");
                             foreach($tb as  $v_tablen){
                                 if(!isset($tables->list[$v_tablen])){
-                                    $rep=$sync->addNode("DataDefinition")->setAttributes(array("TableName"=>$v_tablen));
+                                    $rep=$sync->addNode(IGKDbSchemas::DATA_DEFINITION)->setAttributes(array("TableName"=>$v_tablen));
                                     $_api->datadb("get_sync_definition", $rep, $v_tablen, $u, $apt, $ctrl->Db, $entries);
                                 }
                             }
@@ -138,37 +138,6 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                     $p=igk_db_load_data_and_entries_schemas_node($n);
                     igk_wln_e($p->Entries);
 
-                    // $refs=array();
-                    // foreach($p->Entries as $k=>$v){
-                    //     if(isset($p->Relations[$k])){
-                    //         $tb=$p->Relations[$k];
-                    //         foreach($v as $rr=>$row){
-                    //             foreach($tb as $km=>$sm){
-                    //                 $key=strtolower($sm["Table"]."/".$row[$km]);
-                    //                 $i=igk_getv($refs, $key);
-                    //                 if($i == null){
-                    //                     $i=$ctrl->Db->getSyncDataID($sm["Table"], $row[$km], $v);
-                    //                     if(empty($i)){
-                    //                         igk_log_write_i(__FUNCTION__, " data not found for ".$sm["Table"]. ":::".$row[$km]);
-                    //                     }
-                    //                     $refs[$key]=$i;
-                    //                 }
-                    //                 $row[$km]=$i;
-                    //             }
-                    //             $v[$rr]=$row;
-                    //         }
-                    //         $p->Entries[$k]=$v;
-                    //     }
-                    //     foreach($v as $rr=>$row){
-                    //         $ctrl->Db->insertIfNotExists($k, $row);
-                    //     }
-                    // }
-                    // if(!$error){
-                    //     $rep->addNode("Status")->Content=0;
-                    // }
-                    // igk_wln("debugger view ::: loadsyncdata");
-                    // igk_debuggerview()->RenderAJX();
-                    // $rep->RenderAJX();
                 },
             "help"=>function() use (& $_data){
                     $doc=igk_get_document(__FUNCTION__);

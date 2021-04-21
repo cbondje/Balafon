@@ -34,8 +34,7 @@ spl_autoload_register(function($n){
             }
             return 1;
         }
-    }
-    igk_wln("autoload try loading autoload.....".$n);
+    } 
     return 0;
 });
 
@@ -69,25 +68,8 @@ IGKApp::InitAtomic();
 
 // IGKApp::InitSingle();
 
-///<summary>return a list of project installed controllers</summary>
-function igk_sys_project_controllers(){
-    if (!IGKApp::IsInit()){
-        return null;
-    }
-    $c = igk_app()->getControllerManager()->getControllers();
-    $dir = igk_io_projectdir();
-    $projects_ctrl = [];
-    foreach($c as $k){
-        if (strstr($k->getDeclaredDir(), $dir)){
-            $projects_ctrl[] = $k;
-        }
-    }
-    return $projects_ctrl;
-}
 
 $c = igk_sys_project_controllers();
 foreach($c as $m){
-    $m::register_autoload();
-    igk_wln("reigster".$m);
-}
-igk_wln_e("done");
+    $m::register_autoload(); 
+} 

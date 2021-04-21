@@ -303,24 +303,7 @@ class IGKUsersController extends IGKConfigCtrlBase {
             "clLocale"=>"fr"
         )); 
     }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    // protected static function initDb($force=false){
-    //     $c = igk_getctrl(static::class); 
-        
-    //     if(!$force && !igk_is_conf_connected())
-    //         return; 
-
-        
-    //     $v=array($c, "__user_info");
-    //     igk_debug(1);
-    //     igk_notification_reg_event("sys://db/init_complete", [$v]); 
-    //     parent::initDb($force); 
-    //     igk_notification_unreg_event("sys://db/init_complete", [$v]);
-    //     igk_debug(0);
-    // }
+     
     ///<summary></summary>
     ///<param name="func"></param>
     /**

@@ -670,7 +670,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
                     $table_n=$t->$n;
                     if(($table_n == null) || ($table_n == "sqlite_sequence"))
                         continue;
-                    $row=$rep->addNode("DataDefinition")->setAttributes(array("TableName"=>$table_n));
+                    $row=$rep->addNode(IGKDbSchemas::DATA_DEFINITION)->setAttributes(array("TableName"=>$table_n));
                     $tinfo=array();
                     $tt=$this->countTable($table_n);
                     $b=$tt->Columns[0]->name;

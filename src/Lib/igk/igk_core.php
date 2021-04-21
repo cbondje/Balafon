@@ -13,6 +13,9 @@ define(basename(__FILE__), 1);
 use function igk_resources_gets  as __;
 
 ///<summary>autoload class function</summary>
+/**
+ * autoload class in dirs
+ */
 function igk_auto_load_class($name, $entryNS, $classdir, & $refile=null ){
     static $bindfile = null;
     if ($bindfile === null){
@@ -29,10 +32,21 @@ function igk_auto_load_class($name, $entryNS, $classdir, & $refile=null ){
                 $n=substr($n, 1);
             }
         }
-        if(file_exists($file=igk_io_dir($classdir."/".$n.".php"))){            
-            $bindfile($file);            
-            $refile = $file;
-            return 1;
+        if (!is_array($classdir)){
+            $classdir = [$classdir];
+        }
+        // | use to fit class path entry namespace
+        $gdir = 0;
+        while($tdir = array_shift($classdir)){
+            if($gdir){  
+                $tdir = dirname($tdir);
+            }
+            if(file_exists($file=igk_io_dir($tdir."/".$n.".php"))){            
+                $bindfile($file);            
+                $refile = $file;
+                return 1;
+            } 
+            $gdir = 1; 
         } 
     }
     return 0;
@@ -226,6 +240,23 @@ function igk_sys_download_core($download=1){
         igk_download_file("Balafon.".IGK_VERSION.".zip", $tfile, "binary", 0);
     return $tfile;
 }
+
+
+///<summary>return a list of project installed controllers</summary>
+function igk_sys_project_controllers(){
+    if (!IGKApp::IsInit()){
+        return null;
+    }
+    $c = igk_app()->getControllerManager()->getControllers();
+    $dir = igk_io_projectdir();
+    $projects_ctrl = [];
+    foreach($c as $k){
+        if (strstr($k->getDeclaredDir(), $dir)){
+            $projects_ctrl[] = $k;
+        }
+    }
+    return $projects_ctrl;
+}
 ///<summary></summary>
 ///<param name="msg"></param>
 /**
@@ -293,9 +324,9 @@ function igk_dev_wln_e(){
 function igk_wln($msg=""){
     if (file_exists(IGK_LIB_DIR.'/Inc/igk_trace.pinc'))
         include(IGK_LIB_DIR.'/Inc/igk_trace.pinc');
-
+ 
     // $LF = igk_getv($options =  igk_environment->get("sys://igk_wln"), "lf", "<br />");
-
+ 
     if(!($lf=igk_get_env(IGK_LF_KEY))){
         $v_iscmd=igk_is_cmd();
         $lf=$v_iscmd ? IGK_CLF: "<br />";
@@ -329,8 +360,7 @@ function igk_wln($msg=""){
 /**
 * write line to buffer and exit
 */
-function igk_wln_e($msg){
-   
+function igk_wln_e($msg){     
     igk_set_env('TRACE_LEVEL', 3);
     call_user_func_array('igk_wln', func_get_args());
     igk_exit();

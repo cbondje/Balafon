@@ -15,7 +15,7 @@ abstract class FactoryBase {
 
     public function create(){ 
         for($i = 0; $i < $this->count; $i++){
-            $def = $this->definition();
+            $def = $this->definition(); 
             $this->model::create($def);
         }    
     }

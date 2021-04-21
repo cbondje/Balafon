@@ -10,7 +10,7 @@ class Utils{
         
             $o = new $classname();
             if (!isset(igk_environment()->AutoLoad[$classname])){ 
-                spl_autoload_register(BaseController::CreateAutoloadCallback($o));
+                $o::register_autoload();
                 igk_environment()->setArray("AutoLoad", $classname, 1); 
             }            
             return $o;

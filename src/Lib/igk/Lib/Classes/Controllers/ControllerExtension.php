@@ -65,6 +65,32 @@ abstract class ControllerExtension{
         $ad = igk_get_data_adapter($ctrl);
         return $ad->sendQuery($query);
     }
+    public static function db_add_column(BaseController $ctrl, $table, $info, $after=null){
+        $ad = igk_get_data_adapter($ctrl);         
+        if (!$ad->grammar->exist_column($table, $info->clName)){
+            if ($query = $ad->grammar->add_column($table, $info, $after)){                
+                if ($r = $ad->sendQuery($query)){                    
+                    if ($info->clLinkType){
+                        $query_link = $ad->grammar->add_foreign_key($table, $info);
+                        $ad->sendQuery($query_link);
+                    }
+                    return true;
+                }
+            }
+        }
+    }
+    public static function db_rm_column(BaseController $ctrl, $table, $info){
+        $ad = igk_get_data_adapter($ctrl);
+        if ($ad->grammar->exist_column($table, $info->clName)){
+            if ($info->clLinkType &&  
+                ($query = $ad->grammar->remove_foreign($table, $info->clName))){           
+                $ad->sendQuery($query);
+            }
+            $query = $ad->grammar->rm_column($table, $info);
+            return $ad->sendQuery($query);
+        }
+        return false;
+    }
   
     /**
      * resolv controller name key
@@ -104,8 +130,22 @@ abstract class ControllerExtension{
     }
     public static function migrate(BaseController $ctrl, $classname=null){
         
-        $rgx = "/^[0-9]{8}_[0-9]{4}_(?P<name>(".IGK_IDENTIFIER_PATTERN."))/i";
+        if ($ctrl->getUseDataSchema()){
+            $f = igk_db_load_data_schemas(igk_db_get_schema_filename($ctrl), $ctrl); 
+            if ($m = igk_getv($f, "migrations")){
+                // igk_environment()->querydebug = 1;
+                try{
+                    foreach($m as $t){
+                        $t->upgrade(); 
+                    }
+                }
+                catch(Exception $ex){
+                    igk_wln_e("some error", $ex->getMessage());
+                }
+            }
+        }
 
+        $rgx = "/^[0-9]{8}_[0-9]{4}_(?P<name>(".IGK_IDENTIFIER_PATTERN."))/i";
         //get all seed class and run theme
         $dir = $ctrl->getSourceClassDir()."/Database/Migrations";
         $runbatch = 1;
@@ -128,25 +168,34 @@ abstract class ControllerExtension{
                 $name = $tinf["name"][0];
                 $cb = $ctrl::ns("Database/Migrations/{$name}");
                 include_once($file); 
-                Logger::info("init:".$t);
                 try{
-
-                    (new $cb())->up();
-                    
-                    ($r = Migrations::create([
-                        "migration_name"=>$t,
-                        "migration_batch"=>$runbatch
-                        ]) )?  
-                        Logger::success("complete:".$t):
-                        Logger::danger("failed to init:".$t);
- 
-                    if (!$r){
-                        return false;
+                    if(!($cr = Migrations::select_row([
+                        "migration_name"=>$t
+                        ])) || ($cr->migration_batch==0))
+                        {
+                        Logger::info("init:".$t);
+                        (new $cb())->up();
+                            if (!$cr){
+                            ($r = Migrations::create([
+                                "migration_name"=>$t,
+                                "migration_batch"=>$runbatch
+                                ]) )?  
+                                Logger::success("complete:".$t) :
+                                Logger::danger("Failed to migrate: ".$t);
+        
+                            if (!$r){
+                                return false;
+                            }
+                        }
+                        else {
+                            $r->migration_batch = $runbatch;
+                            $r->update();
+                        }
                     }
                     
                 } catch( Throwable $tex){
                     Logger::print($tex->getMessage());
-                    Logger::danger("failed to init: ".$t);
+                    Logger::danger("failed to init: ".$t. ":".$tex->getMessage());
                 }
             }
 
@@ -444,6 +493,9 @@ abstract class ControllerExtension{
 
     public static function getComponentsDir(BaseController $controller){
         return $controller::classdir()."/Components";
+    }
+    public static function getTestClassesDir(BaseController $controller){
+        return dirname($controller::classdir())."/".IGK_TESTS_FOLDER;
     }
 
     ///<summary>set environment parameter for this controller</summary>

@@ -1081,7 +1081,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     */
     public function getDataTableInfo(){
         if($this->getUseDataSchema()){
-            $tb=$this->loadDataFromSchemas();
+            $tb= igk_getv($this->loadDataFromSchemas(), "tables");
             return $tb;
         }
         if(file_exists($this->getDBConfigFile())){
@@ -1822,7 +1822,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
    
         $r=$this->loadDataAndNewEntriesFromSchemas();
         if(!$r)
-            return;
+            return; 
         $tb=$r->Data; 
         $db=igk_get_data_adapter($this, true);
         if($db){
@@ -1962,7 +1962,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     * load data new entries from schemas file
     */
     protected function loadDataNewEntriesFromSchemas(){
-        return igk_db_load_data_entries_schemas(igk_db_get_schema_filename($this));
+        return igk_db_load_data_entries_schemas(igk_db_get_schema_filename($this), $this);
     }
     ///<summary></summary>
     ///<param name="viewpath"></param>

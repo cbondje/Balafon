@@ -319,7 +319,7 @@ function igk_api_mysql_ctrl_gen_schema($api, $ctrlname){
         $rep->addXmlNode("table")->setAttribute("count", igk_count($tables));
         $mysql=$c->Db->Ad;
         foreach($tables as $v){
-            $row=$n->addNode("DataDefinition")->setAttributes(array("TableName"=>$v));
+            $row=$n->addNode(IGKDbSchemas::DATA_DEFINITION)->setAttributes(array("TableName"=>$v));
             $tt=$mysql->sendQuery("SHOW FULL COLUMNS FROM `".$v."`;");
             foreach($tt->Rows as $s){
                 igk_api_get_columninfo($row, $s, $v, $mysql);
@@ -436,7 +436,7 @@ function igk_api_mysql_get_config_data_schema($api, $render=1, $param=null){
                         continue;
                     }
                     $tables[$tname]=(object)array("info"=>$tinfo, "ctrl"=>$v);
-                    $row=$rep->addNode("DataDefinition")->setAttributes(array("TableName"=>$tname, "igk:ctrlName"=>$v->Name));
+                    $row=$rep->addNode(IGKDbSchemas::DATA_DEFINITION)->setAttributes(array("TableName"=>$tname, "igk:ctrlName"=>$v->Name));
                     foreach($tinfo as $vv){
                         $cl=$row->addNode("Column");
                         $cl->setAttributes($vv);
@@ -445,14 +445,15 @@ function igk_api_mysql_get_config_data_schema($api, $render=1, $param=null){
                 }
             }
             else{
-                $tschema=igk_db_load_data_schemas($v->getDataSchemaFile());
+                $data = igk_db_load_data_schemas($v->getDataSchemaFile());
+                $tschema = $data->tables;
                 if($tschema){
                     foreach($tschema as $ck=>$cv){
                         if(isset($tables[$ck])){
                             $msg->add("msg")->Content="Table $ck already found. [".$v->Name. "] get from ".$tables[$ck]->ctrl->Name." with schema";
                             continue;
                         }
-                        $row=$rep->addNode("DataDefinition")->setAttributes(array("TableName"=>$ck, "igk:ctrlName"=>$v->Name));
+                        $row=$rep->addNode(IGKDbSchemas::DATA_DEFINITION)->setAttributes(array("TableName"=>$ck, "igk:ctrlName"=>$v->Name));
                         $row["clDescription"]=igk_getv($cv, "clDescription");
                         $cinfo=igk_getv($cv, "ColumnInfo");
                         $tables[$ck]=(object)array("info"=>$cinfo, "ctrl"=>$v);
@@ -506,7 +507,7 @@ function igk_api_mysql_get_data_schema($api, $render=1, $param=null){
                 if($e)
                     igk_exit();
                 $table_n=$t->$n;
-                $row=$rep->addNode("DataDefinition")->setAttributes(array("TableName"=>$table_n));
+                $row=$rep->addNode(IGKDbSchemas::DATA_DEFINITION)->setAttributes(array("TableName"=>$table_n));
                 $tinfo=array();
                 $tt=$mysql->sendQuery("SELECT Count(*) FROM `".$table_n."`;");
                 $b=$tt->Columns[0]->name;

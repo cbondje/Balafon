@@ -274,17 +274,19 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
         if (!defined("IGK_NO_DBCACHE")){
             $cf = $this->getCacheFile();
         }
-        if(($cf ===null) || !file_exists($cf)){
-            //$tables=array(); 
+        if($no_db_cache || ($cf ===null) || !file_exists($cf)){
+             
             $t=igk_sys_getall_ctrl();  
-
             foreach($t as  $v){
-                if(igk_is_class_incomplete($v))
+       
+                if(igk_is_class_incomplete($v)){ 
                     continue;
+                }
                 if($v === $this)
                     continue;
                 if($v->getUseDataSchema()){
-                    $r=$v->loadDataFromSchemas();
+                    $cr = $v->loadDataFromSchemas(); 
+                    $r= igk_getv($cr, "tables"); 
                     if($r != null){
                         foreach($r as $kk=>$vv){
                             $this->_addTable($kk, $v);
@@ -297,8 +299,7 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
                         $this->_addTable($v->getDataTableName(), $v);
                     }
                 }
-            }
-            
+            } 
             if (!$no_db_cache)
                 $this->_storeDbCache(1);
         }
@@ -1659,14 +1660,14 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
     */
     public function getAllTableNames(){
         $this->_initTableInfo();
-        $tab=& $this->getLoadTables();
+        $tab = & $this->getLoadTables();
         if($tab)
             return array_keys($tab);
         return null;
     }
     ///<summary></summary>
     /**
-    * 
+    * get the cache faile used to store table:controller definition
     */
     public function getCacheFile(){  
         return igk_io_cachedir().DIRECTORY_SEPARATOR.".mysql.db.cache";
@@ -1699,6 +1700,11 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
     * @param mixed $global the default value is true
     */
     public function getDataTableDefinition($tablename, $global=true){
+       if ($tablename == "%prefix%groupauthorizations"){
+           igk_wln("not resolved");
+           igk_trace();
+           igk_exit();
+       }
         if(!is_string($tablename)){
             igk_die("/!\\ tablename not a string");
         }

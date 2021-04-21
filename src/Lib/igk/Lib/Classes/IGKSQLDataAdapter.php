@@ -9,6 +9,15 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
     public static function ResolvType($t){
         return IGKSQLQueryUtils::ResolvType($t);
     }
+    public function getGrammar(){
+        return $this->create_grammar() ?? die("grammar can't be found");
+    }
+    protected function create_grammar(){
+        return igk_environment()->createClassInstance(IGK\System\Database\SQLGrammar::class);
+    }
+    public function escape($str){
+        return igk_db_escape_string($str);
+    }
     /**
      * get relation attached to table
      * @param mixed $adapter 

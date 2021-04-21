@@ -1026,11 +1026,11 @@ EOF;
         $dom["Platform"]=IGK_PLATEFORM_NAME;
         $dom["PlatformVersion"]=IGK_WEBFRAMEWORK;
         $e=IGKHtmlItem::CreateWebNode("Entries");
-        $d=$this->loadDataFromSchemas();
+        $d= igk_getv($this->loadDataFromSchemas(),"tables");
         if($d){
             $tabs=array();
             foreach($d as $k=>$v){
-                $b=$dom->add("DataDefinition");
+                $b=$dom->add(IGKDbSchemas::DATA_DEFINITION);
                 $b["TableName"]=$k;
                 $b["Description"]=$v["Description"];
                 $tabs[]=$k;

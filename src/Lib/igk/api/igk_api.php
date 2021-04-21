@@ -322,7 +322,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                             $entries=$sync->addNode("Entries");
                             foreach($tb as $v_tablen){
                                 if(!isset($tables->list[$v_tablen]) && $ctrl->Db->getCanSyncDataTable($v_tablen)){
-                                    $rep=$sync->addNode("DataDefinition")->setAttributes(array("TableName"=>$v_tablen));
+                                    $rep=$sync->addNode(IGKDbSchemas::DATA_DEFINITION)->setAttributes(array("TableName"=>$v_tablen));
                                     $_api->datadb("get_sync_definition", $rep, $v_tablen, $u, $apt, $ctrl->Db, null, $tables);
                                 }
                             }
@@ -338,7 +338,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                             if($vd->HasChilds){
                                 foreach($vd->Childs->ToArray() as $l){
                                     switch($l->TagName){
-                                        case "DataDefinition":
+                                        case IGKDbSchemas::DATA_DEFINITION:
                                         $sync->add($l);
                                         break;
                                         case "Entries":
@@ -479,7 +479,8 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                     $ctrl=igk_getctrl($n);
                     if($ctrl){
                         $schema=igk_db_backup_ctrl($ctrl);
-                        igk_db_drop_ctrl_db($ctrl, $ctrl->loadDataFromSchemas(), __FUNCTION__);
+                        $tables = igk_getv($ctrl->loadDataFromSchemas(),"tables");
+                        igk_db_drop_ctrl_db($ctrl, $tables, __FUNCTION__);
                         igk_db_init_db($ctrl);
                         igk_db_restore_backup_data($ctrl, $schema);
                     }

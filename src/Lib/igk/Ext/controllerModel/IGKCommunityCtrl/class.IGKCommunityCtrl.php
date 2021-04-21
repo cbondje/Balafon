@@ -53,8 +53,7 @@ abstract class IGKCommunityCtrl extends IGKCtrlTypeBase {
 	public static function initDb(){
 		igk_set_env("sys://db/constraint_key", "igk_com");
 		if (igk_is_conf_connected())
-			$this->initDbFromFunctions();
-
+			self::ctrl()->initDbFromFunctions(); 
 	}
 	protected function getConfigFile()
 	{
