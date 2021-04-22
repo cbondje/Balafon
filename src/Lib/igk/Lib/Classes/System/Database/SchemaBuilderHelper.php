@@ -37,6 +37,7 @@ class SchemaBuilderHelper{
     public static function Downgrade($options){
         if ($m = igk_getv($options, "migrations")){ 
             try{
+                $m = array_reverse($m);
                 foreach($m as $t){
                     $t->downgrade(); 
                 }

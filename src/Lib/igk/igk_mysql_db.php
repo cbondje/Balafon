@@ -489,9 +489,7 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
                     igk_ilog($this->m_dbManager->getError(), __METHOD__);
                 }
                 return $s;
-            }else{
-                igk_wln_e("kj::::", $tablename, $this->tableExists($tablename));
-            }
+            } 
         }
         return false;
     }
