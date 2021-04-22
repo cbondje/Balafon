@@ -305,7 +305,7 @@ function igk_api_mysql_ctrl_gen_schema($api, $ctrlname){
         igk_ilog("'admin must be connected in order to generate data schema");
         return 0;
     }
-    $rep=igk_createxmlnode("data-schemas");
+    $rep=igk_createxmlnode(IGK_SCHEMA_TAGNAME);
     $rep["Date"]=date('Y-m-d');
     $rep["Version"]="1.0";
     $n=igk_html_node_noTagNode();
@@ -412,7 +412,7 @@ function igk_api_mysql_extract($api, $tbname){
 */
 function igk_api_mysql_get_config_data_schema($api, $render=1, $param=null){
     $ctrl=$api->App->getControllerManager()->getControllers();
-    $rep=igk_createxmlnode("data-schemas");
+    $rep=igk_createxmlnode(IGK_SCHEMA_TAGNAME);
     $uri=igk_getv(igk_getv(igk_get_ns(), "ns"), "igk");
     $rep->setAttribute("xmlns:igk", $uri);
     $msg=$rep->add("warning-message");
@@ -492,7 +492,7 @@ function igk_api_mysql_get_config_data_schema($api, $render=1, $param=null){
 * @param mixed $param the default value is null
 */
 function igk_api_mysql_get_data_schema($api, $render=1, $param=null){
-    $rep=igk_createxmlnode("data-schemas");
+    $rep=igk_createxmlnode(IGK_SCHEMA_TAGNAME);
     $rep["Date"]=date('Y-m-d');
     $rep["Version"]="1.0";
     $mysql=igk_get_data_adapter(IGK_MYSQL_DATAADAPTER, true);

@@ -38,7 +38,7 @@ class SQLGrammar{
         $q .= "`".$table."` ADD ";
         $q .= $info->clName ." ";
 
-        $q .= $this->getColumnInfo($info);
+        $q .= rtrim($this->getColumnInfo($info));
 
         if (!empty($after)){
             $q.= " AFTER `".$after."`";
@@ -46,10 +46,18 @@ class SQLGrammar{
         return $q;
     }
     public function rm_column($table, $info, $after=null){
+        $name= is_object($info)? igk_getv($info, "clName") : $info;
         $adapter  = igk_get_data_adapter(IGK_MYSQL_DATAADAPTER);
         $q = "ALTER TABLE ";
         $q .= "`".$table."` DROP ";
-        $q .= $adapter->escape($info->clName) ." "; 
+        $q .= $adapter->escape($name); 
+        return $q;
+    }
+    public function rename_column($table, $column, $new_name){
+        $adapter  = igk_get_data_adapter(IGK_MYSQL_DATAADAPTER);
+        $q = "ALTER TABLE ";
+        $q .= "`".$table."` RENAME COLUMN ";
+        $q .= $adapter->escape($column) ." TO ".$adapter->escape($new_name); 
         return $q;
     }
     /**
@@ -61,9 +69,15 @@ class SQLGrammar{
     public function exist_column($table, $column, $db=null){
         $adapter  = igk_get_data_adapter(IGK_MYSQL_DATAADAPTER);
         $db= $db ?? $adapter->getDbName();
-        $r = $adapter->sendQuery("SELECT * FROM information_schema.COLUMNS ".      
+        $r = $adapter->sendQuery($q = "SELECT * FROM information_schema.COLUMNS ".      
         "where TABLE_NAME='$table' and TABLE_SCHEMA='$db' AND COLUMN_NAME='$column'");
-        $row = ($r) ? $r->getRowAtIndex(0) : null; 
+        $row = null;
+        if ($r){
+            if ($r->ResultTypeIsBoolean()){
+                return $r->value;  
+            }
+            $row = $r->getRowAtIndex(0);
+        }
         return $row !=null;
     }
     public function remove_foreign($table, $info, $db=null){

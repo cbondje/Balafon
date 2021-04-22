@@ -2,6 +2,7 @@
 namespace IGK\System\Database\MySQL;
 
 use IGKDBSingleValueResult;
+use IGKMYSQLDataAdapter;
 use IGKQueryResult;
 use IGKQueryRowObj;
 use IGKSorter;
@@ -97,16 +98,6 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
         $_handle=$options && igk_getv($options, 'handle');
         if(!$_handle){
             if(is_bool($dbresult) || is_numeric($dbresult) || ($dbresult === null)){
-                // $out=new IGKMySQLQueryResult();
-                // $out->m_fieldcount=1;
-                // $out->m_columns[]="clResult";
-                // $t=array("clResult"=>$dbresult);
-                // $out->m_irows[]=$t;
-                // $out->m_type=is_numeric($dbresult) ? "numeric": "boolean";
-                // $out->m_value=$dbresult;
-                // $out->m_query=$query;
-                // $out->setError(igk_getv($options, "error"));
-                // $out->setErrorMsg(igk_getv($options, "errormsg"));
                 $out = new IGKDBSingleValueResult();
                 $out->type = is_numeric($dbresult) ? "numeric": "boolean";
                 $out->value = $dbresult;
@@ -132,15 +123,15 @@ final class IGKMySQLQueryResult extends IGKQueryResult implements IIGKQueryResul
                     foreach($tab as $k=>$v){
                         $out->m_columns[$i]=(object)array("name"=>$k, "typeName"=>"php", "index"=>$i);
                         $i++;
-                    }
-                    igk_wln("out ::: ", $out);
+                    } 
                     return $out;
                 }
             }
         }
-        if(!igk_db_is_resource($dbresult)){
+        if(!igk_db_is_resource($dbresult) || ($dbresult instanceof IGKQueryResult )){
             return $dbresult;
         }
+        
         $c=igk_db_num_rows($dbresult);
         $out=new IGKMySQLQueryResult();
         if($_handle){

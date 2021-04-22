@@ -143,7 +143,7 @@ function igk_api_get_columninfo($row, $v, $table_n, $mysql){
 	return $cl;
 }
 function igk_api_mysql_get_data_schema($api, $render=1 , $param=null){
-	$rep  = igk_createxmlnode("data-schemas");
+	$rep  = igk_createxmlnode(IGK_SCHEMA_TAGNAME);
 	$rep["Date"] = date('Y-m-d');
 	$rep["Version"]="1.0";
 	$mysql = igk_get_data_adapter(IGK_MYSQL_DATAADAPTER, true);
@@ -306,7 +306,7 @@ function igk_api_mysql_get_sync_definition($api, $row, $table_n, $u, $mysql, $db
 }
 function igk_api_mysql_get_config_data_schema($api, $render=1, $param=null){
 	$ctrl = $api->App->getControllerManager()->getControllers();
-	$rep = igk_createxmlnode("data-schemas");
+	$rep = igk_createxmlnode(IGK_SCHEMA_TAGNAME);
 	$uri = igk_getv(igk_getv(igk_get_ns(), "ns"), "igk");
 	$rep->setAttribute("xmlns:igk", $uri);
 	$msg = $rep->add("warning-message");
@@ -413,7 +413,7 @@ function igk_api_mysql_who_use($api, $tablename=null){
 }
 
 function igk_api_mysql_get_table_data_schema($api, $tablename=null){
-	$rep  = igk_createxmlnode("data-schemas");
+	$rep  = igk_createxmlnode(IGK_SCHEMA_TAGNAME);
 	$rep->RenderAJX();
 }
 function igk_api_mysql_check_data_structure($api){

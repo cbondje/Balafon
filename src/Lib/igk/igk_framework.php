@@ -4898,22 +4898,27 @@ function igk_date_now($format=null){
     return date(IGK_DATETIME_FORMAT);
 }
 
-function igk_db_init_dataschema($ctrl, $dataschema, $db){
+ /**
+  * 
+  */
+function igk_db_init_dataschema($ctrl, $dataschema, $adapter){
 	$r = $dataschema;
+    if (!is_object($r)){
+        throw new IGKException("dataschema not an object");
+    }
 	$tb=$r->Data;
 	$etb=$r->Entries;
-	$no_error = 1;  
-
+	$no_error = 1; 
 	foreach($tb as $k=>$v){
 		$n=igk_db_get_table_name($k, $ctrl);
-        $data=igk_getv($etb, $n); 
+        $data=igk_getv($etb, $n);
 
 		igk_hook(IGK_NOTIFICATION_INITTABLE, [$ctrl, $n, & $data]); 
-		if(!$db->createTable($n, igk_getv($v, 'ColumnInfo'), $data, igk_getv($v, 'Description'), $db->DbName)){
+		if(!$adapter->createTable($n, igk_getv($v, 'ColumnInfo'), $data, igk_getv($v, 'Description'), $db->DbName)){
 			// igk_ilog("failed to create table: ".$n);
 			igk_push_env("db_init_schema", __("failed to create [0]", $n));
 			$no_error  = 0;
-		}
+		} 
 	}
 	return $no_error;
 }
@@ -6241,8 +6246,7 @@ function igk_db_load_data_and_entries_schemas($file, $ctrl=null){
 *  load data schema from loaded node
 */
 function igk_db_load_data_and_entries_schemas_node($d, $ctrl=null){
-    if ($d===null){
-        // igk_environment()->is("development") && 
+    if ($d===null){ 
         igk_wln_e("data is null");
         return;
     }
@@ -6336,7 +6340,8 @@ function igk_db_load_data_schema_array($n, & $tab, & $tbrelation=null, & $migrat
                 if ($c instanceof IGKHtmlCommentItem)
                     continue; 
                 $fc = strtolower($c->tagName);                        
-                $item = $v_m->$fc()->load($c);  
+                $item = $v_m->$fc()->load($c);
+                // igk_ilog("calltype:".$fc);
                 switch($fc){
                     case "addcolumn":
                         // add extra column definion
@@ -6348,10 +6353,11 @@ function igk_db_load_data_schema_array($n, & $tab, & $tbrelation=null, & $migrat
                         }
                        // igk_wln_e(array_keys($tabcl), $tb);
                         break;
-                    case "rmcolumn":
+                    case "removecolumn":
                         $tb = IGKSysUtil::GetTableName($item->table, $ctrl);
                         $tabcl = & $tab[$tb]["ColumnInfo"];
-                        unset($tabcl[$item->name]);
+                        $item->columnInfo = $tabcl[$item->column];
+                        unset($tabcl[$item->column]);
                         break;
                     case "changecolumn":
                         $tb = IGKSysUtil::GetTableName($item->table, $ctrl);
@@ -6363,9 +6369,9 @@ function igk_db_load_data_schema_array($n, & $tab, & $tbrelation=null, & $migrat
                         break;
                     case "renamecolumn":
                         $tb = IGKSysUtil::GetTableName($item->table, $ctrl);
-                        $tabcl = & $tab[$tb]["ColumnInfo"];
-                        $column = $tabcl[$item->name];
-                        $column->clName = $item->newname;
+                        $tabcl = & $tab[$tb]["ColumnInfo"];                        
+                        $column = $tabcl[$item->column];
+                        $column->clName = $item->new_name;
                         $tabcl[$column->clName] = $column;
                         unset($tabcl[$item->name]);
                         break;
@@ -6381,11 +6387,16 @@ function igk_db_load_data_schema_array($n, & $tab, & $tbrelation=null, & $migrat
 * load data from schema files
 */
 function igk_db_load_data_schemas($file, $ctrl=null){
-  
+    if (!file_exists($file)){
+        return null;
+    }
+    return igk_db_load_data_schemas_node(IGKHtmlReader::LoadFile($file), $ctrl);
+}
+function igk_db_load_data_schemas_node($d, $ctrl=null){
     $tables=array();
     $migrations=[];
     $relations = [];
-    if(file_exists($file) && ($d=IGKHtmlReader::LoadFile($file))){
+    if($d){
         $n=igk_getv($d->getElementsByTagName(IGK_SCHEMA_TAGNAME), 0);
         if($n){ 
             igk_db_load_data_schema_array($n, $tables, $relations, $migrations, $ctrl);           
@@ -35344,7 +35355,7 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
                 igk_set_header(500);
                 igk_ilog(implode("", ["<div>/!\\ Domain startup file changed - cookies missmatch</div>", $b. " vs ".$file]));
                 igk_session_destroy();
-                igk_dev_wln_e("sub domain missmatch startup file", $b. " vs ".$file, session_id(), ini_get("session.save_path"), "real : ".session_save_path());
+                igk_dev_wln_e(__FILE__.":".__LINE__."sub domain missmatch startup file", $b. " vs ".$file, session_id(), ini_get("session.save_path"), "real : ".session_save_path());
                 igk_exit();
             }
         }
@@ -41386,7 +41397,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
         }
         if(igk_qr_confirm()){
             igk_frame_close(__FUNCTION__);
-            $tbname=$this->getDataTableName();
+            $tbname= igk_db_get_table_name($this->getDataTableName(), $this);
             $gp=igk_getr("clGroups");
             igk_db_delete($this, $tbname, array(IGK_FD_AUTH_ID=>$id));
             if($gp){
@@ -68248,7 +68259,6 @@ final class IGKCSVQueryResult extends IGKQueryResult {
 final class IGKDataQueryResult extends IGKQueryResult{
     const CREATE_ROW="obj://createrow";
     private $m_columns;
-    private $m_rowcount;
     private $m_rows;
     ///<summary></summary>
     /**

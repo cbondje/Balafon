@@ -77,21 +77,36 @@ abstract class ControllerExtension{
                     return true;
                 }
             }
-        }
+        }  
     }
     public static function db_rm_column(BaseController $ctrl, $table, $info){
         $ad = igk_get_data_adapter($ctrl);
-        if ($ad->grammar->exist_column($table, $info->clName)){
-            if ($info->clLinkType &&  
-                ($query = $ad->grammar->remove_foreign($table, $info->clName))){           
+        $is_obj = is_object($info);
+        if ($is_obj){
+            $name = $info->clName;
+        }else {
+            $name = $info;
+        } 
+        if ($ad->grammar->exist_column($table, $name)){
+            if ($is_obj && $info->clLinkType &&  
+                ($query = $ad->grammar->remove_foreign($table, $name))){           
                 $ad->sendQuery($query);
             }
-            $query = $ad->grammar->rm_column($table, $info);
+            $query = $ad->grammar->rm_column($table, $name);
             return $ad->sendQuery($query);
         }
         return false;
     }
-  
+
+    public static function db_rename_column(BaseController $ctrl, $table, $column, $new_table){
+        $ad = igk_get_data_adapter($ctrl);
+        if ($v = $ad->grammar->exist_column($table, $column)){             
+            if($query = $ad->grammar->rename_column($table, $column, $new_table)){
+                return $ad->sendQuery($query);
+            }
+        } 
+        return false;
+    }
     /**
      * resolv controller name key
      * @param BaseController $ctrl 
@@ -132,8 +147,7 @@ abstract class ControllerExtension{
         
         if ($ctrl->getUseDataSchema()){
             $f = igk_db_load_data_schemas(igk_db_get_schema_filename($ctrl), $ctrl); 
-            if ($m = igk_getv($f, "migrations")){
-                // igk_environment()->querydebug = 1;
+            if ($m = igk_getv($f, "migrations")){ 
                 try{
                     foreach($m as $t){
                         $t->upgrade(); 

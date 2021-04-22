@@ -1700,8 +1700,8 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
     * @param mixed $global the default value is true
     */
     public function getDataTableDefinition($tablename, $global=true){
-       if ($tablename == "%prefix%groupauthorizations"){
-           igk_wln("not resolved");
+       if (strpos($tablename, "%")!==false){
+           igk_wln("table not resolved:". $tablename);
            igk_trace();
            igk_exit();
        }

@@ -8,6 +8,8 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
+use IGK\System\Database\MySQL\IGKMySQLQueryResult;
+
 define("IGK_SQL3LITE_KN", "sql3lite");
 define("IGK_SQL3LITE_KN_TABLE_KEY", IGK_SQL3LITE_KN."::/tableName");
 define("IGK_SQL3LITE_KN_QUERY_KEY", IGK_SQL3LITE_KN."::/query");
@@ -653,7 +655,7 @@ class IGKSQLite3DataAdapter extends IGKSQLDataAdapter implements IIGKDataAdapter
         switch($fmt){
             case 'xml':
             default:
-            $rep=igk_createxmlnode("data-schemas");
+            $rep=igk_createxmlnode(IGK_SCHEMA_TAGNAME);
             $rep["Date"]=date('Y-m-d');
             $rep["Version"]=$this->getDatabaseVersion();
             $rep["Name"]=basename($this->getDatabaseFileName());

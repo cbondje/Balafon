@@ -797,8 +797,7 @@ EOF;
         }
         else{
 
-			// igk_dev_wln_e(__FILE__.".".__LINE__, "RenderError document: ", $fnc);
-            igk_sys_show_error_doc(igk_getr('__c', 404), $this, ["page"=>$page, "fnc"=>$fnc]);
+		    igk_sys_show_error_doc(igk_getr('__c', 404), $this, ["page"=>$page, "fnc"=>$fnc]);
             igk_exit();
         }
         return false;

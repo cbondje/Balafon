@@ -332,6 +332,8 @@ function igk_mysql_time_span($date){
 class IGKMYSQLDataAdapter extends DataAdapterBase {
     private $queryListener;
     private static $_initAdapter; 
+
+    const SELECT_DATA_TYPE_QUERY = 'SELECT distinct data_type as type FROM INFORMATION_SCHEMA.COLUMNS';
     ///<summary></summary>
     ///<param name="ctrl" default="null"></param>
     /**
@@ -345,9 +347,10 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
         static $supportedList;
         if ($supportedList===null){
             $supportedList = [];
-            $g = $this->sendQuery('SELECT distinct data_type as type FROM INFORMATION_SCHEMA.COLUMNS');
-            foreach($g->getRows() as $r){
-                $supportedList[] = strtolower($r->type);
+            if ($g = $this->sendQuery(self::SELECT_DATA_TYPE_QUERY)){
+                foreach($g->getRows() as $r){
+                    $supportedList[] = strtolower($r->type);
+                } 
             }
         } 
         return in_array(strtolower($type), $supportedList); 
@@ -478,6 +481,7 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
     */
     public function createTable($tablename, $columninfoArray, $entries=null, $desc=null){
         if($this->m_dbManager != null){
+        
             if(!empty($tablename) && !$this->tableExists($tablename)){
                 $s=$this->m_dbManager->createTable($tablename, $columninfoArray, $entries, $desc, $this->DbName);
                 if(!$s){
@@ -485,6 +489,8 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
                     igk_ilog($this->m_dbManager->getError(), __METHOD__);
                 }
                 return $s;
+            }else{
+                igk_wln_e("kj::::", $tablename, $this->tableExists($tablename));
             }
         }
         return false;
@@ -613,15 +619,16 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
     * @param mixed $options use to filter the query result. the default value is null
     */
     public function sendQuery($query, $throwex=true, $options=null){
-        
-
         $sendquery=$this->queryListener ?? $this->m_dbManager;
         if($sendquery){            
             $options=$options ?? (object)[];
             $r=$sendquery->sendQuery($query, $throwex);
-             
-            if($r !== null)
+            if ($r instanceof IGKQueryResult){
+                return $r;
+            }
+            if($r !== null){
                 return IGKMySQLQueryResult::CreateResult($r, $query, $options);
+            }
         }
         return null;
     }
@@ -643,6 +650,9 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
     */
     public function setSendDbQueryListener($listener){
         $this->queryListener=$listener;
+    }
+    public function getSendDbQueryListener(){
+        return $this->queryListener;
     }
     ///<summary></summary>
     /**

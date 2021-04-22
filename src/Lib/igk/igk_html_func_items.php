@@ -1315,7 +1315,7 @@ function igk_html_node_ctrlview($view, $ctrl, $params=null){
 * function igk_html_node_dbdataschema
 */
 function igk_html_node_dbdataschema(){
-    $rep=igk_createXmlNode("data-schemas");
+    $rep=igk_createXmlNode(IGK_SCHEMA_TAGNAME);
     $rep["Date"]=date('Y-m-d');
     $rep["Version"]="1.0";
     return $rep;

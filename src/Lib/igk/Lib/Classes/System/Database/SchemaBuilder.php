@@ -5,8 +5,9 @@ use IGKDbSchemas;
 
 class SchemaBuilder{
     private $_output;
+    private $_migrations;
     public function __construct(){
-        $this->_output = igk_createxmlnode("data-schemas");
+        $this->_output = igk_createxmlnode(IGK_SCHEMA_TAGNAME);
     }
     public function render(){
         return $this->_output->render();
@@ -16,5 +17,14 @@ class SchemaBuilder{
         $n["TableName"] = $table;
         $n["Description"] = $desc;
         return SchemaTableBuilder::Create($n, $this);
+    }
+    public function migrations(){
+        if ($this->_migrations==null){
+
+            $n =  $this->_output->add(IGKDbSchemas::MIGRATIONS_TAG);
+            $this->_migrations = SchemaMigrationBuilder::Create($n , $this);
+            
+        }
+        return $this->_migrations;
     }
 }
