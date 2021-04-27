@@ -7,6 +7,11 @@
 // @company: IGKDEV
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
+namespace IGK\System\Installers;
+
+use Exception;
+use IGKHtmlReader;
+use IGKIO;
 
 use function igk_resources_gets as __;
 ///<summary>Represente class: InstallerActionMiddleWare</summary>
@@ -21,7 +26,7 @@ class InstallerActionMiddleWare{
     * 
     */
     protected function abort(){
-        igk_wln("aborting : ".get_class($this));
+        // igk_wln("aborting : ".get_class($this));
     }
     ///<summary></summary>
     ///<param name="list"></param>
@@ -71,15 +76,15 @@ class InstallerActionMiddleWare{
     * @param mixed $service the default value is null
     */
     public static function Run($list, $index, $service=null){
-        $c=$list[$index];
+        $c=$list[$index]; 
         $_service=(object)array(
             "Success"=>0,
             "Start"=>$index,
             "List"=>$list,
             "Current"=>$index,
-            "BaseDir"=>$service ? $service->BaseDir: igk_io_basedir(),
-            "LibDir"=>$service ? $service->LibDir: IGK_LIB_DIR,
-            "CoreZip"=>$service ? $service->CoreZip: null,
+            "BaseDir"=> $service ? $service->BaseDir: igk_io_basedir(),
+            "LibDir"=> $service ? $service->LibDir: IGK_LIB_DIR,
+            "CoreZip"=> $service ? igk_getv($service, "CoreZip") : null,
             "CacheDir"=>$service && !empty($cd=$service->CacheDir) ? $cd: igk_io_cachedir(),
             "Version"=>IGK_VERSION,
             "Listener"=>$service
@@ -219,7 +224,8 @@ class ExtractLibaryMiddleWare extends InstallerActionMiddleWare{
         $lib=$this->getService()->LibDir;
         IGKIO::CreateDir($lib);
         if(!igk_zip_unzip(igk_html_uri($zip), $lib."/../../", "#^Lib/igk#")){
-            return;}
+            return;
+        }
         $this->next();
     }
 }

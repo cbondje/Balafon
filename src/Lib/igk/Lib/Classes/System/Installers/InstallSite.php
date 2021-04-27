@@ -118,8 +118,11 @@ RewriteRule ^(.)+$ "/index.php?rwc=1" [QSA,L]
 
 </Directory>
 <Directory {$src}/public/assets/_chs_/dist/js>
-AddType text/javascript js
+AddType text/javascripit js
 AddEncoding deflate js
+<IfModule mod_headers.c>
+Header set Cache-Control "max-age=31536000"
+</IfModule>
 </Directory>
 </VirtualHost>
 EOF

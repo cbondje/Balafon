@@ -141,7 +141,7 @@ class App{
             if ($action){
                 return $action($command , ...$args); 
             }else{
-                echo "no action found";
+                Logger::danger("no action found");
             }
         } catch (Exception $ex){
             $app->print(self::gets(self::RED, "error:"). $ex->getMessage());

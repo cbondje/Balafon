@@ -3821,9 +3821,30 @@ function igk_html_node_hiddenfields(array $fields){
             $f->addInput($k, "hidden", $v);
         }
     }
-    return $f;
-
+    return $f; 
 }
+
+/**
+ * create a grid node
+ */
+function igk_html_node_grid()
+{
+    $n = igk_createnode("div");
+    $n["class"] = "+igk-grid";
+    return $n;
+}
+
+/**
+ * add tab component
+ */
+function igk_html_node_ajxtabcomponent($host, $name) {
+    $n = igk_createnode(IGKHtmlComponents::Component, null,[ 
+        $host, IGKHtmlComponents::AJXTabControl, $name
+    ]); 
+    return $n;
+}
+
+
 
 Factory::form("initfield", function(){
     if ($f = igk_html_parent_node()){        
@@ -3863,6 +3884,22 @@ Factory::table("header", function(...$header){
              if (empty($v)){
                 $n->th()->nbsp();
             }else{
+
+                if (is_array($v)){
+                    $text = igk_getv($v, "text", igk_getv($v, 0));
+                    $attribs = null;
+                    foreach(["attribs", "attributes"] as $s){
+                        if (key_exists($s, $v)){
+                            $attribs = igk_getv($v, $s);
+                            break;
+                        }
+                    }
+                    $th = $n->th();
+                    if ($attribs)
+                        $th->setAttributes($attribs);
+                    $th->Content = $text;
+                    return;
+                }
                 $n->th()->Content = $v;
             }
         });

@@ -16,6 +16,10 @@ use \IGKControllerManagerObject;
 class MakeClassCommand extends AppExecCommand{
     var $command = "--make:class";
 
+    var $category = "make";
+
+    var $desc = "make a new class";
+
     public function exec($command, $classPath=null) {
         if (empty($classPath)){
             Logger::danger("class path can't be empty");

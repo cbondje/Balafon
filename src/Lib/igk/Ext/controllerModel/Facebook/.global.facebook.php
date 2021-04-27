@@ -1,5 +1,7 @@
 <?php
 
+use IGK\Resources\R;
+
 igk_set_env("sys://facebook/settings", array(
 "lib"=>"https://connect.facebook.net",
 "lang"=>"en_GB",

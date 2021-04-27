@@ -39,8 +39,17 @@ class SchemaMigrationBuilder extends SchemaBuilderHelper{
         $this->migration()->addColumn($table, $options, $after);
         return $this;
     }
-    public function changeColumn(){
-
+    public function changeColumn($table, $column, array $options){
+        if ($this->is_migration){
+            $b = $this->_output->add("changeColumn");
+            $b["table"] = $table; 
+            $b["column"] = $column; 
+            if (!empty($options)){
+                $this->_addcolumnAttributes($options, $b);
+            } 
+            return $this;
+        }
+        $this->migration()->changeColumn($table, $column, $options);
     }
     public function renameColumn($table, $colname, $newname){
         if ($this->is_migration){

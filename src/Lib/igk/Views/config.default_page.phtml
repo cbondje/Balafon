@@ -57,10 +57,16 @@ igk.os.checkupdate('{$u}');
 EOF;
 $uform=$box->addPanelBox()->addDiv();
 if(igk_io_basedir_is_root() && function_exists("zip_open")){
-    $uri=igk_register_temp_uri(IGKBalafonInstaller::Class);
-    $uform->addDiv()->setClass("igk-update-button")->addAJXPickFile($uri."/upload", "{complete:igk.core.install('".$uri."/update"."', '#update_target'),"."progress:igk.core.progress('#update_target'),"."accept:'.zip'"."}")->setAttribute("value", __("Update CoreLib"));
-    $uform->addDiv()->setId("update_target");
-    $uform->addScript()->Content=  file_get_contents(dirname(__FILE__).'/Scripts/configs/installer.js');
+    $cl = \IGK\System\Installers\IGKBalafonInstaller::class;
+    if (class_exists($cl)){
+        $uri=igk_register_temp_uri($cl);
+         
+        $uform->addDiv()->setClass("igk-update-button")
+        ->addAJXPickFile($uri."/upload", "{complete:igk.core.install('".$uri."/update"."', '#update_target'),"."progress:igk.core.progress('#update_target'),"."accept:'.zip'"."}")
+        ->setAttribute("value", __("Update CoreLib"));
+        $uform->addDiv()->setId("update_target");
+        $uform->addScript()->Content=  file_get_contents(dirname(__FILE__).'/Scripts/configs/installer.js');
+    }
 }
 $uform->add("span")->setclass("badge git")->Content="<span>Git: </span><a href=\"https://github.com/goukenn/Balafon\" target=\"__blank\" > https://github.com/goukenn/Balafon </a>";
 $div=$box->addPanelBox()->addDiv();

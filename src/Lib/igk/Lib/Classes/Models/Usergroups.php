@@ -11,4 +11,5 @@ class Usergroups extends ModelBase {
 	/** 
 	 */
 	protected $table = "%prefix%usergroups"; 
+ 
 }

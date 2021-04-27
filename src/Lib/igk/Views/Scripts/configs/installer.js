@@ -15,23 +15,31 @@ igk.system.createNS("igk.core", {
 
 			var source = new EventSource(uri);			
 			source.addEventListener("message", function(e){
-				// console.debug("message : "+e.data);
+				console.debug("message : "+e.data);
+				if (e.data=="failed"){
+					source.close();
+				}
 				q.setHtml(e.data);
 			});
 			
 			source.addEventListener("error", function(e){
+				console.debug("event finish :"+error);
 				if(e.readyState == EventSource.CLOSED){
 					console.log("connection closed");
 				}
 			});
 			
 			source.addEventListener("finish", function(e){				
+				console.debug("event finish :");
 				source.close();
 				q.setHtml('');
 				if (e.data == 'ok'){
+					// reload on finish
 					document.location.reload(true);
-				}
+				} 
 			});
+			 
+
 		} else {			
 			q.setHtml(igk.R.msg_installing);
 			igk.ajx.post(uri, null, function(xhr){

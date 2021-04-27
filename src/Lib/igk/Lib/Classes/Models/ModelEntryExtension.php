@@ -61,6 +61,19 @@ abstract class ModelEntryExtension{
         $model::update($condition, [$p=>$row->{$p}]);
         return null;
     }
+    public static function updateOrCreateIfNotExists(ModelBase $model, $condition, $update_extras=null){
+        if (!($row = $model->select_row($condition))){
+            if ($update_extras){
+                $condition = array_merge($condition, $update_extras);
+            }
+            return $model::create($condition);
+        }
+        if ($update_extras){
+            $condition = array_merge($condition, $update_extras);
+        }
+        $p = $model->getPrimaryKey(); 
+        return $model::update($condition, [$p=>$row->{$p}]);
+    }
     public static function beginTransaction(ModelBase $model){
         return $model->getDataAdapter()->beginTransaction();
     }
@@ -325,6 +338,17 @@ abstract class ModelEntryExtension{
 		$states[$key] = $row;
 		return $row;
 
+    }
+    /**
+     * get cache row
+     * @param ModelBase $model 
+     * @param mixed $primaryKeyIdentifier 
+     * @return ?ModelBase object 
+     * @throws Exception 
+     * @throws IGKException 
+     */
+    public static function cacheIsRow(ModelBase $model, $primaryKeyIdentifier){
+        return static::cacheRow($model, $primaryKeyIdentifier, false);
     }
 
 

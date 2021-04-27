@@ -65,9 +65,7 @@ include_once('Lib/igk/igk_framework.php');
 define("IGK_MAIN_FILE", igk_html_uri(PHar::running(false)));
 
 
-// igk_wln_e("finish");
-// igk_wln(IGK_APP_DIR);
-// igk_exit();
+ 
 // handle key
 $key = 'phar://handlerequest';
 $uri = igk_io_request_uri();

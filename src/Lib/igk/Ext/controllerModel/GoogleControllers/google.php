@@ -192,14 +192,14 @@ function igk_google_installfont($family, $sizes, $file = null){
     $result=array();
     foreach(explode(';', $sizes) as $k){
         $huri=igk_google_font_api_uri($family, trim($k));
-        $s=igk_curl_post_uri($huri);
+        $s=igk_curl_post_uri($huri."&display=swap");
         $info=igk_curl_info();
         if(($ts=$info["Status"]) == 200){
             if(preg_match_all(GOOGLE_URI_REGEX, $s, $tab) > 0){
                 $lnk=$tab["link"];
                 foreach($lnk as $bs){
                     $b=igk_curl_post_uri($bs);
-                    $sr=str_replace(" ", "+", basename($bs));
+                    $sr=str_replace(" ", "+", basename($bs));                
                     igk_io_w2file($_installdir."/".$sr, $b);
                     $s=str_replace($bs, "./".$name."/".$sr, $s);
                 }
@@ -486,7 +486,7 @@ igk_reg_hook("google_init_component", function(){
     }
 });
 igk_sys_reg_uri("^/!@res/(/)?google/cssfont".IGK_REG_ACTION_METH."[%q%]", function($u, $f){
-    @session_write_close();
+    @session_write_close(); 
     $fdir=igk_google_get_fontdir();
     $file=igk_io_dir($fdir.$f);
     if(file_exists($file)){
@@ -510,41 +510,47 @@ igk_sys_reg_uri("^/!@res/(/)?google/cssfont".IGK_REG_ACTION_METH."[%q%]", functi
 igk_sys_reg_uri("^/!@res/(/)?getgooglefont[%q%]", function($c){
     @session_write_close();
     header("Content-Type:text/css");
+   //  IGKIO::RmDir("/Volumes/Data/wwwroot/sites/8801.237mons/src/public/assets");
+
+    // igk_ilog("try load getgooglefont");
+    // https://local.com:48801/!@res//getgooglefont?uri=aHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3M/ZmFtaWx5PVJvYm90bzoxMDAsNDAwLDcwMCw5MDA=&type=css
+    if (is_array($c)){
+        $c = igk_getv($c, "query");
+    } 
     $q=array();
-    parse_str($c["query"], $q);
-    $uri=base64_decode($q["uri"]);
-    
+    parse_str($c, $q);
+    $uri=base64_decode($q["uri"]);    
     $file="";
     $tab=[];
     parse_str(igk_getv(parse_url($uri), "query"), $tab);
+    
+
     $family=igk_getv($tab, "family");
-    list ($f,$g)  = explode(":", $family);
+    $tab = explode(":", $family);
+    $f = igk_getv($tab, 0);
+    $g = igk_getv($tab, 1);
+    if (igk_count($tab)<2){
+        igk_ilog("not family:".$family);
+    }
     $sizes = implode(";", array_filter(explode(",", $g)));
 
     $fdir=igk_google_get_fontdir();
     igk_io_createdir($fdir);
 
     if($family){
-
         if(($file=igk_google_filefromfamily($family))){
+            
             if(file_exists($file)|| igk_google_installfont($f, $sizes, $file)){
-                $uri=igk_io_baseuri().igk_html_uri(igk_io_baserelativepath($file));
+                $uri=igk_io_baseuri()."/".igk_html_uri(igk_io_baserelativepath($file));
+                // igk_ilog("install font and nav to => ".$uri);    
                 igk_navto($uri);
-            }
-            // igk_wl($s = "/*not exists {$f} - {$sizes} neet to install it... */");//, $tab, $uri, igk_is_webapp() );
-            // igk_ilog($s);
-            // igk_ilog("installl font : $file ".igk_google_installfont($f, $sizes, $file));
-            // $s=igk_io_read_allfile($file);
-            // $baseu=igk_io_baseuri()."/";
-            // $s=str_replace("%baseuri%", $baseu, $s);
-            // igk_wl($s);
+            }           
             igk_set_header(500);
             igk_exit();
         }
         else{// install fonts
             if(igk_is_webapp() || !igk_sys_env_production()){
-                igk_google_installfont($family, $sizes);
-                
+                igk_google_installfont($family, $sizes);                
                 header("Content-Type: text/css");
                 igk_set_header(500);
                 igk_wl("/* Can't install google's font to server */");
@@ -558,7 +564,8 @@ igk_sys_reg_uri("^/!@res/(/)?getgooglefont[%q%]", function($c){
         }
         igk_exit();
     }
-    $s=igk_curl_post_uri($uri);
+    $guri = $uri."&display=swap";
+    $s=igk_curl_post_uri($guri);
     $info=igk_curl_info();
     if($info["Status"] != 200){
         igk_exit();

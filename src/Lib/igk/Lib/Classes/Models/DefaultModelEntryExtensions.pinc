@@ -1,0 +1,54 @@
+<?php
+
+use IGK\Models\Authorizations;
+use IGK\Models\Groupauthorizations;
+use IGK\Models\Groups;
+use IGK\Models\Usergroups;
+use IGK\System\Database\QueryBuilder; 
+
+Usergroups::registerMacro("getUserGroups", function(int $uid){
+    $c = $this::select_query(["clUser_Id"=>$uid],[
+        "Joins"=>
+        [
+            [ Groups::table() =>QueryBuilder::LeftJoin(Groups::table().".clId = clGroup_Id")]
+        ]
+    ]); 
+    return $c ? $c->getRows() : null;
+});
+
+
+Groupauthorizations::registerMacro("getUserAuths", function(int $uid){
+    $auth_table = Authorizations::table();
+    $tab = [];
+    $not_grant = [];
+    $c = $this::select_query(["clUser_Id"=>$uid],[
+        "Distinct"=>1,
+        "Columns"=>[
+            $auth_table.".clId as auth_id",
+            $auth_table.".clName as auth_name",
+            "clGrant"
+        ],
+        "Joins"=>
+        [
+            [ Authorizations::table() =>QueryBuilder::LeftJoin(Authorizations::table().".clId = clAuth_Id")],
+            [ UserGroups::table() =>QueryBuilder::LeftJoin(UserGroups::table().".clUser_Id = ".$uid)],
+            [ Groups::table() =>QueryBuilder::LeftJoin(Groups::table().".clId = ".UserGroups::table().".clGroup_Id")],
+        ],
+        IGKQueryResult::CALLBACK_OPTS=>function($row) use (& $tab, & $not_grant){
+            //+ | filter granted only auth
+            //--------------------------------------------------------------------
+            if (in_array($row->auth_name, $not_grant)){
+                return false;
+            }
+            if (!$row->clGrant){
+                $not_grant[] = $row->auth_name;
+                unset($tab[$row->auth_name]);
+            } else {
+                $tab[$row->auth_name] = $row;  
+            }
+            return false;
+        }
+    ]);  
+    return $tab; 
+
+});

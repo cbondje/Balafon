@@ -4,7 +4,8 @@ namespace IGK\Models;
 use ArrayAccess;
 use Closure;
 use Exception;
-use IGK\Helper\Utility; 
+use IGK\Helper\Utility;
+use IGKEvents;
 use IGKSystemController;
 use IGKSysUtil;
 use ReflectionClass;
@@ -219,7 +220,10 @@ abstract class ModelBase implements ArrayAccess{
                 if ($k->isStatic()){
                     self::$macros[$k->getName()] = [ModelEntryExtension::class, $k->getName()];
                 }
-            }
+            } 
+            require(__DIR__."/DefaultModelEntryExtensions.pinc");
+            igk_hook(IGKEvents::HOOK_MODEL_INIT, []);
+
         }   
         if ($fc = igk_getv(self::$macros, $name)){
             $bind = 1;

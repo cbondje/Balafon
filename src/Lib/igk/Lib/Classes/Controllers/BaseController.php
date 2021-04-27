@@ -269,10 +269,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     */
     protected function _conf_regToParent(){
         $h=null;
-        $p=trim($this->getConfigs()->clParentCtrl);        
-        if (strlen($p)==2){
-            igk_wln_e(get_class($this));
-        }
+        $p=trim($this->getConfigs()->clParentCtrl);
         $p && ($h=igk_getctrl($p, false));
         if($h){
             if($this->WebParentCtrl != null){
@@ -344,7 +341,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             //+ | ----------------------------------------------------------------
             //+ | insert here a middle ware to auto handle the view before include 
             //+ | ----------------------------------------------------------------
-            if ((igk_count($params)>0) && ($handler = $this->getActionHandler($fname, $params[0]))){                
+            if ((igk_count($params)>0) && ($handler = $this->getActionHandler($fname, $params[0]))){                                
                 $handler::Handle($this, $fname, $params);       
             } 
             ob_start();
@@ -1794,7 +1791,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
 		$s.= "abstract class ".basename($cl)."DbConstants{".IGK_LF;
 		   if($tb != null){
 			   ksort($tb);
-               $prefix = igk_db_get_table_name("%prefix%", $this);
+               $prefix = igk_db_get_table_name("%prefix%", $this); 
 			   foreach($tb as $k=>$v){
 				   $n=strtoupper($k);
 					$n=preg_replace_callback("/^%prefix%/i", function(){
@@ -1803,6 +1800,9 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
 					, $n);
                     if ($prefix){
                         $n = preg_replace("/^".$prefix."/i",  "TB_", $n);
+                    }
+                    if (empty($n)){ 
+                        continue;
                     }
 				   $s .= "\tconst ".$n." = \"".$k."\";".IGK_LF; 
 			   }

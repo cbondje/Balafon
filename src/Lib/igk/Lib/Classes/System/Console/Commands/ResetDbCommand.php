@@ -14,11 +14,11 @@ class ResetDbCommand extends AppExecCommand{
         igk_environment()->querydebug = property_exists($command->options, "--querydebug");
         $seed = property_exists($command->options, "--seed");
 
-if ($seed){
-    $seed = $command->app->command["--db:seed"];
-    $fc = $seed["0"];
-    $fc("resetdb", $command); 
-}
+        if ($seed){
+            $seed = $command->app->command["--db:seed"];
+            $fc = $seed["0"];
+            $fc("resetdb", $command); 
+        }
 
         if ($ctrl && ($c = igk_getctrl($ctrl, false))){
             $c = [$c];

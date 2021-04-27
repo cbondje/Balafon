@@ -22,6 +22,15 @@
         <Column clName="clLast" clType="DateTime" clDescription="Last download time" clInsertFunction="NOW()" clUpdateFunction="NOW()" />
 
     </DataDefinition>
+    <DataDefinition TableName="%prefix%backups" >
+        <Column clName="clId" clType="Int" clTypeLength="11" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
+        <Column clName="backup_type" clType="VarChar" clTypeLength="60" clNotNull="true" />       
+        <Column clName="backup_class" clType="Text"  />              
+        <Column clName="backup_path" clType="Text" clNotNull="true" />               
+        <Column clName="backup_create_at" clType="DateTime" clNotNull="true" clInsertFunction="Now()" />
+		<Column clName="backup_update_at" clType="DateTime" clNotNull="true" clInsertFunction="Now()" clUpdateFunction="Now()" />	
+    </DataDefinition>
+
     <DataDefinition TableName="%prefix%authorizations" >
         <Column clName="clId" clType="Int" clAutoIncrement="True" clNotNull="True" clIsPrimary="True" />
         <Column clName="clName" clType="VARCHAR" clTypeLength="140" clNotNull="True" clIsUnique="True" />
@@ -224,7 +233,7 @@
 
     <Migrations>
         <Migration>
-            <changeColumn for="%prefix%users">
+            <changeColumn table="%prefix%users" column="clLogin">
                 <Column clName="clLogin" clType="VARCHAR" clTypeLength="60" clIsUnique="True" /> 
             </changeColumn>
         </Migration>

@@ -6,9 +6,7 @@ use function igk_resources_gets as __;
 
 
 
-final class IGKHtmlComponents {
-	const AJXTabControl = "AJXTabControl";
-}
+
 
 
 ///<summary>used to bind atricle from controller in ajx context</summary>
@@ -239,6 +237,11 @@ final class IGKHtmlAJXTabControlItem extends IGKHtmlCtrlComponentNodeItemBase {
     private $m_tabcontent;
     private $m_tablist;
     private static $demoComponent;
+    public const CONTROL = "AJXTabControl";
+
+    public function getSelectedIndex($index){
+        
+    }
 
 	public function getSettings($key){
 		if ($this->m_tabViewListener){

@@ -205,7 +205,7 @@ function igk_template_load_ns($ns){
 */
 function igk_template_mananer_ctrl(){
     $n=igk_template_class_uri();
-    return igk_getctrl($n);
+    return igk_getctrl($n, false);
 }
 ///<summary></summary>
 ///<param name="packagename"></param>

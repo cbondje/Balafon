@@ -9,7 +9,7 @@ class SchemaBuilderMigration{
     private $items; 
     public function __call($name, $arguments)
     {
-        $cl = __NAMESPACE__."\\Schema".$name."Migration";
+        $cl = __NAMESPACE__."\\Schema".ucfirst($name)."Migration";
         if (class_exists($cl) && is_subclass_of($cl, SchemaMigrationItemBase::class)){
             if(!$this->items){
                 $this->items = [];
@@ -18,7 +18,7 @@ class SchemaBuilderMigration{
             $this->items[] = $c;
             return $c;
         }
-        throw new IGKException("not allowed: ".$name);
+        throw new IGKException("not allowed: $cl::".$name);
     } 
     public function upgrade(){
         if (!$this->items)return false;

@@ -60,6 +60,15 @@ class SQLGrammar{
         $q .= $adapter->escape($column) ." TO ".$adapter->escape($new_name); 
         return $q;
     }
+
+    public function change_column($table, $info){
+        $column = $info->clName;
+        $adapter  = igk_get_data_adapter(IGK_MYSQL_DATAADAPTER);
+        $q = "ALTER TABLE ";
+        $q .= "`".$table."` CHANGE ";
+        $q .= $adapter->escape($column) ." ".$adapter->escape($column) ." ".rtrim($this->getColumnInfo($info));
+        return $q;
+    }
     /**
      * return exists if a column exists
      * @param mixed $table 

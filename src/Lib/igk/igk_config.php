@@ -712,6 +712,7 @@ define("IGK_TB_AUTHORISATIONS", "%prefix%authorizations");
 define("IGK_TB_SUBDOMAINS", "%prefix%subdomains");
 define("IGK_TB_USERGROUPS", "%prefix%usergroups");
 define("IGK_TB_GROUPAUTHS", "%prefix%groupauthorizations");
+define("IGK_TB_GUIDS", "%prefix%guids");
 define("IGK_TB_DATATYPES", "%prefix%data_types");
 define("IGK_TB_HUMAN", "%prefix%humans");
 define("IGK_TB_CONFIGS", "%prefix%configurations");

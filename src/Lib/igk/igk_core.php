@@ -169,6 +169,25 @@ function igk_io_inject_uri_arg($uri, $name, & $fragment = null){
 	} 
     return $uri;
 }
+/**
+ * build info query args
+ */
+function igk_io_build_uri($uri, ?array $query= null, & $fragment=null){
+    $g = parse_url($uri);
+	if (!empty($fragment = igk_getv($g, "fragment"))){
+		$fragment="#".$fragment;
+	}	
+    $info = $query ?? [];
+	$uri = explode("?",$uri)[0];
+	if (!empty($tquery = igk_getv($g, "query"))){
+		parse_str($tquery, $info);
+        if ($info && $query){
+            $info = array_merge($info, $query);
+        }
+	} 
+    $uri = $uri."?".http_build_query($info); 
+    return $uri;
+}
 ///<summary>detect that the environment in on mand line mode</summary>
 /**
 * detect that the environment in on command line mode

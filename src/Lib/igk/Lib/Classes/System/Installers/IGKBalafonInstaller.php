@@ -7,14 +7,20 @@
 // @company: IGKDEV
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
+namespace IGK\System\Installers;
 
-use function\igk_resources_gets as __;
+use IIGKActionResult;
+use Throwable;
+
+use function igk_resources_gets as __;
 ///<summary>use to update core framework</summary>
 /**
 * use to update core framework
 */
 class IGKBalafonInstaller implements IIGKActionResult{
     const INSTALLER_KEY = "installer://uploadfile";
+    protected $zipcore = true;
+    protected $zipfile;
     ///<summary></summary>
     /**
     * 
@@ -47,14 +53,14 @@ class IGKBalafonInstaller implements IIGKActionResult{
                 igk_wln_e("misconfiguration");
             }
         }
-        $zfile=igk_app()->session->getParam($key);
+        $this->zipfile = $zfile = igk_app()->session->getParam($key);
         igk_app()->session->setParam($key, null);
         session_write_close();
         igk_flush_start();
         igk_set_timeout(0);
         $action=new InstallerMiddleWareActions();
 
-
+        if ($this->zipcore){
         if(igk_server()->IGK_LOCAL_TEST){ 
             $action->BaseDir= igk_server()->TEST_BASE_DIR;
             $action->LibDir=igk_server()->LIB_DIR;
@@ -74,22 +80,18 @@ class IGKBalafonInstaller implements IIGKActionResult{
             }
             else{
 				igk_ilog("the zip file {$zfile} not present");
-                igk_flush_write("zip file not exits or is empty [{$zfile}]", "finish");
+                igk_flush_write("zip file not exits or is empty", "finish");
                 igk_flush_data();
                 igk_exit();
             }
         }
+    }
         igk_ilog("installer init install");
-        $action->add(new BalafonInstallerMiddelWare());
-        $action->add(new MaintenaceLibMiddleWare());
-        $action->add(new RenameLibaryMiddleWare());
-        $action->add(new ExtractLibaryMiddleWare());
-        $action->add(new ClearCacheMiddleWare());
-        $action->add(new SuccessMiddleWare());
+        $this->init_installer($action);
         $r = false;
         try{
         $r=$action->process();
-        if($from_upload && file_exists($action->CoreZip)){
+        if(($from_upload || igk_getv($action, "form_upload") ) && file_exists($action->CoreZip)){
             unlink($action->CoreZip);
         }
     } catch (Throwable $data){
@@ -99,7 +101,7 @@ class IGKBalafonInstaller implements IIGKActionResult{
         igk_flush_data();
 
         igk_app()->session->getParam($key, null);
-        igk_ilog("installer finish:".$r);
+        //igk_ilog("installer finish:".$r);
     }
     ///<summary></summary>
     /**
@@ -111,7 +113,20 @@ class IGKBalafonInstaller implements IIGKActionResult{
         igk_app()->session->setParam(self::INSTALLER_KEY, igk_html_uri($file));
         session_write_close();
         igk_io_store_ajx_uploaded_data(dirname($file), basename($file));
-		igk_ilog("installer stored data : ".$file .":".filesize($file));
+        $size = filesize($file);
+        if ($size==0){
+            igk_ilog(static::class.":no data to store : ".$file);
+        }else{
+		    igk_ilog("installer stored data : ".$file .":".$size);
+        }
         igk_exit();
+    }
+    protected function init_installer( InstallerMiddleWareActions $action){
+        $action->add(new BalafonInstallerMiddelWare());
+        $action->add(new MaintenaceLibMiddleWare());
+        $action->add(new RenameLibaryMiddleWare());
+        $action->add(new ExtractLibaryMiddleWare());
+        $action->add(new ClearCacheMiddleWare());
+        $action->add(new SuccessMiddleWare());
     }
 }

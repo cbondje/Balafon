@@ -2,14 +2,14 @@
 // @author: C.A.D. BONDJE DOUE
 // @file: 
 // @desc: 
-// @date: 20210425 04:44:57
+// @date: 20210423 12:32:50
 namespace IGK\Models;
 
 use IGK\Models\ModelBase;
 
-class Logginattempts extends ModelBase{
+class Backups extends ModelBase{
 		/** 
 		 */
-		protected $table = "%prefix%logginattempts"; 
+		protected $table = "%prefix%backups"; 
 	
 }

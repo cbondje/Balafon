@@ -24,6 +24,10 @@ $pad22="20px";
 $pad3="16px";
 $pad4="20px;";
 $pad_title="4px";
+
+$pad_size = "10px";
+$border_radius_size = "10px";
+
 $ctrl_cnf_index=0x1A0;
 $ctrl_options_zindex=$ctrl_cnf_index + 50;
 $ctrl_session_zindex=$ctrl_cnf_index + 100;
@@ -84,7 +88,7 @@ foreach($screen_resolutions as $k){
         }
     }
 }
-$def[$p]="padding:0px 10px;";
+$def[$p]="padding:0px {$pad_size};";
 $ctb=array();
 foreach($screen_resolutions as $scr){
     $xn=$scr."_screen";
@@ -155,7 +159,7 @@ $def["*.igk-transparent-bg"]="background-color:transparent !important;";
 $def[".igk-context-menu"]="{sys:posfix} display:none; min-height:3em; background-color:#e5e5e5; padding:0px; overflow:hidden; z-index:200;";
 $def[".igk-context-menu.igk-show"]="display:block !important;";
 $def[".igk-context-menu:before"]="content:' '; position:absolute; background-color:red; {sys:loc_l,loc_t} width:32px; height:100%";
-$def[".igk-context-menu > li"]="{sys:dispb,posr} padding-left: 36px; padding-right:10px;";
+$def[".igk-context-menu > li"]="{sys:dispb,posr} padding-left: 36px; padding-right:{$pad_size};";
 $def[".igk-context-menu > li a"]="{sys:dispb}padding-top:4px; padding-bottom:4px;";
 $def[".igk-context-menu > li a:hover"]="{sys:no-decoration}";
 $def[".igk-context-menu .igk-context-menu-sep"]="height: 1em;";
@@ -165,9 +169,9 @@ $def[".igk-lg-only"]="display:none !important;";
 $def[".igk-xlg-only"]="display:none !important;";
 $def[".igk-col"]="padding-left:{$pad2}; padding-right:{$pad2};";
 $def[".igk-row > .igk-col"]=
-$def["div > .igk-col"]="float:left; margin-top:10px; margin-bottom:10px;";
+$def["div > .igk-col"]="float:left; margin-top:{$pad_size}; margin-bottom:{$pad_size}";
 $def[".igk-row > .igk-col:not(:last-child)"]="";
-$def[".igk-row .igk-col .igk-row"]="margin:0px -10px;";
+$def[".igk-row .igk-col .igk-row"]="margin:0px -{$pad_size};";
 $def[".igk-form .igk-row"]="margin-top:auto !important;";
 $def[".igk-white-border"]="{sys:bdr-1}; border-color:white";
 $def[".igk-black-border"]="{sys:bdr-1}";
@@ -203,7 +207,7 @@ $def[".igk-body .err-403 .presentation a"]="color:#cecece;";
 $def[".igk-body .err-403 .presentation"]="background-color:#454545;";
 $def[".igk-menu-i"]="{sys:posr}";
 $def[".igk-connect-form"]="margin-left:auto; margin-right:auto; max-width: 400px;";
-$def[".igk-col-view-box"]="padding:10px; background-color: #fff; box-shadow: 0px 0px 2px #aaa; border:1px solid #ddd;";
+$def[".igk-col-view-box"]="padding:{$pad_size};  background-color: #fff; box-shadow: 0px 0px 2px #aaa; border:1px solid #ddd;";
 $def[".igk-signup-form"]="margin-left:auto; margin-right:auto; max-width: 400px;";
 $def[".igk-table-container"] = $def[".igk-tablehost"] = "overflow-x:auto";
 $def[".igk-submenu"]="{sys:dispn}";
@@ -367,8 +371,8 @@ $def[".igk-breadcrumbs > li"]="float:left;";
 $def[".igk-breadcrumbs > li.igk-active"]="[sysbgcl:igk-breadcrumbs-active-bg] [sysfcl:igk-breadcrumbs-active-fcl]";
 $def[".igk-breadcrumbs > li.igk-inactive"]="[sysbgcl:igk-breadcrumbs-inactive-bg] [sysfcl:igk-breadcrumbs-inactive-fcl]";
 $def[".igk-breadcrumbs > li:not(:last-child):after"]="{sys:floatr} content:'/'; padding:0px 8px;";
-$def[".igk-rm-margin"]="margin-right:-10px;margin-left:-10px;";
-$def[".igk-add-margin"]="margin-right:10px;margin-left:10px;";
+$def[".igk-rm-margin"]="margin-right:-{$pad_size}; margin-left:-{$pad_size}; ";
+$def[".igk-add-margin"]="margin-right:{$pad_size}; margin-left:{$pad_size}; ";
 $def["a > svg"]=
 $def["a.igk-svg-host"]="line-height:0;";
 $def["a.svg-a"]="{sys:dispib} width:32px; height:32px; [trans: all 0.2s ease-in-out]";
@@ -432,7 +436,7 @@ $def[".igk-js-notify .igk-notify-btn-close"]="display:block; color:white; margin
 $def[".igk-js-notify.igk-danger .igk-panel"]="color: #777";
 $def[".igk-notify-z"]="min-height:2.1em";
 $def["code.igk-code span.ln"]="color:#cecece; vertical-align:bottom; margin-right:10px";
-$def["code.igk-code span.ln"]="{sys:posr} color: [cl:codeLineForeColor, #cecece] z-index:10; padding-right:10px; [resolv:user-select: none;] display:table-cell !important;";
+$def["code.igk-code span.ln"]="{sys:posr} color: [cl:codeLineForeColor, #cecece] z-index:10; padding-right:{$pad_size}; [resolv:user-select: none;] display:table-cell !important;";
 $def["code.igk-code span.ln:before"]="{sys:posab, loc_l} background-color: [cl:codeLineBgColor, #444] z-index: -1; right:4px; top:-4px; bottom:-4px; margin-left:-12px; content:' ';";
 $def["code.igk-code > div"]="{sys:disptabr}";
 $def["code.igk-code:before"]="{sys:posab, loc_a} background-color: [cl:codeViewBgColor, #eee] content:' '; z-index:-1; ";
@@ -467,7 +471,7 @@ $def[".igk-tabcontrol > .igk-tab-h > ul > li > a"]="cursor:pointer;";
 $def[".igk-tabcontrol ul"]="margin:0px;";
 $def[".igk-tabcontrol > div:first-child > ul > li"]="{sys:dispib} padding:4px;";
 $def[".igk-tabcontrol > div:first-child > ul > li.igk-active"]="font-weight:300; font-size:1.2em; [sysbgcl:igk-tabcontrol-a-bg] [sysfcl:igk-tabcontrol-c-a-fcl]";
-$def[".igk-tabcontrol .igk-tabcontent"]="[sysbgcl:igk-tabcontrol-c-bg] padding:10px; margin-left:-10px; margin-right:-10px; overflow:hidden !important;";
+$def[".igk-tabcontrol .igk-tabcontent"]="[sysbgcl:igk-tabcontrol-c-bg] padding:{$pad_size}; margin-left:-{$pad_size}; margin-right:-{$pad_size}; overflow:hidden !important;";
 igk_css_regcolor("igk-tabcontrol-a-bg", "#eaeff2");
 igk_css_regcolor("igk-tabcontrol-c-bg", "#eaeff2");
 $def[".igk-glyph-home"]="font-size:1.4em";
@@ -553,7 +557,7 @@ $def[".igk-page-zone:before, .igk-page-zone:after"]="display:table;content:' ';"
 $def[".igk-page-zone"]="min-height:1px; padding-left:15px; padding-right:15px; margin-left:auto; margin-right:auto;";
 $def[".igk-container"]="[trans:width 0.9s ease-in-out]  margin-left:auto; margin-right:auto;";
 $def[".igk-container:after, .igk-float-container:after"]="display:table;clear:both;content:' '";
-$def[".igk-padd"]="padding-left:10px; padding-right:10px;";
+$def[".igk-padd"]="padding-left:{$pad_size}; padding-right:{$pad_size};";
 $def[".igk-row-container"]="padding-left:{$pad2}; padding-right:{$pad2}; ";
 $def[".igk-row-container:after"]="display:table;content:' '; clear:both;";
 $def[".igk-bodybox .igk-form-control::-moz-placeholder "]=
@@ -581,12 +585,15 @@ $m[".igk-xlg-only"]="display:block !important;";
 $m[".igk-xlg-dispn"]="display:none;";
 $def[".igk-php"]="font-family: consolas, courier new; color:#555; min-width:600px; min-height:200px; display:inline-block;";
 $def[".igk-cleara:after"]="clear:both; content:' '; display:table;";
-$def[".igk-row"]="padding:0px; margin-left: -10px; margin-right:-10px;";
+$def[".igk-row"]="padding:0px; margin-left: -{$pad_size}; margin-right:-{$pad_size};";
 $def[".igk-row-cell"]="float:left;";
 $def["igk-container .igk-row:not(:first-child)"]="margin-top: {$pad22};";
 $def[".igk-row:after"]="{sys:clearb}";
 $def[".igk-row:after, .igk-row:before"]="content:' '; display:table;";
 $def[".igk-row .igk-col-span"]="{sys:posab, loc_t, loc_r, loc_b}";
+$def[".igk-row:last-child"] = "margin-bottom: {$pad_size};";
+
+
 $m=$sm_screen;
 $pn="";
 foreach($ts as $s){
@@ -617,7 +624,7 @@ $def[".igk-mail"]="[sysbgcl:igk-mail-bg] [sysfcl:igk-mail-fcl]";
 $def[".igk-mail .igk-menu-bar"]="clear:both;";
 $def[".igk-mail a"]="{sys:no-decoration}";
 $def[".igk-mail .igk-btn"]="color:#888; background-color:#78ecff;";
-$def[".igk-mail .sign"]="border-top:1px solid #8d8; padding-top:10px;font-size:0.72em; background-color:#f1f1f1;";
+$def[".igk-mail .sign"]="border-top:1px solid #8d8; padding-top:{$pad_size}; font-size:0.72em; background-color:#f1f1f1;";
 $def[".igk-ms-dialog"]="{sys: posfix} display:none; [sysbgcl:igk-ms-dialog-bg][sysfcl:igk-ms-dialog-fcl]; left:0px; top:50%; width:100%; z-index:400;";
 $def[".igk-ms-dialog:before"]="content:' '; opacity:0.4; display:block; position:fixed; background-color:black; {sys:fitw, fith, loc_t, loc_l, loc_r, loc_b}";
 $def[".igk-ms-dialog.igk-show"]="display:block;";
@@ -661,7 +668,7 @@ $def[".igk-wc-splitter .w_3"]="color:#2A2FFF;";
 $def[".igk-wc-splitter .w_4"]="color:#4FB080;";
 $def[".igk-fragment"]="white-space: nowrap !important;overflow:hidden;";
 $def[".igk-fragment > .igk-fragment-page"]="{sys:dispib, alignt, fitw} padding-bottom:32px;";
-$def[".igk-panel-box"]="background-color:#fff; line-height:2.1em; border:1px solid #e5e5e5; padding:16px 10px; text-overflow:ellipsis;";
+$def[".igk-panel-box"]="background-color:#fff; line-height:2.1em; border:1px solid #e5e5e5; padding:16px {$pad_size}; text-overflow:ellipsis;";
 $def[".igk-android"]="";
 $def["body.igk-android"]="height:auto; overflow:auto;";
 $def[".igk-android.lnd-scape"]="";
@@ -702,7 +709,7 @@ $xxlg_screen[".igk-winui-dialogbox"]="width:880px";
 $def["ul.puce"]="padding-left:32px;";
 $def["ul.puce > li"]="list-style-type:disc;";
 $xsm_screen["ul.puce > li"]="list-style-type:none; padding-right:32px;padding-top:0.5em;";
-$def[".igk-winui-listbox"]="background-color: #444; color:#eee; padding-bottom:4px; margin-left:-10px; margin-right:-10px;";
+$def[".igk-winui-listbox"]="background-color: #444; color:#eee; padding-bottom:4px; margin-left:-{$pad_size}; margin-right:-{$pad_size};";
 $def[".igk-winui-listbox > li"]="display:block !important; border-right:4px #F60 solid;";
 $def[".igk-winui-listbox > li a"]="{sys:dispb} padding:8px; color:#EAEAEA";
 $def[".igk-winui-listbox > li.igk-active"]=" background-color:#F60; color:#EAEAEA";
@@ -710,11 +717,13 @@ $def[".igk-winui-listbox > li.igk-active a"]=" color:#EAEAEA";
 $def[".igk-community-node.inline ul > li"]="{sys:dispib}";
 $def[".igk-centerbox"]="{sys:disptable, fit}";
 $def[".igk-svg-lst"]="{sys:dispn}";
-$def[".igk-winui-toast"]="{sys:posfix} border-radius: 4px; [fcl:toastForeColor, #eee] [bgcl:toastBackgroundColor, #444] transform:translate(-50%); left:50%; bottom:2rem; padding:10px; [trans: 1.4s opacity ease-in-out] z-index:300;";
+$def[".igk-winui-toast"]="{sys:posfix} border-radius: 4px; [fcl:toastForeColor, #eee] [bgcl:toastBackgroundColor, #444] transform:translate(-50%); left:50%; bottom:2rem; padding:{$pad_size}; [trans: 1.4s opacity ease-in-out] z-index:300;";
 $def[".igk-winui-toast.igk-success"]="[fcl:toastSuccessForeColor, #ddd] [bgcl:toastSuccessBackground, #222]";
+$def[".igk-winui-toast.igk-danger"] = "[bgcl: toastDangerBackground, #EC4038] [fcl: toastDangerColor, #F0EFF5]";
+
 $def[".igk-body.igk-bgfilter-blur .igk-winui-toast"]="filter:none !important";
 $def[".igk-winui-span-group"]="display:inline-block";
-$def[".igk-winui-span-group > span"]="float:left; padding:0px 10px;";
+$def[".igk-winui-span-group > span"]="float:left; padding:0px {$pad_size};";
 $def[".igk-android .igk-framebox-dialog"]="width:100%;";
 $def[".igk-ajx-lnk"]="cursor:pointer;";
 $def[".igk-ajx-loader-bar"]="height:4px; position:absolute; left:0px; top:0px; width:100%; right:0px; z-index:10;";
@@ -725,7 +734,7 @@ $def[".igk-admin-menu.vertical > li a"]="{sys:dispb,no-wrap} color:[syscl:menuLi
 $def[".igk-admin-menu.vertical > li a:visited"]="color:[syscl:menuLinkColor];";
 $def[".igk-admin-menu.vertical > li a:hover:not(.igk-active)"]="background-color:#ccc; color:white;";
 $def[".igk-admin-menu.vertical > li a.igk-active"]="background-color:red; color:white;";
-$def[".igk-js-notify-box"]="position:fixed !important; {sys:loc_a} z-index:800; margin:10px;";
+$def[".igk-js-notify-box"]="position:fixed !important; {sys:loc_a} z-index:800; margin:{$pad_size}";
 $def[".igk-js-notify-box.igk-show .igk-js-notify"]="box-shadow:0 0 4px;";
 $def[".igk-js-notify-box.igk-show .igk-js-notify .content-z"]="{sys:dispib, alignl}";
 $def[".igk-hline-sep"]="border-top:1px solid [syscl:HLineSeparatorColor] ; margin-top:1.3em";
@@ -791,7 +800,7 @@ $def[".igk-winui-huebar + .huev"]="content: '0%'";
 $def[".igk-winui-gallery"]="{sys:no-wrap, no-overflow} height:200px;";
 $def[".igk-winui-gallery img"]="{sys:dispib, alignt,fit} [fit:cover]";
 $def[".igk-winui-bg-picturebox"]="{sys:posab, fit} background-size: cover;";
-$def[".igk-cookie-warn"]="{sys:no-overflow} padding:10px; text-align:center; [trans:height 0.5s ease-in]";
+$def[".igk-cookie-warn"]="{sys:no-overflow} padding:{$pad_size}; text-align:center; [trans:height 0.5s ease-in]";
 $def[".igk-cookie-warn .close"]="{sys:dispib, posab} width:32px; right:32px; margin-top:auto; ";
 $def[".igk-cookie-warn .close svg"]="{sys:fit}; fill:white";
 $def["code.code-php > div"]="{sys:no-wrap}";
@@ -840,10 +849,10 @@ $def[".igk-winui-more-view.igk-hide ~ *"]="display: none !important;";
 $def[".igk-code"]="font-family: 'consolas', sans-serif; font-size:8pt; background-color:[cl:codeBgColor, #eee]; "."border-radius:4px;"."padding:4px; ";
 $def[".igk-winui-panel-dialog"]="[trans: opacity 0.5s ease-out] {sys:posab, loc_a, dispflex} justify-content:center; align-items:center; z-index:100; opacity: 1.0;";
 $def[".igk-winui-panel-dialog::before"]="{sys:posfix, fit, loc_a} background-color: #000; opacity:0.5; content:' ';";
-$def[".igk-winui-panel-dialog.inner.inner-h .box"]="position: absolute; top:10px; bottom:10px;";
+$def[".igk-winui-panel-dialog.inner.inner-h .box"]="position: absolute; top:{$pad_size}; bottom:{$pad_size};";
 $def[".igk-winui-panel-dialog.inner.inner-h .box > .igk-content"]="overflow-y:auto; position:relative; top:0px; bottom:0px; margin-bottom:-100px;";
-$def[".igk-winui-panel-dialog > .box"]="{sys:dispib, loc_t} background-color: #fcfcfc; border:1px solid #dedede; "." box-shadow: 0 0 10px black;"." padding:10px; border-radius: 10px; ";
-$def[".igk-winui-panel-dialog > .box > .igk-title .close"]="{sys:posab, loc_r, no-padding} margin-right: 10px; width: 16px; height: 16px";
+$def[".igk-winui-panel-dialog > .box"]="{sys:dispib, loc_t} background-color: #fcfcfc; border:1px solid #dedede; "." box-shadow: 0 0 10px black;"." padding:{$pad_size}; border-radius: {$border_radius_size}; ";
+$def[".igk-winui-panel-dialog > .box > .igk-title .close"]="{sys:posab, loc_r, no-padding} margin-right: {$pad_size}; width: 16px; height: 16px";
 $def[".igk-winui-panel-dialog > .box > .igk-title .close svg"]="{sys:fit}";
 $def[".igk-winui-panel-dialog::after"]="content:' '; display:table;";
 $def[".igk-winui-panel-dialog.igk-hide"]="opacity: 0.0";
@@ -936,7 +945,7 @@ foreach([4, 10, 16, 20] as $pad){
     $def[".marg-r-".$pad]="margin-right: {$pad}px;";
 }
 $def[".igk-font-title-1"]="font-family: 'Roboto', 'Helvetica', 'Arial' , sans-serif; font-size: 3em;font-weight: 200;";
-$def[".clcheckbox"]="margin-right:10px;";
+$def[".clcheckbox"]="margin-right:{$pad_size};";
 $def[".badge"]="padding: 4px; border-radius: 4px; background-color: #eee; ";
 $def[".igk-bg-img"]="{sys:posfix, loc_a, fit, fitc}";
 
@@ -983,7 +992,7 @@ $theme->reg_keyFrames($def, "anim-autohide", "from { opacity: 1.0; } to { opacit
 
 
 
-$def["form.igk-debug-connect-form ul li:last-child"] = "margin-top:10px;";
+$def["form.igk-debug-connect-form ul li:last-child"] = "margin-top:{$pad_size};";
 
 
 /**

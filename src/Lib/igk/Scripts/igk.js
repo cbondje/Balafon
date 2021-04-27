@@ -14776,9 +14776,11 @@ Name:balafon.js
 					}
 					catch (ex) {
 						console.error(ex);
-						igk.winui.notify.showErrorInfo("Exception", "__invoke::Binding ::: " + key + " <br />" + ex
-							+ "<p>" + ex.stack + "</p>"
-							+ "<div>From : Source Code</div><pre style=\"max-height:200px; overflow-y:auto;\">" + e + "</pre>");
+						igk.winui.notify.showErrorInfo("Exception",
+							"__invoke::Binding ::: " + key + " <br />" + ex
+							+ "<p class=\"stack\" style=\"max-height: 240px; font-family:'courier new'; line-height:1.5; font-size:8pt; overflow: auto\">" + ex.stack.split("\n").join("<br />") + "</p>"
+							//+ "<div class=\"source\" >From : Source Code</div><pre style=\"max-height:200px; overflow-y:auto;\">" + e + "</pre>
+						+"");
 					}
 				}
 			};
@@ -15677,7 +15679,7 @@ Name:balafon.js
 
 
 
-
+		var defStyle = " google-Roboto";
 		// merge with notify access.
 		createNS("igk.winui.notify", {
 			setFilterClass: function (f) {
@@ -15900,8 +15902,7 @@ Name:balafon.js
 					settings = b.settings;
 
 				}
-
-
+				
 
 				var q = igk.createNode("div")
 					.addClass("igk-notify");
@@ -15930,16 +15931,17 @@ Name:balafon.js
 			},
 			showError: function (msg) {
 				var q = igk.createNode("div")
-					.addClass("igk-notify igk-notify-danger")
+					.addClass("igk-notify igk-notify-danger"+defStyle)
 					.setHtml(msg);
 				igk.winui.notify.showMsg(q.o.outerHTML, "igk-danger");
 			},
 			showErrorInfo: function (title, msg) {
 				var q = igk.createNode("div")
-					.addClass("igk-notify igk-notify-danger");
+					.addClass("igk-notify igk-notify-danger"+defStyle);
 				q.add("div").addClass("igk-title-4").setHtml(title);
 				q.add("div").addClass("igk-panel igk-notify-panel").setHtml(msg);
-				igk.winui.notify.showMsg(q.o.outerHTML, "igk-danger");
+				var msg = q.o.outerHTML.split("\n").join("<br />");
+				igk.winui.notify.showMsg(msg, "igk-danger");
 			},
 			close: function () {
 				// close the top notification dialog
@@ -16612,9 +16614,7 @@ Name:balafon.js
 
 	};
 
-	igk.winui.reg_event(window, "unload", function (evt) {
-		// page unload
-	});
+	 
 
 	function __global_ready(evt) {
 		igk.context = "global_ready";
@@ -20213,11 +20213,11 @@ igk.ready(function () {
 			}
 		},
 		initAutoTransitionProperties: _initTransitionProperties,
-		loadLinks: function (t) {
+		loadLinks: function (t) {			
 			for (var i = 0; i < t.length; i++) {
 				var c = document.createElement("link");
 				c.setAttribute("href", t[i]);
-				c.setAttribute("rel", "stylesheet");
+				c.setAttribute("rel", "stylesheet");				
 				igk.dom.body().add(c);
 			}
 		},
@@ -23289,12 +23289,10 @@ igk.system.createNS("igk.system", {
 
 
 // ajx button pickfile
-
 (function () {
 	igk.winui.initClassControl("igk-ajx-pickfile", function (
 		// 	n,m,o
-	) {
-
+	){
 		var q = this;
 		var u = this.getAttribute("igk:uri");
 		if (u == null) {
@@ -23305,7 +23303,8 @@ igk.system.createNS("igk.system", {
 		var p = igk.JSON.parse(s, this);
 		if (typeof (p) != 'object') {
 			p = {};
-		}
+		} 
+
 		if (q.o.tagName.toLowerCase() == "input") {
 			var n = igk.dom.replaceTagWith(q, "div");
 			var v = q.getAttribute("value");
@@ -23314,6 +23313,7 @@ igk.system.createNS("igk.system", {
 			n.o.removeAttribute("type");
 			n.o.removeAttribute("igk:uri");
 			n.o.removeAttribute("igk:data");
+			n.o.removeAttribute("igk:uri");
 			q = n;
 		}
 		q.reg_event('click', function (evt) {
@@ -23321,7 +23321,6 @@ igk.system.createNS("igk.system", {
 			evt.stopPropagation();
 			var cp = {};
 			cp.type = p && p.type && p.type.exec("(p|l)") ? p.type : 'p';
-
 			cp.complete = (p ? p.complete : null) || function (s) {
 				if (this.isReady()) {
 					if (p && p.complete) {
@@ -23343,7 +23342,6 @@ igk.system.createNS("igk.system", {
 				if (!_pl)
 					_pl = $igk("#igk-pickfile-progress");
 				_pl.each_all(function () {
-
 					switch (cp.type) {
 						case "p":
 							this.setHtml(Math.round((e.loaded / e.total) * 100) + "%");
@@ -23357,9 +23355,7 @@ igk.system.createNS("igk.system", {
 			};
 			cp.start = p ? p.start : null;
 			cp.accept = p ? p.accept : null;
-
 			//console.debug(cp);
-
 			igk.system.io.pickfile(u, cp);
 		});
 
@@ -23916,7 +23912,7 @@ igk.system.createNS("igk.system", {
 			}
 			// delete gl;
 			// igk.show_prop(gl);
-			igk.winui.reg_event(window, "unload", function () {
+			igk.winui.reg_event(window, "pagehide", function () {
 				gl = null;
 				q.remove();
 				});
@@ -23999,7 +23995,7 @@ igk.system.createNS("igk.system", {
 				};
 				m_gl = gl;
 
-				igk.winui.reg_event(window, "unload", function () {
+				igk.winui.reg_event(window, "pagehide", function () {
 					igk.html5.drawing.FreeContext(gl);
 				});
 				_def = ol;
@@ -24237,8 +24233,7 @@ igk.system.createNS("igk.system", {
 // window.onunload = function(){
 
 // };
-// igk.winui.reg_event(window, "unload",function(evt){
-
+ 
 // igk.ajx.post("http://192.168.0.50/igkdev/testapi/clien_exit");
 // });
 
@@ -25263,5 +25258,54 @@ igk.system.createNS("igk.system", {
 			}
 		});
 	});
+
+})();
+
+(function (){
+	// col hover table
+	var cellindex = -1;
+
+	function rmStyle(q, index){
+		q.qselect("tr td, tr th").each_all(function(){
+			if (this.o.cellIndex == index){
+				this.rmClass("hover");
+			}
+		});
+	};
+	function addStyle(q, index){
+		q.qselect("tr td, tr th").each_all(function(){
+			if (this.o.cellIndex == index){
+				this.addClass("hover");
+			}
+		});
+	};
+	igk.ctrl.registerAttribManager("igk-table-col-hover",{		
+	});
+	var time_= 0;
+	igk.ctrl.bindAttribManager("igk-table-col-hover", function(n,m){
+		var q = this;
+		this.on("mouseover", function(e){
+			if (("cellIndex" in e.target)&&(/TD|TH/.test(e.target.tagName))){
+				clearTimeout(time_);
+				time_ = 0;
+				if (cellindex !=e.target.cellIndex){
+					rmStyle(q, cellindex);
+					cellindex = e.target.cellIndex;
+					addStyle(q, cellindex);
+				}
+			}
+		}).on("mouseout", function(e){
+			// console.debug("mouse out : "+e.target.tagName);
+			if (/TD|TH/.test(e.target.tagName)){
+				clearTimeout(time_);
+				time_ = setTimeout(function(){
+					rmStyle(q, cellindex);
+					cellindex = -1;
+				}, 500);
+				
+			}
+		});
+	});
+ 
 
 })();

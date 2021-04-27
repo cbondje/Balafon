@@ -1417,5 +1417,22 @@ function igk_html_render_attribs($attribs){
 	}
 	return ltrim($o);
 }
+
+
+function igk_html_installer_button($node, $class, $text, $update="/update", $update_target="#update_target"){
+    $c_uri= igk_register_temp_uri($class);
+    $n = igk_html_node_ajxpickfile(
+    $c_uri."/upload", "{complete:igk.core.install('".$c_uri.$update."', '".
+        $update_target."'),".
+        "progress:igk.core.progress('".$update_target."'),"."accept:'.zip'"."}")
+    ->setAttribute("value", $text);
+    $src = file_get_contents(IGK_LIB_DIR.'/Views/Scripts/configs/installer.js'); 
+    $node->addScript()->Content= $src;
+    $node->add($n);
+    return $n;
+    
+
+}
+
 igk_load_library("html_ob");
 igk_load_library("html_json");

@@ -107,6 +107,22 @@ abstract class ControllerExtension{
         } 
         return false;
     }
+
+    public static function db_change_column(BaseController $ctrl, $table, $info){
+        $ad = igk_get_data_adapter($ctrl);         
+        if ($ad->grammar->exist_column($table, $info->clName)){
+            if ($query = $ad->grammar->change_column($table, $info)){                
+                if ($r = $ad->sendQuery($query)){                    
+                    if ($info->clLinkType){
+                        $query_link = $ad->grammar->add_foreign_key($table, $info);
+                        $ad->sendQuery($query_link);
+                    }
+                    return true;
+                }
+            }
+        }  
+    }
+
     /**
      * resolv controller name key
      * @param BaseController $ctrl 
@@ -438,9 +454,10 @@ abstract class ControllerExtension{
             $db=igk_get_data_adapter($ctrl, true);
             if($db){
                 if($db->connect()){
-                    $v_tblist=array();
-                    foreach($tb as $k=>$v){
-                        $v_tblist [$k]=$k;
+                    $tables = igk_getv($tb, "tables");
+                    $v_tblist= [];
+                    foreach(array_keys($tables) as $k){
+                        $v_tblist[$k]=$k;
                     }
                     $func(); 
 				    $db->dropTable($v_tblist);
@@ -528,7 +545,14 @@ abstract class ControllerExtension{
     }
 
 
-    // +| Routing macros
+    
+    /**
+     * Routing macros
+     * @param BaseController $controller 
+     * @param mixed $routename 
+     * @param mixed|null $path 
+     * @return mixed 
+     */
     public static function getRouteUri(BaseController $controller, $routename, $path=null){
         if ($route = Route::GetRouteByName($routename)){
             return RouteActionHandler::GetRouteUri($route, $controller, $path); 
@@ -536,7 +560,14 @@ abstract class ControllerExtension{
         return null;
     }
 
-    // +| Model Utility extension macros
+    /**
+     *  Dispatch model utility 
+     * @param BaseController $controller 
+     * @param mixed $modelname 
+     * @param mixed $funcName 
+     * @param mixed $args 
+     * @return mixed 
+     */
     public static function dispatchToModelUtility(BaseController $controller, $modelname, $funcName, ...$args){
         if ($mod = $controller->loader->model($modelname)){
             $func = $funcName;

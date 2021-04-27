@@ -20,7 +20,10 @@
 					if (this.isReady()){ 
 						this.setResponseTo(p.o);
 						var r = $igk($igk(i).o.form).select('.c-opts').getItemAt(0);
-						r.setHtml(p.select('.c-opts').getItemAt(0).getHtml()).init();
+						var tp = p.select('.c-opts').first();
+						if (r && tp){
+							r.setHtml(tp.getHtml()).init();
+						}
 					}
 				});
 			})(tq);
