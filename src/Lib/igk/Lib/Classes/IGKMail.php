@@ -92,9 +92,7 @@ class IGKMail extends IGKObject implements IIGKMailAttachmentContainer {
     private function __sendMailTLS($headers, $message){
         if(!igk_network_available()){
             return 0;
-        }
-        // igk_ilog("send tls mail");
-        // igk_debug(1);
+        } 
         $errno=0;//IGK_STR_EMPTY;
         $errstr=IGK_STR_EMPTY;
         $host=$this->m_smtphost;

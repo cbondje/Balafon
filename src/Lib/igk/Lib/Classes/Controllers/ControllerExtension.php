@@ -300,10 +300,11 @@ abstract class ControllerExtension{
  
         $uses = [];
         $gc = 0;
-        $extends = "$ns\\Models\\ModelBase";
+        $extends = implode("\\", array_filter([$ns, "Models\\ModelBase"]));
+
         $c = $ctrl->getSourceClassDir()."/Models/";
         if( ($name!="ModelBase") && file_exists($c."/ModelBase.php")){
-            $uses[] = "$ns\\Models\\ModelBase";
+            $uses[] =  implode("\\", array_filter([$ns, "Models\\ModelBase"]));
             $gc = 1;
         }else {
             $uses[] = ModelBase::class;
@@ -326,12 +327,13 @@ abstract class ControllerExtension{
             $o .= "\t/**\n\t *override primary key \n\t */\n";
             $o .= "\tprotected \$primaryKey = \"{$key}\"; ".PHP_EOL;
         }
+        $base_ns = implode("\\", array_filter([$ns, "Models"]));
         $builder = new PHPScriptBuilder();
         $builder->type("class")
         ->author(IGK_AUTHOR)
         ->extends($extends)
         ->name($name)
-        ->namespace($ns."\\Models")
+        ->namespace($base_ns)
         ->defs($o)
         ->uses($uses);
 
@@ -339,10 +341,10 @@ abstract class ControllerExtension{
     }
     private static function GetDefaultModelBaseSource(BaseController $ctrl){
         $o = "";
-        $ns =  self::ns($ctrl, ""); 
+        $ns = implode("\\", array_filter([self::ns($ctrl, ""), "Models"])); 
         $o = "<?php ".PHP_EOL;
         if ($ns){
-            $o .= "namespace $ns\\Models; ".PHP_EOL;
+            $o .= "namespace $ns; ".PHP_EOL;
         }                
         $o .=  "use ".ModelBase::class." as Model;".PHP_EOL;
 

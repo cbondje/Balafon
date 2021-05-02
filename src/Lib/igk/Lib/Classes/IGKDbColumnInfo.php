@@ -129,6 +129,7 @@ final class IGKDbColumnInfo extends IGKObject {
         $this->clType="Int";
         $this->clTypeLength=11;
         $this->clNotNull=false; 
+        
         if(is_array($array)){
             $t=get_class_vars(get_class($this));
             foreach($array as $k=>$v){

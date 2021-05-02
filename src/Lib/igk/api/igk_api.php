@@ -132,7 +132,7 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
         $_data=array();
         $n=igk_createNode("div");
         $_data["geninstall"]=function($ctrl) use ($n, $_api){
-            $v=igk_getctrl($ctrl);
+            $v=igk_getctrl($ctrl, false);
             if(!$v){
                 $n->addDiv()->Content="/!\\ Controller [".$ctrl."] not found";
                 return false;

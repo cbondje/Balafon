@@ -106,7 +106,7 @@ function igk_get_app_ctrl(){
     $tab=explode('?', $v_ruri);
     $uri=igk_getv($tab, 0);
     $page="/".$uri;
-    $actionctrl=igk_getctrl(IGK_SYSACTION_CTRL);
+    $actionctrl=igk_getctrl(IGK_SYSACTION_CTRL,false);
     if($actionctrl && ($e=$actionctrl->matche($page))){
         $n=igk_getv(igk_getquery_args($e->value), "c");
         $ctrl=igk_getctrl($n, false);

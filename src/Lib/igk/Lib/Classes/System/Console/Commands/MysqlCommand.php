@@ -3,6 +3,7 @@ namespace IGK\System\Console\Commands;
 
 use IGK\System\Console\AppExecCommand;
 use IGK\System\Console\Logger;
+use IGKSQLQueryUtils;
 
 class MySQLCommand extends AppExecCommand{
     var $command = "--db:mysql";
@@ -26,7 +27,7 @@ class MySQLCommand extends AppExecCommand{
         Logger::print($this->desc);
         Logger::print("");
         Logger::info("options*:");
-        foreach(explode("|", "initdb|dropdb") as $k){
+        foreach(explode("|", "initdb|dropdb|preview_create_query") as $k){
             Logger::print("\t{$k}");
         }
     }
@@ -38,6 +39,7 @@ class MySQLCommand extends AppExecCommand{
 
         switch(igk_getv($command->options, "--action")){
             case null: 
+                Logger::danger("no --action defined");
                 return;
             case "initdb":
                 foreach ($c as $m) {
@@ -83,6 +85,9 @@ class MySQLCommand extends AppExecCommand{
                     }
                 }
                 return 1;
+                case "preview_create_query":
+                    return $this->preview_create_query($ctrl, ...array_slice(func_get_args(), 2));
+                    break;
         }
 
 
@@ -111,4 +116,30 @@ class MySQLCommand extends AppExecCommand{
         }
         return -1;
     }
+    private  function preview_create_query($ctrl, $table){
+        igk_environment()->mysql_query_filter = 1;
+        $ad = igk_get_data_adapter(IGK_MYSQL_DATAADAPTER);
+        $ad->setSendDbQueryListener($this);
+        if (!($ctrl && ($ctrl = igk_getctrl($ctrl, false)))){
+            return -1;
+        }
+        Logger::info("preview create query");
+
+        igk_environment()->mysql_query_filter = 1;
+        $ad = igk_get_data_adapter(IGK_MYSQL_DATAADAPTER);
+        
+        if (($ctrl->getDataAdapterName() == IGK_MYSQL_DATAADAPTER)){
+            $ad->setSendDbQueryListener($this);
+            $tb = igk_db_get_table_name($table, $ctrl);
+            $def = igk_db_get_table_info($tb);
+            if ($def){
+                $query = IGKSQLQueryUtils::CreateTableQuery($tb, $def["ColumnInfo"], $def["Descriptions"]);
+                Logger::print($query);
+            }
+            $ad->setSendDbQueryListener(null);
+        } else {
+            Logger::danger("not a create query");
+        }
+
+    }   
 }

@@ -12,7 +12,9 @@ if (defined('IGK_SYS_CONFIG_FILE'))
 use IGK\Controllers\BaseController;
 
 
-//+Configuration data
+//+ |----------------------------------------------------------- 
+//+ | Configuration data
+//+ |-----------------------------------------------------------
 define('IGK_ENV_DB_INIT_CTRL', 'sys://env/init_ctrl');
 define('IGK_LOCAL_DEBUGGING', 1);
 define('IGK_NODESTROY_ON_FATAL', 1);
@@ -22,10 +24,9 @@ define('IGK_SYS_CONFIG_FILE', 1);
 //+ define('IGK_ENV_PRODUCTION', 1);
 define('IGK_TRACE_LOG', 1);
 
-
-
-
-//+ ENVIRONMENT SETTING KEYS - DO NOT REPLACE THAT VALUES
+//+ |----------------------------------------------------------- 
+//+ | ENVIRONMENT SETTING KEYS - DO NOT REPLACE THAT VALUES
+//+ |----------------------------------------------------------- 
 define('IGK_AJX_BINDSTYLES', 1);
 define('IGK_ATTACHCHILD_FLAG', 2);
 define('IGK_ATTACHDISPOSE_FLAG', 3);
@@ -451,8 +452,8 @@ define("IGK_ENCODINGTYPE", "text/html; charset=utf-8");
 define("IGK_SERVERNAME", "IGKDEV");
 define("IGK_STR_EMPTY", "");
 define("IGK_MAX_CONFIG_PWD_LENGHT", 5);
-define("IGK_DEFAULT_FOLDER_MASK", 0775);
-define("IGK_DEFAULT_FILE_MASK", 0775);
+define("IGK_DEFAULT_FOLDER_MASK", 0755);
+define("IGK_DEFAULT_FILE_MASK", 0755);// 775 for development
 define("IGK_LF", "\n");
 define("IGK_CLF", "\r\n");
 define("IGK_DATA_FOLDER", "Data");

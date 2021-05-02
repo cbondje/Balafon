@@ -297,7 +297,10 @@ $command = [
             };
         }
         return 200;
-    }, "show help or activate help option for a command"]
+    }, "show help or activate help option for a command"],
+    "--init" => [function ($arg, $command) {
+        
+    }, "init configuration file"]
 ];
 
 //-------------------------------------------------------------------------------
@@ -314,19 +317,17 @@ $command = [
 
 // }
 
-//-------------------------------------------------------------------------------
-// + register command
-// +
-// AppCommand::Register("--definition", function($v, $command){
-//     if ($command->exec){
-//         return;
-//     } 
-//     igk_exit();
-// });
-
-// require_once(IGK_LIB_DIR."/SysMods/InstallSiteManager/IGKInstallSiteConfig.php");
-// $dir = "/Volumes/Data/wwwroot/sites/demo_install";
-// $m = IGK\System\Installers\InstallSite::Install($dir);
+if (isset($argv[1]) && $argv[1]=="--init"){
+    //-----------------------------------------------------------------------------
+    // | initialize balafon configuration 
+    // |
+    $init_data = igk_createxmlnode("balafon");
+    $config = new IGK\System\Console\AppConfigs();
+    $config->init($init_data);
+    igk_io_w2file(getcwd()."/balafon.config.xml", $init_data->render());
+    exit(1);
+}
+ 
 //--------------------------------------------------------------------------------
 // | Run the application
 // |

@@ -6,13 +6,10 @@ igk.system.createNS("igk.core", {
 	var q = $igk(t).first();
 	// console.debug("install start");
 	return function(e){
-		//console.debug("install start "+uri+ " base ::: complete"+e.readyState);
-		
 		if ((e.readyState != 4) || (e.status!=200))
 			return;   
 		if (window.EventSource){
 			// console.debug("start event source "+uri);
-
 			var source = new EventSource(uri);			
 			source.addEventListener("message", function(e){
 				console.debug("message : "+e.data);
@@ -55,8 +52,7 @@ igk.system.createNS("igk.core", {
 	if (!_s)
 		_s = "Progress:";
 	var q = $igk(t).first();
-	return function(e){
-		// console.debug("start progress");
+	return function(e){ 
 		q.setHtml(_s+( Math.round((e.loaded / e.total) * 100)) + "%");
 	};
 }}); 

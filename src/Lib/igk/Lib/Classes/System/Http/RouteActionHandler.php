@@ -378,7 +378,15 @@ class RouteActionHandler
         $this->verbs = $verb;
         return $this;
     }
-
+    /**
+     * shortcut function
+     * @param array $verb 
+     * @return mixed 
+     */
+    public function verbs(array $verb)
+    {
+        return $this->setVerb($verb);
+    }
     public static function GetRouteUri(RouteActionHandler $route, BaseController $controller, $path=null){
         $t = $route->gettype();
         $c = "";

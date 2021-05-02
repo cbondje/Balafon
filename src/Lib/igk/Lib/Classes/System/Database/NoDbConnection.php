@@ -62,4 +62,14 @@ class NoDbConnection{
     * 
     */
     function setOpenCallback(){}
+    /** */
+    function flushForInitDb(){}
+
+    public function __call($n, $name){
+        return null;
+    }
+    public static function __callStatic($name, $arguments)
+    { 
+        return null;        
+    }
 }

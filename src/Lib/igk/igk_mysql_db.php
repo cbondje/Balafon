@@ -25,16 +25,31 @@ if(!function_exists("mysqli_connect")){
 ///<param name="pwd"></param>
 /**
 * 
-* @param mixed $srv
+* @param mixed|object $srv
 * @param mixed $dbu
 * @param mixed $pwd
 */
-function igk_db_connect($srv, $dbu, $pwd, $options=null){
+function igk_db_connect($srv, $dbu=null, $pwd=null, $options=null){
     if(empty($srv))
         return false;
     $g=IGKDBQueryDriver::GetFunc("connect") ?? igk_die("not connect found for !!!! ".IGKDBQueryDriver::$Config["system"]);
     if(IGKDBQueryDriver::Is("MySQLI")){
-        $b = @$g($srv, $dbu, $pwd);
+        $b = null;
+        if (is_object($srv)){
+            if (empty($port = $srv->port)){
+                $port = null;
+            }
+            $mg = [
+                $srv->server,
+                $srv->user,
+                $srv->pwd,
+                null,
+                $port
+            ];  
+            $b = @$g(...$mg);
+        } else {
+            $b = @$g($srv, $dbu, $pwd);
+        }
         if (is_resource($b)){
             if ( $options && isset($options["charset"])){
                 mysqli_set_charset($b, $options["charset"]);
@@ -67,10 +82,8 @@ function igk_db_escape_string($v, $r=null){
 			}
             return $g($b, $v);
 		}
-        $msg="Error: ".__FUNCTION__." - ResId :{$b} - for :".$v. " func is MySQLi ". $g;
-        igk_ilog($msg);
-        igk_die($msg);
-        return $v;
+        // no driver to espace string default function
+        return addslashes($v); 
     }
     if(!empty($g))
         return $g($v);
@@ -334,6 +347,7 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
     private static $_initAdapter; 
 
     const SELECT_DATA_TYPE_QUERY = 'SELECT distinct data_type as type FROM INFORMATION_SCHEMA.COLUMNS';
+    const SELECT_VERSION_QUERY = "SHOW VARIABLES where Variable_name='version'";
     ///<summary></summary>
     ///<param name="ctrl" default="null"></param>
     /**
@@ -352,7 +366,7 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
                     $supportedList[] = strtolower($r->type);
                 } 
             }
-        } 
+        }       
         return in_array(strtolower($type), $supportedList); 
     }
     ///<summary></summary>
@@ -362,18 +376,15 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
     protected function __createManager(){
         if(class_exists(IGKDBQueryDriver::class)){
             $this->makeCurrent();
-            $cnf=$this->app->Configs;
-            $s=IGKDBQueryDriver::Create($cnf->db_server, $cnf->db_user, $cnf->db_pwd);
-            if($s == null){
-                ob_start();
-                igk_wln("CreateManager Error");
-                igk_wln("Error : ". igk_mysql_db_error());
-                igk_wln("server : ".$cnf->db_server);
-                igk_wln("user : ".$cnf->db_user);
-                igk_wln("pwd : :-)");
-                $v= ob_get_clean();
-
-                igk_set_env("sys://db/error", $v);
+            $cnf=$this->app->Configs; 
+            $s=IGKDBQueryDriver::Create((object)[
+                "server"=>$cnf->db_server,
+                "user"=>$cnf->db_user,
+                "pwd"=>$cnf->db_pwd,
+                "port"=>$cnf->db_port
+            ]);
+            if($s == null){ 
+                igk_set_env("sys://db/error","no db manager created");
                 $s=new NoDbConnection();
             }
             else{

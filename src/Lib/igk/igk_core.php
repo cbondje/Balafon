@@ -369,7 +369,7 @@ function igk_wln($msg=""){
                 }
                 igk_wl($lf);
             }
-            else{
+            else{ 
                 igk_wl(__FUNCTION__."::msg is null".$lf);
             }
         }

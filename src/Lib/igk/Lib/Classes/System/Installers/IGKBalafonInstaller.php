@@ -86,7 +86,8 @@ class IGKBalafonInstaller implements IIGKActionResult{
             }
         }
     }
-        igk_ilog("installer init install");
+
+        // igk_ilog("installer init install");
         $this->init_installer($action);
         $r = false;
         try{
@@ -100,8 +101,7 @@ class IGKBalafonInstaller implements IIGKActionResult{
         igk_flush_write($r ? "ok": "failed", "finish");
         igk_flush_data();
 
-        igk_app()->session->getParam($key, null);
-        //igk_ilog("installer finish:".$r);
+        igk_app()->session->getParam($key, null); 
     }
     ///<summary></summary>
     /**

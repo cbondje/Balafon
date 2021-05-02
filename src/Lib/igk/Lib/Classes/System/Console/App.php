@@ -58,7 +58,7 @@ class App{
         if ($basePath === null){
             $basePath = getcwd();
         }
-
+        igk_environment()->set("app_context", "balafon");
         $app->basePath = $basePath;
         Logger::SetLogger(new ConsoleLogger($app));
         $app->boot();

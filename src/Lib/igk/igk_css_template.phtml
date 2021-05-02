@@ -591,7 +591,7 @@ $def["igk-container .igk-row:not(:first-child)"]="margin-top: {$pad22};";
 $def[".igk-row:after"]="{sys:clearb}";
 $def[".igk-row:after, .igk-row:before"]="content:' '; display:table;";
 $def[".igk-row .igk-col-span"]="{sys:posab, loc_t, loc_r, loc_b}";
-$def[".igk-row:last-child"] = "margin-bottom: {$pad_size};";
+$def[".igk-row:last-child:not(:first-child)"] = "margin-bottom: {$pad_size};";
 
 
 $m=$sm_screen;
@@ -642,7 +642,7 @@ $def[".igk-configpage-editor .close-bar"]="background-color: #888";
 $def[".igk-configpage-editor .close-bar:hover"]="background-color: #eee";
 $def[".igk-bodypage"]="{sys:fitw,fith,posr} overflow:hidden;";
 $def["body .igk-session-block"]="{sys:posfix} [sysbgcl:sessionBlockBackground] [sysfcl:sessionBlockColor] box-shadow: 0px 4px 16px; border-radius: 4px;";
-igk_css_regcolor('sessionBlockBackground', "indigo", 1);
+igk_css_regcolor('sessionBlockBackground', "#ededed", 1);
 $def[".igk-session-block .cllabel"]="{sys:dispb,alignt,alignl}";
 $def[".igk-session-button"]="[res:session_btn]; [trans: all 0.2s] cursor:pointer; z-index:{$ctrl_session_zindex}; top:0px; opacity:0.1";
 $def[".igk-session-button:hover"]="opacity:1.0";
@@ -675,7 +675,7 @@ $def[".igk-android.lnd-scape"]="";
 $ptr_def=$theme->getPrintMedia();
 $def[".igk-btn.dispn"]="display:none !important";
 $def[".igk-section-title"]="{sys:no-wrap, ellipsis, no-overflow}";
-$def[".igk-table-host"]="overflow-x:auto !important; width:100%; min-height: 320px; max-height:100%;";
+$def[".igk-table-host"]="overflow-x:auto !important; width:100%; max-height:100%;";
 $def[".igk-comm-lnk, .igk-comm-style"]="{sys:dispib} width:32px; height:32px; cursor:pointer;";
 $def[".igk-comm-lnk > .igk-svg-symbol"]="{sys:fit} border:none !important; fill:white; ";
 $def[".igk-comm-lnk > .igk-svg-symbol.facebook:hover"]="fill:#07F";

@@ -34,12 +34,12 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
             "alt"=>__("tip.editdatabase")
         ));
     }
-    ///<summary></summary>
+    ///<summary>send query request</summary>
     /**
-    * 
+    * send query request
     */
     public function __db_query_r_ajx(){
- 
+        $mysql=igk_get_data_adapter(IGK_MYSQL_DATAADAPTER, true);
         $q=igk_getr("clQuery");
         if(empty($q) || !igk_is_conf_connected())
             igk_exit();
@@ -47,7 +47,17 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
             igk_wl("/!\\". __("Query not allowed : {0}",$q));
             igk_exit();
         }
-        if($q && ($mysql=igk_get_data_adapter(IGK_MYSQL_DATAADAPTER, true)) && $mysql->connect()){
+        if (preg_match("/^SELECT /i",$q)){
+            $g = $mysql->sendQuery("SELECT COUNT(*) as count FROM (".$q.") as dummy");
+
+            
+            if ($g->getRowAtIndex(0)->count > 50){
+                $q .= " Limit 1, 50";
+            } 
+        }
+ 
+
+        if($q){
             $this->setParam("query", $q);
             $g=$mysql->sendQuery($q, true);
             if($g && ($g->RowCount > 0)){
@@ -55,15 +65,16 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
                 $selected = 1;
                 $dv=igk_createnode("div");
                 $dv->addDiv()->Content=$q;
-                $dv->addDiv()->tablehost()
-                ->addDbResult($g, $uri, $selected, igk_app()->Configs->db_query_page_result ?? 50);
+                $dv->div()
+                ->setStyle("min-height:400px;")
+                ->tablehost()->setClass("posab fit overflow-y-a")
+                ->addDbResult($g, $uri, $selected, igk_app()->Configs->db_query_page_result ?? 50, "#query-s-r");
                 $dv->RenderAJX();
             } else {               
                 if ($error = $mysql->getError()){
                         igk_wl("SQLError: ", $error);
                 }               
-            }
-            $mysql->close();
+            } 
         } 
     }
     public function page($view=0){
@@ -358,8 +369,8 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
     private function _showDataBaseBackup($frm){
         $v_dir= igk_io_applicationdir()."/".IGK_BACKUP_FOLDER;
         $bckdiv=$frm->addDiv();
-        igk_html_add_title($bckdiv, "title.Backup");
-        $frm->addHSep();
+        $bckdiv->h2()->Content = __("title.backup");
+   
         $v_table=$frm->addTable()->setClass('igk-table-striped');
         $v_table->setCallback("getIsVisible", "return \$this->HasChilds;");
         $v_hasfile=false;
@@ -572,12 +583,12 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
     * shows datas base
     */
     private function _view_conf_datas($zdiv){
-        $zdiv->clearChilds();
-        $zdiv->addSectionTitle(5)->Content=__("Datas");
+        $zdiv->clearChilds(); 
         $frm=null;
         $mysql=igk_get_data_adapter(IGK_MYSQL_DATAADAPTER, true);
         $v_table=null;
         $pan=$zdiv->addPanelbox();
+        $pan->h2()->Content=__("Datas");
         $h=$pan->addRow();
         $div1=$h->addCol("igk-col-3-3")->addDiv()->setClass("db_info");
         $conf_title=null;
@@ -619,8 +630,9 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
     */
     private function _view_conf_general($zdiv){
         $pan=$zdiv->addPanelBox();
-        igk_html_add_title($pan->addDiv(), "title.Config");
-        $pan->addHSep();
+        $pan->h3()->Content = __("Mysql Database Configuration");
+        $pan->div()->p()->addArticle(null, "help/mysql.db.config.help");
+
         $frm=$pan->addForm();
         $frm->setStyle("max-width:300px;");
         $frm["method"]="POST";
@@ -631,17 +643,11 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
 				"dbServer"=>["attribs"=>["class"=>"igk-form-control required" , "placeholder"=>__("Server"), "value"=>$cnf->db_server]],
 				"dbUser"=>["attribs"=>["class"=>"igk-form-control", "placeholder"=>__("user"), "value"=>$cnf->db_user]],
 				"dbPasswd"=>["type"=>"password", "attribs"=>["class"=>"igk-form-control", "placeholder"=>__("password"), "value"=>null]],
-				"dbName"=>["attribs"=>["class"=>"igk-form-control", "placeholder"=>__("dbname"), "value"=>$cnf->db_name]]
+				"dbName"=>["attribs"=>["class"=>"igk-form-control", "placeholder"=>__("dbname"), "value"=>$cnf->db_name]],
+				"dbPort"=>["attribs"=>["class"=>"igk-form-control", "placeholder"=>__("dbport"), "value"=>$cnf->db_port]],
 			]
         );
-        
-        // $frm->addSLabelInput("dbServer", "text", igk_app()->Configs->db_server);
-        // $frm->addBr();
-        // $frm->addSLabelInput("dbUser", "text", igk_app()->Configs->db_user);
-        // $frm->addBr();
-        // $frm->addSLabelInput("dbPasswd", "password", null);
-        // $frm->addBr();
-        // $frm->addSLabelInput("dbName", "text", igk_app()->Configs->db_name);
+         
         $frm->addBr();
         $_cbar=$frm->addActionBar();
         $_cbar->addBtn("btn_update", __("Update"))->setClass("-clsubmit +igk-btn");
@@ -657,8 +663,7 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
     private function _view_conf_query($zdiv){
         ///TODO: query selector tool 
         $pan=$zdiv->addPanelBox();
-        igk_html_add_title($pan->addDiv(), __("MySQL Query Tool"));
-        $pan->addHSep();
+        $pan->h2()->Content =  __("MySQL Query Tool");        
         $h=$pan->addDiv()->addRow();
         $dv=$h->addCol("fitw")->addDiv();
         $frm=$dv->addForm();
@@ -2089,10 +2094,15 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
         $user=igk_getr("dbUser");
         $pwd=igk_getr("dbPasswd");
         $dbname=igk_getr("dbName");
-        igk_app()->Configs->db_server=$server;
-        igk_app()->Configs->db_user=$user;
-        igk_app()->Configs->db_pwd=$pwd;
-        igk_app()->Configs->db_name=$dbname;
+        $dbPort=igk_getr("dbPort");
+        $cnf = igk_app()->Configs;        
+      
+        $cnf->db_pwd = $pwd;
+        $cnf->db_server = $server;
+        $cnf->db_user = $user;        
+        $cnf->db_name = $dbname;
+        $cnf->db_port = $dbPort;
+
         igk_save_config();
         igk_resetr();
         igk_notifyctrl()->addSuccessr("msg.databaseinfoupdated");

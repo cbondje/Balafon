@@ -148,7 +148,7 @@ function igk_html_app_page_title($ctrl, $title){
 * @param mixed $title
 */
 function igk_html_apptitle($ctrl, $title){
-    return __("title.app_2", $title, $ctrl->getAppTitle());
+    return  __("title.app_2", $title, $ctrl->getAppTitle());
 }
 ///<summary></summary>
 ///<param name="tab"></param>
@@ -654,7 +654,7 @@ function igk_html_db_select_filter($dbResult, $sortcallback, $useempty=0){
 * @param mixed $title
 */
 function igk_html_domaintitle($title){
-    return __("title.app_2", $title, igk_app()->Configs->website_domain);
+    return  __("title.app_2", $title, igk_app()->Configs->website_domain);
 }
 ///<summary></summary>
 ///<param name="obj"></param>
@@ -1129,7 +1129,7 @@ function igk_html_match_message($setting){
 * @param mixed $uri
 * @param mixed $selected the default value is 1
 */
-function igk_html_paginate($target, $pagingHost, $tab, $maxperpage, $callback, $uri, $selected=1){
+function igk_html_paginate($target, $pagingHost, $tab, $maxperpage, $callback, $uri, $selected=1, $ajxtarget=null){
     $max=$maxperpage;
     $count=igk_count($tab);
     $epagination=$max < $count;
@@ -1142,7 +1142,7 @@ function igk_html_paginate($target, $pagingHost, $tab, $maxperpage, $callback, $
             break;
     }
     if($epagination && $uri){
-        $pagingHost->addDiv()->addAJXPaginationView($uri, $count, $maxperpage, $selected);
+        $pagingHost->addDiv()->addAJXPaginationView($uri, $count, $maxperpage, $selected, $ajxtarget);
     }
 }
 ///<summary></summary>

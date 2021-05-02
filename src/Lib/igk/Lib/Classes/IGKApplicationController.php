@@ -36,7 +36,7 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
 
 
 
-	  $d->Title=R::ngets("title.app_2", igk_getv($this->Configs, IGK_CTRL_CNF_TITLE), $this->App->Configs->website_title);
+	    $d->Title= __("title.app_2", igk_getv($this->Configs, IGK_CTRL_CNF_TITLE), igk_app()->Configs->website_title);
         $this->setEnvParam(IGK_CURRENT_DOC_PARAM_KEY, $d);
         $bbox=$d->Body->addBodyBox();
         igk_doc_set_favicon($d, $this->getResourcesDir()."/Img/favicon.ico");
@@ -1005,7 +1005,7 @@ EOF;
         }
         else{
             $d= $this->getAppDocument();
-            $d->Title=R::ngets("title.app_2", igk_getv($this->Configs, IGK_CTRL_CNF_TITLE), $this->App->Configs->website_title);
+            $d->Title= R::ngets("title.app_2", igk_getv($this->Configs, IGK_CTRL_CNF_TITLE), $this->App->Configs->website_title);
             $div=$d->Body->add("div");
             $div->add("div", array("class"=>"igk-title"))->Content=R::ngets("Title.Error");
             $div->add("div", array("class"=>"igk-notify igk-notify-danger"))->Content="No function $c found";

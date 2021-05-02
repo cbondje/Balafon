@@ -1,4 +1,1 @@
-allow from all
-<IfModule mod_headers.c>
-Header set Cache-Control "max-age=31536000"
-</IfModule>
+allow from all 

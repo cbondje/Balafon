@@ -43,12 +43,12 @@ class MakeProjectCommand extends AppExecCommand{
         }
 
         $bind = [];
-
-        $bind[$dir."/{$name}Project.php"] = function($file)use($name, $type, $author,$defs, $desc){
-            $ns = igk_str_ns($name);
+        $ns = igk_str_ns($name);         
+        $clname = ucfirst( basename(igk_io_dir($ns))."Project");
+        $fname = $clname.".php";
+        $bind[$dir."/$fname"] = function($file)use($type, $author,$defs, $desc, $clname, $fname ){
             $builder = new PHPScriptBuilder();
-            $fname = $name."Project.php";
-            $builder->type("class")->name($name)
+            $builder->type("class")->name($clname)
             ->author($author)
             ->defs($defs)
             ->doc("Controller entry point")

@@ -26,6 +26,7 @@ igk_reg_global_setting('db_name', 'igkdev');
 igk_reg_global_setting('db_prefix', IGK_DEFAULT_DB_PREFIX);
 igk_reg_global_setting('db_server', 'localhost');
 igk_reg_global_setting('db_user', 'root');
+igk_reg_global_setting('db_port', '3306');
 igk_reg_global_setting('db_driver', 'nodb');
 igk_reg_global_setting('db_default_column_id', 'clId');
 igk_reg_global_setting('error_debug', '0');

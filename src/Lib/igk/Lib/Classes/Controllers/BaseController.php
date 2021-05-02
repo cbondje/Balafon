@@ -1382,7 +1382,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     /**
     * get style dir
     */
-    public function getPrimaryCssFile(){
+    public function getPrimaryCssFile(){ 
         return igk_io_dir($this->getStylesDir()."/". igk_getv($this->getConfigs(), "PrimaryStyle", "default.pcss"));
     }
     ///<summary>hooks is temporary store callback for controller</summary>

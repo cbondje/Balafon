@@ -7516,7 +7516,6 @@ Name:balafon.js
 			if ("DOMParser" in window) {
 				var g = (new window.DOMParser()).parseFromString(s, "text/xml");
 				r = __dom_get_root(g);
-
 				if (r && r.tagName.toLowerCase() == "parsererror") {
 					return null;
 				}

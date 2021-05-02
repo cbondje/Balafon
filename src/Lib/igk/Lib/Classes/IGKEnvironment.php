@@ -75,7 +75,7 @@ final class IGKEnvironment implements \ArrayAccess{
     * 
     * @param mixed $n
     */
-    public function & __get($n){
+    public function & __get($n){      
         return $this->get($n);
     }
     ///<summary></summary>
@@ -175,6 +175,9 @@ final class IGKEnvironment implements \ArrayAccess{
     */
     public function IsWebApp(){
         return $this->get("IGK_APP") == "WEBAPP";
+    }
+    public function context(){
+        return $this->get("app_context", "web");
     }
     ///<summary></summary>
     /**

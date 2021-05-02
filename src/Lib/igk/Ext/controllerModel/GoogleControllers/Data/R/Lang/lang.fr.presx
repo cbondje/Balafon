@@ -1,3 +1,0 @@
-<?php
-
-igk_die("load res....", __FILE__);

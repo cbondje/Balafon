@@ -1,4 +1,5 @@
 <?php
+ 
 // file: igk_framework.php
 // author: C.A.D BONDJE DOUE
 // description: Balafon Core Framework file
@@ -6,7 +7,6 @@
 // license: read licence.txt
 // mail: bondje.doue@igkdev.com
 // help uri: https://igkdev.com/balafon/wiki
-// basi
 
 use function igk_resources_gets as __;
 
@@ -18,6 +18,7 @@ use IGK\System\Html\Dom\IGKHtmlMeta;
 use IGK\Resources\R;
 use IGK\System\Database\QueryBuilderConstant as queryConstant;
 use IGK\System\Console\Logger;
+use IGK\System\Database\MySQL\IGKMySQLQueryResult;
 
 ///<summary></summary>
 /**
@@ -195,7 +196,7 @@ function igk_ajx_notify_dialog_callback($title, $uri, $callbacks, $method="POST"
 * 
 * @param mixed $title
 * @param mixed $d
-* @param mixed $closeBtn the default value is 'drop'
+* @param mixed $closeBtn 'drop' or attribute
 * @param mixed $callback the default value is null
 */
 function igk_ajx_panel_dialog($title, $d, $closeBtn='drop', $callback=null){
@@ -213,7 +214,7 @@ function igk_ajx_panel_dialog($title, $d, $closeBtn='drop', $callback=null){
  * @param string $closeBtn close button
  * @param callable $callback the call to to call
  */
-function igk_ajx_panel_dialog_result($title, $d, $closeBtn='drop', $callback=null){
+function igk_ajx_panel_dialog_result($title, $d, $closeBtn='drop', ?callable $callback=null){
     ob_start();
     igk_ajx_panel_dialog($title, $d, $closeBtn, $callback);
     return new IGK\System\Http\WebResponse(ob_get_clean());
@@ -1125,7 +1126,7 @@ function igk_check_ie_version($v=11){
 }
 ///<summary>short cut to clear cache</summary>
 /**
-* short cut to clear cache
+* shortcut to clear cache
 */
 function igk_clear_cache(){
     IGKControllerManagerObject::ClearCache();
@@ -2429,12 +2430,12 @@ function igk_css_balafon_index($dir){
 
 
     $doc= igk_get_last_rendered_document() ?? igk_app()->Doc;
- 
+    
     if($doc){
         igk_set_env("sys://css/cleartemp", __FUNCTION__);
         $vsystheme= $doc->getSysTheme();
         $files = $doc->Theme->def->getBindTempFiles(1);
-        @session_write_close();
+        @session_write_close(); 
 
         igk_css_bind_sys_global_files($vsystheme);
         igk_css_load_theme($vsystheme);
@@ -2458,11 +2459,11 @@ function igk_css_balafon_index($dir){
         }
         igk_exit();
     }
+    @session_write_close(); 
     igk_header_no_cache();
     if(!empty($c)){
         igk_zip_output($c);
-    }
-    @session_write_close();
+    } 
     igk_exit();
 }
 ///<summary></summary>
@@ -3381,7 +3382,6 @@ function igk_css_reg_global_style_file($fname, $theme=null, $ctrl=null, $temp=0)
         return;
     }
     /// TODO: BIND CSS FILE collapse string
-    // igk_wln_e(__FILE__.':'.__LINE__, $s, igk_io_collapse_path(igk_io_dir($s)));
     if(igk_current_context() != IGKAppContext::initializing){
         $doc=igk_app()->getDoc();
         if($doc){
@@ -3406,7 +3406,7 @@ function igk_css_reg_global_style_file($fname, $theme=null, $ctrl=null, $temp=0)
             }
             return;
         }
-    }
+    } 
     if(file_exists($s) && preg_match("/(pgcss|css|pcss)/", igk_io_path_ext($s))){
         $tkey = IGK_ENV_CSS_GLOBAL_CONF_FILES;
         $tab=igk_get_env($tkey, array());
@@ -3610,7 +3610,7 @@ function igk_css_render_style($tab, $doc=null){
     if(defined("IGK_FORCSS"))
         return "";
     $doc=$doc ?? igk_app()->Doc ?? igk_die("can't render css style");
-    $systh=$doc->SysTheme;
+    $systheme=$doc->SysTheme;
     $th=$doc->Theme;
     igk_css_bind_sys_global_files();
     igk_css_bind_theme_files($th);
@@ -3619,7 +3619,7 @@ function igk_css_render_style($tab, $doc=null){
         $o .= "{$k}{ ".igk_css_treat($th, $v, $systheme)." }";
     }
     $th->resetAll();
-    $systh->resetAll();
+    $systheme->resetAll();
     return $o;
 }
 ///retrieve base.css file. Management
@@ -4375,7 +4375,7 @@ function igk_ctrl_bind_css_file($ctrl, $file=null, $temp=0){
         else{
             igk_css_bind_file($ctrl, $f);
         }
-    }
+    } 
 }
 ///<summary> controller request to change the lang</summary>
 /**
@@ -7067,9 +7067,8 @@ function igk_db_count_rows($table, $conditions=null, $adapter=IGK_MYSQL_DATAADAP
             $r = $ab->getRowAtIndex(0);
             return $r->count;
         }
-
-        igk_wln_e($ab);
     }
+    return null;
 
 }
 ///<summary></summary>
@@ -7228,7 +7227,7 @@ function igk_db_user_groups($u){
 /**
  * db view result
  */
-function igk_db_view_result_node($result, $uri , $selected, $max=-1){
+function igk_db_view_result_node($result, $uri , $selected, $max=-1, $target=null){
     if(!$result || !igk_reflection_class_implement($result, 'IIGKQueryResult')){
         return null;
     }
@@ -7247,18 +7246,14 @@ function igk_db_view_result_node($result, $uri , $selected, $max=-1){
         $tr->add("th")->Content=$v->name;
         $key []=$v->name;
     }
-    if($max > 0){
-
-
-        // igk_html_paginate($target, $pagingHost, $tab, $maxperpage, $callback, $uri, $selected=1){
-
+    if($max > 0){ 
         igk_html_paginate($r, $n, $result->Rows, $max, function($table, $k, $v) use ($key){
             $tr=$table->addTr();
             foreach($key as $j){
                 $tr->addTd()->Content=$v->$j;
             }
         }
-        , $uri, $selected );
+        , $uri, $selected , $target);
     }
     else{
         foreach($result->Rows as $v){
@@ -7413,9 +7408,6 @@ function igk_debug_wln_i($tag, $msg){
 function igk_debuggerview($die=true){
     if(IGKApp::IsInit() && ($ctrl=igk_getctrl(IGK_DEBUG_CTRL))){
         return $ctrl->getDebuggerView();
-    }
-    if($die){
-        igk_die("DEBUGGER CTRL NOT FOUND");
     }
     return null;
 }
@@ -7589,7 +7581,7 @@ function igk_die($msg=IGK_DIE_DEFAULT_MSG, $throwex=1, $code=400){
                 }
             }
         } 
-		throw new Exception($msg, $code);
+		throw new IGKException($msg, $code);
     }
     else{
         ob_clean();
@@ -8333,6 +8325,8 @@ function igk_get_attrib_raw_context($n_context){
             $raw = igk_getv($n_context, "raw");
         }else { 
             if (igk_environment()->is("DEV")){
+                igk_trace();
+                igk_exit();
                 igk_ilog("context does't provide a raw object");
             }
         }
@@ -8888,7 +8882,7 @@ function igk_get_all_default_pagectrl(){
 function igk_get_session_prefix(){
 	$prefix = "sess_";
 	if (defined("IGK_SESS_DIR"))
-			$prefix = IGK_SESSION_FILE_PREFIX;
+		$prefix = IGK_SESSION_FILE_PREFIX;
 	return $prefix;
 }
 function igk_get_all_session_files(){
@@ -9065,11 +9059,12 @@ function igk_get_article_ext($lang=null){
 function igk_get_basestyle(){
     $bf=__FILE__;
     $rdir=igk_realpath(IGK_APP_DIR);
-    $rdir= igk_io_basedir();// igk_realpath(IGK_APP_DIR);
+    // $rdir= igk_io_basedir();// igk_realpath(IGK_APP_DIR);
+    $date = date('Ymd H:i:s');
     $v=<<<EOF
 <?php
 // desc: generate balafon.css file
-// date: {date('Ymd')}
+// date: {$date}
 // author: C.A.D. BONDJE DOUE
 
 defined("IGK_FORCSS") || define("IGK_FORCSS", 1);
@@ -11006,7 +11001,7 @@ function igk_getctrl($ctrlname, $throwex=true){
         if($v == null){
             $v=igk_init_ctrl($ctrlname);
         }
-        if($throwex && ($v === null)){            
+        if($throwex && ($v === null)){               
             igk_die(__("Controller [{0}] not found", $ctrlname));
         }
         return $v;
@@ -11158,13 +11153,7 @@ function igk_getpv($array, $key, $default=null){
         $ckey=$q;
         if(is_array($array) && isset($array[$q]))
             $o=$array[$q];
-        else if(is_object($array)){
-            // if (igk_is_debug()){
-            //     echo "load object ".$q."<br />\n";
-            //     echo "isset : ".get_class($array). " === ".isset($array->$q)."<br />";
-            // igk_exit();
-            // }
-            // igk_debug_wln("load object");
+        else if(is_object($array)){ 
             if(isset($array->$q))
                 $o=$array->$q;
             else{
@@ -14770,7 +14759,7 @@ function igk_initenv($dirname){
     IGKIO::CreateDir($dirname."/".IGK_SCRIPT_FOLDER);
     IGKIO::CreateDir($dirname."/".IGK_INC_FOLDER);
     igk_io_save_file_as_utf8($dirname."/".IGK_INC_FOLDER."/.htaccess", "deny from all");
-    IGKIO::CreateDir($dirname."/".IGK_CACHE_FOLDER);
+    IGKIO::CreateDir($dirname."/".IGK_CACHE_FOLDER, 0775);
     igk_io_save_file_as_utf8($dirname."/".IGK_CACHE_FOLDER."/.htaccess", "deny from all");
     igk_load_env_files(IGK_LIB_DIR);
     igk_loadcontroller($dirname."/".IGK_INC_FOLDER);
@@ -14779,9 +14768,9 @@ function igk_initenv($dirname){
     $ips=igk_io_server_name();
     igk_io_save_file_as_utf8($dirname."/".IGK_DATA_FOLDER."/domain.conf", !IGKValidator::IsIPAddress($ips) ? $ips: IGK_DOMAIN, true);
     $cgi=IGK_LIB_DIR."/cgi-bin";
-    if(!igk_phar_running()){
-        foreach(igk_io_getfiles($cgi, "/\.cgi$/") as $k){
-            @chmod($k, octdec("0705"));
+    if(!igk_phar_running() && ($ctab = igk_io_getfiles($cgi, "/\.cgi$/"))){
+        foreach($ctab as $k){
+            @chmod($k, octdec("0755"));
         }
     }
     igk_io_save_file_as_utf8($dirname."/Configs/index.php", igk_config_php_index_content(), false);
@@ -15448,7 +15437,7 @@ function igk_io_corestyle_uri(){
 * @param mixed $mode the default value is IGK_DEFAULT_FOLDER_MASK
 */
 function igk_io_createdir($dirname, $mode=IGK_DEFAULT_FOLDER_MASK){
-    $dirname = igk_io_dir($dirname);
+    $dirname = igk_io_dir($dirname);    
 
     if(preg_match("/^phar:/i", $dirname)){
         igk_die("InvalidOperation#1200");
@@ -16094,6 +16083,19 @@ function igk_io_getdbconf_file($dir){
 */
 function igk_io_getfiles($dir, $match=IGK_ALL_REGEX, $recursive=true, & $excludedir=null){
     return IGKIO::GetFiles($dir, $match, $recursive, $excludedir);
+}
+function igk_io_scandir($dir){
+    if (!is_dir($dir)){
+        return [];
+    }
+    $tab = array_filter( scandir($dir) , function($v){
+        return (($v!=".") && ($v!=".."));
+    });
+    if (!$tab ) $tab = [];
+    $tab = array_map(function($d)use($dir){
+        return $dir.DIRECTORY_SEPARATOR.$d;
+    }, $tab);
+    return $tab;
 }
 ///retourne le chemin complet . si chemin relatif fournit c'est le cwd qui intervient
 /**
@@ -17122,15 +17124,10 @@ function igk_io_subdomain_uri_name($uri=null){
 * @param mixed $target : chemin existant
 * @param mixed $cibling : lien a créer
 */
-function igk_io_symlink($target, $cibling){ 
+function igk_io_symlink($target, $link){ 
     $r = false;
-    // igk_ilog("create:".$target);
-    // igk_ilog("collapse:".($cpath = igk_io_collapse_path($target)));
-    // igk_ilog("resovol : ". ($target=igk_io_baserelativepath($target)));
-    // igk_ilog("resovol 2: ".  igk_io_expand_path($cpath));
-    // igk_ilog("resovol 3: ".  igk_io_baserelativepath(igk_io_expand_path($cpath)));
-    if(!igk_server()->WINDIR){
-        if(!is_dir($h=$cibling)){
+     if(!igk_server()->WINDIR){
+        if(!is_dir($h=$link)){
             $h=dirname($h);
         }
         $target=igk_io_baserelativepath($target, $h);
@@ -17138,9 +17135,8 @@ function igk_io_symlink($target, $cibling){
             igk_wln("resolv target : ", $target);
         }
     }
-    
-    if (!file_exists($cibling) && !is_link($cibling) && !($r = @symlink($target, $cibling))){        
-        igk_ilog($msg= "symlink failed: source: ".$target. " cibling: ".$cibling);        
+    if (!file_exists($link) && !is_link($link) && !($r = @symlink($target, $link))){        
+        igk_ilog("symlink failed: source: ".$target. " cibling: ".$link);        
     }
     return $r;
 }
@@ -18781,6 +18777,8 @@ function igk_log($msg, $file, $tag=null){
 */
 function igk_log_append($file, $msg, $tag=IGK_LOG_SYS){
     $s=date("d-m-Y H:i:s:");
+    if ($query = igk_server()->REQUEST_URI)
+        $s.=" ".$query." ";
     igk_set_env("igk_log_var_dump", "text");
     if($msg && is_array($msg) || is_object($msg)){
         $msg=(function() use ($msg){
@@ -20001,34 +19999,7 @@ function igk_post_uri($uri, $args=null, $content=IGK_APP_FORM_CONTENT, $samesess
         igk_die("failed to pos uri . ".$uri);
     }
     return "";
-	//$postdata=null;
-	//$v_gx=igk_get_env("sys://igk_post_uri/header");
-	//if($args != null)
-	//    $postdata=http_build_query($args);
-	//$header="";
-	//$header='Content-type: '.$content.IGK_CLF.'igk-server-admin: bondje.doue@igkdev.com'.IGK_CLF.'igk-server-build: '.IGK_PLATEFORM_NAME.'('.IGK_VERSION.')'.IGK_CLF.'igk-server: '.IGK_PLATEFORM_NAME.IGK_CLF.(!empty($v_gx) ? $v_gx.IGK_CLF: "")."Content-Length: ".strlen($postdata).IGK_CLF;
-	//$tab=$_SESSION;
-	//if($samesession){
-	//    $header .= "Cookie: ".session_name()."=".session_id().IGK_CLF;
-	//    session_write_close();
-	//}
-	//$opts=array('http'=>array(
-	//            'method'=>'POST',
-	//            'header'=>$header,
-	//            'content'=>$postdata
-	//        ));
-	//$context=stream_context_create($opts);
-	//$result=@file_get_contents($uri, false, $context);
-	//if($samesession){
-	//    session_start();
-	//    $_SESSION=$tab;
-	//}
-	//igk_set_env("igk_post_uri:/Error", null);
-	//igk_set_env("sys://igk_post_uri/header", null);
-	//if($result === false){
-	//    igk_set_env("igk_post_uri:/Error", error_get_last());
-	//}
-	//return $result;
+	
 }
 ///<summary> get environment last error for last call to igk_post_uri</summary>
 /**
@@ -21360,7 +21331,7 @@ function igk_require_module($modulename, $loadall=1, $die=1){
         return $mod;
     }
     else if($die){
-        igk_die(__FUNCTION__." ::module <b>{$modulename}</b> required not present");
+        igk_die(__FUNCTION__."::module <b>{$modulename}</b> missing", 1, 500);
     }
     return null;
 }
@@ -22508,9 +22479,10 @@ function igk_start_session($reset=0){
     }
     ini_set("session.cookie_same","Strict");
     //+ | security fix 
-    ini_set("session.cookie_secure", true);
+    ini_set("session.cookie_secure", igk_sys_srv_is_secure());
     ini_set("session.cookie_httponly", 1);
     ini_set("session.cookie_samesite", "strict");
+
     //+ $idstorage= trim(isset($_COOKIE) && isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName]: trim(igk_getr($cookieName)));
     //+ check if the session is passed prio to cookie value. 
     //+ 2020 Edge and chrome on Mac no need for session_id https://www.php.net/manual/en/function.session-id.php
@@ -22528,9 +22500,9 @@ function igk_start_session($reset=0){
         if (version_compare(PHP_VERSION,"7.3.0", ">="))
         {
             if (!session_set_cookie_params($opts)){ 
-               igk_ilog("set cookie failed");
-               igk_ilog($opts);
-            }
+               igk_ilog("set cookie options failed");
+               igk_ilog($opts); 
+            } 
         }
         else {
             session_set_cookie_params(
@@ -22539,10 +22511,10 @@ function igk_start_session($reset=0){
                 $opts["domain"],
                 igk_sys_srv_is_secure(),
                 true
-            ); 
-        }
+            );  
+        } 
     } 
-    $b = session_start();    
+    $b = session_start();       
     return $b;
 }
 ///<summary>store start time</summary>
@@ -22575,7 +22547,7 @@ function igk_str_append_to(& $s, $v, $sep=','){
 ///<summary>convert string to php namespace convension</summary>
 function igk_str_ns($n){
     return implode("", 
-        array_filter(explode("_", str_replace(" ", "_", str_replace("/", "\\", $n))))
+      array_map("ucfirst",  array_filter(explode("_", str_replace(" ", "_", str_replace("/", "\\", $n)))))
     );
 
 }
@@ -26718,10 +26690,11 @@ function igk_sys_start_engine($file, $render){
         IGKApp::Init($file, $render);
     }
     catch(\Exception $ex){
-        igk_ilog("Exception: ".implode("\n", [
-            __FILE__.":".__LINE__,        
-            $ex->getMessage()
-            ])); 
+       
+        // igk_ilog("Exception: ".implode("\n", [
+        //     __FILE__.":".__LINE__,        
+        //     $ex->getMessage()
+        //     ])); 
         igk_show_exception($ex);
     }
 }
@@ -33054,8 +33027,7 @@ final class IGKIO{
     * @param mixed $dirname
     * @param mixed $mode the default value is IGK_DEFAULT_FOLDER_MASK
     */
-    public static function CreateDir($dirname, $mode=IGK_DEFAULT_FOLDER_MASK){
-        
+    public static function CreateDir($dirname, $mode=IGK_DEFAULT_FOLDER_MASK){        
         return igk_io_createdir($dirname, $mode);
     }
     ///<summary> Create a directory recursivily</summary>
@@ -33855,7 +33827,7 @@ final class IGKIO{
                         break;
                     }
                 }
-                else if(is_file($v)){
+                else if(is_file($v)|| is_link($v)){
                     if($recursive)
                         unlink($v);
                     else{
@@ -35925,6 +35897,7 @@ final class IGKAppConfig extends IGKObject {
     private function __construct(){
         $this->_loadSystemConfig();
     }
+   
     ///<summary>load configuration files </summary>
     /**
     * load configuration files
@@ -35933,18 +35906,9 @@ final class IGKAppConfig extends IGKObject {
         $file=IGK_CONF_DATA;
         $this->m_configEntries=array();
         $fullpath=igk_io_syspath($file);
-        $f=IGKCSVDataAdapter::LoadData($fullpath, [
-            "separtor"=>","
-        ]);
-        if($f !== null){
-            foreach($f as  $v){
-                $this->m_configEntries[$v[0]]=trim(igk_getv($v, 1));
-            }
-        }
+        IGK\System\Configuration\ConfigUtils::LoadData($fullpath, $this->m_configEntries);        
         $this->m_datas = new ConfigData($fullpath, $this, $this->m_configEntries);
-
-        date_default_timezone_set( igk_getv($this->m_datas, 'date_time_zone', "Europe/Brussels"));
-         
+        date_default_timezone_set( igk_getv($this->m_datas, 'date_time_zone', "Europe/Brussels"));         
     }
     ///<summary></summary>
     /**
@@ -36674,13 +36638,9 @@ final class IGKConfigCtrl extends BaseController implements IIGKConfigController
         $file=IGK_CONF_DATA;
         $e=array();
         $fullpath=igk_io_syspath($file);
-        $f=IGKCSVDataAdapter::LoadData($fullpath);
         $e=$this->getConfigSettings()->configEntries;
-        if($f !== null){
-            foreach($f as  $v){
-                $e[$v[0]]=trim(igk_getv($v, 1));
-            }
-        }
+        IGK\System\Configuration\ConfigUtils::LoadData($fullpath, $e);
+        
     }
     ///<summary></summary>
     ///<param name="page"></param>
@@ -36894,8 +36854,8 @@ final class IGKConfigCtrl extends BaseController implements IIGKConfigController
     /**
     * 
     */
-    public function clearcache(){         
-        IGKControllerManagerObject::ClearCache(); 
+    public function clearcache(){  
+        igk_clear_cache();       
         if(igk_is_ajx_demand()){
             igk_ajx_toast(__("Clear cache success"), "success");
             igk_exit();
@@ -38639,18 +38599,23 @@ final class IGKControllerAndArticlesCtrl extends IGKConfigCtrlBase {
         $select["name"]=
         $select["id"]="controller";
         $tab =igk_sys_getuserctrls();
+        $g = null;
+        if ( ($ts = $this->SelectedController) && !($g = igk_getctrl($this->SelectedController, false))){
+            $this->SelectedController = null;
+        } 
         if(count($tab) > 0){
             foreach($tab as $v){
-                if($this->SelectedController === null)
-                    $this->SelectedController=$v->getName();
+                if($g === null){
+                    $this->SelectedController =$v->getName();
+                    $g = $v;
+                }
                 $opt=$select->add("option", array("value"=>$v->getName()));
                 if($v->getName() == $this->SelectedController)
                     $opt["selected"]="true";
                 $opt->Content=$v->getDisplayName();
             }
-            $ctrl=igk_getctrl($this->SelectedController);
             $dv=$frm->addDiv();
-            $this->_view_ctrl_options($ctrl, $dv);
+            $this->_view_ctrl_options($g, $dv);
         }
     }
     ///<summary></summary>
@@ -40070,8 +40035,7 @@ EOF;
             $ctrl->SetCustomConfigInfo($t); 
         }
         $notify = igk_notifyctrl();
-        if ($ctrl->storeConfigSettings()){
-            igk_ilog("configuration updated : ".get_class($notify)); 
+        if ($ctrl->storeConfigSettings()){ 
             $notify->addSuccess(__("Controller [{0}] updated", $ctrl->Name)); 
         } else {
             igk_ilog("configuration failed");
@@ -41160,13 +41124,15 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
     * 
     * @param mixed $frm
     */
-    private function _auth_options($frm){
+    private function _auth_options($frm, $drop=false){
         $bar = $frm->addActionBar();
         IGKHtmlUtils::AddImgLnk($bar, igk_js_post_frame($this->getUri("auth_add_authorisation_ajx")), "add_16x16")
         ->setAttribute("class", "igk-btn");
-        $bar->abtn($this->getUri("auth_drop_selection"))
-        ->on("click"," ns_igk.winui.form.postData(this, '^.igk-form'); return false;")
-        ->google_icons("drop");
+        if ($drop){
+            $bar->abtn($this->getUri("auth_drop_selection"))
+            ->on("click"," ns_igk.winui.form.postData(this, '^.igk-form'); return false;")
+            ->google_icons("delete");
+        }
     }
 
     public function auth_drop_selection(){
@@ -41223,33 +41189,32 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
         igk_exit();
     }
     private function _authview(){
-
+        $c = igk_db_count_rows($tb,null,$this);
         $d=igk_createnode("div");
         $d->class = "+auth-view";
         $d["id"]="auth";
         $frm=$d->addCol("igk-col igk-col-3-3")->addForm();
         $frm->addNotifyHost();
-        $this->_auth_options($frm);
-        $table=$frm->addDiv()->setClass("igk-table-host")->addTable();
-        $table["class"]="igk-table igk-table-hover igk-table-striped";
+        $this->_auth_options($frm, $c > 0);
+        $table = null;
         // TODO Paginate sample:    
-        $tb = IGK_TB_AUTHORISATIONS;
-        $c = igk_db_count_rows($tb,null,$this);
+        $tb = igk_db_get_table_name(IGK_TB_AUTHORISATIONS);
+     
         $page = igk_getr("authpage", 1); // this->getParam("authpage");
         $total = 20;
 
         $r=igk_db_table_select_where($tb, null, $this, null, [
             "Limit"=>[($page-1)*$total, $max = ($page*$total)]
         ]);
-        $tr=$table->addTr();
-        $tr->add("th")->addSpace();
-        $tr->add("th")->Content=__("lb.clName");
-        $tr->add("th")->setClass("fitw")->Content=__("lb.clGroups");
-
-        $tr->add("th")->addSpace();
-        $tr->add("th")->addSpace();
-        if($r){
+ 
+        if($r){ 
             foreach($r->Rows as  $v){
+                if (!$table){
+                    $table=$frm->tablehost()->table()->header("" , __("lb.clName"), 
+                    __("lb.clGroups"), "", ""
+                    );
+                    $table["class"]="igk-table igk-table-hover igk-table-striped";
+                }
                 $tr=$table->addTr();
                 $tr->addTd()->addInput("clAuths[]", "checkbox", $v->clId);
                 $tr->addTd()->Content = $v->clName;
@@ -41275,8 +41240,10 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
                 $li->a("?authpage=".$sl)->setClass("igk-btn")->Content = $sl;
             }
 
+        }    
+        if($r){
+            $this->_auth_options($frm, $c > 0);
         }
-        $this->_auth_options($frm);
         return $d;
     }
     private function getGroupNamesLitteral($authid){
@@ -41322,10 +41289,12 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
     public function auth_add_authorisation_ajx(){
         if(igk_qr_confirm()){
             $o=igk_get_robj();
-            if(igk_db_insert($this, IGK_TB_AUTHORISATIONS, $o))
-                igk_notifyctrl()->addMsgr("msg.authorisation.added");
+            $tb = igk_db_get_table_name(IGK_TB_AUTHORISATIONS, $this);
+            $notify = igk_notifyctrl("notifyauth");
+            if(igk_db_insert($this, $tb, $o))
+                $notify->addMsgr("msg.authorisation.added");
             else{
-                igk_notifyctrl()->addErrorr("msg.authorisation.notadded");
+                $notify->addErrorr("msg.authorisation.notadded");
             }
             $this->View();
             igk_navtocurrent();
@@ -42631,7 +42600,7 @@ class IGKMailCtrl extends IGKConfigCtrlBase {
     */
     public function lock_mail(){
         $c=igk_getr("clEmail");
-        igk_db_update($this, TBIGK_MAINLINGLISTS, array("clActive"=>2), array("clEmail"=>$c));
+        igk_db_update($this, IGK_TB_MAINLINGLISTS, array("clActive"=>2), array("clEmail"=>$c));
         igk_sys_force_view();
         igk_navtocurrent();
     }
@@ -45448,6 +45417,7 @@ final class IGKReferenceCtrl extends IGKConfigCtrlBase {
         foreach($def_attr as  $v){
             $c=(object)array("desc"=>"", "def-v"=>0, "require"=>0, "type"=>"");
             igk_conf_load($c, $v);
+            
             $tr=$tab->addTr();
             $td=$tr->addTd();
             $td->Content=$c->name;
@@ -45457,7 +45427,11 @@ final class IGKReferenceCtrl extends IGKConfigCtrlBase {
             $li[$c->name]=array($v, $tr);
             $g=$c->{"def-v"};
             $td=$tr->addTd();
-            $td->content=igk_getv($c, "type");
+            if ($m = igk_getv($c, "type")){
+                $td->content= $m;
+            }else {
+                $td->content= "mixed";
+            }
             $td=$tr->addTd();
             $td->Content=igk_getv($c, $lang, $c->desc);
             if(!empty($g)){
@@ -45563,11 +45537,14 @@ final class IGKReferenceCtrl extends IGKConfigCtrlBase {
             $s["desc"]="";
             $optional=$v->isOptional();
             $s["require"]=!$optional;
-            if($optional){
+            if($optional && $v->isDefaultValueAvailable()){
                 $s["def-v"]=$v->getDefaultValue();
             }
-            if($v->hasType())
-                $s["type"]=$v->getType();
+            if($v->hasType()){
+                if ($p = $v->getType()){ 
+                    $s["type"]=$p->getName();
+                }
+            }
         };
         if(!$v){
             $fc=IGK_FUNC_NODE_PREFIX.$n;
@@ -45607,8 +45584,7 @@ final class IGKReferenceCtrl extends IGKConfigCtrlBase {
                 $rg=$rf->getNumberOfRequiredParameters();
                 $pt=$rf->getParameters();
                 $this->__storeParamfile($f, $pc, $pt, $n, $fc_addcallback);
-                if(file_exists($f)){
-                    $d=IGKHtmlReader::LoadXMLFile($f);
+                if(file_exists($f) &&  ($d=IGKHtmlReader::LoadXMLFile($f))){                    
                     $def_attr=$d->getElementsByTagName("attr");
                     $li=array();
                     $target->addWebMasterNode()->addDiv()->Content="file:  ".igk_realpath(igk_io_dir($f));
@@ -46227,7 +46203,6 @@ final class IGKSessionManagerCtrl extends IGKConfigCtrlBase{
     public function clearall(){
         session_destroy();
         session_write_close();
-        // $d=ini_get("session.save_path");
 		foreach(igk_get_all_session_files() as  $f){
 			unlink($f);
 		}
@@ -47008,7 +46983,7 @@ final class IGKSystemUriActionCtrl extends IGKConfigCtrlBase implements IIGKUriA
     */
     public function matche($uri){
         $error="";
-        $v_routes=$this->getRoutes();
+        $v_routes=  $this->getRoutes();
         if($v_routes){
 			krsort($v_routes);
             foreach($v_routes as $k=>$v){
@@ -51149,7 +51124,7 @@ final class IGKSystemManagerController extends IGKNonVisibleControllerBase {
             $code |= 0x100;
             return $response;
         }
-        if($n && ($n != ".") && ($n != "..") && (igk_getctrl($n) == null) && ($type != null)){
+        if($n && ($n != ".") && ($n != "..") && (igk_getctrl($n, false) == null) && ($type != null)){
             $clcontent=self::GetDefaultClassContent($n, $type, $webparent);
             $p="";
             if(($ctrl_ns != "igk") && preg_match(IGK_NAME_SPACE_REGEX, $ctrl_ns)){
@@ -52977,9 +52952,9 @@ final class IGKNotificationCtrl extends BaseController implements IIGKNotifyMess
     ///<param name="key"></param>
     /**
     * 
-    * @param mixed $key
+    * @param mixed $message key
     */
-    function addSuccessr($key){
+    function addSuccessr($msg){
         $mg = $this->getGlobalStorage();
         $mg->addSuccessr($msg);
         // $this->TargetNode->addSuccessr($key);
@@ -53436,8 +53411,7 @@ final class IGKSessionController extends BaseController {
     public function clearcache(){
         if(IGKServerInfo::IsLocal() || igk_is_conf_connected() || !igk_sys_env_production()){
             igk_clear_cache();
-        }
-        
+        } 
         igk_navto_referer();
     }
     ///<summary> clear session and navigate</summary>
@@ -53919,7 +53893,7 @@ final class IGKControllerManagerObject extends IGKObject {
         } else {
             igk_trace();
             igk_ilog("failed to initialize class instance : $classname");
-            exit;
+            igk_exit();
         }
         return null;
     }
@@ -54080,36 +54054,16 @@ final class IGKControllerManagerObject extends IGKObject {
         $t=null;
         if($bdir == null)
             $bdir=igk_io_cachedir();
+        // + | Clear assets folder
+        if (is_dir($assets = igk_io_basedir()."/".IGK_RES_FOLDER)){
+            IGKIO::RmDir($assets);
+        }
         if (is_dir($bdir)){
-            if ($hdir = opendir($bdir)){
-                while($m = readdir($hdir)){
-                    if ( ($m == ".") || ($m == ".."))
-                        continue;
-                    $s = $bdir."/".$m;
-                    if (is_dir($s)){
-                        IGKIO::RmDir($s);
-                    }else{
-                        unlink($s);
-                    }
-                }
-                closedir($hdir);
-            }
-            igk_io_save_file_as_utf8($bdir."/.htaccess", "deny from all", false);
+            IGKIO::RmDir($bdir);           
+            igk_io_w2file($bdir."/.htaccess", "deny from all", false);
             igk_raise_event("sys://cache/clear");
         }
-
-        //  $t=igk_io_getfiles($bdir, "/.*/", false); 
-
-        // if($t){
-        //     foreach($t as $v){
-        //         if(basename($v) == ".htaccess")
-        //             continue;
-        //         @@@igk_debug_wln("unlink: ".$v);
-        //         @unlink($v);
-        //     }
-        //     igk_raise_event("sys://cache/clear");
-        //     igk_io_save_file_as_utf8($bdir."/.htaccess", "deny from all", false);
-        // }
+        
     }
     ///<summary></summary>
     /**
@@ -68571,6 +68525,7 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
     private $m_closeCallback;
     private $m_dbpwd;
     private $m_dbselect;
+    private $m_dbport; // store the port
     private $m_dbserver;
     private $m_dbuser;
     private $m_isconnect;
@@ -68585,6 +68540,18 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
     public  static $Config;
     static $idd=0;
     const DRIVER_MYSQLI = "MySQLI";
+    public function getServer(){
+        return $this->m_dbserver;
+    }
+    public function getUser(){
+        return $this->m_dbuser;
+    }
+    public function getPort(){
+        return $this->m_dbport;
+    }
+    public function getPwd(){
+        return $this->m_dbpwd;
+    }
     ///<summary>.ctr</summary>
     /**
     * .ctr
@@ -68697,7 +68664,8 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
 				$lcount." <br />");
 				
         }
-        $r=igk_db_connect($this->m_dbserver, $this->m_dbuser, $this->m_dbpwd, $this->m_dboptions);
+        $r=igk_db_connect($this);//->m_dbserver, $this->m_dbuser, $this->m_dbpwd, $this->m_dboptions);
+       
 
         if(igk_db_is_resource($r)){
             self::SetResId($r, __FUNCTION__);
@@ -68767,11 +68735,20 @@ class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
     * @param mixed $dbuser the default value is "root"
     * @param mixed $dbpwd the default value is ""
     */
-    public static function Create($dbserver="localhost", $dbuser="root", $dbpwd=""){
+    public static function Create($dbserver="localhost", $dbuser="root", $dbpwd="", $port = null){
         $out=new IGKDBQueryDriver();
-        $out->m_dbserver=trim($dbserver);
-        $out->m_dbuser=trim($dbuser);
-        $out->m_dbpwd=trim($dbpwd);
+        if (is_object($dbserver)){
+            //principal info 
+            $out->m_dbserver=trim($dbserver->server);
+            $out->m_dbuser=trim($dbserver->user);
+            $out->m_dbpwd=trim($dbserver->pwd);
+            $out->m_dbport = $dbserver->port;
+        } else {
+            $out->m_dbserver= trim($dbserver);
+            $out->m_dbuser=trim($dbuser);
+            $out->m_dbpwd=trim($dbpwd);
+            $out->m_dbport = $port;
+        }
         $out->connect();
         if($out->m_isconnect){
             $out->close();
@@ -72231,7 +72208,7 @@ class IGKResourceUriResolver{
             if(!$generate){
                 return 1;
             }
-            if(!($outlink=igk_io_symlink($target, $cibling))){
+            if(!file_exists($target)  && !($outlink=igk_io_symlink($target, $cibling))){
                 igk_die(__("Failed to create symbolic link -1- {0} ==&gt; {1}", $target, igk_realpath($target), $cibling));
             }
             igk_hook("generateLink", array(
@@ -72257,10 +72234,10 @@ class IGKResourceUriResolver{
                 }
                 $tab=$this->environment;
                 // +| generate asset directory
-                if (!file_exists($chain= igk_io_basedir(igk_html_uri(IGK_RES_FOLDER."/.htaccess")))){
+               // if (!file_exists($chain= igk_io_basedir(igk_html_uri(IGK_RES_FOLDER."/.htaccess")))){
                     // +
-                    igk_io_w2file($chain, file_get_contents(IGK_LIB_DIR."/Default/assets.htaccess.inc"));
-                }
+                    // igk_io_w2file($chain, file_get_contents(IGK_LIB_DIR."/Default/assets.htaccess.inc"));
+                // }
                 foreach($tab as $i=>$j){
                     if(igk_io_is_subdir($i, $rp)){
                         $s=$j;
@@ -72277,8 +72254,8 @@ class IGKResourceUriResolver{
                                 if(!$exists && !is_link($o)){
                                     $odir=dirname($o);
                                     if (IGKIO::CreateDir($odir)){
-                                        if(!($outlink=igk_io_symlink($rp, $o))){
-                                             
+                                        if( !file_exists($o) && !($outlink=igk_io_symlink($rp, $o))){                                             
+                                            igk_ilog("file exists ? $rp = ".file_exists($o));
                                             igk_ilog(__("Failed to create symbolic link - 2 - ")." ".$rp .'==$gt; '. $o. " ? ".is_link($o)." = ".$outlink);
                                             return null;
                                         }
@@ -72439,7 +72416,11 @@ class IGKSQLQueryUtils {
                     return "longtext";
                 }
                 break;
-        }
+            case "date":
+                if ($adapter->isTypeSupported('datetime')){
+                    return "datetime";
+                }
+        }  
         return "text";
     }
     public static function AllowedDefValue(){
@@ -72496,6 +72477,8 @@ class IGKSQLQueryUtils {
         $defvalue = self::AllowedDefValue();
 		
         foreach($columninfo as $v){
+           
+            
             if(($v == null) || !is_object($v)){
                 igk_die(__CLASS__." :::Error table column info is not an object error for ".$tbname);
             }
@@ -72505,7 +72488,8 @@ class IGKSQLQueryUtils {
             $v_name=igk_db_escape_string($v->clName);
             $query .= "`".$v_name."` ";
             $type=igk_getev(static::ResolvType($v->clType), "Int");
-            if (!$adapter->isTypeSupported($type)){
+           
+            if ($adapter && !$adapter->isTypeSupported($type)){
                 $type = static::fallbackType($type, $adapter);
             } 
             $query .= igk_db_escape_string($type);
@@ -72557,14 +72541,13 @@ class IGKSQLQueryUtils {
                 $query .= "DEFAULT {$_def} ";
 
                 if ($r_v && $v->clUpdateFunction){
-                    $_def = isset($defvalue[$_ktype][$v->clUpdateFunction]) ? $v->clDefault:
-                    "".igk_db_escape_string($v->clUpdateFunction)."";
-                
+                    $_def = !isset($defvalue[$_ktype][$v->clUpdateFunction]) ? $v->clDefault:
+                    "".igk_db_escape_string($v->clUpdateFunction).""; 
                     $query .= " ON UPDATE {$_def}";
                 }
-                 
-
             }
+ 
+
             if($v->clDescription && !$nocomment){
                 $query .= "COMMENT '".igk_db_escape_string($v->clDescription)."' ";
             }
@@ -73122,7 +73105,7 @@ class IGKSQLQueryUtils {
         }
         else if(is_callable($options)){
             $g=igk_db_create_opt_obj();
-            $c= self::CALLBACK_OPTS;
+            $c= IGKQueryResult::CALLBACK_OPTS;
             $g->$c=$options;
             $options=$g;
         }
@@ -74003,6 +73986,7 @@ abstract class IGKSysCache{
     * @param mixed $force the default value is false
     */
     public static function CacheLibFiles($force=false){
+ 
         $f=self::LibCacheFile();
         if(empty($f))
             return;
@@ -74014,10 +73998,19 @@ abstract class IGKSysCache{
         }
         $data=IGK_STR_EMPTY;
         $dir=IGK_LIB_DIR; 
+        $rdata = [];
+        $src = "";
         if(!empty(self::$LibFiles)){
             foreach(self::$LibFiles as  $v){
-                $data .= 'require_once(\''.$v.'\');'.$el;
-            }
+                $v = igk_io_collapse_path($v);
+                if (strpos($v, "%lib%")===0){
+                    $src .= "require_once('".substr($v, 6)."');".$el;
+                }else{
+
+                    $data .= '\''.$v.'\','.$el;
+                    $rdata[] = $v;
+                }
+                }
         }
         else{
             igk_trace();
@@ -74029,9 +74022,7 @@ abstract class IGKSysCache{
         if(!$phar){
             $init=<<<EOF
 \$bck = getcwd();
-chdir(IGK_LIB_DIR);
-\$d = '{$dir}';
-chdir(\$d);
+chdir(IGK_LIB_DIR);  
 EOF;
             $restore=<<<EOF
 chdir(\$bck);
@@ -74045,13 +74036,23 @@ EOF;
 // author: C.A.D BONDJE DOUE
 // date : {$date}
 ${init}
-{$data}
+${src}
+\$g = [{$data}];
+foreach(\$g as \$k){
+    if (file_exists(\$c = igk_io_expand_path(\$k))){
+        require_once(\$c);
+    }
+    else die("file not found: ".\$k);
+}
 ${restore}
 EOF;
         igk_io_save_file_as_utf8($f, $out);
+ 
         self::Init_CachedHook();
         if(function_exists("opcache_invalidate"))
             opcache_invalidate($f, true);
+
+ 
     }
     ///<summary>init cache folder hook</summary>
     /**
@@ -74443,8 +74444,8 @@ if(file_exists(($file=dirname(__FILE__)."/.igk.version.php"))){
 unset($file);
 define("IGK_BALAFON_JS_VERSION", "4.6.0.0408");
 define("IGK_FRAMEWORK", "IGKDEV-WFM");
-!defined("IGK_WEBFRAMEWORK") && define("IGK_WEBFRAMEWORK", "11.5");
-!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".0.0418");
+!defined("IGK_WEBFRAMEWORK") && define("IGK_WEBFRAMEWORK", "11.6");
+!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".0.0428");
 define("IGK_AUTHOR", "C.A.D. BONDJE DOUE");
 define("IGK_AUTHOR_CONTACT", "bondje.doue@igkdev.com");
 define("IGK_AUTHOR_2", "R. TCHATCHO");
@@ -74764,19 +74765,22 @@ igk_sys_reg_uri("^/".IGK_RES_FOLDER."/".IGK_SCRIPT_FOLDER.IGK_REG_ACTION_METH."[
 });
 igk_sys_reg_uri("^/".IGK_RES_FOLDER."/".IGK_STYLE_FOLDER."/balafon.css[%q%]", function($m=null){
      if(defined("IGK_FORCSS"))
-        return;
-    define("IGK_FORCSS", 1);
-  // igk_wln("/* balafon css*/");
+        return; 
+ 
+    header("Content-Type: text/css");
 
     $d="/".IGK_RES_FOLDER."/".IGK_STYLE_FOLDER."/balafon.css.php";
-    $f=igk_io_dir(igk_io_basedir().$d);
+    // + | change to application directory for protected -- 
+    $f=igk_io_dir(igk_io_applicationdir().$d);
     if(!file_exists($f)){
         igk_io_w2file($f, igk_get_basestyle());
     } 
-    //igk_ilog("get balafon css::".$f);
-    include($f); 
-    // header("Content-Type: text/css");
-    // echo "body{background-color: indigo}";
+    try{
+        include($f); 
+    }catch(Exception $ex){
+        header("Content-Type: text/css");
+        echo "body{background-color: red}";
+    }
     igk_exit();
 }
 , 0);

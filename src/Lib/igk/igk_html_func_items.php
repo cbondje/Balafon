@@ -674,8 +674,11 @@ function igk_html_node_arraylist($list, $tag="li", $callback=null){
 /**
 * bind article
 */
-function & igk_html_node_article($ctrl, $name, $raw=null, $showAdminOption=1){ 
+function & igk_html_node_article($ctrl, $name, $raw=[], $showAdminOption=1){ 
     $n=igk_html_node_NoTagNode();
+    if ($ctrl===null){
+        $ctrl = igk_getctrl(IGKSysDbController::class);
+    }
     igk_html_article($ctrl, trim($name), $n, $raw, null, true, true, $showAdminOption);
     return $n;
 }
@@ -1355,10 +1358,10 @@ function igk_html_node_dbentriescallback($target, $callback, $queryResult, $fall
 * @param mixed $r
 * @param mixed $max
 */
-function igk_html_node_dbresult($r, $uri, $selected, $max=-1){
+function igk_html_node_dbresult($r, $uri, $selected, $max=-1, $target=null){
     $n=igk_createnotagnode();
     if($r)
-        $n->add(igk_db_view_result_node($r, $uri, $selected, $max));
+        $n->add(igk_db_view_result_node($r, $uri, $selected, $max, $target));
     return $n;
 }
 ///<summary>DataBase select component </summary>
@@ -2477,12 +2480,19 @@ function igk_html_node_paneldialog($title, $content=null, $settings=null){
     }
 
     if($settings){
-
         if($svgBtn=igk_getv($settings, "closeBtn")){
 			if (is_numeric($svgBtn)){
 				$svgBtn ="drop";
 			}
             $tl->addABtn("#")->setClass("close")->Content=igk_svg_use($svgBtn);
+        } 
+        
+        if ($attribs = igk_getv($settings, "attribs")){
+            if ($cl = igk_getv($attribs, "class")){
+               $n["class"] = $cl;
+            }
+            unset($attribs["class"]);
+            $n->setAttributes($attribs);
         }
     }
     return $n;
@@ -3789,13 +3799,22 @@ function igk_html_node_ViewCallback(callable $callback){
 
 ///<summary> center page document</summary>
 function igk_html_node_pageCenterBox(callable $host=null){
-    $f = igk_html_parent_node();
-    $box = $f->div()->
-    container()->row()->col("no-margin fitw")->div()->setClass("fitvh")->addCenterBox()->getBox();
-    if ($host!=null){
-        $host($box);
+    $box = null;
+    $_o = null;
+    if ($f = igk_html_parent_node()){
+        $dv = $f->div();
+        $_o = $f;
+    }else {
+        $dv = igk_createnode("div");
+        $_o = $dv;
     }
-    return $f;//box;
+    $box = $dv->
+    container()->row()->col("no-margin fitw")->div()->setClass("igk-page-center fitvh")->addCenterBox()->getBox();
+        if ($host!=null){
+            $host($box);
+        }
+      
+    return $_o;
 }
 
 

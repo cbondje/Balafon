@@ -1,4 +1,5 @@
 <?php
+use function igk_resources_gets as __;
 
 ///<summary>class used to manage database for a controller</summary>
 /**
@@ -92,8 +93,9 @@ class IGKDbUtility extends IGKObject implements IIGKDbUtility {
     * @param mixed $ctrl
     */
     public function __construct($ctrl){
-        if($ctrl == null)
+        if($ctrl == null){
             igk_die("variable ctrl can't be null");
+        }
         $this->m_Ctrl=$ctrl;
         if($this->connect()){
             register_shutdown_function(function(){
@@ -101,7 +103,8 @@ class IGKDbUtility extends IGKObject implements IIGKDbUtility {
             });
         }
         else{
-            igk_die(__("Failed to select {0}'s databases", $this->m_Ctrl->getDataAdapterName()));
+          //igk_wln_e( $this->getAd());
+          // igk_die(__("Failed to select {0}'s databases", __CLASS__));
         }
     }
     ///<summary>get table prefix</summary>

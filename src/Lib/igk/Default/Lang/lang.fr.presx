@@ -1637,3 +1637,11 @@ $l["phone number"]= "contact telephonique";
 $l["profession name"]= "occupation actuelle";
 
 $l["q.confirm_remove_group_auth"] = "Voulez vous vraiment supprimer cette authorization de la liste? ";
+
+
+$l["dbServer"] = "Serveur";
+$l["dbUser"] = "Utilisateur";
+$l["bbPasswd"] = "Mot de passe";
+$l["dbName"] = "Base de données";
+$l["menu.installsite"] = "Install Site";
+$l["menu.session"] = "Session";

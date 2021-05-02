@@ -6,6 +6,7 @@ use IGK\System\IO\File\PHPScriptBuilder;
 
 class FixLangCommand extends AppExecCommand{
     var $command = "--fix:lang";
+    var $category = "Fixing";
     var $desc = "fix language file";
     public function exec($command, $path=null)
     { 

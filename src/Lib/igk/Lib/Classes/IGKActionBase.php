@@ -117,4 +117,14 @@ abstract class IGKActionBase implements IActionProcessor{
     protected function getActionProcessor(){
         return IGK\Actions\Dispatcher::class;
     }
+
+    public function getController(){
+        return $this->ctrl;
+    }
+    public function __get($n){
+        if (method_exists($this, $fc = "get".$n)){
+            return $this->$fc();
+        }
+        return null;
+    }
 }

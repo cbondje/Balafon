@@ -7,14 +7,17 @@
 	var current = [];
 	igk.system.createNS("igk.winui.paginationview",{
 		init:function(){
-		
-			
 			function _page_ready(q, i, t, cl, r){
 				return function(xhr){
 						if (this.isReady()){
 							if (xhr.status == 200){
-								if (i.target)
-									q.select(i.target).setHtml(xhr.responseText).init();
+								console.debug("target :"+i.target);
+								if (i.target){
+									$igk(i.target).first().setHtml(xhr.responseText).init();
+									if (!i.update_uri){
+										return;
+									}
+								}
 								else
 									igk.ajx.fn.replace_or_append_to_body.apply(this, [xhr]); 
 								if (typeof(r)=='undefined'){ 
@@ -47,8 +50,7 @@
 			if (!popstate){
 				// console.debug("reg event");
 				igk.winui.reg_event(window, 'popstate', function(e){
-					// console.debug(current.length);
-					
+					// console.debug(current.length);					
 					var du = document.location.href;
 					var ldu = du + (du.indexOf("?")!=-1 ? "?":"") + "?reset=1";
 						if(i.cookie){
@@ -64,42 +66,13 @@
 					}else{
 						current.pop();
 						current.push(document.location.href);
-						// if ((e.state==null)  && (current.length>0)){
-							// current.pop();
-							
-							// console.debug("not match");
-							// console.debug(e);
-							// console.debug(current);	
-							igk.ajx.get(ldu, null, _page_ready(q,i,du, du, 1));
-						// }
+					  	igk.ajx.get(ldu, null, _page_ready(q,i,du, du, 1));
+					 
 					}
 					
 					e.preventDefault();
 					e.stopPropagation();
-					return;
-				// //	/^+i.baseuri+/.test(document.location.href
-					// // if (e.state ==null){
-						// // console.debug('state is null'+ document.referrer);
-						// // console.debug(current);
-						// // if (current.length>0){
-							// // var suri  = current.pop();
-							// // igk.ajx.get(suri, null, _page_ready(q,i,document.location.href, suri, 1));
-						// // }
-						// // else{
-							// reload the current document page						
-							// // igk.ajx.get(document.location.href, null, _page_ready(q,i,document.location.href,current.pop(), 1));
-						// // }
-						// // return;
-					// // }
-					
-					// // var r=e.state['igk-rol'];
-					// // if (r){
-						// // console.debug("navigate :"+document.location.href);
-						// // console.debug("olduriss :"+e.state.olduri);
-						// // igk.ajx.get(document.location.href, null, _page_ready(q,i,document.location.href, document.location.href, 1));
-						// // current.pop();
-					// // }
-
+					return;  
 				});
 				popstate=1;
 			}

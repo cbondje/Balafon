@@ -547,3 +547,11 @@ $l["lb.clGsm"] = "GSM";
 $l["lb.clEmail"] = "E-Mail";
 
 $l["warn.question.dbwillbedestroyed"] = "/!\\ all tables and data will be reset. Continue?";
+
+$l["dbServer"] = "Host";
+$l["dbUser"] = "User";
+$l["bbPasswd"] = "Password";
+$l["dbName"] = "Name";
+
+$l["menu.installsite"] = "Install Site";
+$l["menu.session"] = "Session";
