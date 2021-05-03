@@ -41,6 +41,11 @@ abstract class ControllerExtension{
         }
         return $t;
     }
+    public static function baseUri(BaseController $ctrl){
+        return igk_io_baseuri() === $ctrl->getAppUri()? 
+	        $ctrl->getAppUri() : igk_io_baseuri();        
+    }
+    
     /**
      * return asset content if exists
      * @param BaseController $ctrl 

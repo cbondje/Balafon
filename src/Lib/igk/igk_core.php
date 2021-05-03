@@ -350,6 +350,7 @@ function igk_wln($msg=""){
         $v_iscmd=igk_is_cmd();
         $lf=$v_iscmd ? IGK_CLF: "<br />";
     }
+    
     foreach(func_get_args() as $k){
         $msg=$k;
         if(is_string($msg) || is_numeric($msg))

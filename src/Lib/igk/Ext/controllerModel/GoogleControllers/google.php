@@ -64,8 +64,8 @@ function igk_google_get_font_sizes($family, $size=null){
     if ($size===null){
         $defaultsize = '100;200;400;700;900';
         $familysizes = [
-            "roboto"=>'100;400;700;900',
-            "material icons"=>""
+            "Roboto"=>'100;400;700;900',
+            "Material+Icons"=>"400"
         ];
         $size = igk_getv($familysizes, strtolower($family), $defaultsize );
     }
@@ -509,10 +509,9 @@ igk_sys_reg_uri("^/!@res/(/)?google/cssfont".IGK_REG_ACTION_METH."[%q%]", functi
 , 1);
 igk_sys_reg_uri("^/!@res/(/)?getgooglefont[%q%]", function($c){
     @session_write_close();
-    header("Content-Type:text/css");
-   //  IGKIO::RmDir("/Volumes/Data/wwwroot/sites/8801.237mons/src/public/assets");
+    header("Content-Type:text/css"); 
 
-    // igk_ilog("try load getgooglefont");
+   //  IGKIO::RmDir("/Volumes/Data/wwwroot/sites/8801.237mons/src/public/assets");
     // https://local.com:48801/!@res//getgooglefont?uri=aHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3M/ZmFtaWx5PVJvYm90bzoxMDAsNDAwLDcwMCw5MDA=&type=css
     if (is_array($c)){
         $c = igk_getv($c, "query");
@@ -537,13 +536,20 @@ igk_sys_reg_uri("^/!@res/(/)?getgooglefont[%q%]", function($c){
     $fdir=igk_google_get_fontdir();
     igk_io_createdir($fdir);
 
-    if($family){
+    if($family){ 
         if(($file=igk_google_filefromfamily($family))){
             
-            if(file_exists($file)|| igk_google_installfont($f, $sizes, $file)){
-                $uri=igk_io_baseuri()."/".igk_html_uri(igk_io_baserelativepath($file));
-                // igk_ilog("install font and nav to => ".$uri);    
-                igk_navto($uri);
+            if(file_exists($file) || igk_google_installfont($f, $sizes, $file)){
+                $ref = igk_io_baserelativepath($file);
+                $uri=igk_io_baseuri()."/".igk_html_uri($ref);
+                if (file_exists($ref)){
+                    igk_navto($uri);
+                } else {
+                    igk_set_header(404);
+                    igk_exit();
+                }
+
+                //igk_wln_e("install::::".$uri);
             }           
             igk_set_header(500);
             igk_exit();

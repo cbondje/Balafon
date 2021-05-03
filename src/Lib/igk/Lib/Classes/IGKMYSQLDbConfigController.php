@@ -737,7 +737,7 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
                 "options"=>(object)["--action"=>"migrate"]
             ]);
             $r = ob_get_clean();
-            $this->notifyctrl()->success(__("database migrate") );
+            $this->notifyctrl()->success(__("database migrate"));
         }
         return igk_navtocurrent();
     }
@@ -1968,7 +1968,6 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
             igk_navtocurrent();
         }
         set_time_limit(0);
-        igk_close_session();
         igk_set_env(__FUNCTION__, 1);
         igk_notification_reset(IGKEvents::HOOK_DB_INIT_ENTRIES);
         IGKIO::RmDir(IGK_APP_DIR."/Caches/db");
@@ -1995,10 +1994,13 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
                 igk_set_env(__FUNCTION__, null);
                 $this->_storeDbCache();
                 igk_getctrl(IGK_SESSION_CTRL)->forceview();
+                $this->notifyctrl()->success(__("init system database"));
             }
         }
         else
             $ad=null;
+        
+        igk_close_session();
         if($nav && !igk_is_ajx_demand()){
             igk_navtocurrent();
         }

@@ -7136,11 +7136,7 @@ Name:balafon.js
 	}
 
 	function __dom_get_root(e) {
-		var r = null;
-
-		// igk.DEBUG=1;
-
-		// igk.DEBUG=0;	
+		var r = null; 
 		$igk(e).select(">>").each(function () {
 			if (this.o.nodeType == 1) {
 				r = this.o;
@@ -7148,9 +7144,7 @@ Name:balafon.js
 			}
 			return true;
 		});
-
 		return r;
-
 	};
 
 	function __replace_xml_doc(d, txt) {
@@ -7522,10 +7516,8 @@ Name:balafon.js
 			}
 			else {
 				// TODO
-
 				r = igk.dom.activeXDocument();
 				r.load(s);
-
 			}
 			return r;
 		}

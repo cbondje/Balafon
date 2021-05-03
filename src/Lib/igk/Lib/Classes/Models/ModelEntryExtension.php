@@ -169,6 +169,27 @@ abstract class ModelEntryExtension{
     public static function display(ModelBase $model){
         return "display:".$model->to_json();
     }
+
+    /**
+     * return the selected data
+     * @param ModelBase $model 
+     * @return string 
+     * @throws Exception 
+     */
+    public static function formSelectData(ModelBase $model){
+        $data = [];
+        foreach($model::select_all() as $m){
+            $data[] = ["i"=>$m->{$m->getPrimaryKey()},"t"=>$m->display()];
+        }
+        return $data;
+    }
+
+    /**
+     * return this model form fields
+     * @param ModelBase $model 
+     * @return array 
+     * @throws IGKException 
+     */
     public static function formFields(ModelBase $model){
         $cl = $model->getFormFields();
         $t = [];
