@@ -16,8 +16,7 @@ class MySQLCommand extends AppExecCommand{
         }
         if (preg_match("/^SELECT Count\(\*\) /i", $query)){
             // force table creation query igk_wln($query);
-            // igk_wln_e("-----"); 
-            return null;
+             return null;
         }
         return true;
     }

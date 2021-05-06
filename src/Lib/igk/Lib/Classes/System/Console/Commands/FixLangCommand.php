@@ -19,7 +19,7 @@ class FixLangCommand extends AppExecCommand{
 
             $l = [];
             include($f);
-            ksort($l);
+            ksort($l, SORT_NATURAL | SORT_FLAG_CASE);
             $o = "";
 
             foreach($l as $k=>$v){

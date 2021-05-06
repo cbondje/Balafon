@@ -146,3 +146,13 @@ EOF;
     $t->add($n);
     return $t;
 }
+
+
+function igk_html_demo_circlewaiter($t){
+    $n=igk_createnode();
+    $n->circlewaiter();
+    $t->add($n);
+    $t->a("#")->on("click", "\$igk('.igk-circle-waiter').first().remove(); ")->Content = "remove";
+    
+
+}

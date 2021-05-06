@@ -9,6 +9,7 @@
 use IGK\Core\Ext\Google\IGKGoogleCssUri as GoogleCssUri;
 use IGK\Core\Ext\Google\IGKGooglePackage as IGKGooglePackage;
 use IGK\Core\Ext\Google\IGKHrefListValue as IGKHrefListValue;
+use function igk_resources_gets as __;
 
 
 define("GOOGLE_URI_REGEX", "/url\s*\((?P<link>[^)]+)\)/");
@@ -345,8 +346,10 @@ function igk_google_zoneinit($g){
 * @param mixed $t
 */
 function igk_html_demo_googlecirclewaiter($t){
-    $t->addDiv()->Content=R::ngets("msg.pleasewait");
-    $t->addgoogleCircleWaiter();
+    /// TODO : Fix google circle
+    $dv = $t->div()->setStyle("height: 200px");
+    $dv->addDiv()->Content =__("Please wait...");
+    $dv->addgoogleCircleWaiter()->setStyle("display:inline-block; height:100px; width:100%");
 }
 ///'https://local.com/Lib/igk/Ext/ControllerModel/GoogleControllers/Scripts/igk.google.maps.js'
 /**

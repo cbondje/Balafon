@@ -190,8 +190,9 @@ class ControllerConfigData extends IGKObject implements ArrayAccess{
     /**
     * 
     */
-    public function storeConfig(){  
-        $d = igk_createxml_config_data($this->m_configs); 
+    public function storeConfig(){         
+        $this->m_changed = 0;  
+        $d = igk_createxml_config_data($this->m_configs);  
         return igk_io_w2file($this->getConfigFile(), $d->render());
     }
     public function get($xpath, $default= null){

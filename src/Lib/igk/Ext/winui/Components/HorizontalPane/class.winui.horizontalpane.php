@@ -537,10 +537,10 @@ $target->Load( igk_html_databinding_treatresponse($s,null, null,null));
 		$u = igk_app()->Session->User;
 		switch($t){
 			case "infobox":
-				return !$this->HasPage && (IGKApp::getInstance()->IsSupportViewMode(IGKViewMode::WEBMASTER) || ($u && igk_sys_isuser_authorize($u, "sys://designpage")));
+				return !$this->HasPage && (IGKApp::getInstance()->IsSupportViewMode(IGKViewMode::WEBMASTER) || ($u && $u->auth("sys://designpage")));
 
 			case "option":
-				return (igk_app()->IsSupportVIewMode(IGKViewMode::WEBMASTER) || ($u && igk_sys_isuser_authorize($u , 'sys://designpage')) )&& ($this->Folder != null);
+				return (igk_app()->IsSupportVIewMode(IGKViewMode::WEBMASTER) || ($u && $u->auth('sys://designpage')) )&& ($this->Folder != null);
 
 		}
 		return false;
@@ -580,10 +580,9 @@ $target->Load( igk_html_databinding_treatresponse($s,null, null,null));
 		//$u = igk_app()->Session->User;
 		$u = igk_app()->Session->User;
 
-		$v = IGKApp::getInstance()->IsSupportViewMode(IGKViewMode::WEBMASTER) || ($u && igk_sys_isuser_authorize($u, "sys://designpage"));
+		$v = IGKApp::getInstance()->IsSupportViewMode(IGKViewMode::WEBMASTER) || ($u && $u->auth("sys://designpage"));
 		if ($v)
 		{
-
 			if ($p){
 				$uri = $p->getAddHorizontalPageUri();
 		}

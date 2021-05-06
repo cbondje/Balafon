@@ -166,34 +166,34 @@ abstract class IGKApplicationController extends IGKPageControllerBase implements
         igk_exit();
         return false;
     }
-    ///<summary>check init and init user to this apps </summary>
-    /**
-    * check init and init user to this apps
-    */
-    public function checkUser($nav=true, $uri=null){
-        $r=true;
-        $u= igk_app()->Session->User;
-        $ku=$this->getUser();   
+    // ///<summary>check init and init user to this apps </summary>
+    // /**
+    // * check init and init user to this apps
+    // */
+    // public function checkUser($nav=true, $uri=null){
+    //     $r=true;
+    //     $u= igk_app()->Session->User;
+    //     $ku=$this->getUser();   
 
-        if($ku === null){
-            if($u !== null){
-                $this->setUser($this->initUserFromSysUser($u));
-            }
-            else
-                $r=false;
-        }
-        if($nav && !$r){
-            $ruri=igk_io_base_request_uri();
-            $s="";
-            if($ruri)
-                $s="q=".base64_encode($ruri);
-            $u=($uri == null ? $this->getAppUri(""): $uri);
-            if($s)
-                $u .= ((strpos($u, "?") === false) ? "?": "&").$s;
-            igk_navto($u);
-        }
-        return $r;
-    }
+    //     if($ku === null){
+    //         if($u !== null){
+    //             $this->setUser($this->initUserFromSysUser($u));
+    //         }
+    //         else
+    //             $r=false;
+    //     }
+    //     if($nav && !$r){
+    //         $ruri=igk_io_base_request_uri();
+    //         $s="";
+    //         if($ruri)
+    //             $s="q=".base64_encode($ruri);
+    //         $u=($uri == null ? $this->getAppUri(""): $uri);
+    //         if($s)
+    //             $u .= ((strpos($u, "?") === false) ? "?": "&").$s;
+    //         igk_navto($u);
+    //     }
+    //     return $r;
+    // }
     ///<summary></summary>
     ///<param name="node" default="null"></param>
     /**
@@ -1104,10 +1104,11 @@ EOF;
         if(empty($t))
             throw new Exception(__("Can't setup controller: {0}", get_class($this) ));
         $c=array($t, $t."_administrator");
+        $table = igk_db_get_table_name(IGK_TB_GROUPS);
         foreach($c as $k){
-            $e=igk_db_table_select_where(IGK_TB_GROUPS, array(IGK_FD_NAME=>$k), $this);
+            $e=igk_db_table_select_where($table, array(IGK_FD_NAME=>$k), $this);
             if($e && !$e->Success){
-                igk_db_insert($this, IGK_TB_GROUPS, array(IGK_FD_NAME=>$k));
+                igk_db_insert($this, $table, array(IGK_FD_NAME=>$k));
             }
         }
     }

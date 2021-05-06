@@ -6850,9 +6850,18 @@ Name:balafon.js
 			enumerable: true
 		});
 	}
+	createNS("igk.Number",{
+		parseByte: function(i){
+			if (i>255)
+				return 255;
+			if (i<0)
+				return 0;
+			return i;
+		}
+	});
 	createNS("igk.system.color", {
 		HSVtoColor: function (h, s, v) {
-
+			// angle 
 			var r, g, b;
 			var c = v * s;
 			var x = c * (1 - Math.abs(((h / 60.0) % 2) - 1));
@@ -6874,97 +6883,10 @@ Name:balafon.js
 				r = c; g = 0; b = x;
 			}
 			return {
-				r: parseInt(r * 255),
-				g: parseInt(g * 255),
-				b: parseInt(b * 255)
+				r: igk.Number.parseByte(r * 255),
+				g: igk.Number.parseByte(g * 255),
+				b: igk.Number.parseByte(b * 255)
 			};
-
-
-			// BAD ERROR
-
-			// HSV contains values scaled as in the color wheel:
-			// that is,all from 0 to 255. 
-			// for( this code to work,HSV.Hue needs
-			// to be scaled from 0 to 360(it// s the angle of the selected
-			// point within the circle). HSV.Saturation and HSV.value must be 
-			// scaled to be between 0 and 1.
-			// var h;
-			// var s;
-			// var v;
-			// var r=0;
-			// var g=0;
-			// var b=0;
-			// // Scale Hue to be between 0 and 360. Saturation
-			// // and value scale to be between 0 and 1.
-			// h=(h / 255 * 360) % 360;
-			// s=(s / 255);
-			// v=(v / 255);
-
-			// if(s==0)
-			// {
-			// // If s is 0,all colors are the same.
-			// // This is some flavor of gray.
-			// r=v;
-			// g=v;
-			// b=v;
-			// }
-			// else
-			// {
-			// var p,q,t,fractionalSector,sectorNumber,sectorPos;
-			// // The color wheel consists of 6 sectors.
-			// // Figure out which sector you// re in.
-			// sectorPos=h / 60;
-			// sectorNumber=parseInt(Math.floor(sectorPos));
-			// // get the fractional part of the sector.
-			// // That is,how many degrees into the sector
-			// // are you?
-			// fractionalSector=sectorPos - sectorNumber;
-			// // Calculate values for the three axes
-			// // of the color. 
-			// p=v *(1 - s);
-			// q=v *(1 -(s * fractionalSector));
-			// t=v *(1 -(s *(1 - fractionalSector)));
-			// // Assign the fractional colors to r,g,and b
-			// // based on the sector the angle is in.
-			// switch(sectorNumber)
-			// {
-			// case 0:
-			// r=v;
-			// g=t;
-			// b=p;
-			// break;
-			// case 1:
-			// r=q;
-			// g=v;
-			// b=p;
-			// break;
-			// case 2:
-			// r=p;
-			// g=v;
-			// b=t;
-			// break;
-			// case 3:
-			// r=p;
-			// g=q;
-			// b=v;
-			// break;
-			// case 4:
-			// r=t;
-			// g=p;
-			// b=v;
-			// break;
-			// case 5:
-			// r=v;
-			// g=p;
-			// b=q;
-			// break;
-			// }
-			// }
-			// // return an RGB structure,with values scaled
-			// // to be between 0 and 255.
-			// return {r:parseInt(r * 255),
-			// g:parseInt(g * 255),
-			// b:parseInt(b * 255)};
 		}
 	});
 
@@ -8351,14 +8273,12 @@ Name:balafon.js
 	(function () {
 		var _cnode = 0; //convertter node with css
 		var S = igk.system;
-		igk.appendProperties(igk.system, {
-			color: function (r, g, b, a) {// .ctrl color 
+		var _CNS = igk.system.color || {};
+		function __ColorClass(r, g, b, a) {// .ctrl color 
 				this.r = r;
 				this.g = g;
 				this.b = b;
 				this.a = a ? a : 1.0;
-
-
 				igk.appendProperties(this, {
 					toString: function () {
 						var r = this.r;
@@ -8402,7 +8322,11 @@ Name:balafon.js
 					}
 				});
 
-			},
+		}; 
+		igk.appendProperties(__ColorClass, _CNS); 
+
+		igk.appendProperties(igk.system, {
+			color: __ColorClass,
 			colorGetA: function (v) {
 				if (!v)
 					return 0;
@@ -21189,6 +21113,7 @@ igk.ready(
 		var q = this;
 		var _running = true;
 		var _dat = null;
+		var _offset = 0;
 
 		igk.appendProperties(this.data, {
 			canva: null,// canva zone
@@ -21215,8 +21140,9 @@ igk.ready(
 				// background
 				ctx.strokeStyle = '' + cl;
 				ctx.beginPath();
-				var offset = -(Math.PI / 2);
+				var offset = (_offset * (Math.PI/180.0)) -(Math.PI / 2);
 				var _s = _getData();
+			 
 				switch (_s.mode) {
 					case 2:
 						if (this.dir == 1) {
@@ -21229,18 +21155,15 @@ igk.ready(
 							v2 = offset + (2 * Math.PI);
 							// ctx.arc(cx,cy,r,offset +(2*Math.PI)*(1-v) ,offset+ (2*Math.PI) ,false);
 						}
-
 						break;
 					case 1:
-
-						if (this.dir == 1) {
-							v1 = offset + (of_set * (Math.PI * 2));
-							v2 = offset + (2 * Math.PI) * v;
-
+						if (this.dir == 1){
+							v1 =   offset + (of_set * (Math.PI * 2));
+							v2 =   offset + (2 * Math.PI) * v;
 						}
 						else {
-							v1 = offset + (2 * Math.PI) * (1 - v);
-							v2 = offset + ((2 * Math.PI) * (1 - of_set));
+							v1 =   offset + (2 * Math.PI) * (1 - v);
+							v2 =   offset + ((2 * Math.PI) * (1 - of_set));
 						}
 						break;
 				}
@@ -21248,32 +21171,27 @@ igk.ready(
 					ctx.arc(cx, cy, r, v1, v2, false);
 
 				ctx.stroke();
-				// delete(ctx);// .dispose();
 			}
-
 		});
 
-		function _getData() {
+		function _getData(){
 			if (_dat == null) {
-
-
-
 				var _s = q.data.storyboard.getComputedStyle('content', ':before');
 				var _t = /^"((.)+)"$/i.exec(_s);
 				_dat = igk.JSON.init_data({ stop: 'width', mode: 1 }, (_t ? _t[1].replace(/\\\"/g, "\"") : null), function (s) {
 					s.stop = (_t ? _t[1] : null) || 'width';
 				});
-
 				q.data.penWidth = q.data.storyboard.getComputedStyle('border-size', ':before');
 			}
 			return _dat;
-		}
+		};
 		this.data.canva = this.add("canvas").addClass("posab fitw fith loc_t loc_l");
 
 		this.data.storyboard = this.add("div").addClass("igk-anim-time-board")
 			.reg_event("transitionend", function (evt) {
 				var _m = _getData();
-				// get transitionned property
+		 
+
 				if (evt.propertyName == _m.stop) {
 					// base of definition
 					if (q.data.dir == 1) {
@@ -21285,17 +21203,12 @@ igk.ready(
 						// .rmClass("igk-cl-2").addClass("igk-cl-1");
 						q.data.dir = 1;
 					}
-					_running = false;
-
+					//for infinit loop
+					//_running = false;
 					setTimeout(function () {
 						_running = !0;
 					}, 2000);
 				}
-				// q.data.storyboard.remove();
-
-			})
-			.reg_event("transitionstart", function (evt) {
-
 
 			})
 			// .addClass("dispn")	
@@ -21306,11 +21219,6 @@ igk.ready(
 				})
 			.addClass("igk-cl-2")
 			.setHtml(" ");
-
-
-
-
-
 		// for animation
 		setTimeout(function () {
 			var n = q.data.storyboard;
@@ -21319,13 +21227,20 @@ igk.ready(
 
 			q.data.render(0, 'transparent', 0);
 
-			igk.html.canva.animate(function (e) {
-
+			igk.html.canva.animate(function (e) { 
+				if (q.o.parentNode==null){
+					// stop animation
+					return !1;
+				}
 				if (!q.data.end) {
 					var x = igk.getNumber(n.getComputedStyle("width"));
 					var y = igk.getNumber(n.getComputedStyle("height"));
 					var cl = n.getComputedStyle('color');
-
+					_offset += 5;//= (new Date()).getMilliseconds() *180/(1*1000);
+					if (_offset>360){
+						_offset = 1;
+					}
+					// console.debug(_offset);
 					q.data.render(
 						Math.round((x / 100.0) * 100) / 100,
 						cl,
@@ -21336,7 +21251,7 @@ igk.ready(
 				q.data.render(1.0, "", 1.0);
 				return _running;
 			});
-		}, 1000);
+		}, 500);
 
 		// this.reg_event("click",function(){
 		// igk.ajx.post("http://localhost/igkdev/Configs/?express=1",'data=5');

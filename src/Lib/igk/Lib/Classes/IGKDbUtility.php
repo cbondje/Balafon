@@ -336,7 +336,7 @@ class IGKDbUtility extends IGKObject implements IIGKDbUtility {
     * return a sync data id
     */
     public function getSyncDataID($table, $value, $properties=null){
-        if($table == IGK_TB_USERS){
+        if($table == igk_db_get_table_name(IGK_TB_USERS)){
             if("+@id:/".$properties->User->clLogin === $value){
                 return $properties->User->clId;
             }
@@ -380,7 +380,7 @@ class IGKDbUtility extends IGKObject implements IIGKDbUtility {
         if(!$row){
             return "[row is null ". $valueInTable."]";
         }
-        if($table == IGK_TB_USERS && $row){
+        if (($table == igk_db_get_table_name(IGK_TB_USERS)) && $row){
             return "+@id:/".$row->clLogin;
         }
         return "@:/".$this->getSyncIdentificationId($table, $row);
@@ -403,7 +403,7 @@ class IGKDbUtility extends IGKObject implements IIGKDbUtility {
     * @param mixed $id
     */
     public function getSystemUserById($id){
-        return $this->select(IGK_TB_USERS, array(IGK_FD_ID=>$id))->getRowAtIndex(0);
+        return igk_get_user($id); 
     }
     ///<summary>get user id</summary>
     /**
@@ -418,10 +418,7 @@ class IGKDbUtility extends IGKObject implements IIGKDbUtility {
     * get user by id
     */
     public function getUser($uid){
-        if(!$this->connect())
-            return false;
-        $r=$this->selectSingleRow(IGK_TB_USERS, $uid);
-        $this->close();
+        return igk_get_user($uid);
     }
     ///<summary></summary>
     ///<param name="uid" default="null"></param>

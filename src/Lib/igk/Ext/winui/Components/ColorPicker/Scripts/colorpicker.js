@@ -155,9 +155,13 @@
             if (h < 0)
                 h = 255 + h;
             //h = 360;
-            return  igk.color.HSVtoColor(h,
-                s,
-                v);
+			var t = {h:h, s:s, v: v};
+            var m =  igk.system.color.HSVtoColor(t.h,
+                t.s,
+                t.v);
+			/// TODO:  FIX COLOR PICKER
+			// console.debug(t, m);
+			return m;
 		}
 		
 		function __updateview(){

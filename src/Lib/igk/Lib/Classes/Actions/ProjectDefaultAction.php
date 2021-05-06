@@ -22,8 +22,12 @@ abstract class ProjectDefaultAction extends \IGKActionBase{
      * @return mixed 
      */
     public function assets(){
-        // $path = implode("/", [$this->ctrl->getDataDir(), IGK_RES_FOLDER,  implode("/", func_get_args())]);
-        if ($content = $this->ctrl::asset_content(implode("/", func_get_args()))){
+
+        $path = implode("/", func_get_args());
+
+
+
+        if ($content = $this->ctrl::asset_content($path)){
             $response = new WebResponse($content);
             $mime = igk_getv(igk_header_mime(), igk_io_path_ext($path), "text/plain");
             $response->headers=[
@@ -32,20 +36,8 @@ abstract class ProjectDefaultAction extends \IGKActionBase{
             ]; 
             $response->cache_output(2500);  
             $response->output();
-        }
-        // if (file_exists($path)){
-        //     $response = new WebResponse(file_get_contents($path));
-        //     $mime = igk_getv(igk_header_mime(), igk_io_path_ext($path), "text/plain");
-        //     $response->headers=[
-        //         "Content-Type:{$mime}"
-        //     ]; 
-        //     $response->cache_output(2500); 
-        //     $response->output();
-        // }
-
-        throw new  RequestException(404, "resource not found");
-        
-
+        } 
+        throw new  RequestException(404, "resource not found: $path");
     }
     protected function manifest_json(){
         $dir = $this->ctrl->getDeclaredDir();

@@ -38,9 +38,15 @@ function igk_api_get_columninfo($row, $v, $table_n, $mysql){
     $cl=$row->addNode("Column");
     $cl["clName"]=$v->Field;
     $tab=array();
-    preg_match_all("/^((?P<type>([^\(\))]+)))\\s*(\((?P<length>([0-9]+))\)){0,1}$/i", trim($v->Type), $tab);
+    $ctype = trim($v->Type);
+    preg_match_all("/^((?P<type>([^\(\))]+)))\\s*((\((?P<length>([0-9]+))\)){0,1}|(.+)?)$/i", trim($v->Type), $tab);
+    //igk_wln("type ::::". $v->Type. " = ".$tab["type"][0]);
     $cl["clType"]=igk_balafon_mysql_datatype(igk_getv($tab["type"], 0, "Int"));
-    $cl["clTypeLength"]=igk_getv($tab["length"], 0, 0);
+    if (strtolower($cl["clType"]) =="enum"){
+        $cl["clEnumValues"] = substr($ctype, strpos($ctype, "(")+1,-1); 
+    }else{
+        $cl["clTypeLength"]=igk_getv($tab["length"], 0, 0);
+    }
     if($v->Default)
         $cl["clDefault"]=$v->Default;
     if($v->Comment){
@@ -216,10 +222,10 @@ function igk_api_mysql_check_data_structure($api, $ignore_notused=0, $exit=1){
     if (!isset($tconfig["tbigk_users"])){
         igk_die("not found");
     } 
+ 
 
     $tdb =  igk_api_mysql_get_data_schema($api, false, (object)array("check"=>1));
-    // igk_html_pre($tdb["tbigk_users"]);
-    // igk_exit();
+
 
     $rep=igk_createNode("data_response");
     $err=$rep->add("error-message");
@@ -244,13 +250,19 @@ function igk_api_mysql_check_data_structure($api, $ignore_notused=0, $exit=1){
             }
             $v_btest=$v_testb[$vv->clName];
             unset($v_testb[$vv->clName]);
-            if(strtolower($vv->clType) != strtolower($v_btest->clType)){
+            $s_type = strtolower($vv->clType);
+            $t_type = strtolower($v_btest->clType);
+            if (($s_type != $t_type) && !(($s_type == "date") && in_array($t_type, ["datetime"])) ){
+
+               
+
                 $err->add("msg")->Content=
                         sprintf("Column [%s::%s] type not --- match. Expected %s but %s found",
                         $tbname, $vv->clName,
                         $vv->clType,
                         $v_btest->clType
                     );
+                    // igk_wln_e("test:", $v_btest);
                 // "Column [{$tbname}::{$vv->clName}] Type Not match. Expected {$vv->clType} but {$v_btest->clType} found";
                 $v_err=0;
             }
@@ -445,7 +457,7 @@ function igk_api_mysql_get_config_data_schema($api, $render=1, $param=null){
                 }
             }
             else{
-                $data = igk_db_load_data_schemas($v->getDataSchemaFile());
+                $data = igk_db_load_data_schemas($v->getDataSchemaFile(), $v);
                 $tschema = $data->tables;
                 if($tschema){
                     foreach($tschema as $ck=>$cv){
@@ -515,6 +527,10 @@ function igk_api_mysql_get_data_schema($api, $render=1, $param=null){
                 $tt=$mysql->sendQuery("SHOW FULL COLUMNS FROM `".$table_n."`;");
                 foreach($tt->Rows as $v){
                     $cl=igk_api_get_columninfo($row, $v, $table_n, $mysql);
+                    // if ($v->Field == "clGrant" ){
+                    //     igk_wln($cl);
+                    //     igk_wln_e("grant...");
+                    // }
                     $tinfo[$v->Field]=new IGKDbColumnInfo($cl->Attributes->ToArray());
                 }
                 $tables[$table_n]=(object)array("tinfo"=>$tinfo, 'ctrl'=>"sys://mysql_db");

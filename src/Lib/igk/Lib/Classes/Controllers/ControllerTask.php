@@ -13,6 +13,10 @@ abstract class ControllerTask{
     
     protected $controller;
 
+    /**
+     * 
+     * @var RouteActionHandler
+     */
     protected $route;
 
     public function __construct($controller, ?RouteActionHandler $route=null)

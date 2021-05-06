@@ -2,6 +2,7 @@
 namespace IGK\Helper;
 
 use Exception;
+use IGK\System\Http\Request;
 
 abstract class Utility {
     public static function PostCref(callable $callback, $valid=1, $method="POST"){
@@ -9,6 +10,17 @@ abstract class Utility {
             return $callback();
         }
         return false;
+    }
+    public static function RequestGet($paramHandler, $requestName, $paramName, $update=true){
+        $c = Request::getInstance()->have($requestName, $paramHandler->getParam($paramName));
+        if ($update){
+            if (!empty($c)){
+                $paramHandler->setParam($paramName, $c);
+            } else {
+                $paramHandler->setParam($paramName, null);
+            }
+        }
+        return $c;
     }
     /**
      * get the email display

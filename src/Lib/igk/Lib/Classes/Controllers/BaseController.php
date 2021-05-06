@@ -31,7 +31,6 @@ use IGKString;
 * Framework base Controller implementation
 */
 abstract class BaseController extends RootControllerBase implements IIGKController, IIGKWebController, IIGKDataController {
-    /// TODO: DISABLE SAVING DATA
     const CHILDS_FLAG=5;
     const CURRENT_VIEW= IGK_CURRENT_CTRL_VIEW;
     const ENV_PARAM_USER_SETTINGS=0x200;
@@ -1107,7 +1106,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
                     return $s;
             }
         }
-        return IGK_TABLE_PREFIX.$this->getName();
+        return igk_db_get_table_name("%prefix%".$this->getName(), $this);
     }
     ///<summary></summary>
     /**
@@ -2374,7 +2373,7 @@ EOF
     * update the current data base
     */
     public function updateDb(){
-        $s=igk_is_conf_connected() || igk_sys_isuser_authorize(igk_user(), $this->Name.":".__FUNCTION__);
+        $s=igk_is_conf_connected() || igk_user()->auth($this->Name.":".__FUNCTION__);
         if(!$s){
             igk_ilog("not authorize to updateDb of " + $this->getName());
             igk_navto($this->getAppUri());

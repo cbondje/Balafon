@@ -1257,14 +1257,16 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
     public function getIgnoreList($table){
         static $ignoreList = null;
         if ($ignoreList === null){
+            $tb = igk_db_get_table_name(IGK_TB_USERS);
             $ignoreList = [
-                IGK_TB_USERS=>["clPwd", "clDate", "clLastLogin", "clPicture", "clId" ]
+                $tb=>["clPwd", "clDate", "clLastLogin", "clPicture", "clId" ]
             ];
         }
         return igk_getv($ignoreList, $table, ["clId"]);
     }
     public function getFieldHandler($table){
-        $r = array_merge([IGK_TB_USERS=>function($columninfo, $li, $value, $iparam){
+        $tb = igk_db_get_table_name(IGK_TB_USERS);
+        $r = array_merge([$tb=>function($columninfo, $li, $value, $iparam){
             $v = $columninfo->name;
             switch($columninfo->name){
                 case "clClassName":

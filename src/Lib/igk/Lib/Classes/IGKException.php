@@ -15,6 +15,7 @@ class IGKException extends Exception {
     * @param mixed $status the default value is 404
     */
     public function __construct($msg, $code=500, ?\Throwable $throwable=null){
+        
         parent::__construct($msg, $code, $throwable);        
     }
     ///<summary>display value</summary>

@@ -68,7 +68,9 @@ final class IGKHtmlCircleColorPickerItem extends IGKHtmlItem
 		$this->ClearChilds();
 		$d = $this->addDiv()->setClass("dispib");
 		$c = $d->addDiv();
-		$c->addImg()->setAttribute("src", igk_html_resolv_img_uri($this->m_ctrl->getDataDir()."/R/Img/bg-circ.png"));
+		$uri = $this->m_ctrl->getDataDir()."/R/Img/bg-circ.png";
+		$uri = IGKResourceUriResolver::getInstance()->resolve($uri); 
+		$c->addImg()->setAttribute("src", $uri);
 
 		$c->addDiv()->setClass("posab loc_l loc_t loc_r fith igk-circ-pan")->setStyle("border :1px solid #eee");
 

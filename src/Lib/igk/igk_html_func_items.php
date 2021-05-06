@@ -56,6 +56,42 @@ function igk_html_node_yield($hook, ...$args){
     );
     return $n; 
 }
+///<summary>create text node</summary>
+/**
+* create text node
+*/
+function igk_html_node_text($txt=null){
+    return igk_createtextnode($txt);
+}
+
+///<summary></summary>
+///<param name="menuList"></param>
+///<param name="selected"></param>
+/**
+* 
+* @param mixed $menuList
+* @param mixed $selected
+*/
+function igk_html_node_configsubmenu($menuList, $selected){
+    $ul=igk_createnode("ul")->setClass("igk-cnf-content_submenu");
+    foreach($menuList as $k=>$v){
+        $li=$ul->addLi();
+        $li->add("a", array("href"=>$v))->Content=__("cl".$k);
+        if($selected == $k){
+            $li["class"]="+igk-cnf-content_submenu_selected";
+        }
+        else{
+            $li["class"]="-igk-cnf-content_submenu_selected";
+        }
+    }
+    return $ul;
+}
+/**
+ * create xml node
+ */
+function igk_html_node_xmlnode($tag){
+    return igk_createxmlnode($tag);
+}
 /**
  * call hook to render content on node 
  * @param mixed $hook 
@@ -313,7 +349,7 @@ function igk_html_node_menu($tab, $selected=null, $uriListener=null, $callback=n
                 $uri = $uriListener($uri);
             } 
             $a = $li->addA($uri);
-            if ($selected && ($selected == igk_getv($v, "selected"))){
+            if ($selected && (($selected == $i) || ($selected == igk_getv($v, "selected")))){
                 $li["class"] = "+selected";
             }
             $li["class"] = "+".igk_css_str2class_name($i);
@@ -958,6 +994,16 @@ function igk_html_node_circlewaiter(){
     $n->setClass("igk-circle-waiter");
     return $n;
 }
+function igk_html_node_boxdialog(){
+    $n=igk_createnode("div");
+    $n->setClass("igk-dialog");
+    return $n;
+}
+function igk_html_node_dialog_circle_waiter(){
+    $bar = igk_createnode("boxdialog")->setClass("igk-dialog");
+    $bar->div()->setClass("flex fit flex-a-center")->circlewaiter();
+    return $bar;
+}
 ///<summary></summary>
 /**
 * 
@@ -1386,10 +1432,10 @@ function igk_html_node_dbselect($name, $result, $callback=null, $valuekey=IGK_FD
     }
     return $n;
 }
-///<summary>function igk_html_node_dialog</summary>
+///<summary>create a dialog host that will not being displayed</summary>
 ///<param name="title"></param>
 /**
-* function igk_html_node_dialog
+*  create a dialog host that will not being displayed<
 * @param mixed $title
 */
 function igk_html_node_dialog($title=null){
@@ -1398,10 +1444,10 @@ function igk_html_node_dialog($title=null){
     $n["igk:title"]=$title;
     return $n;
 }
-///<summary>function igk_html_node_dialogbox</summary>
+///<summary>create a dialog box</summary>
 ///<param name="title"></param>
 /**
-* function igk_html_node_dialogbox
+* create a dialog box
 * @param mixed $title
 */
 function igk_html_node_dialogbox($title){
@@ -1413,18 +1459,18 @@ function igk_html_node_dialogbox($title){
     $t->addDiv()->setClass("opts")->addSvgSymbol("v_dot_3");
     return $n;
 }
-///<summary>function igk_html_node_dialogboxcontent</summary>
+///<summary>create a dialog box content</summary>
 /**
-* function igk_html_node_dialogboxcontent
+*  create a dialog box content
 */
 function igk_html_node_dialogboxcontent(){
     $n=igk_createnode("div");
     $n["class"]="dialog-c";
     return $n;
 }
-///<summary>function igk_html_node_dialogboxoptions</summary>
+///<summary>create dialogbox options node</summary>
 /**
-* function igk_html_node_dialogboxoptions
+* create dialogbox options node
 */
 function igk_html_node_dialogboxoptions(){
     $o=igk_html_parent_node();
@@ -3864,6 +3910,27 @@ function igk_html_node_ajxtabcomponent($host, $name) {
 }
 
 
+///<summary>include local file as javascript</summary>
+/**
+ * include local file as javascript
+ */
+function igk_html_node_include_js($file){
+    if ( $f = igk_html_parent_node()){
+          $d = igk_createxmlnode("script");
+          $d["type"]= "balafon/js-include";
+          $d["class"]= "igk-winui-balafon-js-inc";
+  
+          $d->Content = implode("", ["//<![CDATA[", implode("", explode("\n", 
+          file_get_contents($file)))
+          ,"]]>"]);
+          $f->add($d);
+      } 
+      return $f;
+  }
+
+//----------------------------------------------------------------
+// + | REGISTER HTML FACTORY function
+//----------------------------------------------------------------
 
 Factory::form("initfield", function(){
     if ($f = igk_html_parent_node()){        

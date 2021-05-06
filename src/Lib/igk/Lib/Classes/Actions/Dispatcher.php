@@ -26,11 +26,10 @@ class Dispatcher implements IActionProcessor{
         $this->host = $host;
     } 
     public static function __callStatic($name, $args){
-       
+   
         if (self::$sm_macro===null){
             self::$sm_macro = [];
             self::$sm_macro["Dispatch"]= function($fc, ...$args){
-               
                 $g = new ReflectionFunction($fc); 
                 $cl = null; 
                 $required =  $g->getNumberOfRequiredParameters();
@@ -86,7 +85,8 @@ class Dispatcher implements IActionProcessor{
                 return $fc(...$args);
             }; 
         }
-        if (is_callable($fc = igk_getv(self::$sm_macro, $name))){       
+        if (is_callable($fc = igk_getv(self::$sm_macro, $name))){   
+            
             return $fc(...$args);
         } 
         return (new static(null))->$name(...$args);
@@ -95,8 +95,8 @@ class Dispatcher implements IActionProcessor{
     {     
         if (is_callable($g =  [$this->host, $name]) 
         &&  ($fc = Closure::fromCallable($g)->bindTo($this->host))
-        ){             
-            $targs = array_merge([$fc] , array_slice($arguments,1));       
+        ){      
+            $targs = array_merge([$fc] , $arguments);       
             return self::__callStatic("Dispatch", $targs);   
         }     
         throw new ActionNotFoundException("PPP".$name);   

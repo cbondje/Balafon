@@ -1645,3 +1645,7 @@ $l["bbPasswd"] = "Mot de passe";
 $l["dbName"] = "Base de données";
 $l["menu.installsite"] = "Install Site";
 $l["menu.session"] = "Session";
+$l["failed to change user's password"] = "impossible de changer le mot de passe";
+
+
+

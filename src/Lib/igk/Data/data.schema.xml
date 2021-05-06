@@ -230,7 +230,6 @@
         <Column clName="logginattempts_createAt" clType="DateTime"  clDefault="NOW()" clDescription="Now" clNotNull="True" />
         <Column clName="logginattempts_updateAt" clType="DateTime"  clUpdateFunction="Now()" clDescription="Last try datetime" clNotNull="True" />
     </DataDefinition>
-
     <Migrations>
         <Migration>
             <changeColumn table="%prefix%users" column="clLogin">

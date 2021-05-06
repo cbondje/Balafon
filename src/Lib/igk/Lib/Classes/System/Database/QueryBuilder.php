@@ -11,4 +11,7 @@ class QueryBuilder{
     public static function LeftJoin($condition){
         return ["type"=>QueryBuilderConstant::LeftJoin, $condition];
     }
+    public static function InnerJoin($condition){
+        return ["type"=>QueryBuilderConstant::InnerJoin, $condition];
+    }
 }

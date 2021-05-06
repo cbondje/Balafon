@@ -402,7 +402,7 @@ function igk_html_load_menu_array($target, $tab, $item="li", $subnode="ul", $use
             $ajx=igk_getv($s, "ajx");
             $lkey=igk_getv($s, "lkey", "menu.".$k);
             $init=igk_getv($s, "init");
-            if((false === $auth) || (is_string($auth) && !igk_sys_isuser_authorize($user, $auth))){
+            if((false === $auth) || (is_string($auth) && !$user->auth($auth))){
                 continue;
             }
             $hi=$mi->add($item);
@@ -843,9 +843,10 @@ function igk_html_form_fields($formFields, $render=0){
             $_name = "name=\"{$k}\" ";
         } 
         $_is_div = !preg_match("/(hidden|fieldset|button|submit|reset|datalist)/", $_type);
+        $_is_required = isset($v["required"]) ? $v["required"]: 0;
         if($_is_div){
             $o .= "<div";
-            if((isset($v["required"]) ? $v["required"]: 0)){
+            if($_is_required){
                 $o.= " class=\"required\"";
             }
             $o .= ">";
@@ -859,6 +860,9 @@ function igk_html_form_fields($formFields, $render=0){
             case "textarea":
             $o .= "<textarea {$_name} {$_id}";
             $load_attr($v, $o);
+            if($_is_required){
+                $o.= " required=\"true\"";
+            }
             $o .= ">{$_value}</textarea>";
             break;
             case "radiogroup":

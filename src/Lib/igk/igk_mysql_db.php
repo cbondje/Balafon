@@ -473,7 +473,7 @@ class IGKMYSQLDataAdapter extends DataAdapterBase {
     * 
     * @param mixed $dbname
     */
-    public function createdb($dbname){
+    public function createdb($dbname){ 
         if($this->m_dbManager != null)
             return $this->m_dbManager->createDb($dbname);
         return false;

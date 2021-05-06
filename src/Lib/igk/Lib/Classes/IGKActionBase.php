@@ -108,6 +108,10 @@ abstract class IGKActionBase implements IActionProcessor{
         if ($fc = igk_getv(self::$macro, $name)){
             return $fc(...$arguments);
         } 
+        // if (igk_environment()->is("DEV")){
+        //     igk_trace();
+        //     igk_exit();
+        // }
         throw new ActionNotFoundException($name);   
     }
     /**

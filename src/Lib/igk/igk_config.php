@@ -719,6 +719,7 @@ define("IGK_TB_COMMUNITY", "%prefix%community");
 define("IGK_TB_SYSTEMURI", "%prefix%systemuri");
 define("IGK_TB_COOKIESTORE", "%prefix%cookie_storages");
 define("IGK_TB_MIGRATIONS", "%prefix%migrations");
+define("IGK_TB_TEMPLATES", "%prefix%templates");
 define("IGK_START_COMMENT", "/*");
 define("IGK_END_COMMENT", "*/");
 define("IGK_IPV4_REGEX", "/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(:[0-9]+)?$/i");

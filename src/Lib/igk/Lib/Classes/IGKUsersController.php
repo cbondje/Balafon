@@ -68,10 +68,20 @@ class IGKUsersController extends IGKConfigCtrlBase {
         } else {
             $rm_me = 1;
         }
-        if ($r = Users::select_row([
-            "clLogin"=>$log, 
-            "clPwd"=>IGKSysUtil::Encrypt($pwd)
-        ])){
+        $condition = [];
+
+        if (!IGKValidator::IsEmail($log)){
+            $condition[] = (object)[
+                "operand"=>"OR",
+                "conditions"=>[
+                    "clLogin"=>$log,
+                    "clLogin"=>$log."@".igk_app()->Configs->website_domain
+                ]
+            ];            
+        }
+        $condition["clPwd"] = IGKSysUtil::Encrypt($pwd);
+
+        if ($r = Users::select_row($condition)){
             if($r->clStatus == 1){
                 $t=igk_sys_create_user($r->to_array());
                 $this->setGlobalUser($t);
@@ -92,9 +102,8 @@ class IGKUsersController extends IGKConfigCtrlBase {
             if(!preg_match("/@(.)+$/i", $log)){
                 $log=$log."@".igk_app()->Configs->website_domain;
             }
-            $prefix = defined("IGK_PWD_PREFIX")? IGK_PWD_PREFIX : "";
             
-            $tab=array("clLogin"=>$log, "clPwd"=>md5($prefix.$pwd));
+            $tab=array("clLogin"=>$log, "clPwd"=>IGKSysUtil::Encrypt($pwd));
             $t=$e->searchEqual($tab);
             if($t && is_object($t)){
                 if($t->clStatus == 1){
@@ -160,7 +169,7 @@ class IGKUsersController extends IGKConfigCtrlBase {
     * 
     */
     public function getDataTableName(){
-        return IGK_TB_USERS;
+        return igk_db_get_table_name(IGK_TB_USERS);
     }
     ///<summary></summary>
     /**
@@ -200,7 +209,7 @@ class IGKUsersController extends IGKConfigCtrlBase {
         $s=new IGKDbUtility($this);
         if($s->connect()){
             while($u->clParent_Id){
-                $r=$s->selectFirstRow(IGK_TB_USERS, array("clId"=>$u->clParent_Id));
+                $r=$s->selectFirstRow($this->getDataTableName(), array("clId"=>$u->clParent_Id));
                 if(!$r){
                     $u=null;
                     break;
@@ -224,7 +233,7 @@ class IGKUsersController extends IGKConfigCtrlBase {
             return null;
         $s=new IGKDbUtility($this);
         if($s->connect()){
-            $r=$s->select(IGK_TB_USERS, array("clParent_Id"=>$u->clId));
+            $r=$s->select($this->getDataTableName(), array("clParent_Id"=>$u->clId));
             if($r->RowCount == 0)
                 return array();
             return $r->Rows;
@@ -345,22 +354,28 @@ class IGKUsersController extends IGKConfigCtrlBase {
     */
     public function lstgrp($id=null){
         $id=$id ?? igk_getr("id");
-        if($id){
+        if($id && ($user = Users::cacheRow($id))){
             $n=igk_createnode("div")->addPanelBox();
             $frm=$n->addAJXForm();
             $frm->setStyle("min-width: 320px");
             $group=igk_db_user_groups($id);
             if(igk_count($group) > 0){
                 $frm->addObData(function() use ($group, $id){
-                    foreach($group as  $gid=>$v){
-                        igk_wl("<div>".$v."</div>");
-                        $a = igk_createnode("a");
-                        $a["href"]=$this->getUri("rm_grp_from_group&id={$id}&gid=".$gid);
-                        $a->google_icons("delete");
-                        $a->renderAJX();
+                    $dv = igk_createnode("div")->setClass("group-list");
+                    $table = $dv
+                    ->tablehost()->table()->header("", __("name"),
+                    "", "");
+                    foreach($group as  $gid=>$v){ 
+                        $tr = $table->tr();
+                        $tr->td()->nbsp();
+                        $tr->td()->Content = $v;
+                        $tr->td()->a($this->getUri("rm_grp_from_group&id={$id}&gid=".$gid))
+                        ->google_icons("delete"); 
+                        $tr->td()->nbsp(); 
                     }
+                    $dv->renderAJX();
                 });
-                igk_ajx_panel_dialog(__("User's group"), $n);
+                igk_ajx_panel_dialog(__("User's group"). " - " .$user->fullname(), $n);
             }
             else{
                 igk_ajx_toast("no group", "warn");
@@ -408,7 +423,7 @@ class IGKUsersController extends IGKConfigCtrlBase {
     public function register($login, $pwd, $firstname, $lastname, $parentclass=null, $level=1){
         $row=igk_db_create_row($table=$this->DataTableName);
         $row->clLogin=$login;
-        $row->clPwd=md5(IGK_PWD_PREFIX.$pwd);
+        $row->clPwd= IGKSysUtil::Encrypt($pwd);
         $row->clFirstName=$firstname;
         $row->clLastName=$lastname;
         $row->clLevel=$level;
@@ -483,7 +498,7 @@ class IGKUsersController extends IGKConfigCtrlBase {
 			$tu = ["clId"=>$u->clId, "clLogin"=>$u->clLogin];			
             $k=igk_db_table_select_where($tb, $tu, $this);
             if($k->RowCount == 1){
-                igk_app()->Session->setUser($u, $this);
+                $this->setGlobalUser($u);
                 return 1;
             }
         }
@@ -525,7 +540,7 @@ class IGKUsersController extends IGKConfigCtrlBase {
             }
             else
                 $u->clStatus=1;
-            igk_db_update($this, $this->getDataTableName(), $u);
+            igk_db_update($this,  igk_db_get_table_name($this->getDataTableName(), $this), $u);
             igk_notifyctrl("sys://uc/auf")->addSuccessr("msg.user.inforupdated");
             $this->View();
         }
@@ -569,7 +584,7 @@ class IGKUsersController extends IGKConfigCtrlBase {
             unset($o->clRePwd);
             unset($o->clAcceptCondition);
             if($o->clPwd)
-                $o->clPwd= IGK_PWD_PREFIX.$o->clPwd;
+                $o->clPwd= IGKSysUtil::Encrypt($o->clPwd);
             $tb=$this->getDataTableName();
             if(igk_db_table_select_where($tb, array("clLogin"=>$o->clLogin))->RowCount > 0){
                 igk_notifyctrl()->mark("clLogin", $o->clLogin);
@@ -817,8 +832,8 @@ class IGKUsersController extends IGKConfigCtrlBase {
             $rid = (object)[
                 "clPwd"=>null
             ];
-            $rid->clPwd = IGK_PWD_PREFIX.$password;
-            $i = $this->Db->update(IGK_TB_USERS, $rid , $condition);
+            $rid->clPwd = IGKSysUtil::Encrypt($password);
+            $i = $this->Db->update($this->getDataTableName(), $rid , $condition);
             if ($i){
                 igk_hook(IGKEvents::USER_PWD_CHANGED, compact("userid", "password"));
                 $msg["msg"] = __("User's password changed");
@@ -834,13 +849,13 @@ class IGKUsersController extends IGKConfigCtrlBase {
         if (!igk_is_conf_connected()){
             igk_header_status(403);
         }
-       
+        $tb = $this->getDataTableName();
         $id = igk_getr("id");
         if (!$id){
             igk_die("id not set", 403);
         }
         $condition = [IGK_FD_ID=>$id];
-        $rid = $this->Db->selectSingleRow(IGK_TB_USERS , $condition);
+        $rid = $this->Db->selectSingleRow($tb , $condition);
         if (!$rid){
             igk_die("user not found", 403);
         }
@@ -852,15 +867,15 @@ class IGKUsersController extends IGKConfigCtrlBase {
             }
             $r = (object)igk_getr_k(["pwd", "rpwd"]);
             $m = ["msg"=>__("failed to change user's password"), "type"=>"igk-danger"];
-            if ($r->pwd && (strlen($r->pwd) > 8) && ($r->pwd == $r->rpwd)){
-
-                $rid->clPwd = IGK_PWD_PREFIX.$r->pwd;
-                $i = $this->Db->update(IGK_TB_USERS, $rid , $condition);
+            
+            if ($r->pwd && ($r->pwd == $r->rpwd) && IGKValidator::IsValidPwd($r->pwd)){ 
+                $rid->clPwd = $r->pwd;
+                $i = $this->Db->update($tb, $rid , $condition);
                 if ($i){
                     $m["msg"] = __("User's password changed");
                     $m["type"] = "igk-success";
                     igk_ilog("User's ".$id. " password changed");
-                }
+                } 
             } 
             $helper->Notify($m["msg"], $m["type"]);
             igk_ajx_panel_dialog_close();

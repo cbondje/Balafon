@@ -55,6 +55,12 @@ class RouteActionHandler
     protected $auth;
 
     /**
+     * auth requirement 
+     * @var bool
+     */
+    protected $auth_requirement;
+
+    /**
      * get the attached model user
      * @var mixed
      */
@@ -237,7 +243,7 @@ class RouteActionHandler
     public function isAuth(Users $user)
     {
         if ($user && !empty($this->auth)) {
-            $r = $user->auth($this->auth);
+            $r = $user->auth($this->auth, $this->auth_requirement);
             return $r;
         }
         return true;
@@ -284,14 +290,17 @@ class RouteActionHandler
         $this->name = $name;
         return $this;
     }
+
     /**
      * set autorisation key name
-     * @param mixed $name 
-     * @return void 
+     * @param mixed $name string|array of autorisation
+     * @param bool $strict autorisation requirement
+     * @return RouteActionHandler 
      */
-    public function auth($name)
+    public function auth($name, bool $strict=false)
     {
         $this->auth = $name;
+        $this->auth_requirement = $strict;
         return $this;
     }
     /**

@@ -47,10 +47,6 @@ abstract class MiddlewireActionBase extends IGKActionBase{
             }
             throw new IGKException("User Not found");
         }
-       
-
-        Users::registerMacro("auth", MacrosHelper::auth());
-
         $user = $this->ctrl->User;
         if (!$user){
             throw new IGKException("no users");

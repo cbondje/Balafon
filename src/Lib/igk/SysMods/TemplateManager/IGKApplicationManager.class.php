@@ -15,6 +15,15 @@ class IGKApplicationManager extends BaseController{
     const MAIN_FILE="Application.php";
     const MANIFEST_TAGNAME="balafon_manifest";
     const TEMPLATE_DIR="Templates";
+
+    public function getDataTableName()
+    {
+        return null;
+    }
+    public function getCanInitDb()
+    {
+        return false;
+    }
     ///<summary>.ctr</summary>
     /**
     * .ctr
@@ -91,7 +100,7 @@ class IGKApplicationManager extends BaseController{
         $frm->addNotifyHost("template://addnew");
         $dv=$frm->addDiv();
         $dv->setStyle("padding:32px 24px; min-width:400px;");
-        $tab=igk_db_form_data(TBIGK_TEMPLATES, function($n, & $t){
+        $tab=igk_db_form_data(IGK_TB_TEMPLATES, function($n, & $t){
             if($n == "clId")
                 return 1;
             switch($n){
@@ -481,8 +490,9 @@ class IGKApplicationManager extends BaseController{
     */
     public function make_default_ajx($id=null){
         $id=$id ?? igk_getr("id");
+        $table = igk_db_get_table_name(IGK_TB_TEMPLATES);
         if($this->Db->connect()){
-            $row=$this->Db->selectSingleRow(TBIGK_TEMPLATES, $id);
+            $row=$this->Db->selectSingleRow($table, $id);
             if($row){
                 igk_app()->Configs->web_pagectrl=$row->clPackageName;
                 igk_save_config();
@@ -525,7 +535,7 @@ class IGKApplicationManager extends BaseController{
         $zip->addFromString(".init.php", "");
         $zip->addFromString(".erase.php", "");
         $zip->addFromString(".data.json", "");
-        $bpath=igk_io_getdir(igk_io_basedir()."/".$row->clPath);
+        $bpath= igk_io_dir(igk_io_basedir()."/".$row->clPath);
         $tf=igk_io_getfiles($bpath);
         foreach($tf as  $v){
             $p=igk_io_unix_path(substr($v, strlen($bpath) + 1));
@@ -581,7 +591,7 @@ class IGKApplicationManager extends BaseController{
     public function uninstall_ajx($id=null){
         $id=$id ?? igk_getr("id");
         if($this->Db->connect()){
-            $row=$this->Db->selectSingleRow(TBIGK_TEMPLATES, $id);
+            $row=$this->Db->selectSingleRow(IGK_TB_TEMPLATES, $id);
             if($row){
                 $n=igk_template_name($row->clPackageName);
                 $ctrl=$this->getCreatedCtrl($n);

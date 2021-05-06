@@ -7,6 +7,7 @@ use IGKHtmlUtils;
 use IGKQueryResult;
 
 use function igk_resources_gets as __;
+use function PHPUnit\Framework\callback;
 
 ///<summary>Extension</summary>
 abstract class ModelEntryExtension{
@@ -97,10 +98,12 @@ abstract class ModelEntryExtension{
         $tab = [];
         $driver = $model->getDataAdapter();   
         $cl = get_class($model);
-        foreach($driver->select($model->getTable(), $conditions, $options)->getRows() as $row){
-            $c = new $cl($row->toArray());  
-            $tab[] = $c;
-        }  
+        if ($data = $driver->select($model->getTable(), $conditions, $options)){
+            foreach($data->getRows() as $row){
+                $c = new $cl($row->toArray());  
+                $tab[] = $c;
+            }  
+        }
         return $tab;
     }
     public static function count(ModelBase $model, $conditions=null, $options=null){  
@@ -176,9 +179,15 @@ abstract class ModelEntryExtension{
      * @return string 
      * @throws Exception 
      */
-    public static function formSelectData(ModelBase $model){
+    public static function formSelectData(ModelBase $model, ?callable $callback=null){
         $data = [];
-        foreach($model::select_all() as $m){
+        foreach($model::select_all() as $m){    
+            if ($callback){
+                if ($g = $callback($m)){
+                    $data[] = $g;
+                }
+                continue;
+            }
             $data[] = ["i"=>$m->{$m->getPrimaryKey()},"t"=>$m->display()];
         }
         return $data;
@@ -190,7 +199,7 @@ abstract class ModelEntryExtension{
      * @return array 
      * @throws IGKException 
      */
-    public static function formFields(ModelBase $model){
+    public static function formFields(ModelBase $model, $edit=false){
         $cl = $model->getFormFields();
         $t = [];
         $inf = [];
@@ -203,12 +212,13 @@ abstract class ModelEntryExtension{
         $binfo = [];
 
         $b = (igk_count($cl)>0) ? $cl : array_keys($model->to_array());
+       // igk_wln_e($model->to_json());
         //use only data for field
         foreach($b as $v){
             if (!isset($inf[$v]))
                 continue;
             $info  = $inf[$v];
-            $r = ["type"=>"text"];
+            $r = ["type"=>"text", "value"=>$model->$v];
             $type = !empty($info->clInputType) ? IGKHtmlUtils::GetInputType($info->clInputType) : $info->clType;
           
             $attribs = [];
@@ -236,7 +246,7 @@ abstract class ModelEntryExtension{
                         if (!empty($info->clDescription)){
                             $attribs["placeholder"] = __($info->clDescription);
                         }
-                        if (!empty($info->clDefault)){
+                        if (!$edit && !empty($info->clDefault)){
                             $r["value"] = $info->clDefault;
                         }
                         if ($info->clNotNull){
@@ -268,7 +278,7 @@ abstract class ModelEntryExtension{
                     case "datetime":
                     case "timespan":
                             $r["type"] = "datetime-local";
-                            if (igk_environment()->is("DEV")){
+                            if (!$edit && igk_environment()->is("DEV")){
                                 $r["value"] = "1986-01-28T11:38:00.01";
                             }
                         break;
@@ -296,7 +306,7 @@ abstract class ModelEntryExtension{
             if (!empty($info->clDescription)){
                 $attribs["placeholder"] = __($info->clDescription);
             }
-            if (!empty($info->clDefault)){
+            if (!$edit && !empty($info->clDefault)){
                 $r["value"] = $info->clDefault;
             }
             if ($info->clNotNull){

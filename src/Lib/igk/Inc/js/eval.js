@@ -1,5 +1,9 @@
 (function(){
     var i = document.scripts[document.scripts.length-1].previousSibling;
+    if (typeof(i.text) == "undefined"){
+        return;
+    }
+
     var s = i.text.trim().substring(2);
     function loadXml(s){
     var r = null;
@@ -24,7 +28,7 @@
             }
         } catch (b) {
             console.error('Error:igk-winui-balafon-js-inc');
-            console.debug(b.message);
+            console.debug('message:'+ b.message, 'source:'+s, b);
         }
     } else {
         console.debug("failed to parse core data")

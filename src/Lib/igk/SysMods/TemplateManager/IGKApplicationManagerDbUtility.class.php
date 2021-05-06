@@ -50,7 +50,7 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
     * @param mixed $id
     */
     public function dropTemplate($id){
-        $this->delete(TBIGK_TEMPLATES, $id);
+        $this->delete(IGK_TB_TEMPLATES, $id);
     }
     ///<summary></summary>
     /**
@@ -74,7 +74,7 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
     public function getPackageRow($id){
         $row=null;
         if($this->connect()){
-            $row=$this->selectSingleRow(TBIGK_TEMPLATES, $id);
+            $row=$this->selectSingleRow(IGK_TB_TEMPLATES, $id);
             $this->close();
         }
         return $row;
@@ -133,7 +133,7 @@ final class IGKApplicationManagerDbUtility extends IGKDbUtility{
     public function updateTemplate($row){
         $r=0;
         if($this->connect()){
-            $r=$this->update(TBIGK_TEMPLATES, $row, $row->clId);
+            $r=$this->update(IGK_TB_TEMPLATES, $row, $row->clId);
             $this->close();
         }
         return $r;

@@ -2,46 +2,66 @@
 
 namespace IGK\Helper;
 
+use IGK\Models\Groupauthorizations;
 
-class MacrosHelper{
+/**
+ * macro helper expressions
+ * @package IGK\Helper
+ */
+class MacrosHelper
+{
     private static $macros;
 
-    public static function Get($name){
+    public static function Get($name)
+    {
         return self::__callStatic($name, null);
     }
     public static function __callStatic($name, $arguments)
     {
-        if (self::$macros==null){
+        if (self::$macros == null) {
             //init global macros function 
             self::$macros = [
-                "auth"=> function($auths){ 
-                    if (!is_array($auths)){
-                        if (!is_string($auths)){
+                "auth" => function ($auths, $strict = false) {
+                    if (!is_array($auths)) {
+                        if (!is_string($auths)) {
                             return false;
                         }
-                        $auths= [$auths];
+                        $auths = [$auths];
                     }
+                    // igk_wln("check ". implode(", ", $auths));
                     $data = $this->to_array();
-                    $g = $this->{"::auth"} ?? []; 
-                    while($auth = array_shift($auths)){
-                        if (in_array($auth , $g))
-                        {
-                            return true;
+                    if (($g = $this->{"::auth"}) === null) {
+                        $g = [];
+                        if ($b = Groupauthorizations::getUserAuths($this->clId)) {
+                            foreach ($b as $t) {
+                                $g[] = $t->auth_name;
+                            }
                         }
-                        if (!igk_sys_isuser_authorize($data, $auth, false)){
-                            // igk_wln_e("not authorised : ".$auth, $data);
-                            return false;
+                        $this->set("::auth", $g);
+                    }
+                    if (($is_auths = count($g) > 0)) {
+
+                        if ($strict) {
+                            while ($is_auths && ($auth = array_shift($auths))) {
+                                // check all auths
+                                if (!($is_auths = in_array($auth, $g))) {
+                                    break;
+                                }
+                            }
+                        } else {
+                            $is_auths = false;
+                            while ($auth = array_shift($auths)) {
+                                if (in_array($auth, $g)) {
+                                    $is_auths = true;
+                                    break;
+                                }
+                            }
                         }
-                        $g[] = $auth;
-                    } 
-                    $this->set("::auth", $g);
-                    //igk_wln_e("auths,", $g, $this->to_json(), in_array("admin",  $this->{"::auth"}));
-                    return true; 
-                }        
+                    }
+                    return $is_auths;
+                }
             ];
-
         }
-        return igk_getv(self::$macros,$name);
+        return igk_getv(self::$macros, $name);
     }
-
 }

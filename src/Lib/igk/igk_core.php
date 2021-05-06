@@ -427,7 +427,7 @@ function igk_app_is_uri_demand($app, $function){
     return (igk_io_currentUri() == $app->getAppUri($function));
 }
 ///<summary>encrypt in sha256 </summary>
-function igk_encrypt($data,$prefix=null){
+function igk_encrypt($data,$prefix=null){ 
     if ($prefix===null){
         $prefix = defined("IGK_PWD_PREFIX")? IGK_PWD_PREFIX : "";
     }

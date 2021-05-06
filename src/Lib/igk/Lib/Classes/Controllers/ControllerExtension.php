@@ -131,11 +131,20 @@ abstract class ControllerExtension{
     /**
      * resolv controller name key
      * @param BaseController $ctrl 
-     * @param mixed $name 
-     * @return void 
+     * @param mixed $name array|string
+     * @return mixed  array if name is array string name or null
      */
     public static function name(BaseController $ctrl, $name){
-        return implode("/", [get_class($ctrl), $name]);
+        if (is_string($name)){
+            return implode("/", [get_class($ctrl), $name]);
+        } else {
+            if (is_array($name)){
+                $cl = get_class($ctrl);
+                return array_map(function($c)use($cl){
+                    return implode("/", [$cl, $c]);
+                }, $name);
+            }
+        }
     }
 
     /**
@@ -427,12 +436,36 @@ abstract class ControllerExtension{
         }
         if($user->clLevel == -1)
             return true;
-        return igk_sys_isuser_authorize($user, $authDemand);
+        return $user->auth($authDemand);
     }
     public static function getUser(BaseController $controller, $uid=null){
         $u = $uid === null ? igk_app()->session->getUser() : 
          igk_get_user($uid);
         return $u;
+    }
+    public static function checkUser(BaseController $controller, $nav=true, $uri=null){
+        $r=true;
+        $u=igk_app()->Session->User;
+        $ku=$controller->User;       
+        
+        if($ku == null){
+            if($u != null){
+                $controller->User= $controller->initUserFromSysUser($u);
+            }
+            else
+                $r=false;
+        }
+        if($nav && !$r){
+            $m=igk_io_base_request_uri();
+            $s="";
+            $u=($uri == null ? $controller::uri(""): $uri);
+            if(!empty($m)){
+                $s="q=".base64_encode($m);
+                $u .= ((strpos($u, "?") === false) ? "?": "&").$s;
+            }
+            igk_navto($u);
+        }
+        return $r;
     }
    ///<summary></summary>
     /**
@@ -441,6 +474,7 @@ abstract class ControllerExtension{
     public static function dropDb(BaseController $controller, $navigate=1, $force=false){
     
         $ctrl=$controller;
+        
         $func=function() use ($ctrl){
             $rdb=$ctrl->getDb();
             if($rdb && method_exists($rdb, "onStartDropTable")){
@@ -448,11 +482,17 @@ abstract class ControllerExtension{
             }
             igk_raise_event("sys://db/startdroptable", $ctrl);
         };
+        if ($ctrl->getCanInitDb()){
+            
+        
         if(!igk_getv($ctrl->getConfigs(), "clDataSchema")){
             $db=igk_get_data_adapter($ctrl, true);
-            if($db && $db->connect()){
+            if(!empty($table = $ctrl->getDataTableName()) && 
+                $ctrl->getDataTableInfo() && 
+                $db && $db->connect()) {
+                $table = igk_db_get_table_name($table, $ctrl);
                 $func();
-                $db->dropTable($ctrl->getDataTableName());
+                $db->dropTable($table); // ctrl->getDataTableName());
                 $db->close();
             }
         }
@@ -472,6 +512,7 @@ abstract class ControllerExtension{
                 }
             }
         }
+    }
         if ($navigate){
             $controller->View();
             igk_navtocurrent();
