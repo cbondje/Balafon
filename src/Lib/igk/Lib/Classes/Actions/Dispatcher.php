@@ -98,7 +98,10 @@ class Dispatcher implements IActionProcessor{
         ){      
             $targs = array_merge([$fc] , $arguments);       
             return self::__callStatic("Dispatch", $targs);   
-        }     
-        throw new ActionNotFoundException("PPP".$name);   
+        }else{
+            if ( $this->host instanceof IActionProcessor)
+                return $this->host->__call($name, $arguments);
+        }
+        throw new ActionNotFoundException($name);   
     }
 }

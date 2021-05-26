@@ -92,35 +92,7 @@ final class IGKCommunityLink extends IGKConfigCtrlBase
 		}else{
 			igk_navto($this->getUri("showConfig"));
 		}
-		igk_exit();
-
-		// return;
-
-
-
-
-
-		// $cc = igk_db_create_row($tb) ?? igk_die("no data found to create object table ".$tb);
-		// // igk_wln($tb);
-		// // igk_wln($cc);
-		// // die("d");
-		// igk_db_load_row($k, $cc);
-
-		// $cc->clCommunity_Id = $comid;
-		// // igk_wl ($cc);
-		// // igk_wl ($k);
-		// // igk_db_delete($this, "tbigk_community");
-		// 
-
-		// if (igk_db_select($this, $tb, array("clCommunity_Id"=>$comid))->RowCount>0){
-			// unset($cc->clId);
-			// igk_db_update($this, $tb, $cc, array("clCommunity_Id"=>$comid));
-		// }else{
-		// igk_db_insert(IGK_MYSQL_DATAADAPTER,$tb, $cc);
-		// }
-		// igk_navto($this->getUri("showConfig"));
-
-
+		igk_exit(); 
 	}
 
 
@@ -266,8 +238,7 @@ final class IGKCommunityLink extends IGKConfigCtrlBase
 			 $frm->AddHSep();
 			 $frm->addBtn("btn_send", R::ngets("btn.update"));
 
-		}
-
+		} 
 	}
 
 

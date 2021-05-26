@@ -50,10 +50,9 @@ abstract class MiddlewireActionBase extends IGKActionBase{
         $user = $this->ctrl->User;
         if (!$user){
             throw new IGKException("no users");
-        }
-       
+        } 
 
-        $user = Users::createFromCache($this->ctrl->User);
+        $user = Users::currentUser();
         if ( $this->auths && !$user->auth($this->auths)){
              throw new IGKException("Resource access not allowed");
         }

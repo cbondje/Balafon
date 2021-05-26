@@ -2,6 +2,8 @@
 
 use IGK\Models\Usergroups;
 use IGK\Models\Users;
+use IGK\System\Database\QueryBuilder;
+
 use function igk_resources_gets as __;
 
 ///<summary>class used to register global user in system</summary>
@@ -81,8 +83,15 @@ class IGKUsersController extends IGKConfigCtrlBase {
         }
         $condition["clPwd"] = IGKSysUtil::Encrypt($pwd);
 
+  
+
         if ($r = Users::select_row($condition)){
             if($r->clStatus == 1){
+                igk_app()->Session->lastLogin = $r->clLastLogin;
+                //+ | update the last login 
+                Users::update(["clLastLogin"=>
+                    QueryBuilder::Expression("CURRENT_TIMESTAMP")],
+                    $r->clId); 
                 $t=igk_sys_create_user($r->to_array());
                 $this->setGlobalUser($t);
                 if($rm_me){
@@ -253,10 +262,19 @@ class IGKUsersController extends IGKConfigCtrlBase {
         }
         return null;
     }
+    protected function InitComplete()
+    {
+        parent::InitComplete();
+        igk_reg_hook(IGK_HOOK_DB_TABLECREATED, function($e){
+            if ($e->args["1"] == Users::table()){
+                 $this->initDataEntry();
+            } 
+        });
+    }
     ///insert data base
     /**
     */
-    protected function initDataEntry($db, $tbname=null){
+    protected function initDataEntry(){
          
         $d=igk_app()->Configs->website_domain;
         $now=date(IGK_MYSQL_DATETIME_FORMAT); 
@@ -844,13 +862,13 @@ class IGKUsersController extends IGKConfigCtrlBase {
         $helper->Notify($msg["msg"], $msg["type"]);
         return $i;
     }
-    public function changePassword(){
+    public function changePassword(int $id=null){
 
         if (!igk_is_conf_connected()){
             igk_header_status(403);
         }
         $tb = $this->getDataTableName();
-        $id = igk_getr("id");
+        $id = $id ? $id : igk_getr("id");
         if (!$id){
             igk_die("id not set", 403);
         }

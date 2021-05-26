@@ -189,12 +189,7 @@ final class IGKSysUtil
     /**
      * resolv the table name
      */
-    public static function GetTableName($table, $ctrl=null){
-        // if ($table == "%prefix%jobtask"){
-        //     igk_wln($ctrl, "Prefix : ". $ctrl->Configs->clDataTablePrefix,  igk_db_get_table_name($table, $ctrl) );
-        //     igk_trace();
-        //     igk_exit();
-        // }
+    public static function GetTableName($table, $ctrl=null){   
         return igk_db_get_table_name($table, $ctrl); 
     }
 }

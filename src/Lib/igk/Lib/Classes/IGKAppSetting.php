@@ -10,15 +10,15 @@ class IGKAppSetting{
         $app = null;  
         static $sm_setting = null;       
         if (!isset($_SESSION)){
-            if (igk_is_cmd()){
+            //if (igk_is_cmd()){
 
                 if($sm_setting === null){
                     $sm_setting = new IGKDummySetting();
                 }
                 $app = & $sm_setting;
                 return $app;
-            }
-            igk_wln_e("No Session started;");
+           // }
+            // igk_wln_e("No Session started;");
         }
         if (isset($_SESSION[IGK_APP_SESSION_KEY])){
             $app =  & $_SESSION[IGK_APP_SESSION_KEY];

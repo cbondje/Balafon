@@ -44,8 +44,9 @@ class IGKSystemHelper{
             $notify->error($errormessage);
         }
     }
+    ///<summary>assert toation on ajx demand condition</summary>
     /**
-     * 
+     * assert toation on ajx demand condition
      * @param mixed $condition 
      * @param mixed $successmsg 
      * @param mixed $errormessage 

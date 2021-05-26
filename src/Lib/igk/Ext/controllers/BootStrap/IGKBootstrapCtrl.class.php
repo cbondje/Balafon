@@ -130,10 +130,8 @@ final class IGKBootstrapCtrl extends IGKConfigCtrlBase
 
 		igk_html_add_title($box, "title.ConfigBootStrap");
 		$f = $this->getArticle("./help/help.bootstrap");
-		if (file_exists($f)){
-			$box->addHSep();
-			igk_html_article($this, "./help/help.bootstrap", $box->addDiv(), null, null, true);
-			$box->addHSep();
+		if (file_exists($f)){ 
+			$box->div()->addArticle($this, $f ,[]);	 
 		}
 
 

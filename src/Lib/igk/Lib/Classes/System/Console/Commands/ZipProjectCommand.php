@@ -26,7 +26,7 @@ class ZipProjectCommand extends AppExecCommand{
         }
 
         $prjname = igk_str_snake(basename(igk_io_dir(get_class($ctrl))));
-        $fname = "/project_.".$prjname.".zip";
+        $fname = "/project_.".$prjname.".".date("Ymd").".zip";
         if ($path == null){
             $path = getcwd().$fname;
         } else if (is_dir($path)){

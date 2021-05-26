@@ -11,4 +11,8 @@ trait EnumeratesConstants{
     public static function GetConstantKeys(){
         return array_keys(self::GetConstants());
     }
+    public static function GetConstantValue($k){
+        $ref = new ReflectionClass(static::class);
+        return $ref->getConstant($k);
+    }
 }

@@ -9,6 +9,7 @@ use IGKEvents;
 use IGKSystemController;
 use IGKSysUtil;
 use ReflectionClass;
+use tbn_ctrl;
 
 abstract class ModelBase implements ArrayAccess{
 
@@ -61,6 +62,23 @@ abstract class ModelBase implements ArrayAccess{
      */
     protected $fillable;
 
+
+    /**
+     * for mocking object
+     * @var mixed
+     */
+    private $is_mock;
+
+    /**
+     * define unset field for update
+     * @var mixed
+     */
+    protected $update_unset;
+
+    public function getUpdateUnset(){
+        return $this->update_unset;
+    }
+
     public function getFactory(){
         if ($this->factory === null){
             $name = basename(igk_io_dir(get_class($this)));
@@ -83,12 +101,17 @@ abstract class ModelBase implements ArrayAccess{
     public function getFormFields(){
         return $this->form_fields;
     }
+    public function getDisplay(){
+        return $this->display;
+    }
+    
     
 
     public function __construct($raw=null)
     {
         $this->raw = igk_db_create_row($this->getTable());
-        if (!$this->raw ){
+        if (!$this->raw ){ 
+            igk_trace();
             die("failed to create db row: ".$this->getTable());
         }
         if ($raw){
@@ -140,9 +163,11 @@ abstract class ModelBase implements ArrayAccess{
      * return the current table string
      * @return mixed 
      */
-    public function getTable(){
-        $ctrl = $this->getController();
-        return IGKSysUtil::GetTableName($this->table, $ctrl); 
+    public function getTable(){        
+        return IGKSysUtil::GetTableName($this->table, $this->getController()); 
+    }
+    public function getTableInfo(){
+        return igk_db_getdatatableinfokey($this->getTable());
     }
     public function getController(){
         return igk_getctrl($this->controller, false);
@@ -192,14 +217,15 @@ abstract class ModelBase implements ArrayAccess{
                     }
                     if (__CLASS__ == static::class){
                         self::$macros[$name] = $callback;     
-                    }else {
-                        self::$macros[static::class."/".$name] = $callback; 
+                    }else { 
+                        self::$macros[igk_ns_name(static::class."/".$name)] = $callback; 
                     }
                 },
                 "unregisterMacro"=>function($name){
-                    unset(self::$macros[static::class."/".$name]);
+                    unset(self::$macros[igk_ns_name(static::class."/".$name)]);
                 },
                 "registerExtension"=>function($classname){ 
+                    
                     $f = new ReflectionClass($classname);
                     foreach($f->getMethods() as $k){
                         if ($k->isStatic()){
@@ -221,14 +247,18 @@ abstract class ModelBase implements ArrayAccess{
                     self::$macros[$k->getName()] = [ModelEntryExtension::class, $k->getName()];
                 }
             } 
-            require(__DIR__."/DefaultModelEntryExtensions.pinc");
+            require_once(__DIR__."/DefaultModelEntryExtensions.pinc");
             igk_hook(IGKEvents::HOOK_MODEL_INIT, []);
 
-        }   
+        } 
+        $_instance_class = igk_environment()->createClassInstance(static::class);
+        $_instance_class->is_mock = 1;
+
         if ($fc = igk_getv(self::$macros, $name)){
             $bind = 1;
             if (is_array($fc)){
-                array_unshift($arguments, igk_environment()->createClassInstance(static::class));
+
+                array_unshift($arguments, $_instance_class); 
                 $bind = 0;
             } 
             if ($bind && (static::class !== __CLASS__)){
@@ -239,14 +269,14 @@ abstract class ModelBase implements ArrayAccess{
             }            
             return $fc(...$arguments);
         } 
-        if ($fc = igk_getv(self::$macros, static::class."/".$name)){
-            $fc = $fc->bindTo(new static);
+        if ($fc = igk_getv(self::$macros, igk_ns_name(static::class."/".$name))){
+            $fc = $fc->bindTo($_instance_class);
             return $fc(...$arguments);
         }
         if (static::class === __CLASS__){
             return;
         }   
-        $c = new static;
+        $c = $_instance_class;
         if (method_exists($c, $name)){
             return $c->$name(...$arguments);
         }
@@ -268,7 +298,7 @@ abstract class ModelBase implements ArrayAccess{
         if ($regInvoke === null){
             $regInvoke = 1;
         }
-        if ($fc = igk_getv(self::$macros, static::class."/".$name)){
+        if ($fc = igk_getv(self::$macros, igk_ns_name(static::class."/".$name))){
             $fc = $fc->bindTo($this); 
             return $fc(...$arguments);
         } 
@@ -296,6 +326,10 @@ abstract class ModelBase implements ArrayAccess{
         return Utility::To_JSON($this->raw, $options);
     }
 
+    public function is_mock(){
+        return $this->is_mock;
+    }
+
     /**
      * return raw data
      * @return mixed 
@@ -307,5 +341,49 @@ abstract class ModelBase implements ArrayAccess{
         $pkey = $this->primaryKey;
         $r = $this->getDataAdapter()->update($this->getTable(), $this->raw, [$this->primaryKey=>$this->$pkey]);    
         return $r && $r->success(); 
+    }
+
+      /**
+     * retrieve all registrated model
+     * @return array
+     */
+    public static function GetModels(){
+        $dir = dirname(__FILE__);
+        $hdir = opendir($dir);
+        $tab = [];
+        $main_cl = static::class;
+        $ns = str_replace('/', '\\', dirname(str_replace("\\", "/", $main_cl)));
+
+        while($c = readdir($hdir)){
+            if (($c == "..") || ($c==".")){
+                continue;
+            }
+            if (preg_match("/\.php$/", $c)){
+                $file = implode("/", [$dir, $c]);
+                if ($file==__FILE__){
+                    continue;
+                }
+                include_once($file); 
+                $name = substr($c, 0, -4);
+                $cl = $ns."\\".$name;
+                if (class_exists($cl) && is_subclass_of($cl, $main_cl)){
+                    $tab[] = $cl;
+                }
+            }
+        }
+
+        closedir($hdir);
+        return $tab;
+    }
+    /**
+     * invoke loading
+     * @param mixed $arguments 
+     * @return mixed 
+     * @throws Exception 
+     */
+    public function __invoke(...$arguments)
+    {
+        // igk_wln_e("loading", $arguments);
+        return static::__callStatic("select_query_rows", $arguments); // ("select_all", $arguments);
     }
 }

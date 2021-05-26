@@ -23,6 +23,10 @@ abstract class IGKActionBase implements IActionProcessor{
      * @return void 
      */
     public static function Register($name, $callback){
+        if (igk_environment()->is("DEV")){
+            igk_trace(); // "ksdf");
+            igk_exit();
+        }
         self::$macro[$name] = $callback;
     }
     ///<summary></summary>
@@ -76,7 +80,6 @@ abstract class IGKActionBase implements IActionProcessor{
      */
     protected function Handle($fname, $args, $exit=1, $flag=0){ 
         $ctrl = null; 
-
         if ($fname instanceof BaseController){           
             if (func_num_args()<3){
                 throw new \Exception("Require 3 argument in that case");
@@ -108,10 +111,10 @@ abstract class IGKActionBase implements IActionProcessor{
         if ($fc = igk_getv(self::$macro, $name)){
             return $fc(...$arguments);
         } 
-        // if (igk_environment()->is("DEV")){
-        //     igk_trace();
-        //     igk_exit();
-        // }
+        // dispath to methods
+        if (method_exists($this, $fc = $name."_".igk_server()->REQUEST_METHOD)){
+            return $this->$fc(...$arguments);
+        }    
         throw new ActionNotFoundException($name);   
     }
     /**

@@ -7,9 +7,8 @@ use IGKSQLQueryUtils;
 
 class MySQLCommand extends AppExecCommand{
     var $command = "--db:mysql";
-
     var $desc = "mysql db managment command"; 
-
+    var $category = "db";
     public function sendQuery($query){
         if (preg_match("/^(CREATE|INSERT|ALTER)/i", $query)){
             Logger::print($query);
@@ -84,7 +83,7 @@ class MySQLCommand extends AppExecCommand{
                     }
                 }
                 return 1;
-                case "preview_create_query":
+            case "preview_create_query":
                     return $this->preview_create_query($ctrl, ...array_slice(func_get_args(), 2));
                     break;
         }
@@ -115,24 +114,22 @@ class MySQLCommand extends AppExecCommand{
         }
         return -1;
     }
-    private  function preview_create_query($ctrl, $table){
-        igk_environment()->mysql_query_filter = 1;
+    private  function preview_create_query($ctrl, $table){ 
         $ad = igk_get_data_adapter(IGK_MYSQL_DATAADAPTER);
         $ad->setSendDbQueryListener($this);
         if (!($ctrl && ($ctrl = igk_getctrl($ctrl, false)))){
             return -1;
         }
-        Logger::info("preview create query");
+        Logger::info("preview create query"); 
 
         igk_environment()->mysql_query_filter = 1;
-        $ad = igk_get_data_adapter(IGK_MYSQL_DATAADAPTER);
         
-        if (($ctrl->getDataAdapterName() == IGK_MYSQL_DATAADAPTER)){
+        if (($ctrl->getDataAdapterName() == IGK_MYSQL_DATAADAPTER)){ 
             $ad->setSendDbQueryListener($this);
             $tb = igk_db_get_table_name($table, $ctrl);
             $def = igk_db_get_table_info($tb);
             if ($def){
-                $query = IGKSQLQueryUtils::CreateTableQuery($tb, $def["ColumnInfo"], $def["Descriptions"]);
+                $query = $ad->getGrammar()->createTableQuery($tb, $def["ColumnInfo"], $def["Descriptions"]);
                 Logger::print($query);
             }
             $ad->setSendDbQueryListener(null);

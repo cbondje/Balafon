@@ -14,12 +14,18 @@ function _closeDialog(b){
         });
     }
 };
-
+var no_close = !1;
 function _panDialogInit(){
     _dialog.push(this);
+	
     if (!_init){
         igk.winui.events.regKeyPress(function(e){
+			
             if(e.keyCode == igk.winui.inputKeys.Escape){
+				if (no_close){
+					no_close = !1;
+					return;
+				}	
                 if (_dialog.length> 0){
                     _closeDialog();
                     e.stopPropagation();
@@ -27,6 +33,14 @@ function _panDialogInit(){
                 }               
             }
         });
+		$igk(document.body).on("click", function(e){
+			if (e.target.tagName=="INPUT"){
+				if (e.target.getAttribute("type")=="file"){
+					no_close = !0;
+				}
+				return;
+			} 
+		});
         _init=1;
     }
     var q = this;

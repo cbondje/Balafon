@@ -1,6 +1,7 @@
 <?php
 namespace IGK\Resources;
 
+use IGK\Controllers\BaseController;
 use IGKObject;
 use IGKAppContext;
 use IGK\Resources\IGKLangKey;
@@ -260,8 +261,14 @@ EOF;
     * @param mixed $files the default value is null
     */
     private static function LoadCtrlLang($ctrl, $files=null){
+
+
+        
+        if (!($ctrl instanceof BaseController)){
+            return;
+        }
         $v= $_instance = self::getInstance();
-        $gdir=$ctrl->getResourcesDir()."/Lang";
+        $gdir=$ctrl->configDir()."/Lang";
         $f=null;
         $tfile=array();
         if($files === null){

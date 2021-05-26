@@ -208,22 +208,17 @@ class RouteActionHandler
             foreach ($tab["name"] as $i) {
                 $c = trim($i);
                 $s = $tab[0][$count];
-                $opt = igk_getv($tab["option"], 0) == "*";
+                $opt = igk_getv($tab["option"], $count) == "*";
+                // print_r($tab["option"]);
                 if ($g = igk_getv($this->m_expressions, $c)) {
                     if ($opt) {
                         $g = "(/{$g}(/)?)?";
-                        $s = "/" . rtrim($s, "/");
+                        $s = "/" . rtrim($s, "/"); 
                     }
                     $croute = str_replace($s, "(".$g.")", $croute);
                 }
                 $count++;
-            }
-            // if ($this->path == "task/state/{id}/{state}"){
-            //     echo "<pre>";
-            //     print_r($tab);
-            //     echo "</pre>";
-            //     igk_wln_e($tab, $croute, $this->m_expressions);
-            // }
+            } 
         }
         return "#^" . $croute . "$#";
     }
@@ -261,8 +256,7 @@ class RouteActionHandler
         if (!in_array($verb, $this->verbs)) {
             return false;
         }
-        $regex = $this->getPatternRegex();
-    
+        $regex = $this->getPatternRegex(); 
         if ($r = preg_match($regex, "/" . ltrim($path, "/"))) {
             if ($this->ajx && !igk_is_ajx_demand()){                
                 throw new  RequestException(400);                                
@@ -310,8 +304,12 @@ class RouteActionHandler
     {
         return $this->addExpression($id, $pattern);
     }
-
-    public function ajx(bool $value){
+    /**
+     * set ajx route pattern requirement
+     * @param bool $value 
+     * @return $this 
+     */
+    public function ajx(bool $value =  true){
         $this->ajx = $value;
         return $this;
     }

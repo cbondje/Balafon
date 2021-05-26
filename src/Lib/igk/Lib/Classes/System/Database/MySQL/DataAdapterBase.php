@@ -7,6 +7,7 @@ use Exception;
 use IGKDBQueryDriver;
 use IGKException;
 use IGKMySQLDataCtrl;
+use IGKNotImplementException;
 use IGKSQLDataAdapter;
 use IGKSQLQueryUtils;
 
@@ -22,6 +23,9 @@ abstract class DataAdapterBase extends IGKSQLDataAdapter{
     private $m_time;
     private static $sm_emptyResult;
     protected $m_dbManager;
+
+    
+
     ///<summary></summary>
     ///<param name="ctrl" default="null"></param>
     /**
@@ -59,7 +63,7 @@ abstract class DataAdapterBase extends IGKSQLDataAdapter{
 
     ///<summary></summary>
     /**
-    * 
+    * @return object data manager
     */
     protected function __createManager(){}
     ///<summary></summary>
@@ -168,36 +172,42 @@ abstract class DataAdapterBase extends IGKSQLDataAdapter{
     * @param mixed $tbname
     * @param mixed $whereTab the default value is null
     */
-    public function selectCount($tbname, $whereTab=null, $options=null){
-     
-        $o="";
-        $s=0;
-        $flag = "";
-        $extra = null;
-        if ($options){
-            $extra = IGKSQLQueryUtils::GetExtraOptions($options, $this);
-            $flag = igk_getv($extra, "flag");
-        }               
-        $q="SELECT ";
-        if (!empty($flag))
-            $q.=$flag;
-        $q.= "Count(*) as count FROM `".igk_mysql_db_tbname($tbname)."`";
-       
-        if ($extra && ($joints = igk_getv($extra, "join"))){            
-            $q.= $joints.PHP_EOL;            
-        }
+    public function selectCount($tbname, $where=null, $options=null){
+        if (!$options)
+            $options = [];
 
-        if(is_array($whereTab) && igk_count($whereTab) > 0){
-            $q .= " WHERE ".IGKSQLQueryUtils::GetCondString($whereTab);
-        }
-        else{
-            if(is_string($whereTab)){
-                $q .= " WHERE ".igk_db_escape_string($whereTab);
-            }
-        } 
-        $q .= ";";
+        $options["Columns"] = [
+            "Count(*) as count"
+        ];
+        $query = $this->getGrammar()->createSelectQuery($tbname, $where, $options);
+        // $o="";
+        // $s=0;
+        // $flag = "";
+        // $extra = null;
+        // if ($options){
+        //     $extra = IGKSQLQueryUtils::GetExtraOptions($options, $this);
+        //     $flag = igk_getv($extra, "flag");
+        // }               
+        // $q="SELECT ";
+        // if (!empty($flag))
+        //     $q.=$flag;
+        // $q.= "Count(*) as count FROM `".igk_mysql_db_tbname($tbname)."`";
+       
+        // if ($extra && ($joints = igk_getv($extra, "join"))){            
+        //     $q.= $joints.PHP_EOL;            
+        // }
+
+        // if(is_array($whereTab) && igk_count($whereTab) > 0){
+        //     $q .= " WHERE ".IGKSQLQueryUtils::GetCondString($whereTab);
+        // }
+        // else{
+        //     if(is_string($whereTab)){
+        //         $q .= " WHERE ".igk_db_escape_string($whereTab);
+        //     }
+        // } 
+        // $q .= ";";
         try {
-            $g=$this->sendQuery($q, false);
+            $g=$this->sendQuery($query, false);
             return $g;
         }
         catch(Exception $ex){
@@ -375,34 +385,8 @@ abstract class DataAdapterBase extends IGKSQLDataAdapter{
         $this->m_time=new IGKMySQLTimeManager($this);
         return $this->m_time;
     }
-    ///<summary></summary>
-    ///<param name="tablename"></param>
-    ///<param name="entry"></param>
-    ///<param name="where" default="null"></param>
-    /**
-    * 
-    * @param mixed $tablename
-    * @param mixed $entry
-    * @param mixed $where the default value is null
-    */
-    public function getUpateQuery($tablename, $entry, $where=null){
-        return IGKSQLQueryUtils::GetUdpateQuery($tablename, $entry, $where);
-    }
-    ///<summary></summary>
-    ///<param name="tbname"></param>
-    ///<param name="values"></param>
-    ///<param name="condition" default="null"></param>
-    ///<param name="tableInfo" default="null"></param>
-    /**
-    * 
-    * @param mixed $tbname
-    * @param mixed $values
-    * @param mixed $condition the default value is null
-    * @param mixed $tableInfo the default value is null
-    */
-    public function GetUpdateQuery($tbname, $values, $condition=null, $tableInfo=null){
-        return IGKSQLQueryUtils::GetUpdateQuery($tbname, $values, $condition, $tableInfo);
-    }
+     
+    
     ///<summary></summary>
     /**
     * 
@@ -453,7 +437,7 @@ abstract class DataAdapterBase extends IGKSQLDataAdapter{
     * 
     */
     public function listTables(){
-        return $this->sendQuery("SHOW TABLES;");
+        return $this->getGrammar()->listTables(); 
     }
     ///<summary></summary>
     /**

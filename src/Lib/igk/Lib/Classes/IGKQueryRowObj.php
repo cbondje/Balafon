@@ -26,7 +26,7 @@ class IGKQueryRowObj implements ArrayAccess, Iterator{
 		$g->m_rows = $tab;
 		return $g;
 	}
-	public function toArray($filter=false){
+	public function to_array($filter=false){
 		$tab = $this->m_rows;
 		if ($filter){
 			$tab = array_filter($tab, function($k, $m){

@@ -35,6 +35,7 @@ class Request
         } 
         return $this->js_data;
     }
+  
     /**
      * set the request parameters
      */
@@ -72,15 +73,24 @@ class Request
     {
         return igk_getr($name, $default);
     }
+    public function getBase64($name, $tab=null){
+        if ($tab === null){
+            $tab = $_REQUEST;
+        }
+        if (key_exists($name, $tab)){
+            return base64_decode($tab[$name]);
+        }
+        return null;
+    }
     /**
      * 
      * @param mixed $name 
      * @param mixed|null $default 
-     * @return void 
+     * @return mixed 
      */
     public function have($name, $default=null){
         if (key_exists($name, $_REQUEST)){
-            return igk_getr($name);
+            return igk_getr($name, $_REQUEST);
         }
         return  $default;
     }

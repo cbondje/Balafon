@@ -1,5 +1,12 @@
 <?php
 ///<summary>represent a client user manager controller</summary>
+
+use IGK\Resources\R;
+
+/**
+ * connect users
+ * @package 
+ */
 abstract class IGKUserManagerController extends IGKCtrlTypeBase
 {
 	/** @var StdClass $m_user */

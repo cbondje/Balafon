@@ -336,13 +336,13 @@ final class IGKApiFunctionCtrl extends IGKApplicationController {
                             $vd=igk_createNode();
                             igk_notification_push_event("system/notify/syncdata/".$ctrl->Name, $_api, array("node"=>$vd, "user"=>$uid));
                             if($vd->HasChilds){
-                                foreach($vd->Childs->ToArray() as $l){
+                                foreach($vd->Childs->to_array() as $l){
                                     switch($l->TagName){
                                         case IGKDbSchemas::DATA_DEFINITION:
                                         $sync->add($l);
                                         break;
                                         case "Entries":
-                                        $entries->addRange($l->Childs->ToArray());
+                                        $entries->addRange($l->Childs->to_array());
                                         break;
                                     }
                                 }

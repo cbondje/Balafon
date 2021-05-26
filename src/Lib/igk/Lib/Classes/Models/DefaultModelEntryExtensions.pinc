@@ -8,12 +8,12 @@ use IGK\Models\Usergroups;
 use IGK\Models\Users;
 use IGK\System\Database\QueryBuilder; 
 
-Usergroups::registerMacro("getUserGroups", function(int $uid){
+Usergroups::registerMacro("getUserGroups", function(int $uid){   
     $c = $this::select_query(["clUser_Id"=>$uid],[
         "OrderBy" => ["clName|ASC"],
         "Joins"=>
         [
-            [ Groups::table() =>QueryBuilder::LeftJoin(Groups::table().".clId = clGroup_Id")]
+            [ Groups::table() =>QueryBuilder::LeftJoin(Groups::column("clId")." = clGroup_Id")]
         ]
     ]); 
     return $c ? $c->getRows() : null;
@@ -61,3 +61,4 @@ Groupauthorizations::registerMacro("getUserAuths", function(int $uid){
 });
 
 Users::registerMacro("auth", MacrosHelper::auth());
+Users::registerMacro("currentUser", MacrosHelper::currentUser());

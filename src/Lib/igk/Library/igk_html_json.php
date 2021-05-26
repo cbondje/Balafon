@@ -26,14 +26,14 @@ function igk_html_json($n){
 
 			if($ctrib=$q->getAttributes()){
 				$attribs=array();
-				foreach($ctrib->ToArray() as $k=>$attrv){
+				foreach($ctrib->to_array() as $k=>$attrv){
 					$attribs[$k]=IGKHtmlUtils::GetAttributeValue($attrv);
 				}
 				if(count($attribs) > 0){
 					$view[0]=$attribs;
 				}
 			}
-			if(($_cc=$q->getChilds()) && ($childs=$_cc->toArray()) && (count($childs) > 0)){
+			if(($_cc=$q->getChilds()) && ($childs=$_cc->to_array()) && (count($childs) > 0)){
 				$view[1]=array();
 				foreach($childs as $ch){
 					array_unshift($cp, array("q"=>$ch, "s"=>& $view[1]));

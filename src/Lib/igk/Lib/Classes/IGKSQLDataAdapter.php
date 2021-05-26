@@ -1,19 +1,55 @@
 <?php
-
+use function igk_getv as getv;
 
 ///<summary>Represente class: IGKSQLDataAdapter</summary>
 /**
 * Represente IGKSQLDataAdapter class
 */
 abstract class IGKSQLDataAdapter extends IGKDataAdapter{
-    public static function ResolvType($t){
+    /**
+     * 
+     * @param mixed $t 
+     * @return mixed 
+     * @throws IGKException 
+     * @deprecated since 11.7.05.19 use SQLGrammar insteed
+     */
+    public static function ResolvType($t){        
         return IGKSQLQueryUtils::ResolvType($t);
     }
+    public function GetValue($k, $rowInfo=null, & $tinfo=null){
+        static $configs;
+        if ($configs===null){
+            $configs['auto_increment_word'] = "AUTO_INCREMENT";
+        }
+        $sys = $configs;
+        if(empty($sys))
+            return null;
+        $m= getv($configs, $k);
+        if(is_callable($m)){
+            return $m($rowInfo, $tinfo);
+        }
+        return $m;
+    }
+
+     /**
+     * create link expression
+     * @param string $table table name
+     * @param array $column 
+     * @param array $value 
+     * @param mixed $columnkey 
+     * @return IGKDbLinkExpression 
+     */
+    public function createLinkExpression($table, $column, $value, $columnkey){
+        return new IGKDbLinkExpression($table, $column, $value, $columnkey);      
+    }
+
     public function getGrammar(){
         return $this->create_grammar() ?? die("grammar can't be found");
     }
-    protected function create_grammar(){
-        return igk_environment()->createClassInstance(IGK\System\Database\SQLGrammar::class);
+    protected function create_grammar(){        
+        $grammar = new IGK\System\Database\SQLGrammar($this);
+        // $grammar->driver = $this;
+        return $grammar;
     }
     public function escape($str){
         return igk_db_escape_string($str);
@@ -95,13 +131,8 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
     * delete all from table
     */
     public function deleteAll($tbname, $condition=null){
-        igk_trace();
-        igk_exit();
-		$c= "";
-		if ($condition && strlen($c = IGKSQLQueryUtils::GetCondString($condition))>0){
-				$c = " WHERE ".$c;
-		}
-        return $this->sendQuery("DELETE FROM `".igk_mysql_db_tbname($tbname)."`".$c, $tbname);
+        $query = $this->getGrammar()->createDeleteQuery($tbname, $condition);		
+        return $this->sendQuery($query); 
     }
     ///<summary>setup manager config for next operation</summary>
     /**
@@ -178,50 +209,52 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
     * @param mixed $options the default value is null
     */
     public function selectAndWhere($tbname, $condition=null, $options=null){
-        $o="";
-        $q="";
-        $s=0;
-        $s="";
-        $column= "*"; //IGKSQLQueryUtils::GetColumnList($options, $tbname);
-        $tlist = "";
-        if(is_string($tbname)){
-            $tbname=igk_mysql_db_tbname($tbname);
-            $tlist="`".$tbname."`";
+        // $o="";
+        // $q="";
+        // $s=0;
+        // $s="";
+        // $column= "*"; //IGKSQLQueryUtils::GetColumnList($options, $tbname);
+        // $tlist = "";
+        // if(is_string($tbname)){
+        //     $tbname=igk_mysql_db_tbname($tbname);
+        //     $tlist="`".$tbname."`";
+        // }
+        // else if(is_array($tbname)){
+        //     $r=0;
+        //     foreach($tbname as $k){
+        //         $_n=igk_mysql_db_tbname($k);
+        //         if($r)
+        //             $q .= ",";
+        //         $q .= "`".$_n."`";
+        //         $r=1;
+        //     }
+        //     $tlist = $q;
+        //     $q = "";
+        // } 
+        // if($condition){
+        //     if(is_object($condition) || (is_array($condition) && (igk_count($condition) > 0))){
+        //         if ($c = IGKSQLQueryUtils::GetCondString($condition, "AND", $this))
+        //             $q .= "WHERE ".$c;
+        //     }
+        //     else if(is_numeric($condition) || !is_string($condition)){
+        //         $q .= "WHERE `".IGK_FD_ID."`='".igk_db_escape_string($condition)."' ";
+        //     }
+        //     else if(is_string($condition)){
+        //         $q .= "WHERE ".igk_db_escape_string($condition)." ";
+        //     }
+        // }
+        // $q = " FROM ".$tlist .$q;
+        // $columns = "*";
+        // if ($options && ($tq= IGKSQLQueryUtils::GetExtraOptions($options, $this))){
+        //     if (!empty($tq->join))
+        //         $q = $tq->join . " ".$q;
+        //     $q.= " ".$tq->extra;
+        //     $columns = $tq->columns;
+        // }
+        // $q = "SELECT {$columns} ".$q.";";
+        if ($query = $this->getGrammar()->createSelectQuery($tbname, $condition, $options)){
+            return $this->sendQuery($query, $tbname, $options);
         }
-        else if(is_array($tbname)){
-            $r=0;
-            foreach($tbname as $k){
-                $_n=igk_mysql_db_tbname($k);
-                if($r)
-                    $q .= ",";
-                $q .= "`".$_n."`";
-                $r=1;
-            }
-            $tlist = $q;
-            $q = "";
-        } 
-        if($condition){
-            if(is_object($condition) || (is_array($condition) && (igk_count($condition) > 0))){
-                if ($c = IGKSQLQueryUtils::GetCondString($condition, "AND", $this))
-                    $q .= "WHERE ".$c;
-            }
-            else if(is_numeric($condition) || !is_string($condition)){
-                $q .= "WHERE `".IGK_FD_ID."`='".igk_db_escape_string($condition)."' ";
-            }
-            else if(is_string($condition)){
-                $q .= "WHERE ".igk_db_escape_string($condition)." ";
-            }
-        }
-        $q = " FROM ".$tlist .$q;
-        $columns = "*";
-        if ($options && ($tq= IGKSQLQueryUtils::GetExtraOptions($options, $this))){
-            if (!empty($tq->join))
-                $q = $tq->join . " ".$q;
-            $q.= " ".$tq->extra;
-            $columns = $tq->columns;
-        }
-        $q = "SELECT {$columns} ".$q.";";
-        return $this->sendQuery($q, $tbname, $options);
     }
     ///<summary></summary>
     ///<param name="tbname"></param>
@@ -237,8 +270,39 @@ abstract class IGKSQLDataAdapter extends IGKDataAdapter{
     */
     public function update($tablename, $entry, $condition=null, $tabinfo=null){
         $this->dieNotConnect();
-        $query=IGKSQLQueryUtils::GetUpdateQuery($tablename, $entry, $condition, $tabinfo);
+        $query = $this->getGrammar()->createUpdateQuery($tablename, $entry, $condition, $tabinfo);
+        // $query=IGKSQLQueryUtils::GetUpdateQuery($tablename, $entry, $condition, $tabinfo);
         $s=$this->sendQuery($query, $tablename);
         return $s;
+    }
+
+    public function getFuncValue($type, $value){
+        //
+        // if ($pos == "IGK_PASSWD_ENCRYPT"){
+        //     return "'".$driver->escape_string(IGKSysUtil::Encrypt($value))."'";
+        // }
+        //
+        return null;
+    }
+    public function getObjValue($value){
+        if(igk_reflection_class_implement($value, IIGKHtmlGetValue::class)){
+            return $value->getValue(
+                (object)[
+                    "grammar"=>null,
+                    "type"=>"insert"
+                ]
+            );
+        }
+        return null;
+    }
+    public function getObExpression($value, $throwex=false){
+        if ($value instanceof IGKDbExpression){
+            return $value->getValue();
+        } else {
+            if ($throwex){
+                throw new IGKException(__("objet not a DB Expression"));
+            }
+        }
+        return null;
     }
 }

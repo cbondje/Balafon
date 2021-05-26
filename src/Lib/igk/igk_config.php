@@ -18,11 +18,11 @@ use IGK\Controllers\BaseController;
 define('IGK_ENV_DB_INIT_CTRL', 'sys://env/init_ctrl');
 define('IGK_LOCAL_DEBUGGING', 1);
 define('IGK_NODESTROY_ON_FATAL', 1);
-define('IGK_NO_TRACELOG', 1);
 define('IGK_SYS_CONFIG_FILE', 1);
+define('IGK_NO_TRACELOG', 1); 
+//+ define('IGK_NO_SESSION', 1);
 //+ define("IGK_TRACE", 1);
-//+ define('IGK_ENV_PRODUCTION', 1);
-define('IGK_TRACE_LOG', 1);
+//+ define('IGK_ENV_PRODUCTION', 1); 
 
 //+ |----------------------------------------------------------- 
 //+ | ENVIRONMENT SETTING KEYS - DO NOT REPLACE THAT VALUES
@@ -250,7 +250,6 @@ define("IGK_HTML_NOTAG_ELEMENT", "NoTagNode");
 //+ define('IGK_SESS_DIR', '1');
 //+ define('IGK_SINGLE_CONTROLLER_APP', '1');
 //+ define('IGK_TESTING', '1');
-//+ define('IGK_TRACELOG', '1');
 //+ define('IGK_TRACE_CLEAN', '1');
 //+ define('IGK_UPLOADFILE', '1');
 //+ define('IGK_UP_FILE_SIZE', '1');
@@ -301,8 +300,7 @@ define("IGK_CSS_DEFAULT_STYLE_FUNC_KEY", 'sys://css/function/defaultStyle');
 // define("IGK_NAMED_NODE_PARAM", 0x002B);
 // define("IGK_NODE_DISPOSED_EVENT", 0x0029);
 // define("IGK_NOTIFICATION_APP_DOWNLOADED", 0x0033);
- 
-// define("IGK_HOOK_DB_TABLECREATED", 0x0031);
+  
 // define("IGK_NOTIFICATION_DB_TABLEDROPPED", 0x0032);
 // define("IGK_NOTIFICATION_INITTABLE", 0x0035);
 // define("IGK_NOTIFICATION_USER_CHANGED", 0x0034);
@@ -450,8 +448,8 @@ define("IGK_ENCODINGTYPE", "text/html; charset=utf-8");
 define("IGK_SERVERNAME", "IGKDEV");
 define("IGK_STR_EMPTY", "");
 define("IGK_MAX_CONFIG_PWD_LENGHT", 5);
-define("IGK_DEFAULT_FOLDER_MASK", 0755);
-define("IGK_DEFAULT_FILE_MASK", 0755);// 775 for development
+defined("IGK_DEFAULT_FOLDER_MASK") || define("IGK_DEFAULT_FOLDER_MASK", 0755);
+defined("IGK_DEFAULT_FILE_MASK") || define("IGK_DEFAULT_FILE_MASK", 0755); 
 define("IGK_LF", "\n");
 define("IGK_CLF", "\r\n");
 define("IGK_DATA_FOLDER", "Data");
@@ -754,13 +752,7 @@ define("IGK_APP_LOGO", "/" . IGK_RES_FOLDER . "/Img/app_logo.png");
 define('IGK_ERR_CTRL_', 65536);
 define('IGK_ERR_NO_PAGEVIEW', 65546);
 define('IGK_ERR_FUNCNOTAVAILABLE', 65547);
-// igk_set_env("sys://notification/msgs", array(
-// "en"=>array( 
-// IGK_HOOK_DB_TABLECREATED=>"New table created"
-// ),
-// "fr"=>array(),
-// "nl"=>array()
-// ));
+
 // igk_set_error_msg(array("en"=>array(IGK_ERR_CTRL_=>"Controller error")));
 // igk_set_error_msg(array("en"=>array(IGK_ERR_NO_PAGEVIEW=>"No pageview defined for {0}. your class probably doesn't call the base construct")));
 
@@ -784,8 +776,7 @@ define("IGK_ENV_GLOBAL_SCRIPT_KEY", "sys://globalscript");
 // ,'IGK_NODESTROY_ON_FATAL'
 // ,'IGK_NO_TRACELOG'
 // ,'IGK_SYS_CONFIG_FILE'
-// ,'IGK_TRACE'
-// ,'IGK_TRACE_LOG',
+// ,'IGK_TRACE' 
 // 'IGK_WEBFRAMEWORK',
 // 'IGK_DEFAULT_FOLDER_MASK',
 // 'IGK_DEFAULT_FILE_MASK'];

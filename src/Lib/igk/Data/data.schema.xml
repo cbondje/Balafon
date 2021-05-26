@@ -233,9 +233,23 @@
     <Migrations>
         <Migration>
             <changeColumn table="%prefix%users" column="clLogin">
-                <Column clName="clLogin" clType="VARCHAR" clTypeLength="60" clIsUnique="True" /> 
+                <Column clName="clLogin" clType="VARCHAR" clTypeLength="60" clIsUnique="True" clRequire="true" /> 
             </changeColumn>
         </Migration>
+        
+        
+        <Migration>
+            <addColumn table="%prefix%users" >
+                <Column clName="clupdate_at" clType="DateTime"  clDefault="CURRENT_TIMESTAMP" clUpdateFunction="Now()" clDescription="update information" clNotNull="True" /> 
+            </addColumn>
+        </Migration>
+        <Migration>
+            <changeColumn table="%prefix%subdomains" column="clCtrl">
+                <Column clName="clCtrl" clType="VARCHAR" clTypeLength="255" clDescription="Controller name" clNotNull="True" />
+            </changeColumn>
+        </Migration>
+ 
+
     </Migrations>
 
 </data-schemas>

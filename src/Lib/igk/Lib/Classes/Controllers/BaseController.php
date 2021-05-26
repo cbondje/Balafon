@@ -340,7 +340,11 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             //+ | ----------------------------------------------------------------
             //+ | insert here a middle ware to auto handle the view before include 
             //+ | ----------------------------------------------------------------
-            if ((igk_count($params)>0) && ($handler = $this->getActionHandler($fname, $params[0]))){                                
+            // if ((igk_count($params)>0) && !key_exists(0, $params)){
+            //     igk_ilog("somthing bad");
+            //     igk_ilog($params);
+            // }
+            if ((igk_count($params)>0) && key_exists(0, $params) && ($handler = $this->getActionHandler($fname, $params[0]))){                                
                 $handler::Handle($this, $fname, $params);       
             } 
             ob_start();
@@ -356,6 +360,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             }
         }
         catch(\Exception $ex){
+            if (!($code = $ex->getCode())){
+                $code = 500;
+            }
+            igk_set_header($code);
             igk_show_exception($ex);
             igk_exit();
         }
@@ -1085,7 +1093,7 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
             $e->Load(IGKIO::ReadAllText($this->DBConfigFile));
             $t=array();
             foreach($e->getElementsByTagName(IGK_COLUMN_TAGNAME) as $k){
-                $t[]=new IGKDbColumnInfo($k->Attributes->ToArray());
+                $t[]=new IGKDbColumnInfo($k->Attributes->to_array());
             }
             return $t;
         }
@@ -1769,75 +1777,10 @@ abstract class BaseController extends RootControllerBase implements IIGKControll
     //     // self::__callStatic(__FUNCTION__, func_get_args());
     // }
     ///<summary>init database constant file</summary>
-    /**
-    * init database constant file
-    */
-    protected function initDbConstantFiles(){
-        $f=$this->getDbConstantFile();
-        $tb=$this->getDataTableInfo();
-        
-
-        $s="<?php".IGK_LF;
-        $s .= "// Balafon : generated db constants file".IGK_LF;
-        $s .= "// date: ".date("Y-m-d H:i:s").IGK_LF;
-        // generate class constants definition
-        $cl = igk_html_uri(get_class($this));
-        $ns = dirname($cl);
-        
-        if (!empty($ns) && ($ns !=".")){
-            $s .= "namespace ".str_replace("/","\\", $ns)."; ".IGK_LF;
-        } 
-		$s.= "abstract class ".basename($cl)."DbConstants{".IGK_LF;
-		   if($tb != null){
-			   ksort($tb);
-               $prefix = igk_db_get_table_name("%prefix%", $this); 
-			   foreach($tb as $k=>$v){
-				   $n=strtoupper($k);
-					$n=preg_replace_callback("/^%prefix%/i", function(){
-						return IGK_DB_PREFIX_TABLE_NAME;
-					}
-					, $n);
-                    if ($prefix){
-                        $n = preg_replace("/^".$prefix."/i",  "TB_", $n);
-                    }
-                    if (empty($n)){ 
-                        continue;
-                    }
-				   $s .= "\tconst ".$n." = \"".$k."\";".IGK_LF; 
-			   }
-		   }
-		$s.="}".IGK_LF;
-
-		igk_io_w2file($f, $s, true);
-		include_once($f);		 
-    }
+   
     
      
-    ///<summary> initialize db from data schemas </summary>
-    /**
-    *  initialize db from data schemas
-    */
-    protected function initDbFromSchemas(){
-   
-        $r=$this->loadDataAndNewEntriesFromSchemas();
-        if(!$r)
-            return; 
-        $tb=$r->Data; 
-        $db=igk_get_data_adapter($this, true);
-        if($db){
-            if($db->connect()){ 
-				igk_db_init_dataschema($this, $r, $db); 
-                $db->close();
-            }
-            else{
-                igk_ilog("/!\\ connexion failed ");
-            }
-        }
-        else{
-            igk_log_write_i(__FUNCTION__, "no adapter found");
-        }
-        return $tb;
-    }
+  
     ///<summary></summary>
     /**
     * 

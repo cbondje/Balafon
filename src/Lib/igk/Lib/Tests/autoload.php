@@ -66,10 +66,7 @@ igk_loadlib(IGK_PROJECT_DIR);
 // // initialize application static folder 
 IGKApp::InitAtomic();
 
-// IGKApp::InitSingle();
-
-
-$c = igk_sys_project_controllers();
-foreach($c as $m){
+// IGKApp::InitSingle(); 
+foreach(igk_sys_project_controllers() as $m){
     $m::register_autoload(); 
 } 

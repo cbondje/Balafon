@@ -176,7 +176,7 @@ function igk_api_mysql_get_data_schema($api, $render=1 , $param=null){
 					
 					foreach($tt->Rows as $m=>$v){	
 						$cl = igk_api_get_columninfo($row, $v,$table_n, $mysql);						
-						$tinfo[$v->Field] =new IGKDbColumnInfo( $cl->Attributes->ToArray());
+						$tinfo[$v->Field] =new IGKDbColumnInfo( $cl->Attributes->to_array());
 						// if($table_n == "tbigk_humans"){
 							//igk_wln($tables[$table_n]->tinfo[$v->Field]);
 							//$e = true;
@@ -214,7 +214,7 @@ function igk_api_mysql_get_table_definition($api, $row, $table_n, $mysql, $tinfo
 		$cl = igk_api_get_columninfo($row, $v, $table_n, $mysql);						
 		
 		if ($tinfo)
-		$tinfo[$v->Field] =new IGKDbColumnInfo( $cl->Attributes->ToArray());
+		$tinfo[$v->Field] =new IGKDbColumnInfo( $cl->Attributes->to_array());
 		
 	}
 

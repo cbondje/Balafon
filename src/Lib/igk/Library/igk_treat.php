@@ -7,6 +7,8 @@
 // @mail: bondje.doue@igkdev.com
 // @url: https://www.igkdev.com
 
+defined("IGK_FRAMEWORK") || die("REQUIRE FRAMEWORK - No direct access allowed");
+
 ///<summary>protect request information</summary>
 /**
 * protect request information
@@ -228,8 +230,11 @@ class IGKProtectHtmlField{
                         $offset=strlen($s);
                         $t=$s.$t;
                     }
-                    else{
-                        igk_wln_e("something wrong ... string litteral", $t);
+                    else{ 
+                        // "no ed found"
+                        $offset = strlen($t);
+                        return $t;
+                        // igk_wln_e("something wrong ... string litteral", $t);
                     }
                     return $t;
                 }
@@ -297,4 +302,3 @@ class IGKProtectHtmlField{
         return $v;
     }
 }
-defined("IGK_FRAMEWORK") || die("REQUIRE FRAMEWORK - No direct access allowed");

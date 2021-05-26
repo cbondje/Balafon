@@ -749,7 +749,7 @@ function igk_html_form_select_data($data, $callback){
 /**
 * build form field on modele view
 */
-function igk_html_form_fields($formFields, $render=0){
+function igk_html_form_fields($formFields, $render=0, $engine=null, $tag="div"){
     $o="";
     $clprop = new  IGKHtmlClassValueAttribute();
     $get_attr_key = function($v){
@@ -762,9 +762,11 @@ function igk_html_form_fields($formFields, $render=0){
         }
         return $key;
     };
-   
+    if (empty($tag)){
+        $tag = "div";
+    } 
+
     $clprop->add("data");
-    // igk_wln($clprop->getValue());
    
     $load_attr=function($v, & $o) use( $get_attr_key ,  $clprop ) {
         $clprop->clear();
@@ -799,7 +801,7 @@ function igk_html_form_fields($formFields, $render=0){
             $o .=  " class=\"".$defclass."\"";
         }
     };
-    $bindValue = function(&$o, & $fieldset, $k, $v) use ($get_attr_key, $load_attr){
+    $bindValue = function(&$o, & $fieldset, $k, $v) use ($get_attr_key, $load_attr, $tag){
         $attr_key = $get_attr_key($v);
         $_value= key_exists("value", $v) ? $v["value"]: "";
         if ($attr_key){
@@ -845,7 +847,7 @@ function igk_html_form_fields($formFields, $render=0){
         $_is_div = !preg_match("/(hidden|fieldset|button|submit|reset|datalist)/", $_type);
         $_is_required = isset($v["required"]) ? $v["required"]: 0;
         if($_is_div){
-            $o .= "<div";
+            $o .= "<".$tag;
             if($_is_required){
                 $o.= " class=\"required\"";
             }
@@ -866,11 +868,11 @@ function igk_html_form_fields($formFields, $render=0){
             $o .= ">{$_value}</textarea>";
             break;
             case "radiogroup":
-            $o .= '<div style="display:inline-block;">';
+            $o .= '<'.$tag.' style="display:inline-block;">';
             foreach($v["data"] as $kk=>$vv){
                 $o .= '<span >'.__($kk).'</span><input type="radio" name="'.$k.'"'.$_id.' value="'.$vv.'" />';
             }
-            $o .= "</div>";
+            $o .= "</{$tag}>";
             break;
             case "datalist":
                 if (empty($_id)){
@@ -910,7 +912,7 @@ function igk_html_form_fields($formFields, $render=0){
                 foreach($_tab as $row){
                     $o .= "<option ";
                     $o .= "value=\"{$row['i']}\" ";
-                    if(isset($bas) && ($bas == $row['i'])){
+                    if( (isset($bas) && ($bas == $row['i'])) || (igk_getv($row, 'selected'))){
                         $o .= "selected";
                     }
                     $o .= ">";
@@ -941,7 +943,7 @@ function igk_html_form_fields($formFields, $render=0){
             break;
         }
         if($_is_div){
-            $o .= "</div>";
+            $o .= "</{$tag}>";
         }
     };
     $fieldset=0;

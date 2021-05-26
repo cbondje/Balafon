@@ -30,7 +30,7 @@ $controller::initDb($force);
 
 $ad->flushForInitDb();
 igk_hook(IGKEvents::HOOK_DB_INIT_ENTRIES, array($controller));
-igk_hook(IGKEvents::HOOK_DB_INIT_COMPLETE);
+igk_hook(IGKEvents::HOOK_DB_INIT_COMPLETE, ["controller"=>$controller]);
 if ($navigate){
     $controller::logout(0);
 } 

@@ -119,6 +119,12 @@ final class IGKDbColumnInfo extends IGKObject {
      * the link expression for default value
      */
     var $clDefaultLinkExpression;
+
+    /**
+     * this column is require
+     * @var clRequire
+     */
+    var $clRequire;
     ///<summary></summary>
     ///<param name="array" default="null"></param>
     /**

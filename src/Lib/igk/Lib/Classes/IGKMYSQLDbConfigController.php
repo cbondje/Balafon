@@ -781,7 +781,9 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
             if($db_table){
                 foreach($db_table->Rows as $t=>$v){
                     $v_tbname=igk_getv($v, "Table");
-                    $r=$mysql->sendQuery("SELECT * FROM `".$v_tbname."`;");
+                    // $r=$mysql->sendQuery("SELECT * FROM `".$v_tbname."`;");
+                    ///TODO: SELECT
+                    $r= $mysql->getGrammar()->createSelectQuery($v_tbname);  // sendQuery("SELECT * FROM `".$v_tbname."`;");
                     if($r){
                         $out .= $v_tbname. IGK_LF;
                         $v_sep=false;
@@ -1934,7 +1936,7 @@ final class IGKMYSQLDbConfigController extends IGKConfigCtrlBase {
             
             igk_notification_push_event("sys://db/init_complete", $this);
             igk_hook(IGKEvents::HOOK_DB_INIT_ENTRIES, array($this));
-            igk_hook(IGKEvents::HOOK_DB_INIT_COMPLETE);
+            igk_hook(IGKEvents::HOOK_DB_INIT_COMPLETE, ["controller"=>$this]);
         }
             igk_set_env("sys://db_init", null);
             igk_set_env("sys://db_init/error", null);

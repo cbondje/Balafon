@@ -8,6 +8,7 @@ use IGK\Controllers\ControllerTask;
 use IGK\Models\Crons;
 use IGK\System\Console\App;
 use IGK\System\Console\AppCommand;
+use IGK\System\Console\Commands\DbCommand;
 use IGK\System\Console\Logger;
 use IGK\System\IO\File\PHPScriptBuilder;
 use IGK\System\Process\CronJobProcess;
@@ -77,16 +78,16 @@ $command = [
     "--set:configs" => [
         function ($v, $command) {
             $command->exec = function ($command, $classname = null, $path = null, $value = null) {
-                Logger::success("Change Configs");
                 if (($c = igk_getctrl($classname, false)) && !empty($path)) {
-
+                    
                     $c->Configs->$path = $value;
                     $c->Configs->storeConfig();
+                    Logger::success("Change configs");
                 }
                 Logger::print("\n");
             };
         },
-        __("set controller class configuration")
+        __("set controller's configuration")
     ],
 
     "--set:sysconfigs" => [
@@ -105,9 +106,12 @@ $command = [
     ],
 
     "--db:seed" => [function ($v, $command) {
-        $command->exec = function ($command, $ctrl, $class = null) {
-            if ($c = igk_getctrl($ctrl, false)) {
-                igk_environment()->querydebug = property_exists($command->options, "--querydebug");
+        $command->exec = function ($command, $ctrl=null, $class = null) {
+            DbCommand::Init($command);
+            
+            if ($ctrl){ 
+               if($c = igk_getctrl($ctrl, false)) {
+
                 $inf = get_class($c);
                 if (!empty($class))
                     $inf .= "::" . $class;
@@ -115,12 +119,26 @@ $command = [
                 $c::seed($class);
                 Logger::success("seed complete");
                 return 1;
+               }
+               else {
+                   Logger::danger("controller [$ctrl] not found");
+               }
+            }else{
+                $c = igk_sys_getall_ctrl();
+                foreach($c as $t){
+                    $t::register_autoload();
+                    Logger::info("seed:".get_class($t));
+                    if ($t::seed()){
+                        Logger::success("seed:".get_class($t));
+                    }
+                }
             }
             return -1;
         };
-    }, __("seed your data base with face controller")],
+    }, __("seed your data base with face controller"), "db"],
     "--db:migrate" => [function ($v, $command) {
         $command->exec = function ($command, $ctrl=null) {
+            DbCommand::Init($command);
             if ($c = igk_getctrl($ctrl, false)) {
                 $command->app->print("migrate...");
                 $c::migrate();
@@ -134,10 +152,12 @@ $command = [
                 }
             }
         };
-    }, __("migrate your database")],
+    }, __("migrate your database"), "db"],
     "--db:initdb" => [function ($v, $command) {
         $command->exec = function ($command, $ctrl = "") {
-            $c = null;
+            $c = null; 
+            DbCommand::Init($command);
+            
             if (!empty($ctrl)) {
                 if (!($ctrl = igk_getctrl($ctrl, false))) {
                     Logger::danger("no countroller found");
@@ -150,7 +170,7 @@ $command = [
             if ($c) {
                 foreach ($c as $m) {
                     if ($m->getCanInitDb()) {
-                        Logger::info("init: " . get_class($m));
+                        Logger::info("init: " . get_class($m)); 
                         $m::initDb();
                         Logger::success("complete: " . get_class($m));
                     }
@@ -160,15 +180,16 @@ $command = [
             return -1;
         };
         return 0;
-    }, __("initialize database")],
+    }, __("initialize database"), "db"],
     "--dbsys:initdb" => [function ($v, $command) {
-        $command->exec = function () {
+        $command->exec = function ($command) {
+            DbCommand::Init($command);
             if ($c = igk_getctrl(IGK_SYSDB_CTRL, false)) {
                 $c::Invoke($c, 'initDb');
             }
             return 0;
         };
-    }, __("initialize system database")],
+    }, __("initialize system database"), "db"],
     "--controller:list" => [function ($v, $command) {
         $command->exec = function ($command, $pattern = ".+") {
 
@@ -187,8 +208,7 @@ $command = [
     "--make:page" => [
         function ($v, $command) {
             $command->exec = function ($command, $ctrl, $page) {
-                $ctrl = str_replace("/", "\\", $ctrl);
-                // igk_wln_e($c = $ctrl::ctrl());
+                $ctrl = str_replace("/", "\\", $ctrl); 
                 Logger::info("make page:".$ctrl);
                 if (($c = igk_getctrl($ctrl, false)) || ($c = $ctrl::ctrl())) {
                     $path = "Pages/" . ucfirst($page) . "Page";
@@ -213,8 +233,7 @@ $command = [
                 }
                 else{
                     Logger::danger("failed : controller not found");
-                }
-                //igk_wln_e("make page done", $c, func_get_args(), $command->options); // , $ctrl, $page, $c, $t);
+                } 
             };
         }, [
             "desc" => __("make a new page. controller name [options]"),
@@ -266,21 +285,7 @@ $command = [
             return 0;
         };
     }, __("run script by loading")],
-
-    // "--install-site"=>function(){
-    // },
-    // "--install-project"=>function(){
-    // },
-    // "--install-module"=>function(){
-    // },
-    // "--install-service"=>function(){
-    // },
-    // "--install-composer-package"=>function(){
-    // },
-    // "--validate-config"=>function(){ // validate configuration
-    // },
-    // "config:create"=>function(){ //new configuration
-    // },
+ 
     "-v, --version" => [function ($arg, $command) {
         $command->exec = function () {
             echo IGK_VERSION . "\n";
@@ -297,10 +302,7 @@ $command = [
             };
         }
         return 200;
-    }, "show help or activate help option for a command"],
-    "--init" => [function ($arg, $command) {
-        
-    }, "init configuration file"]
+    }, ["desc"=>"show help or activate help option for a command"], "info"]   
 ];
 
 //-------------------------------------------------------------------------------

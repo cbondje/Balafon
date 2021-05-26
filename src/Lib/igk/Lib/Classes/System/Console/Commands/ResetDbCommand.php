@@ -6,28 +6,34 @@ use IGK\System\Console\Logger;
 
 class ResetDbCommand extends AppExecCommand{
     var $command = "--db:resetdb";
-
     var $desc = "reset database"; 
+    var $category = "db";
 
     public function exec($command, $ctrl=null)
     {   
-        igk_environment()->querydebug = property_exists($command->options, "--querydebug");
+        DbCommand::Init($command); 
         $seed = property_exists($command->options, "--seed");
-
+         
         if ($seed){
             $seed = $command->app->command["--db:seed"];
             $fc = $seed["0"];
             $fc("resetdb", $command); 
         }
 
-        if ($ctrl && ($c = igk_getctrl($ctrl, false))){
-            $c = [$c];
+        if ($ctrl){
+            if ($c = igk_getctrl($ctrl, false)){            
+                $c = [$c];
+            } else{
+                Logger::danger("controller not found");
+                return -1;
+            }
         } else {
             $c = igk_app()->getControllerManager()->getControllers(); 
         }
         if ($c) {
             foreach ($c as $m) {
-                if ($m->getCanInitDb()) {
+                if ($m->getCanInitDb()){
+                    $m->register_autoload();
                     $command->app->print("resetdb : " . get_class($m));
                     $m::resetDb(false, true);
                     Logger::success("complete: ".get_class($m));

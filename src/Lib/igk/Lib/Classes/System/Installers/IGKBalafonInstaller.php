@@ -9,6 +9,7 @@
 // @url: https://www.igkdev.com
 namespace IGK\System\Installers;
 
+use IGKSystemController;
 use IIGKActionResult;
 use Throwable;
 
@@ -26,6 +27,9 @@ class IGKBalafonInstaller implements IIGKActionResult{
     * 
     */
     public function index(){ 
+    }
+    public function configDir(){
+        return IGKSystemController::configDir();
     }
     ///<summary></summary>
     /**

@@ -3,6 +3,7 @@
 namespace IGK\Controllers;
 
 use Exception;
+use IGK\System\Http\Route;
 use IGK\System\Http\RouteActionHandler;
 /**
  * controller task : routable controller action
@@ -26,7 +27,9 @@ abstract class ControllerTask{
         $this->init(); 
     }
     protected function init(){
-
+        if (!$this->route){
+            Route::LoadConfig($this->controller);
+        }
     }
     /**
      * index start entry task
@@ -42,7 +45,6 @@ abstract class ControllerTask{
         }
         array_unshift($args, $name);
         return $this->index(...$args);
-        // throw new Exception("Task $name not found");
     }
 
 

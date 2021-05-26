@@ -763,7 +763,7 @@
 // },
 // initdrag: function (uri, properties){
 		// (function(q){
-		// var uf = igk.winui.dragdrop.fn.update_file;
+		// var uf = igk.winui.dragdrop.fn.upload_file;
 		// var p =  q.parentNode.parentNode;
 		// var d = $igk(q).select('.igk-hbox').getItemAt(0);
 		// if (d){

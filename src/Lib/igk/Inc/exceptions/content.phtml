@@ -1,7 +1,7 @@
 <?php
 
 use IGK\IGKEnvironment;
-
+ 
 $is_prod = !igk_server_is_local() && !igk_app()->Configs->error_debug && igk_sys_env_production();
 $base_path = $is_prod;
 $cl1 = "#ddd";

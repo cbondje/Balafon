@@ -23,6 +23,7 @@ function igk_auto_load_class($name, $entryNS, $classdir, & $refile=null ){
             include_once(func_get_arg(0));
         };
     } 
+  
 
     if(empty($entryNS) || (strpos($name, $entryNS) === 0)){
         $n = $name;
@@ -37,6 +38,7 @@ function igk_auto_load_class($name, $entryNS, $classdir, & $refile=null ){
         }
         // | use to fit class path entry namespace
         $gdir = 0;
+   
         while($tdir = array_shift($classdir)){
             if($gdir){  
                 $tdir = dirname($tdir);
@@ -44,8 +46,16 @@ function igk_auto_load_class($name, $entryNS, $classdir, & $refile=null ){
             if(file_exists($file=igk_io_dir($tdir."/".$n.".php"))){            
                 $bindfile($file);            
                 $refile = $file;
+                igk_hook(IGKEvents::HOOK_AUTLOAD_CLASS, [
+                    $name,
+                    $file
+                ]);
                 return 1;
             } 
+            if (igk_is_debug()){
+                igk_ilog($file);
+            } 
+            igk_debug_wln("try loadind 444 ".$name, $entryNS, "not found : ".$file, "?".file_exists($file));
             $gdir = 1; 
         } 
     }
@@ -57,10 +67,10 @@ function igk_io_get_script($f, $args=null){
     }
     return null;
 }
-function & igk_toarray($tab){
-	$t = (array)$tab;
-    return $t;
-}
+// function & igk_to_array($tab){
+// 	$t = (array)$tab;
+//     return $t;
+// }
 
 ///<summary>evalute constant and get the value</summary>
 ///<return>null if constant not defined</return>
@@ -381,7 +391,7 @@ function igk_wln($msg=""){
 * write line to buffer and exit
 */
 function igk_wln_e($msg){     
-    igk_set_env('TRACE_LEVEL', 3);
+    igk_set_env('TRACE_LEVEL', 3);    
     call_user_func_array('igk_wln', func_get_args());
     igk_exit();
 }
@@ -435,4 +445,90 @@ function igk_encrypt($data,$prefix=null){
 }
 function igk_sys_copyright(){
     return "IGKDEV &copy; 2011-".date('Y')." ".__("all rights reserved");
+}
+
+
+///<summary></summary>
+///<param name="depth"></param>
+/**
+* 
+* @param mixed $depth the default value is 0
+*/
+function igk_trace($depth=0, $sep="", $count=-1, $header=0){
+    $callers=debug_backtrace();
+    $o="";
+    $tc=1;
+    
+    if (igk_is_cmd()){
+        for($i=$depth; $i < count($callers); $i++, $tc++){
+            //+ show file before line to cmd+click to be handle
+            $f=igk_getv($callers[$i], "function");
+            $c=igk_getv($callers[$i], "class", "__global");
+            $o.= igk_getv($callers[$i], "file").":".igk_getv($callers[$i], "line") . PHP_EOL;
+        } 
+        echo $o;
+        return;
+    }
+
+    $o .= "<div>".$sep;
+    $o .= "<table>".$sep;
+
+    if ($header){
+        $o .= "<tr>";
+        $o .= "<th>&nbsp;</th>";
+        $o .= "<th>".__("Line")."</th>";
+        $o .= "<th>".__("File")."</th>";
+        $o .= "<th>".__("Function")."</th>";
+        $o .= "<th>".__("In")."</th>";
+        $o .= "</tr>".$sep;
+    }
+    $_base_path = !igk_environment()->is("DEV") && defined("IGK_BASE_DIR");
+  
+    for($i=$depth; $i < count($callers); $i++, $tc++){
+ 
+        $f=igk_getv($callers[$i], "function");
+        $c=igk_getv($callers[$i], "class", "__global");
+        $o .= "<tr>";
+        $o .= "<td>".$tc."</td>";
+        $o .= "<td>".igk_getv($callers[$i], "line")."</td>";
+
+        $o .= "<td>";
+        $g = igk_getv($callers[$i], "file");
+        if ($_base_path){
+            $g = igk_io_basepath($g);
+        }
+        $o .= $g; 
+
+        $o .= "</td>";
+        $o .= "<td>".$f."</td>";
+        $o .= "<td>".$c."</td>";
+        $o .= "</tr>".$sep;
+        if ($count>0){
+            $count--;
+            if ($count==0)
+                break;  
+        }
+    }
+    $o .= "</table>".$sep;
+    $o .= "</div>".$sep;
+    echo $o;
+}
+
+///<summary>get system directory presentation</summary>
+/**
+* get system directory presentation
+*/
+function igk_io_dir($dir, $separator=DIRECTORY_SEPARATOR){
+    $d=$separator;     
+    $out=IGK_STR_EMPTY;
+    if(ord($d) == 92){
+        $out=preg_replace("/\//", '\\', $dir);
+        $out=str_replace("\\", "\\", $out);
+    }
+    else{
+        $d="/[\\\\]/";
+        $out=preg_replace($d, '/', $dir);
+        $out=str_replace("//", "/", $out);
+    }
+    return $out;
 }

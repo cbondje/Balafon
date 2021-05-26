@@ -8,8 +8,9 @@ use Exception;
 * use to manage Server Environment
 */
 final class IGKEnvironment implements \ArrayAccess{
-    private $m_envs;
     private static $sm_instance;
+    private $m_envs;
+    private $m_basedir;
     // | default FOUR ENVIRONMENT TYPE
     private static $env_keys = [
         "DEV"=>"development",
@@ -19,6 +20,16 @@ final class IGKEnvironment implements \ArrayAccess{
     ];
     public function getEnvironments(){
         return $this->m_envs;
+    }
+     /**
+     * get the environment base directory
+     * @return mixed 
+     */
+    public function getBaseDir(){
+        return $this->m_basedir;
+    }
+    public function setBaseDir($basedir){
+        $this->m_basedir = $basedir; 
     }
     /**
      * create an environment class instance
@@ -96,7 +107,11 @@ final class IGKEnvironment implements \ArrayAccess{
     * @param mixed $v
     */
     public function __set($n, $v){
-        $this->OffsetSet($n, $v);
+        if (method_exists($this, $fc = "set".$n)){
+            $this->$fc($v);            
+        } else{
+            $this->OffsetSet($n, $v);
+        }
 		return $this;
     }
     ///<summary></summary>
@@ -119,12 +134,16 @@ final class IGKEnvironment implements \ArrayAccess{
     */
     public function & get($var, $default=null){
 		$t = null;
-		if (array_key_exists($var, $this->m_envs)){
-			$t = & $this->m_envs[$var];
+        if (method_exists($this, $fc = "get".$var)){
+            $t = $this->$fc();
+        } else {
+            if (array_key_exists($var, $this->m_envs)){
+                $t = & $this->m_envs[$var];
+            }
         }
         if ($t===null)
             $t = $default;
-        //$t = igk_getv($this->m_envs, $var);
+    
 		return $t;
     }
     ///<summary>create a environment class </summary>

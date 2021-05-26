@@ -264,7 +264,7 @@ $l["ClGetNkown_Id"] = "Comment vous nous connaissez?";
 $l["clfirstname"]="Prenom";
 $l["cllastname"]="Nom";
 $l["cllogin"]="Login";
-$l["clpwd"]="Mots de passe";
+$l["clpwd"]="Mot de passe";
 $l["clemail"]="Email";
 $l["clgender"]="Genre";
 $l["clGsm"]="GSM";
@@ -1649,3 +1649,8 @@ $l["failed to change user's password"] = "impossible de changer le mot de passe"
 
 
 
+$l["Add user"] = "Ajouter l'utilisateur";
+
+$l["Change password"] = "Changer le mot de passe";
+$l["Passwd"] = "Mot de passe";
+$l["RePasswd"] = "Saisir a nouveau";

@@ -36,7 +36,7 @@ function igk_template_update_attrib_piped_expression($n, $attr, $v, $context, $s
 }
 
 function igk_template_get_piped_value($rv, $context){
-	extract( igk_toarray($context));
+	extract( igk_to_array($context));
     list($v, $pipe) = igk_str_pipe_args($rv, $c, 0);
     // igk_ilog(__FILE__.":43:".$v);
 	$v = @eval( "return $v;");
@@ -47,7 +47,7 @@ function igk_template_get_piped_value($rv, $context){
 
 igk_reg_template_bindingattributes("*for", function($reader, $attr, $v, $context, $setattrib){
     $g=(function($script) use ($context){
-        extract(igk_toarray($context));      
+        extract(igk_to_array($context));      
         return eval((function(){
             if (func_num_args()==1)
             return "return ".func_get_arg(0).";"; 
@@ -58,7 +58,7 @@ igk_reg_template_bindingattributes("*for", function($reader, $attr, $v, $context
 });
 igk_reg_template_bindingattributes("*classes", function($n, $attr, $v, $context, $setattrib){
     $g=(function($rv) use ($n, $context, $setattrib){
-        extract(igk_toarray($context));
+        extract(igk_to_array($context));
         if($d=igk_json_parse($rv)){
             $tab=[];
             foreach($d as $cl=>$cond){
@@ -80,7 +80,7 @@ igk_reg_template_bindingattributes("*classes", function($n, $attr, $v, $context,
 });
 igk_reg_template_bindingattributes("*href", function($n, $attr, $v, $context, $setattrib){
     $g=(function($rv) use ($n, $context, $setattrib){
-        extract(igk_toarray($context));
+        extract(igk_to_array($context));
 		$s="return {$rv};";
 		$v = @eval($s);
         $setattrib("href", $v);
@@ -95,7 +95,7 @@ igk_reg_template_bindingattributes("*visible", function($readerInfo, $attr, $v, 
         if ((func_num_args()!=1) ||  !is_string (func_get_arg(0))){
             igk_die("argument script not valid");
         }
-        extract(igk_toarray($context)); 
+        extract(igk_to_array($context)); 
         if(isset($ctrl)){
             extract(igk_extract_context($ctrl));
         }  

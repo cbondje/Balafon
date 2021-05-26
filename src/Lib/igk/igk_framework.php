@@ -229,6 +229,9 @@ function igk_ajx_panel_dialog_close(){
     $n->Content="igk.winui.controls.panelDialog.close()";
     $n->RenderAJX();
 }
+/**
+ * ask client to send a request again to update the value
+ */
 function igk_ajx_update($uri, $target='body', $type='get'){
     if ($type!='get'){
         $type = 'post';
@@ -305,13 +308,15 @@ function igk_ajx_replace_ctrl_view($ctrl, $view=1){
 * @param mixed $target id to target
 * @param mixed $hash hash to pass to ajx context
 */
-function igk_ajx_replace_node($n, $target=null, $hash=null){
+function igk_ajx_replace_node($n, $target=null, $hash=null, $render=true){
 
     $c=new IGKHtmlAJXReplacementNode();
     $c["target"]=$target;
     $c["hash"]=$hash;
     $c->addNode($n);
+    if ($render)
     $c->RenderAJX();
+    return $c;
 }
 ///<summary></summary>
 ///<param name="uri"></param>
@@ -1406,7 +1411,7 @@ function igk_conf_get_expression($s){
     $i=0;
     $m=0;
     $n="";
-    $q=0;
+    $q=null;
     while($i < $ln){
         $ch=$s[$i];
         switch($ch){
@@ -3709,9 +3714,7 @@ function igk_css_treat_gtheme($theme, $systheme, $v){
     $match=array(); 
     $gtheme = $theme;
     if ($systheme->def===null){
-        igk_wln(get_class($systheme) == IGKHtmlDoc::class);
-        igk_trace();
-        igk_exit();
+        igk_die("system definition is null.");
     }
 
     $d= & $systheme->def->getCl();
@@ -3825,12 +3828,6 @@ function igk_css_treat_bracket($v, $theme, $systheme=null, $gtheme=null, $doc=nu
     if($doc == null){
         igk_wln_e("can't treat bracket\n".igk_show_trace());
     }  
-    if ($systheme === null) {
-        header("Content-Type: text/plain");
-        igk_trace();
-        igk_exit();
-    }
-
     $systheme= $systheme ? $systheme : $doc->getSysTheme();
     $gtheme= $gtheme ? $gtheme : $doc->Theme;
     $reg2=IGK_CSS_TREAT_REGEX_2;
@@ -4914,6 +4911,7 @@ function igk_db_init_dataschema($ctrl, $dataschema, $adapter){
 	$tb=$r->Data;
 	$etb=$r->Entries;
 	$no_error = 1; 
+    $adapter->beginInitDb($ctrl);
 	foreach($tb as $k=>$v){
 		$n=igk_db_get_table_name($k, $ctrl);
         $data=igk_getv($etb, $n); 
@@ -4923,11 +4921,11 @@ function igk_db_init_dataschema($ctrl, $dataschema, $adapter){
             $adapter->DbName
             )
         ){
-			// igk_ilog("failed to create table: ".$n);
 			igk_push_env("db_init_schema", __("failed to create [0]", $n));
 			$no_error  = 0;
 		} 
 	}
+    $adapter->endInitDb();
 	return $no_error;
 }
 
@@ -5250,10 +5248,7 @@ function igk_db_ctrl_datatable_info_key($ctrl, $table){
         return $h;
     }
     $c=$ctrl->getDataTableInfo();
-    if(!$c){ 
-        // igk_trace();
-        // igk_exit($tc);
-        // igk_die("getDataTableInfo  null for : ".$table. " class : ".get_class($ctrl));
+    if(!$c){  
         return null;
     }
     if($ctrl->UseDataSchema){
@@ -6310,16 +6305,16 @@ function igk_db_load_data_entries_schemas($file, $ctrl){
 /**
 * load data schema in array
 */
-function igk_db_load_data_schema_array($n, & $tab, & $tbrelation=null, & $migrations=null, $ctrl=null){
+function igk_db_load_data_schema_array($n, & $tab, & $tbrelation=null, & $migrations=null, $ctrl=null, $resolvname=true){
     $entries=$n->getElementsByTagName(IGKDbSchemas::ENTRIES_TAG);
     $tentries = [];
     if ($entries){
         foreach($n->getElementsByTagName(IGKDbSchemas::ROWS_TAG) as $v){
             if ($tb = $v["For"]){
-                $tb = IGKSysUtil::GetTableName($tb); 
+                $tb = $resolvname ?  IGKSysUtil::GetTableName($tb, $ctrl) : $tb; 
                 $rtab = [];
                 foreach($v->getElementsByTagName("Row") as $item){
-                    array_push($rtab, $item->getAttributes()->ToArray());
+                    array_push($rtab, $item->getAttributes()->to_array());
                 }
 
                 if (isset($tentries[$tb])){
@@ -6333,20 +6328,20 @@ function igk_db_load_data_schema_array($n, & $tab, & $tbrelation=null, & $migrat
 
     foreach($n->getElementsByTagName(IGK_DATA_DEF_TAGNAME) as $v){
         $c=array();
-        $tb=  IGKSysUtil::GetTableName($v["TableName"], $ctrl);
+        $tb = $v["TableName"];
+        if ($resolvname)
+            $tb= IGKSysUtil::GetTableName($v["TableName"], $ctrl);
         foreach($v->getElementsByTagName(IGK_COLUMN_TAGNAME) as $vv){
             $cl = IGKDbColumnInfo::CreateWithRelation(igk_to_array($vv->Attributes), $tb, $ctrl, $tbrelation);           
             $c[$cl->clName] = $cl;
-        }
-     
-       
+        } 
         $tab[$tb]=array(
                 "ColumnInfo"=>$c,
                 "Description"=>igk_getv($v,"Description"),
                 "Entries"=>igk_getv($tentries, $tb)
             );
     }
-    if ($nmigrations = igk_getv($n->getElementsByTagName(IGKDbSchemas::MIGRATIONS_TAG), 0)){
+    if ($resolvname && ($nmigrations = igk_getv($n->getElementsByTagName(IGKDbSchemas::MIGRATIONS_TAG), 0))){
         
         // | load migrations           
         foreach($nmigrations->getElementsByTagName(IGKDbSchemas::MIGRATION_TAG) as $mig){
@@ -6405,20 +6400,20 @@ function igk_db_load_data_schema_array($n, & $tab, & $tbrelation=null, & $migrat
 /**
 * load data from schema files
 */
-function igk_db_load_data_schemas($file, $ctrl=null){
+function igk_db_load_data_schemas($file, $ctrl=null, $resolvname=true){
     if (!file_exists($file)){
         return null;
     }
-    return igk_db_load_data_schemas_node(IGKHtmlReader::LoadFile($file), $ctrl);
+    return igk_db_load_data_schemas_node(IGKHtmlReader::LoadFile($file), $ctrl, $resolvname);
 }
-function igk_db_load_data_schemas_node($d, $ctrl=null){
+function igk_db_load_data_schemas_node($d, $ctrl=null, $resolvname=true){
     $tables=array();
     $migrations=[];
     $relations = [];
     if($d){
         $n=igk_getv($d->getElementsByTagName(IGK_SCHEMA_TAGNAME), 0);
         if($n){ 
-            igk_db_load_data_schema_array($n, $tables, $relations, $migrations, $ctrl);           
+            igk_db_load_data_schema_array($n, $tables, $relations, $migrations, $ctrl, $resolvname);           
         }
     } 
     return (object)compact("tables", "migrations", "relations");
@@ -6432,6 +6427,7 @@ function igk_db_load_data_schemas_node($d, $ctrl=null){
 * @param mixed $ctrl controller
 * @param mixed $tablename tablename
 * @param mixed $entries entry to add
+* @deprecated since 11.6 please use grammar object
 */
 function igk_db_load_entries($ctrl, $tablename, $entries){
     $v_r=igk_db_create_row($tablename);
@@ -6448,7 +6444,7 @@ function igk_db_load_entries($ctrl, $tablename, $entries){
                 $cond=array();
                 $r=null;
                 if(preg_match("/\[\s*link\s*:\s*(?P<cond>([^\]]+))\]/", $mv, $cond)){
-                    $r=$ctrl->select($linktable, array(igk_db_create_expression($cond["cond"])), ["Columns"=>["clId"=>"id"]])->getRowAtIndex(0);
+                    $r=$ctrl->select($linktable, array(igk_db_create_expression($cond["cond"])), ["Columns"=>[IGK_FD_ID=>"id"]])->getRowAtIndex(0);
                     if($r){
                         $b->$k=intval($r->id);
                     }
@@ -6493,7 +6489,7 @@ function igk_db_load_entries_array($n, & $tab, $ctrl){
         foreach($ttb as $kk=>$vv){
             $attr=$vv->Attributes;
             if($attr)
-                $c[]=$attr->ToArray();
+                $c[]=$attr->to_array();
         }
         if(igk_count($c) > 0){
             $tab[$tb]=$c;
@@ -6645,7 +6641,7 @@ function igk_db_reg_sys_ctrl($n, $ctrlobj){
 * @param mixed $cgctrl the default value is null
 */
 function igk_db_register_auth($name, $cgctrl=null){
-    $table = igk_db_table_name(IGK_TB_AUTHORISATIONS);
+    $table = igk_db_get_table_name(IGK_TB_AUTHORISATIONS);
     $cgctrl=$cgctrl ?? igk_db_get_datatableowner($table);
     if($cgctrl)
         igk_db_insert_if_not_exists($cgctrl, $table, array(IGK_FD_NAME=>$name));
@@ -6731,7 +6727,7 @@ function igk_db_restore_backup_data($ctrl, $schema, & $error=null, $ad=null){
         foreach($e->getElementsByTagName("Rows") as $row){
             $table=$row["For"];
             foreach($row->getElementsByTagName("Row") as $item){
-                $tab=$item->getAttributes()->ToArray();
+                $tab=$item->getAttributes()->to_array();
                 if(igk_count($tab) > 0){
                     try {
                         igk_db_insert_if_not_exists($ad, $table, $tab);
@@ -6773,7 +6769,7 @@ function igk_db_restore_backup_data_adapter($adapter, $schema, & $error){
             $autoinc=null;
             $tabinfo=igk_db_column_info($ktinfo, $table, $autoinc);
             foreach($row->getElementsByTagName("Row") as $item){
-                $tab=$item->getAttributes()->ToArray();
+                $tab=$item->getAttributes()->to_array();
                 if(igk_count($tab) > 0){
                     try {
                         if($autoinc)
@@ -7069,7 +7065,7 @@ function igk_db_table_select_row($table, $id, $controllerOrAdapterName=IGK_MYSQL
     else if(is_object($id))
         $k=(array)$id;
     else
-        $k=array("clId"=>$id);
+        $k=array(IGK_FD_ID=>$id);
     $r=igk_db_table_select_where($table, $k, $controllerOrAdapterName, $leaveopen);
     if($r && ($r->RowCount == 1))
         return $r->getRowAtIndex(0);
@@ -7172,7 +7168,7 @@ function igk_db_update($controllerOrAdpaterName, $table, $entry, $where=null, $d
     $adapt=igk_get_data_adapter($controllerOrAdpaterName, false, $leaveOpen);
     if($adapt){
         $adapt->connect($dbname);
-        $r=$adapt->update($table, $entry, $where == null ? array("clId"=>$entry->clId): $where);
+        $r=$adapt->update($table, $entry, $where == null ? array(IGK_FD_ID=>$entry->clId): $where);
         if(!$r && IGKApp::$DEBUG){
             igk_log_write_i("udpate error", igk_debuggerview()->getMessage());
         }
@@ -7597,6 +7593,11 @@ function igk_die($msg=IGK_DIE_DEFAULT_MSG, $throwex=1, $code=400){
                 }
             }
         } 
+        // | Last Exception
+
+        igk_wln($msg);
+        igk_trace();
+        igk_exit();
 		throw new IGKException($msg, $code);
     }
     else{
@@ -7710,6 +7711,10 @@ function igk_display_error($a){
     else{
         ini_set("display_errors", "0");
     }
+}
+
+function igk_form_input_type($type){
+    return IGKHtmlUtils::GetInputType($type);
 }
 ///<summary></summary>
 ///<param name="doc"></param>
@@ -10341,7 +10346,7 @@ function igk_get_ns_func($name){
 */
 function igk_get_packages_dir(){
     if (defined("IGK_PACKAGE_DIR"))
-        return IGK_PACKAGE_DIR;
+        return constant('IGK_PACKAGE_DIR');
     if (defined("IGK_APP_DIR"))
         return igk_io_dir(IGK_APP_DIR."/".IGK_PACKAGES_FOLDER);
     
@@ -11112,7 +11117,7 @@ function igk_geterror_code($code){
 */
 function igk_getev($value, $default){
     if(($value == null) || empty($value)){
-        if(is_callable($default))
+        if(is_callable($default) && ($default instanceof Closure))
             return $default();
         return $default;
     }
@@ -11295,7 +11300,7 @@ function igk_getrequest($tab, $key, $value=null){
             return igk_str_quotes($t);
         return $t;
     }
-    if (is_callable($value)){
+    if ( is_callable($value) && ($value instanceof closure)){        
         return $value();
     }
     return $value;
@@ -11393,6 +11398,17 @@ function igk_gettv($value, $default){
 */
 function igk_getv($array, $key, $default=null){
     return igk_getpv($array, array($key), $default);
+}
+function igk_getv_fallback($item, $keys){
+    if (is_string($keys)){
+        $keys = explode("|", $keys);
+    }
+    foreach($keys as $r){
+        if (! ($m = igk_getv($item, $r))){
+            return $m;
+        }
+    }
+    return null;
 }
 ///<summary></summary>
 ///<param name="n"></param>
@@ -11601,12 +11617,19 @@ function igk_header_str2array($s){
 * 
 * @param mixed $name
 * @param mixed $args the default value is
+* @param mixed $options to pass to to okthe default value is
 */
-function igk_hook($name, $args=array()){ 
+function igk_hook($name, $args=array(), $options=null){ 
+    $def = null;
+    if ($options){
+        $def = igk_get_robjs("default|output", 0, (object)$options);        
+    }
     $hooks=igk_environment()->{"sys://hooks"};
     if(!$hooks){
         $hooks=array();
     }
+    // igk_wln_e($name);
+
     $tab=igk_getv($hooks, $name);
     if($tab){
         $list=& $tab->list;
@@ -11620,12 +11643,12 @@ function igk_hook($name, $args=array()){
             });
             $tab->changed=0;
         }
-        $cargs=array((object)array("args"=>$args, "handle"=>0, "output"=>null));
+        $cargs=array((object)array("args"=>$args, "handle"=>0, "lastoutput"=>null, "output"=>$def ? $def->output: null));
         $count=0;
         foreach($list as $v){
             if(!is_callable($v->callback)){
                 if(is_object($v->callback)){ 
-                    $cargs[0]->output = igk_invoke_callback_obj(null, $v->callback, $cargs);
+                    $cargs[0]->lastoutput = igk_invoke_callback_obj(null, $v->callback, $cargs);
                 }
                 else{
                     igk_wln_e(__FILE__.':'.__LINE__,
@@ -11634,7 +11657,7 @@ function igk_hook($name, $args=array()){
                 }
             }
             else
-                $cargs[0]->output = call_user_func_array($v->callback, $cargs);
+                $cargs[0]->lastoutput = call_user_func_array($v->callback, $cargs);
             if($cargs[0]->handle){
                 break;
             }
@@ -11642,7 +11665,7 @@ function igk_hook($name, $args=array()){
         }
         return $cargs[0]->output;
     }
-    return null;
+    return $def ? $def->output : $args;
 }
 
 function igk_html_use($p){
@@ -12366,7 +12389,7 @@ function igk_html_create_db_tab_select($tag, $ctrl, $id, $table){
 */
 function igk_html_createmenu($name, $uri){
     return (object)array(
-            "clId"=>igk_new_id(),
+            IGK_FD_ID=>igk_new_id(),
             IGK_FD_NAME=>$name,
             "clUri"=>$uri
         );
@@ -12798,6 +12821,7 @@ function igk_html_eval_global_script($src, $ctrl, $raw, $context=null){
             if(igk_count($tab) > 1){
                 $obj=igk_html_databinding_getobjforscripting($ctrl);
                 igk_html_databinding_read_obj_litteral($obj, $value, $ctrl, $raw);
+                $out = $src;
                 foreach($obj->args as $k=>$tv){
                     $rm=igk_html_treat_content($out, $ctrl, $raw)->render();//($tv, $ctrl, $raw, IGK_HTML_BINDING_EVAL_CONTEXT);
                     $obj->args[$k]=igk_html_php_eval($obj, $ctrl, $raw, $rm, 1);
@@ -13219,7 +13243,7 @@ function igk_html_hearachi($n, $level=-1, $mode="t", $callback=null){
         }
         $so .= IGK_LF;
         $ch=$s->node->Childs;
-        $tab=$ch ? $ch->ToArray(): array();
+        $tab=$ch ? $ch->to_array(): array();
         for($c=count($tab)-1; $c>=0; $c--){
             array_push($q, (object)array("node"=>$tab[$c], "level"=>$s->level + 1));
         }
@@ -13666,7 +13690,7 @@ function igk_html_render_node($n, & $options, $tab=null, $textonly=false, $chain
             $options->Depth++;
         else
             $options->Depth=1;
-        igk_xml_initialize($options, array("Stop"=>0, "Indent"=>0));
+        igk_xml_initialize($options, array("Stop"=>0, "Indent"=>0, "Context"=>"XML"));
     }
     else{
         $options=igk_xml_create_render_option();
@@ -14277,7 +14301,7 @@ function igk_ilog($msg, $tag=null, $traceindex=0){
     if(!($f = igk_const("IGK_LOG_FILE")))
         $f=igk_ilog_file();
     if(!defined('IGK_NO_TRACELOG')){
-        if(defined("IGK_TRACELOG") || !igk_sys_env_production()){
+        if(!igk_sys_env_production()){
             igk_ilog_trace(igk_trace_function(2 + $traceindex));
             $msg=array("msg"=>$msg, "trace"=>igk_ilog_get_trace());
         }
@@ -14676,6 +14700,7 @@ function igk_init_user_info(){
 * @return mixed
 */
 function igk_initenv($dirname){
+ 
     if(!is_dir($dirname))
         return -9;
     $confFILE=$dirname."/Data/configure";
@@ -15067,6 +15092,7 @@ function igk_io_applicationdatadir(){
 */
 function igk_io_applicationdir(){
     if(!defined('IGK_APP_DIR')){
+        return IGK_LIB_DIR."/application";
         igk_die("application directory not defined", IGKErrors::NoAPPDIRDEFINED);
     }
     return IGK_APP_DIR;
@@ -15124,9 +15150,11 @@ function igk_io_basedatadir($dir=null){
 * get path from base directory
 */
 function igk_io_basedir($dir=null){
-    if(!defined("IGK_BASE_DIR"))
+    $bdir = igk_environment()->get("basedir", constant("IGK_BASE_DIR"));
+    if(!$bdir){
         return null;
-    $l=igk_io_dir(IGK_BASE_DIR);
+    }
+    $l=igk_io_dir($bdir);
     if($dir == null)
         return $l;
     if(file_exists($dir) && (($hdir=igk_io_dir($dir)) == igk_realpath($dir))){
@@ -15140,7 +15168,7 @@ function igk_io_basedir($dir=null){
     $dir=igk_io_dir($dir);
     if($s && preg_match($egext, $dir))
         return $dir;
-    return igk_io_dir(IGK_BASE_DIR."/".$dir);
+    return igk_io_dir($bdir."/".$dir);
 }
 ///<summary> get if the base directory is equal to server document root</summary>
 /**
@@ -15469,11 +15497,7 @@ function igk_io_createdir($dirname, $mode=IGK_DEFAULT_FOLDER_MASK){
             if (@mkdir($dirname)){
                 chmod($dirname, $mode);
             }else{
-                igk_ilog("failed to create : ".$dirname);
-
-                // igk_dev_wln("failed to create ".$dirname);
-                // igk_trace();
-                // igk_exit();
+                igk_ilog("failed to create : ".$dirname); 
             }
         }
         else{
@@ -15640,25 +15664,7 @@ function igk_io_currenturi(){
 function igk_io_cwdrelativepath($dir){
     return IGKIO::GetRelativePath($dir, getcwd());
 }
-///<summary>get system directory presentation</summary>
-/**
-* get system directory presentation
-*/
-function igk_io_dir($dir){
-    $d=DIRECTORY_SEPARATOR;
-    $r='/';
-    $out=IGK_STR_EMPTY;
-    if(ord($d) == 92){
-        $out=preg_replace("/\//", '\\', $dir);
-        $out=str_replace("\\", "\\", $out);
-    }
-    else{
-        $d="/[\\\\]/";
-        $out=preg_replace($d, '/', $dir);
-        $out=str_replace("//", "/", $out);
-    }
-    return $out;
-}
+
 ///<summary></summary>
 /**
 * 
@@ -16369,7 +16375,7 @@ function igk_io_is_subdir($p, $c){
     if(DIRECTORY_SEPARATOR != "/"){
         $p=str_replace("\\", "/", $p);
         $c=str_replace("\\", "/", $c);
-    }
+    } 
     if(empty($p)){
         igk_die(__FUNCTION__."::p is empty ");
     }
@@ -17556,12 +17562,12 @@ function igk_is_module_present($modulename){
         return 1;
     return 0;
 }
-///<summary></summary>
+///<summary>determine whether to only get one controller per application</summary>
 /**
-* 
+* determine whether to only get one controller per application
 */
 function igk_is_singlecore_app(){
-    return  igk_const("IGK_SINGLE_CONTROLLER_APP") || igk_sys_getconfig("force_single_controller_app");
+    return   igk_const("IGK_SINGLE_CONTROLLER_APP") || igk_sys_getconfig("force_single_controller_app");
 }
 ///<summary>determine that the request is coming from this local server</summary>
 /**
@@ -19808,7 +19814,7 @@ function igk_pattern_view_extract($ctrl, $p, $globalregister=0){
                 }
                 $handle_file = 1;
             
-               //igk_trace();
+               
             } 
         }
     }
@@ -20931,6 +20937,7 @@ function igk_register_autoload_class(callable $func= null, $priority=10){
     }
     if($autoloading === null){
         spl_autoload_register(function($n) use ($k, & $sort, & $reg_func){
+            //igk_debug_wln("try oau load ".$n, $reg_func!=null);
             if ($reg_func){
                 $b=igk_get_env($k);
                 if ($b){
@@ -20939,9 +20946,10 @@ function igk_register_autoload_class(callable $func= null, $priority=10){
                             return strnatcmp($a["p"], $b["p"]);
                         });
                     }
+                    $args = func_get_args();
                     foreach($b as $c){
                         $fc=$c["c"];
-                        if(call_user_func_array($fc, func_get_args()))
+                        if(call_user_func_array($fc, $args))
                             return 1;
                     }
                 }
@@ -20959,6 +20967,7 @@ function igk_register_autoload_class(callable $func= null, $priority=10){
                 }
                 return 1;
             }
+            igk_debug_wln("file not exists ".$f);
             return 0;
         });
         //--------------------------------------------------------------------------------
@@ -22361,6 +22370,7 @@ function igk_show_trace($depth=1){
     }
     $o="";
     if(igk_is_cmd()){
+        $tc = 0;
         for($i=$depth; $i < count($callers); $i++, $tc++){
             //+ show file before line to cmd+click to be handle
             $f=igk_getv($callers[$i], "function");
@@ -22570,12 +22580,17 @@ function igk_str_append_to(& $s, $v, $sep=','){
     else
         $s=$sep.$v;
 }
-///<summary>convert string to php namespace convension</summary>
+///<summary>convert string to php namespace name</summary>
 function igk_str_ns($n){
     return implode("", 
       array_map("ucfirst",  array_filter(explode("_", str_replace(" ", "_", str_replace("/", "\\", $n)))))
     );
-
+}
+/**
+ * return string namespace presentation
+ */
+function igk_ns_name($ns){
+    return str_replace("/", "\\", $ns);
 }
 ///<summary></summary>
 ///<param name="tab"></param>
@@ -25077,7 +25092,7 @@ function igk_sys_gen_sitemap($ctrl, $domain="", $render=1){
         }
     }
     if ($source= igk_app()->Configs->getConfig("sitemap_xsl")){
-        $source = igk_io_datadir()."/".$source;
+        $source = igk_io_applicationdatadir()."/".$source;
     }else {
         $source = igk_io_sys_datadir()."/xml-sitemap.xsl";
     } 
@@ -25636,7 +25651,9 @@ function igk_sys_html_cache_dir(){
 * for init document
 */
 function igk_sys_html_initdoc($doc){
-
+    if (defined("IGK_NO_WEB")){
+        return;
+    }
     $t=igk_css_add_doc_style($doc);
     igk_js_init_doc($doc);
     $t=igk_get_env(IGK_ENV_GLOBAL_SCRIPT_KEY);
@@ -27009,8 +27026,8 @@ function igk_to_array($obj, $emptyarray=1){
     if(is_array($obj))
         return $obj;
     if(is_object($obj)){
-        if(method_exists($obj, "toArray"))
-            return $obj->toArray();
+        if(method_exists($obj, "to_array"))
+            return $obj->to_array();
     }
     return $obj == null ? (($emptyarray) ? array(): null): array($obj);
 }
@@ -27047,71 +27064,6 @@ function igk_tool_reg($name, $prop){
     if(isset($r[$name])){}
     $r[$name]=$prop;
     igk_set_env(IGK_KEY_TOOLS, $r);
-}
-///<summary></summary>
-///<param name="depth"></param>
-/**
-* 
-* @param mixed $depth the default value is 0
-*/
-function igk_trace($depth=0, $sep="", $count=-1, $header=0){
-    $callers=debug_backtrace();
-    $o="";
-    $tc=1;
-    
-    if (igk_is_cmd()){
-        for($i=$depth; $i < count($callers); $i++, $tc++){
-            //+ show file before line to cmd+click to be handle
-            $f=igk_getv($callers[$i], "function");
-            $c=igk_getv($callers[$i], "class", "__global");
-            $o.= igk_getv($callers[$i], "file").":".igk_getv($callers[$i], "line") . PHP_EOL;
-        } 
-        echo $o;
-        return;
-    }
-
-    $o .= "<div>".$sep;
-    $o .= "<table>".$sep;
-
-    if ($header){
-        $o .= "<tr>";
-        $o .= "<th>&nbsp;</th>";
-        $o .= "<th>".__("Line")."</th>";
-        $o .= "<th>".__("File")."</th>";
-        $o .= "<th>".__("Function")."</th>";
-        $o .= "<th>".__("In")."</th>";
-        $o .= "</tr>".$sep;
-    }
-    $_base_path = !igk_environment()->is("DEV") && defined("IGK_BASE_DIR");
-  
-    for($i=$depth; $i < count($callers); $i++, $tc++){
- 
-        $f=igk_getv($callers[$i], "function");
-        $c=igk_getv($callers[$i], "class", "__global");
-        $o .= "<tr>";
-        $o .= "<td>".$tc."</td>";
-        $o .= "<td>".igk_getv($callers[$i], "line")."</td>";
-
-        $o .= "<td>";
-        $g = igk_getv($callers[$i], "file");
-        if ($_base_path){
-            $g = igk_io_basepath($g);
-        }
-        $o .= $g; 
-
-        $o .= "</td>";
-        $o .= "<td>".$f."</td>";
-        $o .= "<td>".$c."</td>";
-        $o .= "</tr>".$sep;
-        if ($count>0){
-            $count--;
-            if ($count==0)
-                break;  
-        }
-    }
-    $o .= "</table>".$sep;
-    $o .= "</div>".$sep;
-    echo $o;
 }
 ///<summary></summary>
 ///<param name="level" default="1"></param>
@@ -27682,6 +27634,9 @@ function igk_usort(& $item, $params){
         $item->Sort($params);
     }
 }
+//------------------------------------------------------------------
+//+ | validation utility function
+//------------------------------------------------------------------
 ///<summary></summary>
 ///<param name="msg"></param>
 ///<param name="cibling" default="null"></param>
@@ -28051,8 +28006,6 @@ function igk_do_response($r){
     }
     if ($e) 
         igk_exit();
-    // igk_trace();
-    // igk_wln("bind...".$r, $e);
     return $r;
 }
 ///<summary>handle object action.</summary>
@@ -28365,7 +28318,6 @@ function igk_xml_is_cachingrequired($options=null){
 */
 function igk_xml_is_mailoptions($options){
     if($options && !isset($options->Context)){
-		// igk_trace();
         igk_die("Try to send XML options without <b>Context</b> property");
     }
     return $options && ($options->Context == "mail");
@@ -30109,14 +30061,14 @@ final class IGKAppMethod {
     }
     ///<summary></summary>
     /**
-    * 
+    * @return mixed
     */
     public function getClass(){
         return $this->m_->getFlag(self::C_CLASS);
     }
     ///<summary></summary>
-    /**
-    * 
+   /**
+    * @return mixed
     */
     public function getId(){
         return $this->m_->getFlag(self::C_IDN);
@@ -31109,7 +31061,7 @@ class IGKFormBuilderEngine implements IIGKFormBuilderEngine{
     * @param mixed $id the default value is null
     */
     protected function _initEntries($c, $entries, $filter=null, $id=null){
-        $fobj=["selected"=>0, "value"=>"clId", "key"=>"clName"];
+        $fobj=["selected"=>0, "value"=>IGK_FD_ID, "key"=>"clName"];
         $callback=null;
         $useempty=0;
         if($filter){
@@ -32519,7 +32471,7 @@ final class IGKHtmlScriptAssocInfo implements Serializable, ArrayAccess{
     /**
     * 
     */
-    public function toArray(){
+    public function to_array(){
         return $this->data;
     }
     ///<summary></summary>
@@ -34559,6 +34511,8 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
     * 
     */
     private function _initControllers(){
+        igk_trace();
+        igk_wln_e("init controller");
         IGKControllerManagerObject::getInstance(function(){
             $this->initControllerComplete();
         });
@@ -34787,16 +34741,17 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
                 $obj->{IGK_SESSION_ID}=-1;
                 self::$sm_instance= new IGKApp($obj);
             }
-            if(!isset($_SESSION) && !igk_is_cmd()){
+            if(!isset($_SESSION) && !igk_is_cmd() && !defined('IGK_NO_SESSION')){
                 $ctx=igk_current_context();
                 if(!igk_sys_env_production()){ 
-                    igk_die(json_encode(["message"=>__("can't create session instance : session not started"), 
+                    igk_die(json_encode([
+                        "message"=>__("can't create session instance : session not started"), 
                         'context'=>$ctx, 
-                        'baseuri'=>igk_io_baseuri()]));
+                        'baseuri'=>igk_io_baseuri()
+                    ]));
                 }
                 else{
-                    if($ctx == IGKAppContext::initializing){
-                        igk_trace();
+                    if($ctx == IGKAppContext::initializing){                       
                         igk_wln_e("Initializing on production ".$ctx, "baseuri: ". igk_io_baseuri(), "baserootdir: ".igk_io_rootbasedir());
                     }
                 }
@@ -34818,14 +34773,30 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
         return self::$sm_instance;
     }
     ///<summary>call this function in order to initiale application for non session handling</summary>
-    public static function InitSingle(){
+    public static function InitSingle($loadEnvironment=1){
         if (self::$sm_instance === null){
             $obj = (object)[];
             self::$sm_instance = new IGKApp($obj); 
-            igk_initenv(IGK_BASE_DIR);
+            if ($loadEnvironment && defined('IGK_BASE_DIR')){
+                 igk_initenv(IGK_BASE_DIR); 
+            }
             self::$sm_instance->setIsInit(true);
         }  
         return self::$sm_instance;
+    }
+    /**
+     * init new application instance
+     */
+    public static function InitNewInstance($setting=null){
+        if (self::$sm_instance){
+            igk_wln_e("already created");
+        }
+        define("IGK_FRAMEWORK_ATOMIC", 1);
+        igk_load_env_files(IGK_LIB_DIR);        
+        $app = new IGKApp((object)[]); 
+        $app->setIsInit(true);
+        self::$sm_instance = $app;
+        return $app;
     }
     ///<summary></summary>
     /**
@@ -34955,7 +34926,9 @@ final class IGKApp extends IGKObject implements IIGKParentDocumentHost{
 	 * @param mixed $renderDefault render the default document.
     */
     public static function Init($file, $renderDefault=1, $setting=null){
-
+        if (self::IsInit()){
+            return;
+        }
         $file=is_file($file) ? realpath($file) : igk_realpath($file) ;
         if(!defined('IGK_APP_DIR')){
             define('IGK_APP_DIR', ($file == null) ? dirname(igk_server()->SCRIPT_FILENAME): dirname($file));
@@ -37167,8 +37140,7 @@ EOF;
             $frm["class"]="fit alignc alingm ";
             $frm["style"]="position:relative; padding-bottom:48px;font-size:1.3em;";
             $frm->Box["style"]="top:0px; bottom:0px; position:relative; overflow-y:auto; height:100%; background-color:#37C4FF;vertical-align:middle;";
-            $dv= $frm->pageCenterBox(function($dv){
-
+            $dv= $frm->pageCenterBox(function($dv)use($frm, $igk_version, $igk_framename){
          
             $dv->addDiv()->setClass("dispib")->setAttribute("style", "text-align:center; color:#efefef; font-size:3.4em;vertical-align:middle; margin-bottom:32px;padding-top:32px;")->Content=IGK_PLATEFORM_NAME."<span class=\"igk-smaller alignt\" style=\"font-size:0.4em\">&copy;</span> Configuration";
             $kdiv=$frm->addDiv()->setClass("no-overflow");
@@ -37261,7 +37233,7 @@ EOF;
                 "clAdmPwd"=>["type"=>"password", "label_text"=>__("Password"), "placeholder"=>__('Admin password'), "attribs"=>[]]
             ]);
             $acbar = $form->addActionBar();
-            $acbar->addSubmit()->Content = __("connect");
+            $acbar->addSubmit("btn.submit", __("connect"));
             $d->addDiv()->Content=IGK_COPYRIGHT;
         }
         if($c)
@@ -38872,7 +38844,7 @@ EOF;
             $frm["action"]=$this->getUri("update_article".(($ajx == 1) ? null: "#".$this->_getarticleid()));
             $ul=$frm->add("ul");
             $ul["class"]="fitw";
-            $ul->addLi()->addTextArea("clContent", $str);
+            $ul->addLi()->addTextArea("clContent", $str)->setClass("igk-text-editor");
             $txt["class"]="fitw tyni";
             $frm->addInput("clfile", "hidden", base64_encode(urlencode($f)));
             $frm->addInput("navigate", "hidden", igk_getr("navigate", 0));
@@ -40711,7 +40683,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
                 $tb = [$tb];
             }
             foreach($tb as $k){
-                if ($dr = igk_db_delete($this, igk_db_get_table_name(IGK_TB_AUTHORISATIONS), array("clId"=>$k))){
+                if ($dr = igk_db_delete($this, igk_db_get_table_name(IGK_TB_AUTHORISATIONS), array(IGK_FD_ID=>$k))){
                     continue;
                 }
                 break;
@@ -40756,7 +40728,9 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
         igk_exit();
     }
     private function _authview(){
-        $c = igk_db_count_rows($tb,null,$this);
+        // TODO Paginate sample:    
+        $tb = igk_db_get_table_name(IGK_TB_AUTHORISATIONS);
+        $c = IGK\Models\Authorizations::count();//  igk_db_count_rows($tb,null,$this);
         $d=igk_createnode("div");
         $d->class = "+auth-view";
         $d["id"]="auth";
@@ -40764,18 +40738,17 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
         $frm->addNotifyHost();
         $this->_auth_options($frm, $c > 0);
         $table = null;
-        // TODO Paginate sample:    
-        $tb = igk_db_get_table_name(IGK_TB_AUTHORISATIONS);
+   
      
         $page = igk_getr("authpage", 1); // this->getParam("authpage");
         $total = 20;
 
-        $r=igk_db_table_select_where($tb, null, $this, null, [
+        $r= IGK\Models\Authorizations::select_all(null,[
             "Limit"=>[($page-1)*$total, $max = ($page*$total)]
         ]);
  
         if($r){ 
-            foreach($r->Rows as  $v){
+            foreach($r as  $v){
                 if (!$table){
                     $table=$frm->tablehost()->table()->header("" , __("lb.clName"), 
                     __("lb.clGroups"), "", ""
@@ -40815,15 +40788,15 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
     }
     private function getGroupNamesLitteral($authid){
         static $groups; 
-        $auths = igk_db_table_select_where(
-            IGK_TB_GROUPAUTHS, ["clAuth_Id"=>$authid], $this);
+        $auths = IGK\Models\Groupauthorizations::select_all(
+            ["clAuth_Id"=>$authid]);
         if ($groups === null){
-            $groups = igk_db_table_select_where(igk_db_get_table_name(IGK_TB_GROUPS), null, $this)->getRows();
+            $groups = IGK\Models\Groups::select_all(); 
         } 
 
         if ($g = $auths){
             $def = [];
-            foreach($g->getRows() as $r){
+            foreach($g as $r){
                 if ($gg = igk_getv($groups, $r->clGroup_Id)){
                     $def[$r->clGroup_Id] = "<a href=\"".$this->getUri("group_members&id=".$r->clGroup_Id)."\" >".$gg->clName."</a>";
                 }
@@ -40890,7 +40863,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
     * 
     */
     public function auth_add_group_ajx(){
-        $id=igk_getr("clId");
+        $id=igk_getr(IGK_FD_ID);
         $row=igk_db_table_select_row(IGK_TB_AUTHORISATIONS, $id);
         if($row == null){
             igk_navtocurrent();
@@ -40929,7 +40902,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
             }
             $frm->addHSep();
             $frm->addInput("confirm", "hidden", "1");
-            $frm->addInput("clId", "hidden", $id);
+            $frm->addInput(IGK_FD_ID, "hidden", $id);
             $frm->addInput("btn.confirm", "submit");
             $frame->RenderAJX();
         }
@@ -40981,16 +40954,16 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
     * 
     */
     public function auth_delete_authorisation_ajx(){
-        $id=igk_getr("clId");
+        $id=igk_getr(IGK_FD_ID);
         $row=igk_db_table_select_row(IGK_TB_AUTHORISATIONS, $id);
         if(igk_qr_confirm() && $row){
-            igk_db_delete($this, igk_db_get_table_name(IGK_TB_AUTHORISATIONS), array("clId"=>$id));
+            igk_db_delete($this, igk_db_get_table_name(IGK_TB_AUTHORISATIONS), array(IGK_FD_ID=>$id));
             $this->View();
             igk_navtocurrent();
         }
         else{
             $frame=igk_frame_add_confirm($this, __FUNCTION__, $this->getUri(__FUNCTION__));
-            $frame->Form->addInput("clId", "hidden", $id);
+            $frame->Form->addInput(IGK_FD_ID, "hidden", $id);
             $frame->Form->Div->Content=__("q.confirm_auth_suppression");
             $frame->RenderAJX(); 
 
@@ -41001,7 +40974,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
     * 
     */
     public function auth_edit_frame_ajx(){
-        $id=igk_getr("clId");
+        $id=igk_getr(IGK_FD_ID);
         $row=igk_db_table_select_row(IGK_TB_AUTHORISATIONS, $id);
         if($row == null){
             igk_navtocurrent();
@@ -41048,7 +41021,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
                 }
             } 
             $frm->addHSep();
-            $frm->addInput("clId", "hidden", $id);
+            $frm->addInput(IGK_FD_ID, "hidden", $id);
             $frm->addInput("confirm", "hidden", 1);
             $frm->addInput("btn.confim", "submit", __("btn.confirm")); 
             igk_ajx_panel_dialog(__("Update authorization : {0}", $row->clName),$frm);
@@ -41062,7 +41035,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
         if(igk_qr_confirm()){
             igk_frame_close(__FUNCTION__);
             $h=igk_db_delete($this, $this->getDataTableName(), array(
-                "clId"=>igk_getr("clId"),
+                IGK_FD_ID=>igk_getr(IGK_FD_ID),
                 IGK_FD_GROUP_ID=>igk_getr(IGK_FD_GROUP_ID)
             ));
             if($h)
@@ -41075,7 +41048,7 @@ final class IGKGroupAuthorisationsController extends IGKConfigCtrlBase{
         }
         else{
             $frame=igk_frame_add_confirm($this, __FUNCTION__, $this->getUri(__FUNCTION__));
-            $frame->Form->addInput("clId", "hidden", igk_getr("clId"));
+            $frame->Form->addInput(IGK_FD_ID, "hidden", igk_getr(IGK_FD_ID));
             $frame->Form->Div->Content=__("q.confirm_remove_group_auth");
             $frame->RenderAJX();
         }
@@ -41202,7 +41175,7 @@ final class IGKGroupController extends IGKConfigCtrlBase {
     * @param mixed $id
     */
     private function _removeGroup($id){
-        igk_db_delete($this, $this->getDataTableName(), array("clId"=>$id));
+        igk_db_delete($this, $this->getDataTableName(), array(IGK_FD_ID=>$id));
         return true;
     }
     ///<summary></summary>
@@ -41219,7 +41192,7 @@ final class IGKGroupController extends IGKConfigCtrlBase {
         switch($this->CurrentView){
             case "viewusers":
             $d=$node->addDiv();
-            $id=igk_getr("clId");
+            $id=igk_getr(IGK_FD_ID);
             if (!($group=$this->getParam("selectedGroup"))){
                 $group = igk_db_table_select_row(IGK_TB_GROUPS, $id);
             }
@@ -41242,7 +41215,7 @@ final class IGKGroupController extends IGKConfigCtrlBase {
                 $max=10;
                 foreach($r->Rows as  $v){
                     $r=$tb->addRow();
-                    $u=igk_db_table_select_row(IGK_TB_USERS, array("clId"=>$v->clUser_Id));
+                    $u=igk_db_table_select_row(IGK_TB_USERS, array(IGK_FD_ID=>$v->clUser_Id));
                     if($u){
                         $r->addTd()->addInput("clUsers[]", "checkbox", $u->clId);
                         $td=$r->addTd();
@@ -41434,16 +41407,17 @@ final class IGKGroupController extends IGKConfigCtrlBase {
     ///<summary>return an array of groups that this user is member of</summary>
     /**
     * return an array of groups that this user is member of
+    * @deprecated user model to insteed
     */
     public function getUserGroups($u, $options=null){
-        igk_trace();
-        igk_exit();
-        $ad=igk_get_data_adapter($this);
-        if(!$ad->connect())
-            return null;
-        if ($options===null)
-            $options = [];
-        $gid = Usergroups::getUserGroups($u->clId);
+        // igk_trace();
+        // igk_exit();
+        // $ad=igk_get_data_adapter($this);
+        // if(!$ad->connect())
+        //     return null;
+        // if ($options===null)
+        //     $options = [];
+        $gid = \IGK\Models\Usergroups::getUserGroups($u->clId);
         // $options["OrderBy"] = ["clName|ASC"];
         // $options["Joins"] = [
         //     [Groups::table()=>QueryBuilder::LeftJoin(Groups::table().".clId on clGroup_Id")]
@@ -41460,8 +41434,7 @@ final class IGKGroupController extends IGKConfigCtrlBase {
                 $g=$ad->select(igk_db_get_table_name(IGK_TB_GROUPS), array(IGK_FD_ID=>$v->clGroup_Id))->getRowAtIndex(0);
                 $t[$v->clGroup_Id]=$g->clName;
             }
-        }
-        $ad->close();
+        } 
         return $t;
     }
     ///<summary></summary>
@@ -41544,7 +41517,7 @@ final class IGKGroupController extends IGKConfigCtrlBase {
     * 
     */
     public function group_dropgroup_ajx(){
-        $id=igk_getr("clId");
+        $id=igk_getr(IGK_FD_ID);
         if(igk_qr_confirm()){
             if($this->_removeGroup($id)){
                 igk_notifyctrl()->addMsgr("msg.group.removed");
@@ -41555,7 +41528,7 @@ final class IGKGroupController extends IGKConfigCtrlBase {
         else{
             $frame=igk_frame_add_confirm($this, "confirm_frame", $this->getUri("group_dropgroup_ajx&clId=".$id));
             $frame->Form->Div->Content=__("msg.confirmsuppression");
-            $frame->Form->Div->addInput("clId", "hidden", $id);
+            $frame->Form->Div->addInput(IGK_FD_ID, "hidden", $id);
             $frame->RenderAJX();
         }
     }
@@ -41565,7 +41538,7 @@ final class IGKGroupController extends IGKConfigCtrlBase {
     */
     public function group_remove_user(){
         $table = igk_db_get_table_name(IGK_TB_USERGROUPS);
-        igk_db_delete($this, $table, igk_getr("clId"));
+        igk_db_delete($this, $table, igk_getr(IGK_FD_ID));
         $this->View();
     }
     ///<summary></summary>
@@ -41583,7 +41556,7 @@ final class IGKGroupController extends IGKConfigCtrlBase {
     public function group_view_user(){
         $this->CurrentView="viewusers";
         $this->setParam("selectedGroup", igk_db_table_select_row(
-            igk_db_get_table_name(IGK_TB_GROUPS), igk_getr("clId")));
+            igk_db_get_table_name(IGK_TB_GROUPS), igk_getr(IGK_FD_ID)));
         $this->View();
     }
     ///<summary></summary>
@@ -42083,30 +42056,7 @@ final class IGKLangCtrl extends IGKConfigCtrlBase {
 				$languages->addLi()->add("a", array("href"=>"?l=".$v))->add("img", array("src"=>R::GetImgUri("flag_$v")));
 			}
 		}
-        IGKHtmlUtils::AddImgLnk($frm, igk_js_post_frame($this->getUri("lang_add_new_frame_ajx")), "add_16x16");
-        // return;
-        // $div->addHSep();
-        // $sh=$v_sh;
-        // $search=new IGKHtmlSearchItem($this->getUri("lang_skey"), $sh);
-        // $search->TargetId="#".$this->TargetNode["id"];
-        // $search->loadingComplete();
-        // $c->add($search);
-        // $c->addHSep();
-        // $this->loadLangOptions($c);
-        // $c->addBr();
-        // igk_notifyctrl()->setNotifyHost($c->addDiv());
-        // $frm=$c->addForm();
-        // $frm["action"]=$this->getUri("update_language_ajx");
-        // $frm["method"]="POST";
-        // $frm["id"]="frm_langkeys_view";
-        // $frm["igk-ajx-form"]=1;
-        // $d=$frm->addDiv();
-        // $d->addCircleWaiter();
-        // $d->addScript()->Content="(function(q){  \$ns_igk.ready(function(){ns_igk.ajx.apost('".$this->getUri("lang_getKeys_ajx")."',null, igk.ajx.fn.replace_node(q) , true);});} )(ns_igk.getParentScriptForm());";
-        // $this->setParam("lang:gui_langview", $frm);
-        // $c->addHSep();
-        // $this->loadLangOptions($c);
-        // $this->setEnvParam("lang:onview", null);
+        IGKHtmlUtils::AddImgLnk($frm, igk_js_post_frame($this->getUri("lang_add_new_frame_ajx")), "add_16x16");       
     }
 }
 require_once(__DIR__."/Lib/Classes/IGKMYSQLDbConfigController.php");
@@ -42266,7 +42216,7 @@ class IGKMailCtrl extends IGKConfigCtrlBase {
         else{
             $n->addMsgr("msg.mailregistered");
             igk_resetr();
-            igk_db_insert_if_not_exists($this, TBIGK_MAINLINGLISTS ,array("clEmail"=>$c));
+            igk_db_insert_if_not_exists($this, IGK_TB_MAINLINGLISTS ,array("clEmail"=>$c));
         }
         igk_sys_force_view();
         igk_navtocurrent();
@@ -45911,23 +45861,19 @@ final class IGKSubDomainCtrl extends IGKConfigCtrlBase{
     * 
     */
     public function dom_add_db_domain_ajx(){
-        if(igk_qr_confirm() && igk_server()->method("POST") && igk_valid_cref(1)){
-            igk_ilog("storing db domain_ajx");
+        if(igk_qr_confirm() && igk_server()->method("POST") && igk_valid_cref(1)){            
             $obj=igk_get_robj();
 			igk_getctrl(IGK_CONF_CTRL)->setSelectedConfigCtrl($this);
             $info = ["type"=>"igk-success", "msg"=>__("updated")];
-            $r = 0;
-            
-            igk_environment()->bindquery = 1;
-            if(($r=igk_db_insert_if_not_exists($this, $this->getDataTableName(), $obj)) > 0){
+            $r = 0;             
+            if(($r= IGK\Models\SubDomains::createIfNotExists($obj))){
                 igk_notifyctrl(__FUNCTION__)->addSuccessr(__("mgs.dataupdated") );
                 $this->__init_domain();
             }
             else{
                 igk_notifyctrl(__FUNCTION__)->addErrorr("err.error_append_1", igk_debuggerview()->getMessage(). " code:".$r);
                 $info["type"]="danger";
-                $info["msg"]=__("failed to add subdomain");
-       
+                $info["msg"]=__("failed to add subdomain");       
             }
 
     
@@ -45940,9 +45886,7 @@ final class IGKSubDomainCtrl extends IGKConfigCtrlBase{
             igk_ajx_replace_uri(igk_io_baseuri()."/Configs/#!p=".$this->getConfigPage());
             igk_ajx_panel_dialog_close();
             igk_resetr();
-        }
-        igk_ilog(igk_ob_get($_REQUEST));
-        igk_ilog("not storing db domain_ajx:: confirm ".igk_qr_confirm() . " method " .igk_server()->method("POST") );
+        } 
         $dv=igk_createnode();
         $frm=$dv->addForm();
         $frm["action"]=$this->getUri(__FUNCTION__);
@@ -45992,7 +45936,7 @@ final class IGKSubDomainCtrl extends IGKConfigCtrlBase{
                 $ok=true;
                 if($ad->connect()){
                     foreach($items as $v){
-                        $ok=$ok& igk_db_delete($this, $this->DataTableName, array("clId"=>$v));
+                        $ok=$ok& igk_db_delete($this, $this->DataTableName, array(IGK_FD_ID=>$v));
                     }
                     $ad->close();
                 }
@@ -46035,7 +45979,7 @@ final class IGKSubDomainCtrl extends IGKConfigCtrlBase{
 
 			$msg  = __("Domain dropped");
 			$type = "igk-success";
-            if(igk_db_delete($this, $this->DataTableName, array("clId"=>igk_getr("i")))){
+            if(igk_db_delete($this, $this->DataTableName, array(IGK_FD_ID=>igk_getr("i")))){
                 igk_notification_push_event("sys://domain/changed", $this);
                 IGKSubDomainManager::getInstance()->Clear();
                 $this->__init_domain();
@@ -46110,7 +46054,7 @@ final class IGKSubDomainCtrl extends IGKConfigCtrlBase{
             igk_exit();
         }
         else{
-            $data=igk_db_table_select_where($this->getDataTableName(), array("clId"=>igk_getr('i')), $this)->getRowAtIndex(0);
+            $data=igk_db_table_select_where($this->getDataTableName(), array(IGK_FD_ID=>igk_getr('i')), $this)->getRowAtIndex(0);
             if($data == null){
                 return;}
             $dv=igk_createnode();
@@ -46404,7 +46348,9 @@ final class IGKSystemUriActionCtrl extends IGKConfigCtrlBase implements IIGKUriA
     */
     protected function InitComplete(){
         parent::InitComplete();
-        self::InitActionList($this);
+        if (!defined("IGK_NO_WEB") || (constant("IGK_NO_WEB")!=1)){
+            self::InitActionList($this);
+        }
     }
     ///<summary></summary>
     /**
@@ -47662,7 +47608,9 @@ height:".$h."px; margin: 1px; background-color:".$p.";"]);
     */
     protected function InitComplete(){
         parent::InitComplete();
-        $this->_initTheme();
+        if (!defined("IGK_NO_WEB") || (constant("IGK_NO_WEB")!=1)){
+            $this->_initTheme();
+        }
     }
     ///<summary></summary>
     /**
@@ -47789,7 +47737,7 @@ height:".$h."px; margin: 1px; background-color:".$p.";"]);
             $this->View();
             return;
         }
-        $tab=igk_app()->Doc->Theme->def->Attributes->ToArray();
+        $tab=igk_app()->Doc->Theme->def->Attributes->to_array();
         $out=array();
         foreach($tab as $k=>$v){
             if(strstr($k, $q)){
@@ -48068,7 +48016,7 @@ height:".$h."px; margin: 1px; background-color:".$p.";"]);
     */
     public function theme_deleteall_emptyclass_ajx(){
         if(igk_qr_confirm()){
-            $tab=igk_app()->Doc->Theme->def->Attributes->ToArray();
+            $tab=igk_app()->Doc->Theme->def->Attributes->to_array();
             $out=array();
             foreach($tab as $k=>$v){
                 if(empty($v)){
@@ -48094,7 +48042,7 @@ height:".$h."px; margin: 1px; background-color:".$p.";"]);
     */
     public function theme_dropPalette(){
         if(igk_qr_confirm()){
-            $id=igk_getr("clId");
+            $id=igk_getr(IGK_FD_ID);
             igk_getctrl(IGK_PALETTE_CTRL)->RemovePalette($id);
             $this->View();
             $this->TargetNode->RenderAJX();
@@ -48109,7 +48057,7 @@ height:".$h."px; margin: 1px; background-color:".$p.";"]);
         $id=igk_getr("id");
         $frame=igk_frame_add_confirm($this, "theme_droppalette_confirm_frame", $this->getUri("theme_dropPalette"));
         $frame->Form->Div->Content=__("msg.confirmsuppression");
-        $frame->Form->Div->addInput("clId", "hidden", $id);
+        $frame->Form->Div->addInput(IGK_FD_ID, "hidden", $id);
         $frame->RenderAJX();
     }
     ///<summary></summary>
@@ -48186,7 +48134,7 @@ height:".$h."px; margin: 1px; background-color:".$p.";"]);
         $t=igk_getr("t");
         if($t == null){
             return;}
-        $tab=igk_app()->Doc->Theme->def->Attributes->ToArray();
+        $tab=igk_app()->Doc->Theme->def->Attributes->to_array();
         $out=array();
         $rep=igk_createnode("response");
         $keys=array_keys($tab);
@@ -49172,8 +49120,9 @@ abstract class IGKPageControllerBase extends IGKCtrlTypeBase{
     */
     protected final function register_autoload(){
         $k="sys://autoloading/".igk_base_uri_name($this->getDeclaredDir());
-        if(igk_get_env($k))
+        if(igk_get_env($k)){
             return;
+        }
         igk_set_env($k, 1);
         igk_register_autoload_class(function(){
             return call_user_func_array(array($this, "auto_load_class"), func_get_args());
@@ -49963,12 +49912,7 @@ final class IGKMsBoxController extends BaseController implements IIGKFrameContro
     * 
     */
     public function View(){
-
-    }
-    public function getDataTableName(){
-        $c = parent::getDataTableName();
-        igk_wln_e($c);
-    }
+    }     
     public function getCanInitDb(){
         return false;
     } 
@@ -50926,18 +50870,7 @@ final class IGKDataTypesCtrl extends IGKNonVisibleControllerBase{
         if (igk_environment()->mysql_query_filter){
             return;
         }
-        $dbu=new IGKDbUtility($this);
-        if($dbu->connect()){
-            $n=$this->getDataTableName();
-            if($tab=igk_getctrl(IGK_MYSQL_DB_CTRL)->getAllTableNames()){
-                foreach($tab as $v){
-                    if($v !== $n){
-                        igk_db_insert_if_not_exists($this, $n, array(IGK_FD_NAME=>$v, IGK_FD_DESC=>'datatable'), array(IGK_FD_NAME=>$v));
-                    }
-                }
-            }
-            $dbu->close();
-        }
+        // igk_ilog("db:changed");
     }
     ///<summary> callback for table created </summary>
     /**
@@ -50946,9 +50879,24 @@ final class IGKDataTypesCtrl extends IGKNonVisibleControllerBase{
     private function _tbCreated($o, $table){ 
         if (igk_environment()->mysql_query_filter)
             return;
-            
+        igk_ilog("table created: ".$table);
+        static $entries = null;
         $e=$table;
         $n= igk_db_get_table_name($this->getDataTableName(), $this);
+
+        if ($entries){
+            $entries = [];
+            if ($table!=$n){
+                if($ad->tableExists($n)){
+                    $r=0;
+                }
+                else{
+                    igk_push_env($key, $e);
+                }
+            }
+        }
+            
+       
         $key="sys://created/tables_flag";
         $ad=igk_get_data_adapter($this);
         if($n !== $e){
@@ -50980,21 +50928,15 @@ final class IGKDataTypesCtrl extends IGKNonVisibleControllerBase{
 
         $n=$this->getDataTableName();
 		$ad=igk_get_data_adapter($this);
-		if($ad && $ad->connect()){
-			if ($ad->tableExists($n)){
-				if (is_array($e)){
-					foreach($e as $t){
-						if($n !== $t)
-							igk_db_delete($this, $n, array(IGK_FD_NAME=>$t));
-					}
-				}else {
-					if($n !== $e){
-						igk_db_delete($this, $n, array(IGK_FD_NAME=>$e));
-					}
-				}
-			}
-			$ad->close();
-		}
+        if (is_array($e)){
+            foreach($e as $t){
+                if($n !== $t)
+                    $ad->delete($n, [IGK_FD_NAME=>$t]);
+            }
+        }else {
+            $ad->delete($n, [IGK_FD_NAME=>$e]);
+        }
+	 
     }
     ///<summary></summary>
     ///<param name="i"></param>
@@ -51671,7 +51613,7 @@ final class IGKReferenceModelCtrl extends IGKNonVisibleControllerBase{
             "ctrl"=>$ctrl,
             "clModel"=>$v_tmodel,
             "clNextValue"=>$c,
-            "clId"=>$model ? $model->clId: null
+            IGK_FD_ID=>$model ? $model->clId: null
         ));
         return $obj;
     }
@@ -51707,7 +51649,7 @@ final class IGKReferenceModelCtrl extends IGKNonVisibleControllerBase{
     * @param mixed $prefix the default value is null
     */
     public function getnewproduct_ref($t, $productTypeTable, $prefix=null){
-        $r=igk_db_table_select_where($productTypeTable, array("clId"=>$t->clProductType_Id));
+        $r=igk_db_table_select_where($productTypeTable, array(IGK_FD_ID=>$t->clProductType_Id));
         $row=$r->getRowAtIndex(0);
         if($row == null){
             return null;
@@ -51724,7 +51666,7 @@ final class IGKReferenceModelCtrl extends IGKNonVisibleControllerBase{
             "ctrl"=>$this,
             "clModel"=>$v_tmodel,
             "clNextValue"=>$c,
-            "clId"=>$model ? $model->clId: null
+            IGK_FD_ID=>$model ? $model->clId: null
         ));
     }
 }
@@ -52692,7 +52634,7 @@ final class IGKNotificationCtrl extends BaseController implements IIGKNotifyMess
             if (is_array($tab) && (count($tab)>0)){
                 foreach($tab as $inf){
                     if (isset($inf["type"]) && isset($inf["msg"])){
-                        $host->add("div")->setClass("igk-panel igk-".$inf["type"])->Content = $inf["msg"];                      
+                        $host->add("div")->setClass("igk-panel ".$inf["type"])->Content = $inf["msg"];                      
                     }
                 }
                 $c->clear(); 
@@ -53831,7 +53773,7 @@ final class IGKControllerManagerObject extends IGKObject {
     public function getUserControllers($callbackfilter=null){
         $tab=$this->getControllers();
         $out=array();
-        if(count($tab) > 0){
+        if(igk_count($tab) > 0){
             $tab_k=array_keys($tab);
             igk_usort($tab_k, "igk_key_sort");
             foreach($tab_k as $k){
@@ -53873,8 +53815,8 @@ final class IGKControllerManagerObject extends IGKObject {
         }
         $no_cache=defined("IGK_NO_CACHE_LIB");
         $sysload=false;
-        $fc=self::FileCtrlCache();
         if(!$no_cache){
+            $fc=self::FileCtrlCache();
             if(file_exists($fc)){
                 foreach(explode(IGK_LF, igk_io_read_allfile($fc)) as $k){
             
@@ -53913,6 +53855,7 @@ final class IGKControllerManagerObject extends IGKObject {
                 }
             }
             if(!$no_cache){
+                $fc=self::FileCtrlCache();
                 igk_io_w2file($fc, $m, true);
                 IGKSysCache::Init_CachedHook();
             }
@@ -54592,323 +54535,6 @@ final class IGKCtrlZone extends IGKObject implements IIGKCtrlDirManagement {
         return igk_io_dir($this->getDeclaredDir().DIRECTORY_SEPARATOR.IGK_VIEW_FOLDER);
     }
 }
-///<summary>Represente class: IGKDataAdapter</summary>
-/**
-* Represente IGKDataAdapter class
-*/
-abstract class IGKDataAdapter extends IGKObject {
-    private static $sm_regAdapter=null;
-    protected $m_name;
-
-    ///<summary>retrieve the adapter name</summary>
-    public function getName(){
-        return $this->m_name;
-    }
-	public abstract function escape_string($s);
-    ///<summary></summary>
-    ///<param name="tablename"></param>
-    /**
-    * 
-    * @param mixed $tablename
-    */
-    public function ClearTable($tablename){}
-    ///<summary></summary>
-    /**
-    * 
-    */
-    abstract public function close();
-    ///<summary></summary>
-    ///<param name="params"></param>
-    /**
-    * 
-    * @param mixed $params
-    */
-    protected function configure($params){}
-    ///<summary></summary>
-    ///<param name="ctrl" default="null"></param>
-    /**
-    * 
-    * @param mixed $ctrl the default value is null
-    */
-    abstract public function connect($ctrl=null);
-    ///<summary></summary>
-    ///<param name="ctrl"></param>
-    ///<param name="throwexception"></param>
-    ///<param name="newAdapter"></param>
-    ///<param name="params" default="null"></param>
-    /**
-    * 
-    * @param mixed $ctrl
-    * @param mixed $throwexception
-    * @param mixed $newAdapter the default value is 0
-    * @param mixed $params the default value is null
-    */
-    public static function CreateDataAdapter($ctrl, $throwexception=true, $newAdapter=0, $params=null){
-        if(empty($ctrl)){
-            igk_wln_e("can't create empty data adapter");
-            return null;
-        }
-        $adapt=self::GetAdapters();
-        $n=IGK_STR_EMPTY;
-        $key=IGK_STR_EMPTY;
-        if(is_string($ctrl)){
-            $key=strtoupper($ctrl);
-            $n="IGK".$ctrl."DataAdapter";
-        }
-        else{
-            $key=strtoupper($ctrl->getDataAdapterName());
-            $n="IGK".$key."DataAdapter";
-        } 
-        if(!$newAdapter && isset($adapt[$key])){
-            
-            return $adapt[$key];
-        } 
-        if(class_exists($n) && !igk_reflection_class_isabstract($n)){
-            $out=igk_create_adapter_from_classname($n);
-            if($out){
-                $adapt[$key]=$out;
-                $out->m_name = $key;
-                return $out;
-
-            }
-        }
-        else{
-            $c=igk_get_env("sys://dataadapter");
-            if($c && isset($c[$key])){
-                $o=$c[$key];
-                $out=new $o();
-                $adapt[$key]=$out;
-                $out->m_name = $key;
-                return $out;
-            }
-        }
-        if($throwexception){
-            igk_die("DataAdapter: ".$ctrl. " not found. Driver class expected : ".$n);
-        }
-        return null;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    abstract public function CreateEmptyResult();
-    ///<summary></summary>
-    ///<param name="tablename"></param>
-    ///<param name="columninfoArray"></param>
-    ///<param name="entries" default="null"></param>
-    /**
-    * 
-    * @param mixed $tablename
-    * @param mixed $columninfoArray
-    * @param mixed $entries the default value is null
-    */
-    public function createTable($tablename, $columninfoArray, $entries=null){}
-    ///<summary></summary>
-    ///<param name="tablename"></param>
-    ///<param name="entries"></param>
-    /**
-    * 
-    * @param mixed $tablename
-    * @param mixed $entries
-    */
-    public function delete($tablename, $condition=null){
-        igk_die("function ".__FUNCTION__." not implements");
-    }
-    ///<summary></summary>
-    ///<param name="tablename"></param>
-    /**
-    * 
-    * @param mixed $tablename
-    */
-    public function deleteAll($tablename, $condition=null){
-        igk_die("function ".__FUNCTION__." not implements");
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function drop($tablename, $condition=null){
-        $this->deleteAll($tablename, $condition);
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function flushForInitDb($complete=null){}
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public static function GetAdapters(){
-        if(self::$sm_regAdapter == null){
-            self::$sm_regAdapter=array();
-            self::LoadAdapter();
-        }
-        return self::$sm_regAdapter;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getApp(){
-        return igk_app();
-    }
-    ///<summary>get the db identifier</summary>
-    /**
-    * get the db identifier
-    */
-    public function getDbIdentifier(){
-        return "db";
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getIsAvailable(){
-        return true;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function initForInitDb(){}
-
-	///<summary>insert </summary>
-    public function insert($table, $entries){
-        igk_wln(__CLASS__. " - [warning] ::::must override insert");
-        return false;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public static function Load(){
-        if(defined("IGK_INIT"))
-            return;
-        self::LoadAdapter();
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    private static function LoadAdapter(){
-        $fc=igk_io_syspath(IGK_ADAPTER_CACHE);
-        $n="/^IGK(?P<name>(.)+)DataAdapter$/i";
-        if(empty($fc)){
-            return false;
-        }
-        if(file_exists($fc)){
-            foreach(explode(IGK_LF, igk_io_read_allfile($fc)) as $k){
-                if(empty(trim($k)))
-                    continue;
-                $key=strtoupper($k);
-                if(preg_match_all($n, $key, $tab)){
-                    $key=$tab["name"][0];
-                }
-                if (class_exists($k, false)){
-                    self::$sm_regAdapter[$key]=new $k();
-                    self::$sm_regAdapter[$key]->m_name = $key;
-                }
-                    
-            }
-        }
-        else{
-            self::$sm_regAdapter=array();
-            $m="";
-            foreach(get_declared_classes() as $k=>$v){
-                if(preg_match($n, $v)){
-                    $t=array();
-                    preg_match_all($n, $v, $t);
-                    $s=$t["name"][0];
-                    if(!igk_reflection_class_isabstract($v) && igk_reflection_class_extends($v, "IGKDataAdapter")){
-                        self::$sm_regAdapter[strtoupper($s)
-                        ]=new $v();
-                        $m .= $v.IGK_LF;
-                    }
-                }
-            }
-            igk_io_w2file($fc, $m);
-        }
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function makeCurrent(){
-        IGKDBQueryDriver::$Config["db"]=$this->getDbIdentifier();
-    }
-    ///<summary> override to manage the open connexion counter</summary>
-    /**
-    *  override to manage the open connexion counter
-    */
-    public function OpenCount(){
-        return 0;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public static function ResetDataAdapter(){
-        self::$sm_regAdapter=array();
-        self::LoadAdapter();
-    }
-    ///<summary></summary>
-    ///<param name="tablename">tablename</param>
-    ///<param name="condition">condition for select</param>
-    ///<param name="options">options</param>
-    /**
-    * 
-    * @param mixed $tablename
-    * @param mixed $condition
-    * @param mixed $options
-    */
-    public function select($tablename, $condition=null, $options=null){}
-    ///<summary></summary>
-    ///<param name="tbname"></param>
-    /**
-    * 
-    * @param mixed $tbname
-    */
-    public function selectAll($tbname){
-        return null;
-    }
-    ///<summary></summary>
-    ///<param name="tablename"></param>
-    ///<param name="conditions" default="null"></param>
-    ///<param name="options" default="null"></param>
-    /**
-    * 
-    * @param mixed $tablename
-    * @param mixed $conditions the default value is null
-    * @param mixed $options the default value is null
-    */
-    public function selectAndWhere($tablename, $conditions=null, $options=null){
-        igk_die("function ".__FUNCTION__." not implements");
-    }
-    ///<summary></summary>
-    ///<param name="dbname"></param>
-    /**
-    * 
-    * @param mixed $dbname
-    */
-    public function selectdb($dbname){}
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function selectLastId(){
-        return null;
-    }
-    ///<summary></summary>
-    ///<param name="tablename"></param>
-    ///<param name="entrie"></param>
-    /**
-    * 
-    * @param mixed $tablename
-    * @param mixed $entrie
-    */
-    public function update($tablename, $entries, $condition=null){}
-}
 ///<summary>Represente class: IGKDataBindingScript</summary>
 /**
 * Represente IGKDataBindingScript class
@@ -55441,6 +55067,7 @@ class IGKEvents extends IGKObject {
     const HOOK_USER_ADDED="sys_user_added";
     const USER_PWD_CHANGED = "user pwd changed";
     const HOOK_MODEL_INIT = "db_init_model_macros";
+    const HOOK_AUTLOAD_CLASS = "sys_autoload_class";
     const VIEWCOMPLETE=0x1;
     private $m_methods;
     private $m_name;
@@ -56169,14 +55796,14 @@ class IGKHtmlAttribs extends IGKObject implements ArrayAccess, Iterator {
     /**
     * transform to array
     */
-    public function ToArray(){
+    public function to_array(){
         return $this->getAttributes();
     }
     ///<summary>transform key to lower</summary>
     /**
     * transform key to lower
     */
-    public function ToArrayi(){
+    public function to_arrayi(){
         $d=[];
         foreach($this->getAttributes() as $k=>$v){
             $d[strtolower($k)
@@ -56288,7 +55915,7 @@ class IGKHtmlChildElementCollections extends IGKObject implements ArrayAccess, I
     * 
     */
     public function Dispose(){
-        $t=$this->ToArray();
+        $t=$this->to_array();
         $ti=0;
         foreach($t as $k){
             if($k){
@@ -56415,7 +56042,7 @@ class IGKHtmlChildElementCollections extends IGKObject implements ArrayAccess, I
     /**
     * 
     */
-    public function ToArray(){
+    public function to_array(){
         if($this->m_childs){
             $t=array_values($this->m_childs);
             return $t;
@@ -56742,7 +56369,11 @@ final class IGKHtmlClassValueAttribute extends IGKHtmlItemAttribute implements S
     * @param mixed $name
     */
     private static function _RegClass($name){
+        if (!IGKApp::IsInit() ||  (defined("IGK_NO_WEB") && (constant("IGK_NO_WEB")==1))){
+            return;
+        }
         $v=& self::_GetRegClass();
+
         $app=igk_app();
         $doc=$app->getDoc();
         if(($doc == null) || isset($doc->SysTheme->def[$name]) || (isset($doc->Theme->def[$name]))){
@@ -56904,6 +56535,9 @@ final class IGKHtmlClassValueAttribute extends IGKHtmlItemAttribute implements S
     * @param mixed $v
     */
     public static function IsCssChild($v){
+        if (!IGKApp::IsInit()){
+            return false;
+        }
         $c=igk_app();
         if($c && $c->Doc){
             $s=$c->Doc->Theme[$v];
@@ -59112,7 +58746,7 @@ class IGKXmlNode extends IGKHtmlItemBase implements ArrayAccess {
                 if($q->m_attributes)
                     $q->m_attributes->Dispose();
                 if($q->m_childs){
-                    $t=$q->m_childs->ToArray();
+                    $t=$q->m_childs->to_array();
                     if(count($t) > 0){
                         array_push($tab, $q);
                         foreach($t as $r=>$m){
@@ -59290,6 +58924,7 @@ class IGKXmlNode extends IGKHtmlItemBase implements ArrayAccess {
     ///<summary>get the childs collection</summary>
     /**
     * get the childs collection
+    * @return iterable|array|mixed 
     */
     public function getChilds(){
         if(($g=$this->getFlag(IGK_CHILDS_FLAG)) == null){
@@ -59408,7 +59043,7 @@ class IGKXmlNode extends IGKHtmlItemBase implements ArrayAccess {
         $c=$this->getChilds();
         if($c){         
             if($name == "*"){
-                $tab=array_merge($tab, $c->ToArray());
+                $tab=array_merge($tab, $c->to_array());
                 foreach($c as $k){
                     $c=$k->getElementsByTagName($s);
                     if(is_array($c) && (count($c) > 0))
@@ -60263,7 +59898,7 @@ class IGKHtmlItem extends IGKXmlNode implements ArrayAccess {
                 break;
                 case "form":
                     $args = is_array($indexOrArgs) ? $indexOrArgs : []; 
-                    $c=new IGKHtmlForm(...$args);
+                    $c=new \IGK\System\Html\Dom\HtmlForm(...$args);
                 break;
                 case "div":
                 $c=new IGKHtmlDiv();
@@ -60634,35 +60269,6 @@ final class IGKGlobalScriptManagerHost extends IGKHtmlItem{
         return $v;
     }
 }
-///<summary>Represente class: IGKHTmlFormTitle</summary>
-/**
-* Represente IGKHTmlFormTitle class
-*/
-final class IGKHTmlFormTitle extends IGKHtmlItem{
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function __construct(){
-        parent::__construct("div");
-        $this["class"]="title";
-    }
-    ///<summary></summary>
-    ///<param name="options" default="null"></param>
-    /**
-    * 
-    * @param mixed $options the default value is null
-    */
-    public function AcceptRender($options=null){
-        if(!$this->IsVisible){
-            return 0;
-        }
-        $c=$this->Content;
-        if($c)
-            return 1;
-        return 0;
-    }
-}
 ///<summary>represent a href link data</summary>
 /**
 * represent a href link data
@@ -60804,7 +60410,7 @@ final class IGKHtmlBody extends IGKHtmlItem {
         }
         $t[]=$this->m_bodyDebugHeader;
         if($c){
-            if($v_child=$c->ToArray()){
+            if($v_child=$c->to_array()){
                 $t=array_merge($t, $v_child);
             }
         }
@@ -60880,11 +60486,7 @@ final class IGKHtmlBody extends IGKHtmlItem {
     /**
     * 
     */
-    public function ClearChilds(){
-		if (igk_env_count(__METHOD__)==2){
-			igk_trace();
-			igk_exit();
-		}
+    public function ClearChilds(){		
         parent::ClearChilds();
         if($this->m_bodyDiv){
             $this->m_bodyDiv=null;
@@ -61784,6 +61386,7 @@ implements JsonSerializable
     * @param mixed $vsystheme
     */
     public static function InitSystemTheme($vsystheme){
+        
         $vsystheme->Name="igk_system_theme";
         $vsystheme->def->Clear();
         $d=$vsystheme->get_media(IGKHtmlDocThemeMediaType::SM_MEDIA);
@@ -61904,7 +61507,7 @@ implements JsonSerializable
             $this->m_head->setParam("sys://css", $g);
             return;
         }
-        $tab=($c=$this->m_head->Childs) ? $c->ToArray(): null;
+        $tab=($c=$this->m_head->Childs) ? $c->to_array(): null;
         foreach($tab as  $v){
             if(get_class($v) == IGKHtmlCssLink::class){
                 if($v->link == $file){
@@ -62481,7 +62084,7 @@ final class IGKHtmlSessionBlockNode extends IGKHtmlCtrlNodeItemBase {
                 $ul->addLi()->add("a", array("href"=>igk_getctrl(IGK_SESSION_CTRL)->getUri("clearcache")))
                 ->setClass($v_btn_class)->Content=__("Clear Cache");
             }
-            $ul->addVisible("igk_is_conf_connected")->addLi()->addA(igk_io_baseUri()."/resetDb")->setClass($v_btn_class)->Content=__("Reset DB");
+            // $ul->addVisible("igk_is_conf_connected")->addLi()->addA(igk_io_baseUri()."/resetDb")->setClass($v_btn_class)->Content=__("Reset DB");
             if ($api_ctrl = igk_getctrl("api", false)){
                 $ul->addVisible("igk_is_conf_connected")->addLi()->addA($api_ctrl->getAppUri(""))->setClass($v_btn_class)->Content=__("API");
             }
@@ -62763,246 +62366,7 @@ final class IGKHtmlFavicon extends IGKHtmlItem {
         return "link";
     }
 }
-///<summary>igk framework form</summary>
-/**
-* igk framework form
-*/
-final class IGKHtmlForm extends IGKHtmlItem {
-    const URLEncoded="application/x-www-form-urlencoded";
-    private $bodydiv;
-    private $footdiv;
-    private $m_definition;
-    private $m_encType;
-    private $m_nofoot;
-    private $m_notitle;
-    private $topdiv;
-    ///<summary></summary>
-    ///<param name="o" default="null"></param>
-    /**
-    * 
-    * @param mixed $o the default value is null
-    */
-    protected function __AcceptRender($o=null){
-        $e=$this->topdiv->Content;
-        $this->topdiv->setIsVisible(!empty($e) && !$this->m_notitle);
-        $this->footdiv->setIsVisible(!$this->footdiv->hasContent && !$this->m_nofoot);
-        return true;
-    }
-    ///<summary></summary>
-    ///<param name="notitle" default="false"></param>
-    ///<param name="nofoot" default="true"></param>
-    /**
-    * 
-    * @param mixed $notitle the default value is false
-    * @param mixed $nofoot the default value is true
-    */
-    public function __construct($action=".", $method="POST", $notitle=false, $nofoot=true){
-        parent::__construct("form");
-        $this->Method=$method;
-        $this->Action=$action;
-        $this->m_encType=true;
-        $this->m_notitle=$notitle;
-        $this->m_nofoot=$nofoot;
-        $this["class"]="igk-form"; 
-        $this->topdiv=new IGKHtmlFormTitle();
-        $this->bodydiv=igk_createnode("div")->AppendAttributes(array("class"=>'content'));
-        $this->footdiv=igk_createnode("div")->AppendAttributes(array("class"=>"foot"));
-        $this->m_definition=new IGKHtmlFormInner($this);
-        parent::_AddChild($this->m_definition);
-        $this->m_definition->Add($this->topdiv);
-        $this->m_definition->Add($this->bodydiv);
-        $this->m_definition->Add($this->footdiv);
-    }
-    ///<summary></summary>
-    ///<param name="item"></param>
-    ///<param name="index" default="null"></param>
-    /**
-    * 
-    * @param mixed $item
-    * @param mixed $index the default value is null
-    */
-    protected function _AddChild($item, $index=null){
-        return $this->bodydiv->_AddChild($item);
-    }
-    ///<summary></summary>
-    ///<param name="nameoritem"></param>
-    ///<param name="attributes" default="null"></param>
-    ///<param name="index" default="null"></param>
-    /**
-    * 
-    * @param mixed $nameoritem
-    * @param mixed $attributes the default value is null
-    * @param mixed $index the default value is null
-    */
-    public function add($nameoritem, $attributes=null, $index=null){
-        return $this->bodydiv->add($nameoritem, $attributes, $index);
-    }
-    ///<summary>input environement confirmation</summary>
-    /**
-    * input environement confirmation
-    */
-    public function addConfirm($v=1){
-        return $this->addInput("confirm", "hidden", $v);
-    }
-    ///<summary></summary>
-    ///<param name="n"></param>
-    ///<param name="v"></param>
-    /**
-    * 
-    * @param mixed $n
-    * @param mixed $v
-    */
-    public function addHidden($n, $v){
-        return $this->addInput($n, "hidden", $v);
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function addToken(){
-        $tokenid=igk_html_form_tokenid();
-        $i=$this->add('input');
-        $i["name"]=$tokenid;
-        $i["value"]=1;
-        $i["type"]="hidden";
-        return $i;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function ClearChilds(){
-        $this->bodydiv->ClearChilds();
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getAction(){
-        return $this["action"];
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getBox(){
-        return $this->bodydiv;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getContent(){
-        return null;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getEncType(){
-        return $this->m_encType;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getFooter(){
-        return $this->footdiv;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getMethod(){
-        return $this["method"];
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getNoFoot(){
-        return $this->m_nofoot;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getNoTitle(){
-        return $this->m_notitle;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getTitle(){
-        return $this->topdiv->Content;
-    }
-    ///<summary></summary>
-    ///<param name="value"></param>
-    /**
-    * 
-    * @param mixed $value
-    */
-    public function setAction($value){
-        return $this["action"]=$value;
-    }
-    ///<summary></summary>
-    ///<param name="v"></param>
-    /**
-    * 
-    * @param mixed $v
-    */
-    public function setContent($v){
-        $this->bodydiv->setContent($v);
-        return $this;
-    }
-    ///<summary></summary>
-    ///<param name="value"></param>
-    /**
-    * 
-    * @param mixed $value
-    */
-    public function setEncType($value){
-        $this->m_encType=$value;
-    }
-    ///<summary></summary>
-    ///<param name="value"></param>
-    /**
-    * 
-    * @param mixed $value
-    */
-    public function setMethod($value){
-        return
-        $this["method"]=$value;
-    }
-    ///<summary></summary>
-    ///<param name="value"></param>
-    /**
-    * 
-    * @param mixed $value
-    */
-    public function setNoFoot($value){
-        $this->m_nofoot=$value;
-    }
-    ///<summary></summary>
-    ///<param name="value"></param>
-    /**
-    * 
-    * @param mixed $value
-    */
-    public function setNoTitle($value){
-        $this->m_notitle=$value;
-    }
-    ///<summary></summary>
-    ///<param name="value"></param>
-    /**
-    * 
-    * @param mixed $value
-    */
-    public function setTitle($value){
-        $this->topdiv->Content=$value;
-    }
-}
+
 ///used with form to render content only
 /**
 */
@@ -64485,7 +63849,7 @@ final class IGKHtmlReaderDocument extends IGKXmlNode {
     *  copy the current node to destination
     */
     public function CopyTo($target){
-        $t=($c=$this->Childs) ? $c->ToArray(): null;
+        $t=($c=$this->Childs) ? $c->to_array(): null;
         $this->__rm_childs(__FUNCTION__);
         if($t) foreach($t as $k){
             if($k == null)
@@ -64676,7 +64040,7 @@ final class IGKHtmlMetaManager extends IGKObject implements Serializable {
             unset($this->m_metas[$name]);
         }
         if($meta && !isset($this->m_metas[$name])){
-            $this->m_metas[$name]=$meta->attributes->toArray();
+            $this->m_metas[$name]=$meta->attributes->to_array();
             $this->m_metas[$name]["changed"]=1;
             return 1;
         }
@@ -64888,7 +64252,7 @@ class IGKHtmlAttribExpressionNode extends IGKHtmlItem{
 
 	protected function loadingComplete(){ 
 		$r = $this->node_args;
-		$m = $this->Attributes->toArray();
+		$m = $this->Attributes->to_array();
 		$_p = [];
 		$_g = explode("|", "*for|*visible");
 		if (!$this->m_context){
@@ -64920,7 +64284,6 @@ class IGKHtmlAttribExpressionNode extends IGKHtmlItem{
 
 		$this->node_args = null;
 		$this->dispose();
-		// igk_trace();
 	}
 }
 
@@ -64959,13 +64322,7 @@ final class IGKHtmlReader extends IGKObject {
     ///<summary>set loading  context</summary>
     private function setContext($context){
         $this->m_context = $context;
-        if (is_object($context)){
-
-            // igk_trace();
-            // igk_wln($context->raw);
-            // igk_wln( igk_get_article_root_context());
-            // igk_exit();
-        }
+        
     }
     ///<summary>bind template object</summary>
     /**
@@ -66540,7 +65897,7 @@ final class IGKHtmlScriptManager extends IGKObject {
         $o="";
         if($tasc){
             $resolver=IGKResourceUriResolver::getInstance();
-            foreach($tasc->toarray() as $k=>$v){
+            foreach($tasc->to_array() as $k=>$v){
                 if(!file_exists($k) || !preg_match("/\.js$/", basename($k)))
                     continue;
                 $u=$resolver->resolve($k, null, 0);
@@ -66661,7 +66018,7 @@ final class IGKHtmlScriptManager extends IGKObject {
             $c->RenderAJX($option);
             $bdir=igk_io_basedir();
             // igk_wln("render .... ", $tasc);
-            foreach($tasc->toArray() as $k=>$v){
+            foreach($tasc->to_array() as $k=>$v){
                 if(is_array($v) && (igk_getv($v, "merge") == 2)){
                     
                     $u = IGKResourceUriResolver::getInstance()->resolve($k);
@@ -66682,7 +66039,7 @@ final class IGKHtmlScriptManager extends IGKObject {
             return;
         }
         if($tasc){
-            $files=array_keys($tasc->toArray());
+            $files=array_keys($tasc->to_array());
             $buri=igk_io_baseuri();
             $libdir=IGK_BALAFON_JS_CORE_FILE;
             $bdir=igk_html_uri(igk_io_basedir());
@@ -67591,12 +66948,13 @@ final class IGKPageView extends IGKObject {
     * 
     */
     public function registerPages(){
-        $ctrl=igk_getctrl(IGK_MENU_CTRL);
-        if(!is_array($this->m_pagelist) || !$ctrl)
-            return;
-        foreach($this->m_pagelist as $k=>$v){
-            if(!empty($k))
-                $ctrl->registerPage(strtolower(trim($k)));
+        if ($ctrl=igk_getctrl(IGK_MENU_CTRL,false)){
+            if(!is_array($this->m_pagelist) || !$ctrl)
+                return;
+            foreach($this->m_pagelist as $k=>$v){
+                if(!empty($k))
+                    $ctrl->registerPage(strtolower(trim($k)));
+            }
         }
     }
 }
@@ -67774,7 +67132,7 @@ abstract class IGKQueryResult extends IGKObject {
     }
     ///<summary></summary>
     /**
-    * 
+    * @return iterable|object 
     */
     public function getRows(){
         return null;
@@ -68131,1040 +67489,7 @@ class IGKDBSingleValueResult{
         return null;
     }
 }
-///<summary>Represente class: IGKDBQueryDriver</summary>
-/**
-* Represente IGKDBQueryDriver class
-*/
-class IGKDBQueryDriver extends IGKObject implements IIGKdbManager {
-    private $fkeys;
-    private $m_adapter;
-    private $m_closeCallback;
-    private $m_dbpwd;
-    private $m_dbselect;
-    private $m_dbport; // store the port
-    private $m_dbserver;
-    private $m_dbuser;
-    private $m_isconnect;
-    private $m_lastQuery;
-    private $m_openCallback;
-    private $m_openCount;
-	private $m_dboptions;
-    private $m_resource;
-    private static $LENGTHDATA=array("int"=>"Int", "varchar"=>"VarChar");
-    private static $__store;
-    private static $sm_resid;
-    public  static $Config;
-    static $idd=0;
-    const DRIVER_MYSQLI = "MySQLI";
-    public function getServer(){
-        return $this->m_dbserver;
-    }
-    public function getUser(){
-        return $this->m_dbuser;
-    }
-    public function getPort(){
-        return $this->m_dbport;
-    }
-    public function getPwd(){
-        return $this->m_dbpwd;
-    }
-    ///<summary>.ctr</summary>
-    /**
-    * .ctr
-    */
-    private function __construct(){}
-    ///<summary></summary>
-    ///<param name="tablename"></param>
-    ///<param name="entries"></param>
-    ///<param name="forceload"></param>
-    /**
-    * 
-    * @param mixed $tablename
-    * @param mixed $entries
-    * @param mixed $forceload the default value is 0
-    */
-    private function __initTableEntries($tablename, $entries, $forceload=0){
-        if(!$forceload && igk_get_env("pinitSDb")){ 
-            igk_reg_hook(IGKEvents::HOOK_DB_INIT_ENTRIES, array(new IGKDbEntryToLoad($this, $tablename, $entries), "loadEntries"));
-            return;
-        }
-        igk_db_load_entries($this, $tablename, $entries);
-    }
-    ///<summary></summary>
-    ///<param name="query"></param>
-    /**
-    * 
-    * @param mixed $query
-    * @param mixed $option null or array key of object 
-    */
-    private function _sendQuery($query, $options=null){
-        return $this->getSender()->sendQuery($query, $options);
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function __sleep(){
-        if($this->m_openCount > 1){
-            igk_die("open count must not be greather than 1");
-        }
-        return array();
-    }
 
-  
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function __wakeup(){
-        igk_wln_e("wake up not allowed ", $this->m_openCount, get_class($this));
-        // $this->m_resource=null;
-        // $this->m_openCount=0;
-    }
-    ///<summary></summary>
-    ///<param name="leaveOpen" default="false"></param>
-    /**
-    * 
-    * @param mixed $leaveOpen the default value is false
-    */
-    public function close($leaveOpen=false){
-        if($this->getIsConnect()){
-            if($leaveOpen && ($this->m_openCount == 1)){
-                return;}
-            $this->m_openCount--;
-            if($this->m_openCount<=0){
-                if(igk_db_is_resource($this->m_resource))
-                    igk_mysql_db_close($this->m_resource);
-                $this->m_isconnect=false;
-                $this->m_resource=null;
-                self::SetResId(null, __FUNCTION__);
-                $this->m_openCount=0;
-            }
-        }
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function closeAll(){
-        if(igk_db_is_resource($this->m_resource)){
-            igk_mysql_db_close($this->m_resource);
-            $this->m_isconnect=false;
-            $this->m_resource=null;
-            $this->m_openCount=0;
-        }
-        if($this->m_closeCallback){
-            call_user_func_array($this->m_closeCallback, array());
-        }
-    }
-	public function escape_string($v){
-		return igk_db_escape_string($v);
-	}
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function connect(){
-    
-        if($this->m_isconnect && $this->m_resource){
-            if(@$this->m_resource->ping()){
-                self::SetResId($this->m_resource, __FUNCTION__);
-                $this->m_openCount++;
-                igk_set_env("lastCounter", igk_ob_get_func('igk_trace'));
-                return true;
-            }
-            $lcount=$this->m_openCount;
-            $this->m_openCount=0;
-            $this->m_isconnect= false;
-            $this->m_openCount=0;
-            igk_die("[igk] The connection was not closed properly :::ping failed : ".
-				$lcount." <br />");
-				
-        }
-        $r=igk_db_connect($this);//->m_dbserver, $this->m_dbuser, $this->m_dbpwd, $this->m_dboptions);
-       
-        
-        if(igk_db_is_resource($r)){
-            self::SetResId($r, __FUNCTION__);
-
-            $t=igk_db_query("SELECT SUBSTRING_INDEX(CURRENT_USER(),'@',1)");
-            if($t && (igk_db_num_rows($t) == 1)){
-                $this->m_isconnect=true;
-                $this->m_resource=$r;
-                $this->m_openCount=1;
-              
-                return true;
-            }
-        }
-        else{
-            $_error=__CLASS__."::Error : SERVER RESOURCE # ";
-            igk_notify_error($_error, "sys");
-        }
-        self::SetResId(null, __FUNCTION__);
-        $this->m_isconnect=false;
-        $this->m_resource=null;
-        return false;
-    }
-    ///<summary></summary>
-    ///<param name="dbserver"></param>
-    ///<param name="dbname"></param>
-    ///<param name="dbuser"></param>
-    ///<param name="dbpwd"></param>
-    /**
-    * 
-    * @param mixed $dbserver
-    * @param mixed $dbname
-    * @param mixed $dbuser
-    * @param mixed $dbpwd
-    */
-    public function connectTo($dbserver, $dbname, $dbuser, $dbpwd){
-        if($this->m_isconnect)
-            $this->close();
-        $r=@igk_db_connect($dbserver, $dbuser, $dbpwd);
-        if(igk_db_is_resource($r)){
-            $t=igk_db_query("SELECT SUBSTRING_INDEX(CURRENT_USER(),'@',1)");
-            if($t && (igk_db_num_rows($t) == 1)){
-                $this->m_isconnect=true;
-                $this->m_resource=$r;
-                $this->m_openCount=1;
-                $tt=$this->selectdb($dbname);
-                if(!$tt){
-                    igk_debug_wln("DB Not selected : ". $dbname);
-                }
-                return $tt;
-            }
-        }
-        else{
-            $s=igk_mysql_db_error();
-            igk_notifyctrl()->addError("MySQLError  : ".$s);
-            igk_debug_wln("ERROR : ". $s);
-        }
-        $this->m_isconnect=false;
-        $this->m_resource=null;
-        return false;
-    }
-    ///<summary></summary>
-    ///<param name="dbserver" default="localhost"></param>
-    ///<param name="dbuser" default="root"></param>
-    ///<param name="dbpwd" default=""></param>
-    /**
-    * 
-    * @param mixed $dbserver the default value is "localhost"
-    * @param mixed $dbuser the default value is "root"
-    * @param mixed $dbpwd the default value is ""
-    */
-    public static function Create($dbserver="localhost", $dbuser="root", $dbpwd="", $port = null){
-        $out=new IGKDBQueryDriver();
-        if (is_object($dbserver)){
-            //principal info 
-            $out->m_dbserver=trim($dbserver->server);
-            $out->m_dbuser=trim($dbserver->user);
-            $out->m_dbpwd=trim($dbserver->pwd);
-            $out->m_dbport = $dbserver->port;
-        } else {
-            $out->m_dbserver= trim($dbserver);
-            $out->m_dbuser=trim($dbuser);
-            $out->m_dbpwd=trim($dbpwd);
-            $out->m_dbport = $port;
-        }
-        $out->connect();
-        if($out->m_isconnect){
-            if (igk_environment()->is("DEV")  && !empty($db = igk_app()->Configs->db_name)){
-                $out->createDb($db);
-            }
-            $out->close();
-        }
-        else{
-            $out=null;
-        }
-        return $out;
-    }
-    ///<summary></summary>
-    ///<param name="db"></param>
-    /**
-    * 
-    * @param mixed $db
-    */
-    public function createdb($db){
-        if(!$this->getIsConnect())
-            return false;
-        $t=$this->getSender()->sendQuery("CREATE DATABASE IF NOT EXISTS `".igk_db_escape_string($db)."` ");
-        return $t;
-    }
-    ///<summary>create table</summary>
-    /**
-    * create table
-    */
-    public function createTable($tbname, $columninfo, $entries=null, $desc=null, $dbname=null){
-        if(!$this->getIsConnect())
-            return false; 
-        $v_rs=false;
-        $v_infkey="sys://db/tabfinfo/data";
-        $v_tableinit_info=igk_get_env($v_infkey);
-        $queryfilter = igk_environment()->mysql_query_filter;
-
-        if($v_tableinit_info === null){
-            $v_tableinit_info=array(
-                "__linkdata"=>array(),
-                "__tables"=>array(),
-                "__failed"=>array(),
-                "__created"=>array(),
-                "__constraint"=>0
-            );
-            igk_get_env($v_infkey, $v_tableinit_info);
-        }
-        $dbname=$dbname == null ? igk_sys_getconfig("db_name"): $dbname;
-        $tbname=igk_mysql_db_tbname($tbname);
-        
-
-        $query=IGKSQLQueryUtils::CreateTableQuery($tbname, $columninfo, $desc, $this->m_adapter);
-        $nk=igk_get_env("sys://db/constraint_key");
-        if($nk){
-            if(!igk_get_env("sys://db/initConstraint/".$nk)){
-                IGKMySQLDataCtrl::DropConstraints($this->m_adapter, $dbname, $nk."%");
-                igk_set_env("sys://db/initConstraint/".$nk, 1);
-            }
-        }
-
-        $t=$this->getSender()->sendQuery($query);
-        if($t){
-            igk_hook(IGK_HOOK_DB_TABLECREATED, [$this, $tbname]);
-            $v_tableinit_info["__created"][$tbname]=$tbname;
-            $query="";
-            $tlinks=array();
-            $linkdata=igk_getv($v_tableinit_info, "__linkdata");
-            $c=& $v_tableinit_info["__tables"];
-            foreach($columninfo as $k=>$v){
-                if($v->clLinkType != null){
-                    $v_tableinit_info["__constraint"]++;
-                    $ck_index=$v_tableinit_info["__constraint"];
-                    $nk=igk_get_env("sys://db/constraint_key", "ctn_");
-                    if($ck_index == 1){
-                        $idx=1;
-                        $ck_index=max($idx, $ck_index);
-                        $v_tableinit_info["__constraint"]=$idx++;
-                    }
-                    $nk=strtolower($nk.$ck_index);
-                    if(strlen($nk) > 64){
-                        $tbm=explode("_", $nk);
-                        $tbs="";
-                        foreach($tbm as $_rs){
-                            $tbs .= !empty($_rs) ? $_rs[0]: "";
-                        }
-                        $nk="constraint_".$tbs;
-                    }
-                    $nk = $queryfilter ? '' : "`".$nk."`";
-                    $query=IGKString::Format("ALTER TABLE {0} ADD CONSTRAINT {1} FOREIGN KEY (`{2}`) REFERENCES {3}  ON DELETE RESTRICT ON UPDATE RESTRICT;\n",
-						"`{$dbname}`.`{$tbname}`", 
-                        $nk,
-                         $v->clName, IGKString::Format("`{0}`.`{1}`(`{2}`)",
-						$dbname,
-						$v->clLinkType,
-						igk_getv($v, "clLinkColumn", IGK_FD_ID)
-					));
-                    $sender=$this->getSender();
-                    if($this->tableExists($v->clLinkType)){
-                        $t=$this->_sendQuery($query);
-                    }
-                    else{
-                        if(!isset($tlinks[$v->clLinkType])){
-                            $mm=igk_getv($linkdata, $v->clLinkType);
-                            if($mm == null){
-                                $mm=(object)array("To"=>1, "from"=>array($tbname=>1));
-                            }
-                            else{
-                                $mm->To++;
-                                $mm->from[$tbname]=1;
-                            }
-                            $tlinks[$v->clLinkType]=$mm;
-                            $linkdata[$v->clLinkType]=$mm;
-                        }
-                        else{
-                            $tlinks[$v->clLinkType]->To++;
-                            $tlinks[$v->clLinkType]->from[$tbname]=1;
-                        }
-                        $inf=null;
-                        if(isset($v_tableinit_info[$v->clLinkType])){
-                            $inf=$v_tableinit_info[$v->clLinkType];
-                        }
-                        else{
-                            $inf=array();
-                        }
-                        $inf[]=$query;
-                        $v_tableinit_info[$v->clLinkType]=$inf;
-                    }
-                }
-            }
-            $direct=true;
-            if($entries != null){
-                if(igk_count($tlinks) > 0){
-                    $c[$tbname]=array("links"=>$tlinks, "entries"=>$entries);
-                    $direct=false;
-                }
-                else{
-                    $this->__initTableEntries($tbname, $entries, 1);
-                }
-            }
-            else{
-                $ctrl=igk_get_env(IGK_ENV_DB_INIT_CTRL) ?? igk_die(__("Environment failed : current controller to init not found. ".$tbname));
-                if(igk_count($tlinks) == 0){
-                    igk_hook(IGKEvents::HOOK_DB_DATA_ENTRY, [$this, $tbname, 0]);
-                }
-                else{
-                    $c[$tbname]=array(
-                        "links"=>$tlinks,
-                        "entries"=>null,
-                        "callback"=>function() use ($tbname){
-                                igk_hook(IGKEvents::HOOK_DB_DATA_ENTRY, [$this, $tbname, 0]);
-                            }
-                    );
-                }
-            }
-            if(isset($v_tableinit_info[$tbname])){
-                $error=false;
-                foreach($v_tableinit_info[$tbname] as $k=>$v){
-                    if(!$this->_sendQuery($v)){
-                        $msg="Alter failed : ". igk_debuggerview()->getMessage();
-                        $error=true;
-                        $v_tableinit_info["__failed"][]=$v;
-                    }
-                }
-                unset($v_tableinit_info[$tbname]);
-                igk_debug_wln("init table with link ".$tbname);
-                if(isset($linkdata[$tbname])){
-                    $tt=$linkdata[$tbname]->from;
-                    foreach($tt as $x=>$y){
-                        if(isset($c[$x])){
-                            unset($c[$x]["links"][$tbname]);
-                            if(igk_count($c[$x]["links"]) == 0){
-                                $e=$c[$x]["entries"];
-                                if($e)
-                                    $this->__initTableEntries($x, $e);
-                                else{
-                                    $cb=igk_getv($c[$x], "callback");
-                                    if(igk_is_callable($cb)){
-                                        call_user_func_array($cb, array($this, $tbname));
-                                    }
-                                    else{
-                                        igk_ilog(__METHOD__, " no callback found for ".$tbname);
-                                        igk_ilog($cb);
-                                        igk_die("no callback error");
-                                    }
-                                }
-                                unset($c[$x]);
-                            }
-                        }
-                    }
-                    unset($linkdata[$tbname]);
-                }
-            }
-            foreach($c as $k=>$v){
-                $m=$v["links"];
-                if(isset($m[$tbname])){
-                    unset($m[$tbname]);
-                    if(igk_count($m) == 0){
-                        $e=$v["entries"];
-                        $this->__initTableEntries($k, $e);
-                        unset($v["links"]);
-                        unset($v["entries"]);
-                        unset($v_tableinit_info["__tables"][$k]);
-                    }
-                    else{
-                        $v["links"]=$m;
-                    }
-                }
-            }
-            $v_tableinit_info["__linkdata"]=$linkdata;
-            $v_tableinit_info["__tables"]=$c;
-            $v_rs=true;
-        }
-        if(!$v_rs)
-            igk_debug_wln("failed to create ".$tbname);
-        igk_set_env("sys://db/tabfinfo/data", $v_tableinit_info);
-        return $v_rs;
-    }
-    ///delete item in tables
-    /**
-    */
-    public function delete($tbname, $values=null){
-        $this->dieNotConnect();
-        $query=IGKSQLQueryUtils::GetDeleteQuery($tbname, $values);
-        $sender=$this->getSender();
-        $t=$this->_sendQuery($query);
-        if($t){
-            if($values == null)
-                $this->_sendQuery("ALTER TABLE `".$tbname."` AUTO_INCREMENT =1");
-            return true;
-        }
-        return false;
-    }
-    ///<summary>delete all items</summary>
-    /**
-    * delete all items
-    */
-    public function deleteAll($tbname, $condition=null){
-        $sender=$this->getSender();
-        $this->dieNotConnect();
-        $tbname= $this->escape_string($tbname);
-   
- 
-        if ($condition===null){
-            if (!$t=$this->_sendQuery("TRUNCATE TABLE `".$tbname."`")){
-                $t=$this->_sendQuery("DELETE FROM `".$tbname."`");
-            }
-            $c=$t && $this->_sendQuery("ALTER TABLE `".$tbname."` AUTO_INCREMENT =1");
-            if($t)
-               return true;
-        } else {
-            $cond = IGKSQLQueryUtils::GetCondString($condition);
-            return $this->_sendQuery("DELETE FROM `".$tbname."` WHERE {$cond}");
-        }
-    }
-    ///<summary></summary>
-    ///<param name="t"></param>
-    ///<param name="msg" default=""></param>
-    /**
-    * 
-    * @param mixed $t
-    * @param mixed $msg the default value is ""
-    */
-    protected function dieinfo($t, $msg=""){
- 
-        if(!$t){ 
-            $d=$this->getErrorCode();
-            $m = $em=$this->getError(); 
-            if (!igk_is_cmd()){
-                $m="<div><div class=\"igk-title-4 igk-danger\" >/!\\ ".__CLASS__." Error</div><div>". $em."</div>"."<div>Code: ".$d."</div>"."<div>Message: <i>".$msg."</i></div></div>";
-            } else {
-                $m = implode(PHP_EOL, ["code: $d", "query: ".$this->getLastQuery(), "error: $m"]);
-            }
-            $this->ErrorString=$em;
-            switch($d){
-                case 1062:
-                case 1146:
-                return null;
-            }
-            igk_push_env("sys://adapter/sqlerror", $m);
-            if(!igk_sys_env_production()){
-                throw new \Exception($m);
-            }
-        }
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    function dieNotConnect(){
-        if(!$this->getIsConnect()){
-            igk_trace();
-            igk_die("/!\\ DB Not connected");
-        }
-    }
-    ///<summary></summary>
-    ///<param name="tablename"></param>
-    /**
-    * 
-    * @param mixed $tablename
-    */
-    public function dropTable($tablename){
-        igk_die(__METHOD__." not implement");
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function flushForInitDb($complete=null){
-        $v_infkey="sys://db/tabfinfo/data";
-        $v_tableinit_info=igk_get_env($v_infkey);
-        $ad=$this->m_adapter;
-        $tb=$v_tableinit_info ? igk_getv(igk_getv($v_tableinit_info, "__failed"), 0): [];
-        $tbs=$v_tableinit_info ? igk_getv($v_tableinit_info, "__linkdata"): [];
-        if ($ad->connect()){
-
-        
-        if(igk_count($tbs) > 0 ){
-            foreach($tbs as $k=>$v){
-                $queries=$v_tableinit_info[$k];
-                foreach($queries as $q){
-                    $ad->sendQuery($q);
-                }
-            } 
-        }
-        $sender=$this->getSender();
-        $tbs=igk_getv($v_tableinit_info, "__linkdata");
-        if((igk_count($tbs) > 0) && $ad->connect()){
-            foreach($tbs as $k=>$v){
-                $queries=$v_tableinit_info[$k];
-                foreach($queries as $q){
-                    $this->_sendQuery($q);
-                }
-            } 
-        }
-        if(is_array($tb) && (igk_count($tb) > 0)){
-            igk_debug_wln("send failed table .... creation ");
-            foreach($tb as $k=>$v){
-                $sender->endQuery($v);
-            }
-        }
-        if (is_callable($complete)){
-            $complete();
-        }
-        $ad->close();
-        }
-        if(($dg=igk_debuggerview()) && ($msg=$dg->getMessage())){
-            igk_wln_assert(!empty($msg), $msg);
-            return !empty($msg);
-        }
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getdatabases(){
-        if(!$this->getIsConnect())
-            return;
-        $t=$this->getSender()->sendQuery("SHOW DATABASES");
-        return $t;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getDbServer(){
-        return $this->m_dbServer;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getDbUser(){
-        return $this->m_dbUser;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getError(){
-        return igk_mysql_db_error();
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getErrorCode(){
-        return igk_mysql_db_errorc();
-    }
-    ///<summary></summary>
-    ///<param name="n"></param>
-    ///<param name="throwError" default="1"></param>
-    /**
-    * 
-    * @param mixed $n
-    * @param mixed $throwError the default value is 1
-    */
-    public static function GetFunc($n, $throwError=1){
-        $tn=self::$Config["db"];
-        if(empty($tn))
-            return null;
-        $fc=igk_getv(self::$Config[$tn]["func"], $n);
-        if(empty($fc))
-            $fc=null;
-        return $fc ?? ($throwError ? igk_die("no <b>{$n}</b> found in {$tn} dataadapter "): null);
-    }
-    ///<summary>get if last execution has an error</summary>
-    /**
-    * get if last execution has an error
-    */
-    public function getHasError(){
-        return igk_mysql_db_has_error();
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getIsConnect(){
-        return $this->m_isconnect;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function getLastQuery(){
-        return $this->m_lastQuery;
-    }
-    ///<summary></summary>
-    ///<param name="tablename"></param>
-    ///<param name="name"></param>
-    /**
-    * 
-    * @param mixed $tablename
-    * @param mixed $name
-    */
-    public function getNewContraintKeys($tablename, $name){
-        if($this->fkeys == null)
-            $this->fkeys=array();
-        $s="csk_". ((strlen($name) > 3) ? substr($name, 0, 3): $name).IGKNumber::ToBase(count($this->fkeys) + 1, 16, 4);
-        $this->fkeys[]=$s;
-        return $s;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public static function GetResId(){
-        return self::$sm_resid;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    private function getSender(){
-        return $this->m_adapter ?? $this;
-    }
-    ///<summary></summary>
-    ///<param name="k"></param>
-    ///<param name="rowInfo" default="null"></param>
-    ///<param name="tinfo" default="null" ref="true"></param>
-    /**
-    * 
-    * @param mixed $k
-    * @param mixed $rowInfo the default value is null
-    * @param mixed * $tinfo the default value is null
-    */
-    public static function GetValue($k, $rowInfo=null, & $tinfo=null){
-        $sys=self::$Config["db"];
-        if(empty($sys))
-            return null;
-        $m=igk_getv(self::$Config[$sys], $k);
-        if(igk_is_callable($m)){
-            return $m($rowInfo, $tinfo);
-        }
-        return $m;
-    }
-    ///<summary></summary>
-    ///<param name="tabname"></param>
-    ///<param name="ctrl" default="null"></param>
-    /**
-    * 
-    * @param mixed $tabname
-    * @param mixed $ctrl the default value is null
-    */
-    public function haveNoLinks($tabname, $ctrl=null){
-        $v_infkey="sys://db/tabfinfo/data";
-        $v_tableinit_info=igk_get_env($v_infkey);
-        $c=& $v_tableinit_info["__tables"];
-        if(isset($c[$tabname])){
-            if($ctrl != null){
-                $c[$tabname]["callback"]=function() use($tabname){
-                    igk_hook(IGKEvents::HOOK_DB_DATA_ENTRY, [$this, $tabname, 0]);
-                };
-            }
-            return 0;
-        }
-        return 1;
-    }
-    ///<summary></summary>
-    ///<param name="callback"></param>
-    /**
-    * 
-    * @param mixed $callback
-    */
-    public static function Init($callback){
-        if(self::$Config == null)
-            self::$Config=array();
-        $callback(self::$Config);
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public static function InitDefault(){
-        $dbName = igk_get_env("dbName");
-        $db=new IGKDBQueryDriver();
-        $db->connect();
-        $db->selectdb($dbName);
-        return $db;
-    }
-    ///<summary>reset db initialize algorithm algorithm</summary>
-    /**
-    * reset db initialize algorithm algorithm
-    */
-    public function initForInitDb(){
-        igk_set_env("sys://db/tabfinfo/data", null);
-    }
-    ///<summary></summary>
-    ///<param name="tbname"></param>
-    ///<param name="values"></param>
-    ///<param name="tableinfo" default="null"></param>
-    /**
-    * 
-    * @param mixed $tbname
-    * @param mixed $values
-    * @param mixed $tableinfo the default value is null
-    */
-    public function insert($tbname, $values, $tableinfo=null){
-        $this->dieNotConnect();
-        $tableinfo=$tableinfo == null ? igk_db_getdatatableinfokey($tbname): $tableinfo;
-
-        // igk_wln(__FILE__.':'.__LINE__, ["tbname"=>$tbname, "table info"=>$tableinfo]);
-        IGKSQLQueryUtils::SetAdapter($this);
-        $query=IGKSQLQueryUtils::GetInsertQuery($tbname, $values, $tableinfo);
-        $t=$this->getSender()->sendQuery($query);
-        if($t){
-            if(($t->getResultType() == "boolean") && $t->getValue()){
-                if(is_object($values)){
-                    if(igk_getv($values, "clId") == null)
-                        $values->clId=$this->lastId();
-                }
-                return true;
-            }
-            return false;
-        }
-        else{
-            $error="[IGK] - Insertion Query Error : ".igk_mysql_db_error(). " : ".$query;
-            igk_ilog($error);
-            igk_db_error($error);
-        }
-        return false;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public static function IsMySQLi(){
-        return self::Is(self::DRIVER_MYSQLI);
-    }
-    ///<summary>get if the current state is on driver</summary>
-    public static function Is($driverName){
-        $s= self::$Config["db"];
-        return ($s == strtolower($driverName));
-        // DRIVER_MYSQLI
-    }
-
-    ///get the last inserted id
-    /**
-    */
-    public function lastId(){
-        return igk_mysql_db_last_id();
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function OpenCount(){
-        return $this->m_openCount;
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public static function RestoreConfig(){
-        IGKDBQueryDriver::$Config=self::$__store;
-        self::$__store=null;
-    }
-    ///<summary></summary>
-    ///<param name="cbinfo"></param>
-    /**
-    * 
-    * @param mixed $cbinfo
-    */
-    public static function SaveConfig($cbinfo){
-        $ctn=array_merge(IGKDBQueryDriver::$Config);
-        $g=IGKDBQueryDriver::$Config["func"];
-        IGKDBQueryDriver::$Config["db"]="user";
-        $tab=array("escapestring"=>function($v) use ($cbinfo){
-                    return $cbinfo->escapeString($v);
-                });
-        IGKDBQueryDriver::$Config["func"]=$tab;
-        self::$__store=$ctn;
-    }
-    ///<summary></summary>
-    ///<param name="table"></param>
-    ///<param name="cond" default="null"></param>
-    ///<param name="options" default="null"></param>
-    /**
-    * 
-    * @param mixed $table
-    * @param mixed $cond the default value is null
-    * @param mixed $options the default value is null
-    */
-    public function select($table, $cond=null, $options=null){
-        $this->dieNotConnect();
-        $query=IGKSQLQueryUtils::GetSelectQuery($this, $table, $cond, $options);
-        $s=$this->_sendQuery($query, $options);
-        return $s;
-    }
-    ///<summary></summary>
-    ///<param name="dbname"></param>
-    /**
-    * 
-    * @param mixed $dbname
-    */
-    function selectdb($dbname){
-        $this->dieNotConnect();
-        $mysql_func=self::GetFunc("selectdb");
-        if(self::$Config["db"] == "mysqli"){
-            if($this->m_resource){
-                if(!@$this->m_resource->ping())
-                    return false;
-                return $mysql_func($this->m_resource, $dbname);
-            }
-            return false;
-        }
-        else{
-            return $mysql_func($dbname);
-        }
-    }
-    ///<summary></summary>
-    /**
-    * 
-    */
-    public function selectLastId(){
-        return IGKMySQLQueryResult::CreateResult($this->_sendQuery("SELECT  LAST_INSERT_ID()"));
-    }
-    ///<summary></summary>
-    ///<param name="query"></param>
-    ///<param name="throwex" default="true"></param>
-    /**
-    * 
-    * @param mixed $query
-    * @param mixed $throwex the default value is true
-    */
-    public function sendQuery($query, $throwex=true){
-        $v_qdebug = igk_environment()->querydebug;
-        $v_nolog = false;
-        if (is_array($throwex)){
-            $v_nolog = igk_getv($throwex, "no_log", false);
-            $throwex = igk_getv($throwex, "throw");
-        }
-        
-        if(igk_db_is_resource($this->m_resource)){
-			if ($v_qdebug){
-                // if (preg_match("/^DELETE|DROP /i", $query)){
-                //     Logger::danger($query);
-                // }
-                // else
-                igk_dev_wln($query);
-				igk_push_env(IGK_ENV_QUERY_LIST, $query);
-			}
-            $this->setLastQuery($query);
-            $t=igk_db_query($query, $this->m_resource);
-            if (!$t && !$v_nolog){ 
-                igk_ilog("Query Error:".$this->getError()."\n".$query."\n"); 
-            }            
-            if($throwex){
-                $this->dieinfo($t, "/!\\ SQL Query Error :<div style='font-style:normal;'>".igk_html_query_parse($query)."</div>");
-            }
-            else if(!$t)
-                return null;
-            return $t;
-        }
-        return null;
-    }
-
-	public function sendMultiQuery($query, $throwex=true){
-        $v_qdebug = igk_environment()->querydebug;
-		if(igk_db_is_resource($this->m_resource)){
-            $this->setLastQuery($query);
-            if ($v_qdebug){
-                igk_dev_wln($query);
-				igk_push_env(IGK_ENV_QUERY_LIST, $query);
-			}
-            $t = igk_db_multi_query( $query , $this->m_resource);
-
-            if($throwex){
-                $this->dieinfo($t, "/!\\ SQLQuery Error:<div style='font-style:normal;'>".igk_html_query_parse($query)."</div>");
-            }
-            else if(!$t)
-                return null;
-            return $t;
-        }
-        return null;
-	}
-    ///<summary></summary>
-    ///<param name="o"></param>
-    /**
-    * 
-    * @param mixed $o
-    */
-    public function setAdapter($o){
-        $this->m_adapter=$o;
-    }
-    ///<summary></summary>
-    ///<param name="v"></param>
-    /**
-    * 
-    * @param mixed $v
-    */
-    public function setCloseCallback($v){
-        $this->m_closeCallback=$v;
-    }
-    ///<summary></summary>
-    ///<param name="v"></param>
-    /**
-    * 
-    * @param mixed $v
-    */
-    private function setLastQuery($v){
-        $this->m_lastQuery=$v;
-    }
-    ///<summary></summary>
-    ///<param name="v"></param>
-    /**
-    * 
-    * @param mixed $v
-    */
-    public function setOpenCallback($v){
-        $this->m_openCallback=$v;
-    }
-    ///<summary></summary>
-    ///<param name="r"></param>
-    ///<param name="context" default="null"></param>
-    /**
-    * 
-    * @param mixed $r
-    * @param mixed $context the default value is null
-    */
-    private static function SetResId($r, $context=null){
-        self::$sm_resid=$r;
-    }
-    ///<summary></summary>
-    ///<param name="tablename"></param>
-    /**
-    * 
-    * @param mixed $tablename
-    */
-    public function tableExists($tablename){
-        if(empty($tablename))
-            return false;
-        try {
-            
-            $s=$this->_sendQuery("SELECT Count(*) FROM `".igk_mysql_db_tbname($tablename)."`", 
-                [
-                    "throw"=>false,
-                    "no_log"=>true
-                ]
-            );
-            if($s && ($s->ResultType == "boolean")){
-                return true; // $s->Value;
-            } 
-            return $s !== null;
-        }
-        catch(Exception $ex){
-
-        }
-         return false;
-    }
-    ///update data table
-    /**
-    */
-    public function update($tbname, $entry, $where=null, $querytabinfo=null){
-        $this->dieNotConnect();
-        $query=IGKSQLQueryUtils::GetUpdateQuery($tbname, $entry, $where, $querytabinfo);
-        $s=$this->_sendQuery($query);
-        return $s;
-    }
-}
 ///<summary>represent handle session service</summary>
 ///<remark> only create when required . from session param</remark>
 /**
@@ -70106,7 +68431,7 @@ class IGKUserInfo extends IGKObject {
                 if($rdb){
                     foreach($rdb->Rows as $b){
                         if(!isset($tab[$b->clAuthId])){
-                            $authinfo=igk_db_table_select_row($this->authtable, array("clId"=>$b->clAuthId));
+                            $authinfo=igk_db_table_select_row($this->authtable, array(IGK_FD_ID=>$b->clAuthId));
                             $authinfo->clGrant=$b->clGrant;
                             $tab[$b->clAuthId]=$authinfo;
                         }
@@ -70128,7 +68453,7 @@ class IGKUserInfo extends IGKObject {
             $tab=array();
             $db=igk_db_table_select_where($this->usergrouptable, array(IGK_FD_USER_ID=>$this->clId));
             foreach($db->Rows as $v){
-                $rdb=igk_db_table_select_where($this->grouptable, array("clId"=>$v->clGroup_Id))->getRowAtIndex(0);
+                $rdb=igk_db_table_select_where($this->grouptable, array(IGK_FD_ID=>$v->clGroup_Id))->getRowAtIndex(0);
                 if($rdb){
                     $tab[$rdb->clName]=$rdb;
                 }
@@ -70720,8 +69045,7 @@ final class IGKHtmlDocTheme extends IGKObjectGetProperties implements ArrayAcces
         $tv=0;
         $s="";
         if($systheme===null){
-            igk_trace();
-            igk_wln_e("systheme is null");
+            $systheme = igk_app()->Doc->getSysTheme();
         }
         $s=$def->getSymbols();
         if(is_array($s)){
@@ -70818,6 +69142,7 @@ final class IGKHtmlDocTheme extends IGKObjectGetProperties implements ArrayAcces
         }
         $ktemp=IGK_CSS_TEMP_FILES_KEY;
         $v_csstmpfiles=$def->getTempFiles();
+      
         if(count($v_csstmpfiles) > 0){
             if(!igk_get_env($ktemp) && $v_csstmpfiles){
                 igk_set_env($ktemp, 1);
@@ -71058,7 +69383,7 @@ final class IGKHtmlDocTheme extends IGKObjectGetProperties implements ArrayAcces
         $systheme = $doc->SysTheme;
         $is_root = $this === $systheme;
         
-        $out=$this->_get_css_def(!$minfile, $themeexport, $systheme);
+        $out=  $this->_get_css_def(!$minfile, $themeexport, $systheme);
 
         if($this->m_medias) foreach($this->m_medias as $k=>$v){
             $g=trim($v->getCssDef($this, $minfile, $themeexport, $systheme));
@@ -72014,6 +70339,7 @@ class IGKResourceUriResolver{
 ///<summary>Represente class: IGKSQLQueryUtils</summary>
 /**
 * Represente IGKSQLQueryUtils class
+* @deprecated since 11.7.0.0519 use SQLGrammar
 */
 class IGKSQLQueryUtils {
     const AVAIL_FUNC=[
@@ -72065,6 +70391,9 @@ class IGKSQLQueryUtils {
         }  
         return "text";
     }
+    /**
+     * @deprecated since 11.7.0.0519 use SQLGrammar
+     */
     public static function AllowedDefValue(){
         static $defvalue = null;
 		if ($defvalue === null){
@@ -72089,6 +70418,13 @@ class IGKSQLQueryUtils {
 		}
         return $defvalue;
     }
+    ///<summary>check if this type support defaut value</summary>
+    /**
+     * @deprecated since 11.7.0.0519 use SQLGrammar
+     */
+    public static function supportDefaultValue($type){
+        return !in_array($type, ["text"]);
+    }
     ///<summary></summary>
     ///<param name="tbname"></param>
     ///<param name="columninfo"></param>
@@ -72102,6 +70438,7 @@ class IGKSQLQueryUtils {
     * @param mixed $desc the default value is null
     * @param mixed $noengine the default value is 0
     * @param mixed $nocomment the default value is 0
+    * @deprecated since 11.7.0.0519 use SQLGrammar
     */
     public static function CreateTableQuery($tbname, $columninfo, $desc=null, $adapter=null, $noengine=0, $nocomment=0){
         
@@ -72119,8 +70456,6 @@ class IGKSQLQueryUtils {
         $defvalue = self::AllowedDefValue();
 		
         foreach($columninfo as $v){
-           
-            
             if(($v == null) || !is_object($v)){
                 igk_die(__CLASS__." :::Error table column info is not an object error for ".$tbname);
             }
@@ -72134,6 +70469,9 @@ class IGKSQLQueryUtils {
             if ($adapter && !$adapter->isTypeSupported($type)){
                 $type = static::fallbackType($type, $adapter);
             } 
+
+
+
             $query .= igk_db_escape_string($type);
             $s=strtolower($type);
             $number=false;
@@ -72174,7 +70512,7 @@ class IGKSQLQueryUtils {
 				}
             }
             $tb=true;
-            if($v->clDefault || $v->clDefault === '0'){
+            if( static::supportDefaultValue($type) &&  $v->clDefault || $v->clDefault === '0'){
 				$_ktype = strtoupper($type);
 				$_def = $r_v = isset($defvalue[$_ktype][$v->clDefault]) ?
                 (is_int($defvalue[$_ktype][$v->clDefault])?
@@ -72191,7 +70529,7 @@ class IGKSQLQueryUtils {
  
 
             if($v->clDescription && !$nocomment){
-                $query .= "COMMENT '".igk_db_escape_string($v->clDescription)."' ";
+                $query .= " COMMENT '".igk_db_escape_string($v->clDescription)."' ";
             }
             if($v->clIsUnique){
                 if(!empty($unique))
@@ -72342,6 +70680,9 @@ class IGKSQLQueryUtils {
         // }
         // return $o;
     }
+    private static function GetKey($k, $adapter){
+        return "`".implode("`.`", array_map([$adapter, "escape_string"] , explode(".", $k)))."`";  
+    }
     ///<summary>get query condition string</summary>
     ///<param name="tab"></param>
     ///<param name="operator" default="'AND'"></param>
@@ -72349,6 +70690,7 @@ class IGKSQLQueryUtils {
     * get query condition string
     * @param mixed $tab
     * @param mixed $operator the default value is 'AND'
+    * @deprecated since 11.7.0.0519 use SQLGrammar
     */
     public static function GetCondString($tab, $operator='AND', $adapter=null, $grammar=null){
         $query="";
@@ -72360,9 +70702,7 @@ class IGKSQLQueryUtils {
             $adapter = igk_db_current_data_adapter();
             if (!$adapter){
                 die("adapter not found");
-            }
-            // igk_trace();
-            // igk_wln_e("condition ", $adapter);
+            } 
         }
         $op= $adapter->escape_string($operator);
         $c_exp="IS NULL";
@@ -72422,8 +70762,9 @@ class IGKSQLQueryUtils {
             if (is_object($v)){
                 $query .= "`".igk_obj_call($v, $fc)."`";      
             }
-            else{  
-                if(preg_match("/^(!|@@|(<|>)=?|#)/", $k, $tab)){
+            else{
+                  
+                if(preg_match("/^(!|@@|@&|(<|>)=?|#|\||&)/", $k, $tab)){
                     $ch=substr($k, 0, $ln=strlen($tab[0]));
                     $k=substr($k, $ln);
                     switch($ch){
@@ -72434,12 +70775,17 @@ class IGKSQLQueryUtils {
                         case "@@";
                         $c=" Like ";
                         break;
+                        case "@&":
+                            $query .= "(".self::GetKey($k, $adapter)." & ".$adapter->escape_string($v).") = ".$adapter->escape_string($v);
+                            $t = 1;
+                            continue 2;
+                        break;
                         default:
                         $c = $ch;
                         break;
                     }
-                }
-                $query .= "`".$adapter->escape_string($k)."`";
+                } 
+                $query .= self::GetKey($k, $adapter); // "`".implode("`.`", array_map([$adapter, "escape_string"] , explode(".", $k)))."`";  
                 if($v !== null)
                 {
                     if (is_array($v)){
@@ -72468,6 +70814,7 @@ class IGKSQLQueryUtils {
     * 
     * @param mixed $tbname
     * @param mixed $values
+    * @deprecated since 11.7.0.0519 use SQLGrammar
     */
     public static function GetDeleteQuery($tbname, $values){
         $query="";
@@ -72483,7 +70830,7 @@ class IGKSQLQueryUtils {
 			if (is_string("values")){
 				 $query .= " WHERE ".igk_db_escape_string($values);
 			}else{
-				$id=igk_getv($values, "clId");
+				$id=igk_getv($values, IGK_FD_ID);
 				if($id){
 					$query .= " WHERE `clId`='".igk_db_escape_string($id)."'";
 				}
@@ -72491,11 +70838,21 @@ class IGKSQLQueryUtils {
         }
         return $query;
     }
+    /**
+     * @deprecated since 11.7.0.0519 use SQLGrammar
+     */
+    private static function Key($t, $adapter, $separator=","){        
+        return implode($separator, array_map(function($t) use($adapter){
+                return  "`".implode("`.`", array_map([$adapter, "escape_string"], explode(".", $t)))."`";
+            }, 
+            array_map("trim", array_filter(explode(",", $t)))));
+    }
     ///<summary></summary>
     ///<param name="options"></param>
     /**
     * 
     * @param mixed $options
+    * @deprecated since 11.7.0.0519 use SQLGrammar
     */
     public static function GetExtraOptions($options, $ad){
         $defOrder = "ASC";
@@ -72568,32 +70925,54 @@ class IGKSQLQueryUtils {
                     break;
                     case queryConstant::GroupBy: 
 					    $optset[$k] = 1;
-                        $query .= " GROUP BY ";
-                        $a = 0;
-                        foreach($v as $s){
-                            $s_t = explode("|", $s);
-                            if ($a)
-                            $query.=",";
-                            $query.= $s_t[0];
-                            $a = 1;
+                        if ($ad->supportGroupBy()){
+                            $query .= " GROUP BY ";
+                            $a = 0;
+                            foreach($v as $s){
+                                $s_t = explode("|", $s);
+                                if ($a)
+                                $query.=",";
+                                $query.= $s_t[0];
+                                $a = 1;
+                            }
                         }
                     break;
                     case "OrderByField":
                         break;
                     case "OrderBy":
+                        // igk_wln_e("order by", $v);
                         if (is_array($v)){                       
                             $torder = "";
+                            $c = "";
                             foreach($v as $s){
+                                
                                 $g = explode("|", $s);
                                 $type = igk_getv($g, 1, $defOrder);
-                                $c = "`".implode("` ".$type.", `", 
-                                array_map([$ad, "escape_string"], 
-                                array_map("trim", explode(",", $g[0]))));
+                                $c = self::Key($g[0], $ad,  "".$type.", ");
+                                // $c = "`".implode("` ".$type.", `",
+                                // );         
+                                
+                                // igk_wln(
+                                //     array_map(function($t) use($ad){
+                                //         return "`".implode("`.`", array_map([$ad, "escape_string"], explode(".", $t))) ."`";
+                                //     },
+                                //    // self::Key($t, $ad)
+                                //     array_map("trim", array_filter(explode(",", "basic.ok")))),
+
+                                //     self::Key("info.BASIC, basic, info", $ad)
+                                // );
+                                //igk_wln_e("done", $c); // $c,$g);
+                                // array_map( function($t)use($ad){                               
+                                //     return self::Key($t, $ad);
+                                // },
+                                // //array_map([$ad, "escape_string"],
+                                // array_map("trim", explode(",", $g[0]))));
                                 if (!empty($torder))
                                     $torder .=", ";
-                                $torder.= $c."` ".$type;
+                                $torder.= $c." ".$type;
                                 
                             }
+                            igk_ilog("torder: ".$torder);                         
                             $optset[$k] = $torder;
 
                         } else {
@@ -72684,6 +71063,7 @@ class IGKSQLQueryUtils {
     /**
     * 
     * @param mixed $b
+    * @deprecated since 11.7.0.0519 use SQLGrammar
     */
     public static function GetFCN($b){
         return strtoupper($b);
@@ -72697,6 +71077,7 @@ class IGKSQLQueryUtils {
     * @param mixed $tbname
     * @param mixed $values
     * @param mixed $tableInfo the default value is null
+    * @deprecated since 11.7.0.0519 use SQLGrammar
     */
     public static function GetInsertQuery($tbname, $values, $tableInfo=null){
         if(!$values)
@@ -72706,9 +71087,7 @@ class IGKSQLQueryUtils {
         $v_v="";
         $v_c=0; 
      
-        $tvalues=self::GetValues($values, $tableInfo);
-        
-
+        $tvalues= self::GetValues($values, $tableInfo); 
 
         foreach($tvalues as $k=>$v){
             if($v_c != 0){
@@ -72741,6 +71120,7 @@ class IGKSQLQueryUtils {
     ///<summary>get sql select query</summary>
     /**
     * get sql select query
+    * @deprecated since 11.7.0.0519 use SQLGrammar
     */
     public static function GetSelectQuery($ad, $tbname, $where=null, $options=null){
         $q="";
@@ -72787,6 +71167,7 @@ class IGKSQLQueryUtils {
     * @param mixed $values
     * @param mixed $condition the default value is null
     * @param mixed $tableInfo the default value is null
+    * @deprecated since 11.7.0.0519 use SQLGrammar
     */
     public static function GetUpdateQuery($tbname, $values, $condition=null, $tableInfo=null){
         $rtbname=igk_mysql_db_tbname( $tbname);
@@ -72794,7 +71175,7 @@ class IGKSQLQueryUtils {
         $out .= "UPDATE `".$rtbname."` SET ";
         $t=0;
         $v_condstr = "";
-        $id=$condition == null ? igk_getv($values, "clId"): null;
+        $id=$condition == null ? igk_getv($values, IGK_FD_ID): null;
 
         if(($id == null) && is_integer($condition)){
             $id=$condition;
@@ -72804,7 +71185,7 @@ class IGKSQLQueryUtils {
       
 
         foreach($tvalues as $k=>$v){
-            if($id && ($k == "clId") || (strpos($k, ":") !== false))
+            if($id && ($k == IGK_FD_ID) || (strpos($k, ":") !== false))
                 continue;
             if($t == 1)
                 $out .= ",";
@@ -72844,6 +71225,9 @@ class IGKSQLQueryUtils {
 
         return $out;
     }
+    /**
+     * @deprecated since 11.7.0.0519 use SQLGrammar
+     */
     protected static function IsAllowedDefValue($def, $type, $value){
         if ($b = igk_getv($def, strtoupper($type))){
             if (isset($b[strtoupper($value)])){
@@ -72852,10 +71236,13 @@ class IGKSQLQueryUtils {
         }  
         return false;
     }
+    /**
+     * @deprecated since 11.7.0.0519 use SQLGrammar
+     */
     private static function GetExpressQuery($express, $tinf){
         $b = explode(".", $express);
         $sl = [$b[0]=>$b[1]]; 
-        if ($b=self::GetSelectQuery(self::$sm_adapter, $tinf->clLinkType, $sl, ["Columns"=>[$tinf->clLinkColumn ?? "clId"]])){
+        if ($b=self::GetSelectQuery(self::$sm_adapter, $tinf->clLinkType, $sl, ["Columns"=>[$tinf->clLinkColumn ?? IGK_FD_ID]])){
             return $b = "(".rtrim(trim($b),";").")";
         }
         return null;
@@ -72873,6 +71260,7 @@ class IGKSQLQueryUtils {
     * @param mixed $columnName
     * @param mixed $value
     * @param mixed $type the default value is "i"
+    * @deprecated since 11.7.0.0519 use SQLGrammar
     */
     public static function GetValue($tbname, $tableInfo, $columnName, $value, $type="i"){
         $tinf=igk_getv($tableInfo, $columnName);        
@@ -73024,12 +71412,13 @@ class IGKSQLQueryUtils {
     * @param mixed $values
     * @param mixed $tableInfo
     * @param mixed $update the default value is 0
+    * @deprecated since 11.7.0.0519 use SQLGrammar
     */
     private static function GetValues($values, $tableInfo, $update=0){
         $tvalues=igk_createobj();
 
-		if (is_object($values) && method_exists($values,"toArray")){
-			$values = $values->toArray();
+		if (is_object($values) && method_exists($values,"to_array")){
+			$values = $values->to_array();
 		}
         if(is_array($values))
             $values=(object)$values;
@@ -73075,6 +71464,7 @@ class IGKSQLQueryUtils {
     * @param mixed $tbname
     * @param mixed $values
     * @param mixed $tableinfo the default value is null
+    * @deprecated since 11.7.0.0519 use SQLGrammar
     */
     public function insert($tbname, $values, $tableinfo=null){
         $this->dieNotConnect();
@@ -73083,13 +71473,13 @@ class IGKSQLQueryUtils {
         $t=$this->sendQuery($query);
         if($t){
             if(is_object($values)){
-                if(igk_getv($values, "clId") == null)
+                if(igk_getv($values, IGK_FD_ID) == null)
                     $values->clId=$this->lastId();
             }
-            return true;
+            return true; 
         }
         else{
-            $error="Insertion Query Error : ".igk_mysql_db_error(). " : ".$query;
+            $error="Query Insert Error : ".igk_mysql_db_error(). " : ".$query;
             igk_debug_wln($error);
             igk_db_error($error);
         }
@@ -73100,6 +71490,7 @@ class IGKSQLQueryUtils {
     /**
     * 
     * @param mixed $t
+    * @deprecated since 11.7.0.0519 use SQLGrammar
     */
     private static function IsNumber($t){
         return preg_match("/(int|float|decimal)/i", $t);
@@ -73666,9 +72057,8 @@ abstract class IGKSysCache{
                 }
                 }
         }
-        else{
-            igk_trace();
-            igk_die("lib caches is empty impossible");
+        else{ 
+            igk_die(__("lib caches is empty."));
         }
         $init='';
         $restore='';
@@ -74134,8 +72524,8 @@ if(file_exists(($file=dirname(__FILE__)."/.igk.version.php"))){
 unset($file);
 define("IGK_BALAFON_JS_VERSION", "4.6.0.0408");
 define("IGK_FRAMEWORK", "IGKDEV-WFM");
-!defined("IGK_WEBFRAMEWORK") && define("IGK_WEBFRAMEWORK", "11.6");
-!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".0.0428");
+!defined("IGK_WEBFRAMEWORK") && define("IGK_WEBFRAMEWORK", "11.7");
+!defined("IGK_VERSION") && define("IGK_VERSION", IGK_WEBFRAMEWORK.".0.0519");
 define("IGK_AUTHOR", "C.A.D. BONDJE DOUE");
 define("IGK_AUTHOR_CONTACT", "bondje.doue@igkdev.com");
 define("IGK_AUTHOR_2", "R. TCHATCHO");
@@ -74239,12 +72629,10 @@ igk_sys_reg_uri("^/favicon.ico[%q%]", function(){
 }
 , 1); 
 //+ | -----------------------------------------------------------------------------------
-//+ | asset balanfon preloader
+//+ | asset balafon preloader
 //+ | uri: /assets/Scripts/balafon.js
 //+ | ----------------------------------------------------------------------------------- 
 igk_sys_reg_uri("^/".IGK_RES_FOLDER."/".IGK_SCRIPT_FOLDER."/balafon.js[%q%]", function(){
-    igk_wln_e("bind balafon js");
-
     $_igk = igk_app();
     $doc= $_igk->Doc;
     if(!$doc){
@@ -74563,15 +72951,18 @@ igk_sys_reg_uri("^/(index\.php/)?\{(:guid)\}(/(:path+))?[%q%]", function($guid, 
                 $ctrl = new $class();
             }
             
-            // igk_wln($obj, $class, $ctrl, $tclass);
+            // igk_wln_e($obj, $class, $ctrl, $tclass);
             $args=$query;
             if(is_string($query))
                 $args=explode("/", $query);
             $method="index";
+            
+            R::RegLangCtrl($ctrl);
+
             if (!empty($tclass) && 
                 class_exists($tclass))
             {
-                 $cl = new $tclass($ctrl);
+                $cl = new $tclass($ctrl);
             }
             else {
                 $cl= $ctrl; //new $class();

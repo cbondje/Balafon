@@ -59,6 +59,13 @@ class MacrosHelper
                         }
                     }
                     return $is_auths;
+                },
+                "currentUser"=>function()
+                {
+                    if ($u = igk_app()->session->getUser()){
+                        return \IGK\Models\Users::createFromCache($u);
+                    }
+                    return null;
                 }
             ];
         }

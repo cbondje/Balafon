@@ -59,7 +59,10 @@ abstract class ControllerExtension{
         }
     }
     public static function configFile(BaseController $ctrl, $name){
-        return $ctrl->getDeclaredDir()."/Configs/$name.php";
+        return self::configDir($ctrl). "/{$name}.php";
+    }
+    public static function configDir(BaseController $ctrl){
+        return $ctrl->getDeclaredDir()."/Configs";
     }
   
     public static function uri(BaseController $ctrl, $name){
@@ -164,6 +167,14 @@ abstract class ControllerExtension{
         //get all seed class and run theme        
         if (igk_is_null_or_empty($classname)){
             $classname = "Database/Seeds/DataBaseSeeder";
+            //$classname = igk_str_ns(implode("/", array_filter([$ctrl->getEntryNamespace(), $classname])));
+         
+        }else{
+            //try to resolv class 
+            if (file_exists($f = $ctrl->classdir()."/Database/Seeds/".$classname.".php")){
+                $classname = implode("/", array_filter([$ctrl->getEntryNamespace(), "Database/Seeds/".$classname]));
+            }
+
         }
         $ctrl::register_autoload();
         $g = self::ns($ctrl, $classname ); 
@@ -171,6 +182,8 @@ abstract class ControllerExtension{
             Logger::info("run seed ".$classname);
             $o = new $g();
             return $o->run();
+        }else{
+            Logger::danger("class not found: ".$classname);
         } 
     }
     public static function migrate(BaseController $ctrl, $classname=null){
@@ -309,6 +322,11 @@ abstract class ControllerExtension{
         }
         return null;
     }
+    public static function getAutoresetParam(BaseController $ctrl, $name, $default=null){
+        $d = $ctrl->getParam($name, $default);
+            $ctrl->setParam($name, null);
+        return $d;
+    }
     private static function GetModelDefaultSourceDeclaration($name, $table, $v, $ctrl){
         $ns =  self::ns($ctrl, "");
  
@@ -328,6 +346,7 @@ abstract class ControllerExtension{
 
         if (!$gc && $ctrl){
             $cl = get_class($ctrl);
+            $uses[] = "$cl::class";
             $o .= "\t/**\n\t */\n";
             $o.= "\tprotected \$controller = {$cl}::class; ".PHP_EOL;
         }
@@ -355,18 +374,24 @@ abstract class ControllerExtension{
     }
     private static function GetDefaultModelBaseSource(BaseController $ctrl){
         $o = "";
+        $cl = "";
+        if ($ctrl){
+            $cl = get_class($ctrl);
+        }
         $ns = implode("\\", array_filter([self::ns($ctrl, ""), "Models"])); 
         $o = "<?php ".PHP_EOL;
         if ($ns){
             $o .= "namespace $ns; ".PHP_EOL;
         }                
         $o .=  "use ".ModelBase::class." as Model;".PHP_EOL;
+        if ($cl){
+        $o .=  "use {$cl}::class;".PHP_EOL;
+        }
 
         $o .= "\n\n/** \n */\n";
         $o .= "class ModelBase extends Model {".PHP_EOL;
          
-        if ($ctrl){
-            $cl = get_class($ctrl);
+        if ($cl){         
             $o .= "\t/**\n\t * Base source controller \n\t */\n";
             $o.= "\tprotected \$controller = {$cl}::class; ".PHP_EOL;
         }
@@ -608,6 +633,7 @@ abstract class ControllerExtension{
         return null;
     }
 
+    ///<summary>Dispatch model utility</summary>
     /**
      *  Dispatch model utility 
      * @param BaseController $controller 
@@ -624,5 +650,84 @@ abstract class ControllerExtension{
         return false;
     }
 
+    ///<summary>get model utility</summary>
+    /**
+     * get model utility
+     * @param BaseController $controller 
+     * @param mixed $modelname 
+     * @return mixed 
+     */
+    public function modelUtility(BaseController $controller, $modelname){
+        return $controller->loader->model($modelname);
+    }
+
+      ///<summary> initialize db from data schemas </summary>
+    /**
+    *  initialize db from data schemas
+    */
+    public static function initDbFromSchemas(BaseController $controller){
+        
+        $r= $controller->loadDataAndNewEntriesFromSchemas();
+        if(!$r)
+            return; 
+        $tb=$r->Data; 
+        $db=igk_get_data_adapter($controller, true);
+        if($db){
+            if($db->connect()){ 
+				igk_db_init_dataschema($controller, $r, $db); 
+                $db->close();
+            }
+            else{
+                igk_ilog("/!\\ connexion failed ");
+            }
+        }
+        else{
+            igk_log_write_i(__FUNCTION__, "no adapter found");
+        }
+        return $tb;
+    }
+
+     /**
+    * init database constant file
+    */
+    public static function initDbConstantFiles(BaseController $controller){
+        $f=$controller->getDbConstantFile();
+        $tb=$controller->getDataTableInfo();
+        
+
+        $s="<?php".IGK_LF;
+        $s .= "// Balafon : generated db constants file".IGK_LF;
+        $s .= "// date: ".date("Y-m-d H:i:s").IGK_LF;
+        // generate class constants definition
+        $cl = igk_html_uri(get_class($controller));
+        $ns = dirname($cl);
+        
+        if (!empty($ns) && ($ns !=".")){
+            $s .= "namespace ".str_replace("/","\\", $ns)."; ".IGK_LF;
+        } 
+		$s.= "abstract class ".basename($cl)."DbConstants{".IGK_LF;
+		   if($tb != null){
+			   ksort($tb);
+               $prefix = igk_db_get_table_name("%prefix%", $controller); 
+			   foreach($tb as $k=>$v){
+				   $n=strtoupper($k);
+					$n=preg_replace_callback("/^%prefix%/i", function(){
+						return IGK_DB_PREFIX_TABLE_NAME;
+					}
+					, $n);
+                    if ($prefix){
+                        $n = preg_replace("/^".$prefix."/i",  "TB_", $n);
+                    }
+                    if (empty($n)){ 
+                        continue;
+                    }
+				   $s .= "\tconst ".$n." = \"".$k."\";".IGK_LF; 
+			   }
+		   }
+		$s.="}".IGK_LF;
+
+		igk_io_w2file($f, $s, true);
+		include_once($f);		 
+    }
 
 }

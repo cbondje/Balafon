@@ -83,13 +83,26 @@ class Route
     }
     public static function GetRouteByName($name, $classPath = null)
     {
-        foreach (self::$sm_actions as $classPath => $actions) {
-            foreach ($actions as $a) {
-                if ($name == $a->getName()) {
-                    return $a;
+        $actions = null;
+        if ($classPath!==null){            
+            if ($ac = igk_getv(self::$sm_actions, $classPath)){
+                $actions = [$ac];
+            }else{
+                $action = [];
+            }
+        }else{
+            //search in all actions
+            $actions = self::$sm_actions;
+        }
+
+        foreach ($actions as $actions) {
+                          foreach ($actions as $a) {                 
+                if ($name == $a->getName()) { 
+                        return $a;
+                    
                 }
             }
-        }
+        }       
         return null;
     }
 }

@@ -239,8 +239,8 @@ final class IGKHtmlAJXTabControlItem extends IGKHtmlCtrlComponentNodeItemBase {
     private static $demoComponent;
     public const CONTROL = "AJXTabControl";
 
-    public function getSelectedIndex($index){
-        
+    public function getSelectedIndex(){
+        return $this->m_selected;
     }
 
 	public function getSettings($key){
@@ -361,7 +361,7 @@ EOF;
     * 
     * @param mixed $i
     */
-    public function select($i){
+    public function select($i){ 
         if($this->m_selected){
             $this->m_selected->setClass("-igk-active");
         }
@@ -645,7 +645,7 @@ final class IGKHtmlArticleViewItem extends IGKHtmlCtrlNodeItemBase {
     */
     protected function __getRenderingChildren($option=null){
         if($this->m_InnerOnly){
-            return $this->Childs->ToArray();
+            return $this->Childs->to_array();
         }
         return parent::__getRenderingChildren($option=null);
     }
@@ -3798,7 +3798,7 @@ EOF
         $this->__renderDepth($target, $depth);
         $target->add("span")->setClass("s")->Content="&lt;".$r->TagName;
         if($r->HasAttributes){
-            foreach($r->Attributes->ToArray() as $k=>$v){
+            foreach($r->Attributes->to_array() as $k=>$v){
                 $target->addSpace();
                 $target->add("span")->setClass("attr")->Content=$k;
                 $target->add("span")->setClass("o")->Content="=";

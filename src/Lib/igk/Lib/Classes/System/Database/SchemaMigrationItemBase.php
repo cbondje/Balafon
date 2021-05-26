@@ -22,8 +22,8 @@ abstract class SchemaMigrationItemBase{
         $this->migration = $migration;
     }
     public function load($node){  
-        $this->m_raw = igk_get_robjs($this->fill_properties, 0, $node->getAttributes()->toArray());
-        $tab = array_filter($node->getChilds()->toArray(), function($v){
+        $this->m_raw = igk_get_robjs($this->fill_properties, 0, $node->getAttributes()->to_array());
+        $tab = array_filter($node->getChilds()->to_array(), function($v){
             return !($v instanceof IGKHtmlCommentItem);
         }); 
         $this->loadChilds($tab);

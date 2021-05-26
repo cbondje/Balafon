@@ -178,9 +178,10 @@ class App{
             define('IGK_LOG_FILE', $logFolder."/.".IGK_TODAY.".cons.log");
         }
         igk_loadlib(dirname(__FILE__)."/Commands");
+        date_default_timezone_set('Europe/Brussels');
         IGKApp::InitSingle(); 
         if (defined('IGK_DOCUMENT_ROOT'))
-            igk_server()->IGK_DOCUMENT_ROOT = realpath(IGK_DOCUMENT_ROOT);
+            igk_server()->IGK_DOCUMENT_ROOT = realpath(constant('IGK_DOCUMENT_ROOT'));
          
         igk_hook("console::app_boot", $this);
     }

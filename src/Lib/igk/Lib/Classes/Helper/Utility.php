@@ -1,8 +1,9 @@
 <?php
 namespace IGK\Helper;
 
-use Exception;
-use IGK\System\Http\Request;
+use Exception; 
+use IGK\System\Http\RequestUtility;
+use stdClass;
 
 abstract class Utility {
     public static function PostCref(callable $callback, $valid=1, $method="POST"){
@@ -11,16 +12,16 @@ abstract class Utility {
         }
         return false;
     }
+    /**
+     * 
+     * @param mixed $paramHandler 
+     * @param mixed $requestName 
+     * @param mixed $paramName 
+     * @param bool $update 
+     * @return mixed 
+     */
     public static function RequestGet($paramHandler, $requestName, $paramName, $update=true){
-        $c = Request::getInstance()->have($requestName, $paramHandler->getParam($paramName));
-        if ($update){
-            if (!empty($c)){
-                $paramHandler->setParam($paramName, $c);
-            } else {
-                $paramHandler->setParam($paramName, null);
-            }
-        }
-        return $c;
+       return RequestUtility::RequestGet(...func_get_args());
     }
     /**
      * get the email display
@@ -47,7 +48,7 @@ abstract class Utility {
      * @return mixed 
      * @throws Exception 
      */
-    public static function To_JSON($raw , $options=null){
+    public static function To_JSON($raw , $options=null, $json_option = JSON_FORCE_OBJECT){
         $ignoreempty = igk_getv($options, "ignore_empty", 0);
         $default_output = igk_getv($options, "default_ouput", "{}");
         if(is_string($raw)){
@@ -59,16 +60,34 @@ abstract class Utility {
                 $raw = $sraw;
             }else 
             return $default_output;
-        }    
-        $c = new \stdClass();
-        if (is_object($raw) || is_array($raw)){
-            foreach($raw as $k=>$v){
+        }  
+        $tab = [["r"=>$raw, "t"=>new stdClass()]];
+        $root = null;
+        while($m = array_shift($tab)){            
+            $c = $m["t"];
+            $raw = $m["r"];
+            if (!$root)
+                $root = $c;
+            if (is_object($raw) || is_array($raw)){
+                foreach($raw as $k=>$v){
 
-                if ($ignoreempty &&  (($v === null) || ($v =="")))
-                    continue;
-                $c->$k = $v;
-            } 
+                    if ($ignoreempty &&  (($v === null) || ($v =="")))
+                        continue;
+                    // | check if to_array method exists to get the array 
+                    if (is_object($v) && method_exists($v, "to_array")){                       
+                        $c->$k = new stdClass();
+                        array_unshift($tab, ["r"=>$v->to_array(), "t"=>$c->$k]); 
+                        continue;
+                    }
+                    if (is_object($v) || is_array($v)){
+                        $c->$k = new stdClass();
+                        array_unshift($tab, ["r"=>$v, "t"=>$c->$k]);
+                    }else{
+                        $c->$k = $v;
+                    }
+                } 
+            }
         }
-        return json_encode($c);
+        return json_encode($root, $json_option);
     }
 }

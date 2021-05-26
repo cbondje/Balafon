@@ -176,7 +176,7 @@ final class IGKServer{
     /**
     * 
     */
-    public function toArray(){
+    public function to_array(){
         return $this->data;
     }
 }
